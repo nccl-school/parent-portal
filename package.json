@@ -1,8 +1,8 @@
 {
-  "name": "@gfdigital/template-ts-monorepo",
+  "name": "@nccl/parent-portal",
   "private": true,
   "version": "0.0.1",
-  "description": "An opinionated monorepo template that includes boilerplate examples for TS & Vite library packages",
+  "description": "A collection of packages and libraries that comprise the NCCL parent portal",
   "type": "module",
   "workspaces": {
     "packages": [
@@ -13,11 +13,7 @@
     "build": "yarn turbo build",
     "release": "npx changeset publish",
     "test": "yarn vitest --run",
-    "lint": "eslint src --fix"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/green-flash-digital/template-ts-monorepo.git"
+    "lint": "eslint packages/*/src/**/* --fix"
   },
   "keywords": [
     "typescript",
@@ -43,19 +39,15 @@
   ],
   "author": "Drew DeCarme (drew@greenflash.digital)",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/green-flash-digital/template-ts-monorepo/issues"
-  },
-  "homepage": "https://github.com/green-flash-digital/template-ts-monorepo#readme",
-  "packageManager": "yarn@4.7.0",
   "devDependencies": {
     "@changesets/cli": "^2.28.1",
-    "@gfdigital/eslint-config": "0.4.0",
+    "@gfdigital/eslint-config": "^0.4.2",
     "@gfdigital/tsconfig": "^0.3.1",
-    "@types/node": "^22.13.10",
-    "eslint": "^9.22.0",
+    "@types/node": "^22.13.11",
+    "eslint": "^9.23.0",
     "turbo": "^2.4.4",
     "typescript": "^5.8.2",
     "vitest": "^3.0.9"
-  }
+  },
+  "packageManager": "yarn@4.9.1"
 }
