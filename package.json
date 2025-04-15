@@ -40,7 +40,6 @@
   "author": "Drew DeCarme (drew@greenflash.digital)",
   "license": "MIT",
   "devDependencies": {
-    "@changesets/cli": "^2.28.1",
     "@gfdigital/eslint-config": "^0.4.2",
     "@gfdigital/tsconfig": "^0.3.1",
     "@types/node": "^22.13.11",

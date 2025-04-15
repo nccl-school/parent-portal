@@ -1,5 +1,9 @@
 {
-  "cSpell.words": ["gfdigital", "NCCL", "staticly"],
+  "cSpell.words": [
+    "gfdigital",
+    "NCCL",
+    "staticly"
+  ],
   "search.exclude": {
     "**/.yarn": true,
     "**/.pnp.*": true
