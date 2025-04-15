@@ -1197,19 +1197,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gfdigital/components@workspace:packages/components":
-  version: 0.0.0-use.local
-  resolution: "@gfdigital/components@workspace:packages/components"
-  dependencies:
-    "@gfdigital/tsconfig": "npm:^0.3.1"
-    "@types/node": "npm:^22.13.11"
-    "@types/react": "npm:^19.0.12"
-    react: "npm:^19.0.0"
-    typescript: "npm:^5.8.2"
-    vite: "npm:^6.2.2"
-  languageName: unknown
-  linkType: soft
-
 "@gfdigital/eslint-config@npm:^0.4.2":
   version: 0.4.2
   resolution: "@gfdigital/eslint-config@npm:0.4.2"
@@ -1598,17 +1585,40 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nccl/parent-portal@workspace:.":
+"@nccl/components@workspace:packages/components":
   version: 0.0.0-use.local
-  resolution: "@nccl/parent-portal@workspace:."
+  resolution: "@nccl/components@workspace:packages/components"
   dependencies:
-    "@gfdigital/eslint-config": "npm:^0.4.2"
     "@gfdigital/tsconfig": "npm:^0.3.1"
     "@types/node": "npm:^22.13.11"
-    eslint: "npm:^9.23.0"
-    turbo: "npm:^2.4.4"
+    "@types/react": "npm:^19.0.12"
+    react: "npm:^19.0.0"
     typescript: "npm:^5.8.2"
-    vitest: "npm:^3.0.9"
+    vite: "npm:^6.2.2"
+  languageName: unknown
+  linkType: soft
+
+"@nccl/parent-portal@workspace:packages/app":
+  version: 0.0.0-use.local
+  resolution: "@nccl/parent-portal@workspace:packages/app"
+  dependencies:
+    "@clerk/react-router": "npm:^1.2.5"
+    "@cloudflare/vite-plugin": "npm:^0.1.14"
+    "@cloudflare/workers-types": "npm:^4.20250320.0"
+    "@gfdigital/tsconfig": "npm:^0.3.1"
+    "@react-router/dev": "npm:^7.4.0"
+    "@types/node": "npm:^22.13.11"
+    "@types/react": "npm:^19.0.12"
+    "@types/react-dom": "npm:^19.0.4"
+    convex: "npm:^1.23.0"
+    isbot: "npm:^5.1.25"
+    react: "npm:^19.0.0"
+    react-dom: "npm:^19.0.0"
+    react-router: "npm:^7.4.0"
+    typescript: "npm:^5.8.2"
+    vite: "npm:^6.2.2"
+    vite-tsconfig-paths: "npm:^5.1.4"
+    wrangler: "npm:^4.3.0"
   languageName: unknown
   linkType: soft
 
@@ -5085,27 +5095,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nccl-parent-portal@workspace:packages/app":
+"nccl-parent-portal@workspace:.":
   version: 0.0.0-use.local
-  resolution: "nccl-parent-portal@workspace:packages/app"
+  resolution: "nccl-parent-portal@workspace:."
   dependencies:
-    "@clerk/react-router": "npm:^1.2.5"
-    "@cloudflare/vite-plugin": "npm:^0.1.14"
-    "@cloudflare/workers-types": "npm:^4.20250320.0"
+    "@gfdigital/eslint-config": "npm:^0.4.2"
     "@gfdigital/tsconfig": "npm:^0.3.1"
-    "@react-router/dev": "npm:^7.4.0"
     "@types/node": "npm:^22.13.11"
-    "@types/react": "npm:^19.0.12"
-    "@types/react-dom": "npm:^19.0.4"
-    convex: "npm:^1.23.0"
-    isbot: "npm:^5.1.25"
-    react: "npm:^19.0.0"
-    react-dom: "npm:^19.0.0"
-    react-router: "npm:^7.4.0"
+    eslint: "npm:^9.23.0"
+    turbo: "npm:^2.4.4"
     typescript: "npm:^5.8.2"
-    vite: "npm:^6.2.2"
-    vite-tsconfig-paths: "npm:^5.1.4"
-    wrangler: "npm:^4.3.0"
+    vitest: "npm:^3.0.9"
   languageName: unknown
   linkType: soft
 
