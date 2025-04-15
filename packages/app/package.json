@@ -4,14 +4,12 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
-    "deploy": "npm run build && wrangler deploy",
     "dev": "react-router dev",
     "preview": "vite preview",
     "start": "wrangler dev",
     "typecheck": "wrangler types && react-router typegen && tsc -b",
     "convex:dev": "yarn convex dev",
-    "convex:dash": "yarn convex dashboard",
-    "convex:deploy": "yarn convex deploy"
+    "convex:dash": "yarn convex dashboard"
   },
   "dependencies": {
     "@clerk/react-router": "^1.2.5",
