@@ -51,9 +51,6 @@ jobs:
       - name: Build Project
         run: yarn build
 
-      # - name: Test
-      #   run: yarn test
-
       - name: Deploy Convex
         run: yarn workspace @nccl/parent-portal convex:deploy
         env:
@@ -63,13 +60,3 @@ jobs:
         run: yarn workspace @nccl/parent-portal deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-
-      # - name: Create Release Pull Request or Publish to npm
-      #   id: changesets
-      #   uses: changesets/action@v1
-      #   with:
-      #     # This expects you to have a script called release which does a build for your packages and calls changeset publish
-      #     publish: yarn release
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     NPM_TOKEN: ${{ secrets.GREEN_FLASH_NPM_TOKEN }}

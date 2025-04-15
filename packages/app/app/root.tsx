@@ -6,7 +6,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
-import {  ConvexReactClient } from "convex/react";
+import { ConvexReactClient } from "convex/react";
 import { rootAuthLoader } from "@clerk/react-router/ssr.server";
 import {
   ClerkProvider,
@@ -19,12 +19,6 @@ import {
 import { ConvexProviderWithClerk } from "convex/react-clerk";
 
 import type { Route } from "./+types/root";
-
-console.log(`
-  ENV:
-
-  ${import.meta.env}
-`);
 
 const convexClient = new ConvexReactClient(
   import.meta.env.VITE_CONVEX_URL as string

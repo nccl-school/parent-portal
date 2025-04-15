@@ -11,7 +11,7 @@
     "typecheck": "wrangler types && react-router typegen && tsc -b",
     "convex:dev": "yarn convex dev",
     "convex:dash": "yarn convex dashboard",
-    "convex:deploy": "yarn convex deploy"
+    "convex:deploy": "yarn convex deploy --cmd 'yarn build'"
   },
   "dependencies": {
     "@clerk/react-router": "^1.2.5",
