@@ -41,7 +41,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Build Project
-        run: yarn build
+        run: CLOUDFLARE_ENV=${{secrets.CLOUDFLARE_ENV}} yarn build
 
       # - name: Test
       #   run: yarn test
