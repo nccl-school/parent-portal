@@ -47,7 +47,7 @@ jobs:
       #   run: yarn test
 
       - name: Deploy Convex
-        run: yarn workspace @nccl/parent-portal convex:deploy
+        run: yarn convex deploy
         env:
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
 
