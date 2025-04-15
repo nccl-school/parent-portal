@@ -54,7 +54,7 @@ jobs:
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
 
       - name: Deploy App
-        run: yarn workspace @nccl/parent-portal deploy
+        run: export CLOUDFLARE_ENV=${{ vars.CLOUDFLARE_ENV }} && yarn workspace @nccl/parent-portal deploy
         env:
           VITE_CONVEX_URL: ${{ vars.VITE_CONVEX_URL }}
           VITE_CLERK_PUBLISHABLE_KEY: ${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
