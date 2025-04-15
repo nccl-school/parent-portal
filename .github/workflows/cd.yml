@@ -52,7 +52,7 @@ jobs:
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
 
       - name: Deploy App
-        run: yarn workspace @nccl/parent-portal ${{ github.ref_name == 'main' && 'deploy:prod' || 'deploy:stage' }}"
+        run: yarn workspace @nccl/parent-portal ${{ github.ref_name == 'main' && 'deploy:prod' || 'deploy:stage' }}
         env:
           VITE_CONVEX_URL: ${{ secrets.VITE_CONVEX_URL }}
           VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
