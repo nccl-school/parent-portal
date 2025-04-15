@@ -1,5 +1,5 @@
 {
-  "name": "@gfdigital/components",
+  "name": "@nccl/components",
   "version": "0.0.1",
   "description": "A monorepo library that is built with vite & ts",
   "author": "Drew DeCarme (drew@greenflash.digital)",

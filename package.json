@@ -1,5 +1,5 @@
 {
-  "name": "@nccl/parent-portal",
+  "name": "nccl-parent-portal",
   "private": true,
   "version": "0.0.1",
   "description": "A collection of packages and libraries that comprise the NCCL parent portal",
