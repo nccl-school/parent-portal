@@ -7,12 +7,28 @@ import {
   ScrollRestoration,
 } from "react-router";
 import { ConvexProvider, ConvexReactClient } from "convex/react";
+import { rootAuthLoader } from "@clerk/react-router/ssr.server";
+import {
+  ClerkProvider,
+  SignedOut,
+  SignInButton,
+  SignedIn,
+  UserButton,
+  useAuth,
+} from "@clerk/react-router";
+import { ConvexProviderWithClerk } from "convex/react-clerk";
 
 import type { Route } from "./+types/root";
 
 const convexClient = new ConvexReactClient(
   import.meta.env.VITE_CONVEX_URL as string
 );
+
+export async function loader(args: Route.LoaderArgs) {
+  return rootAuthLoader(args, {
+    secretKey: args.context.cloudflare.env.CLERK_SECRET_KEY,
+  });
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -24,7 +40,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <ConvexProvider client={convexClient}>{children}</ConvexProvider>
+        {children}
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -32,8 +48,28 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App() {
-  return <Outlet />;
+export default function App({ loaderData }: Route.ComponentProps) {
+  return (
+    <ClerkProvider
+      loaderData={loaderData}
+      signUpFallbackRedirectUrl="/"
+      signInFallbackRedirectUrl="/"
+    >
+      <ConvexProviderWithClerk client={convexClient} useAuth={useAuth}>
+        <header>
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+        </header>
+        <main>
+          <Outlet />
+        </main>
+      </ConvexProviderWithClerk>
+    </ClerkProvider>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

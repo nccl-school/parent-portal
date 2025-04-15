@@ -9,10 +9,12 @@
     "preview": "vite preview",
     "start": "wrangler dev",
     "typecheck": "wrangler types && react-router typegen && tsc -b",
-    "api:dev": "yarn convex dev",
-    "api:dash": "yarn convex dashboard"
+    "convex:dev": "yarn convex dev",
+    "convex:dash": "yarn convex dashboard",
+    "convex:deploy": "yarn convex deploy"
   },
   "dependencies": {
+    "@clerk/react-router": "^1.2.5",
     "convex": "^1.23.0",
     "isbot": "^5.1.25",
     "react": "^19.0.0",

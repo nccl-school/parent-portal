@@ -3,7 +3,8 @@ name: CD - Build and Deploy
 on:
   push:
     branches:
-      - main # Triggers when a PR is merged into main
+      # - main # Triggers when a PR is merged into main
+      - feat/deployment-pipelines # Triggers when a PR is merged into main
 
 jobs:
   build-and-deploy:
@@ -27,9 +28,6 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "yarn"
 
-      - name: Authenticate NPM
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.GREEN_FLASH_NPM_TOKEN }}" > ~/.npmrc
-
       - name: Install Dependencies
         run: yarn install --immutable
 
@@ -38,6 +36,12 @@ jobs:
 
       # - name: Test
       #   run: yarn test
+
+      - name: Deploy Convex
+        run: yarn workspace app convex:deploy
+
+      - name: Deploy App
+        run: yarn workspace app deploy
 
       # - name: Create Release Pull Request or Publish to npm
       #   id: changesets

@@ -3,8 +3,5 @@
   "name": "nccl-parent-portal",
   "compatibility_date": "2025-02-24",
   "main": "./workers/app.ts",
-  "assets": {},
-  "vars": {
-    "VALUE_FROM_CLOUDFLARE": "Hello from Cloudflare"
-  }
+  "assets": {}
 }
