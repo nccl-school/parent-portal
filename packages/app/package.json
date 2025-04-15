@@ -4,8 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
-    "deploy:stage": "yarn wrangler deploy -e stage",
-    "deploy:prod": "yarn wrangler deploy -e production",
+    "deploy": "yarn wrangler deploy",
     "dev": "react-router dev",
     "preview": "vite preview",
     "start": "wrangler dev",

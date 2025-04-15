@@ -41,9 +41,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Build Project
-        run: yarn build
-        env:
-          CLOUDFLARE_ENV: ${{ vars.CLOUDFLARE_ENV }}
+        run: CLOUDFLARE_ENV=${{ vars.CLOUDFLARE_ENV }} yarn build
 
       # - name: Test
       #   run: yarn test
@@ -54,7 +52,7 @@ jobs:
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
 
       - name: Deploy App
-        run: yarn workspace @nccl/parent-portal ${{ github.ref_name == 'main' && 'deploy:prod' || 'deploy:stage' }}
+        run: yarn workspace @nccl/parent-portal deploy
         env:
           VITE_CONVEX_URL: ${{ vars.VITE_CONVEX_URL }}
           VITE_CLERK_PUBLISHABLE_KEY: ${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
