@@ -41,7 +41,13 @@ jobs:
         run: yarn install --immutable
 
       - name: Build Project
-        run: CLOUDFLARE_ENV=${{ vars.CLOUDFLARE_ENV }} yarn build
+        run: |
+          echo "Building for: ${{ vars.CLOUDFLARE_ENV }}"
+          yarn build
+        env:
+          CLOUDFLARE_ENV: ${{ vars.CLOUDFLARE_ENV }}
+
+          # export CLOUDFLARE_ENV=${{ vars.CLOUDFLARE_ENV }} && yarn build
 
       # - name: Test
       #   run: yarn test
