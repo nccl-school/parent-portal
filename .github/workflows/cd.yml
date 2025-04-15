@@ -41,7 +41,9 @@ jobs:
         run: yarn install --immutable
 
       - name: Build Project
-        run: CLOUDFLARE_ENV=${{secrets.CLOUDFLARE_ENV}} yarn build
+        run: yarn build
+        env:
+          CLOUDFLARE_ENV: ${{ vars.CLOUDFLARE_ENV }}
 
       # - name: Test
       #   run: yarn test
@@ -54,9 +56,9 @@ jobs:
       - name: Deploy App
         run: yarn workspace @nccl/parent-portal ${{ github.ref_name == 'main' && 'deploy:prod' || 'deploy:stage' }}
         env:
-          VITE_CONVEX_URL: ${{ secrets.VITE_CONVEX_URL }}
-          VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
-          CLOUDFLARE_ENV: ${{ secrets.CLOUDFLARE_ENV }}
+          VITE_CONVEX_URL: ${{ vars.VITE_CONVEX_URL }}
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
+          CLOUDFLARE_ENV: ${{ vars.CLOUDFLARE_ENV }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
       # - name: Create Release Pull Request or Publish to npm
