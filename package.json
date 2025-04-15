@@ -42,11 +42,11 @@
   "devDependencies": {
     "@gfdigital/eslint-config": "^0.4.2",
     "@gfdigital/tsconfig": "^0.3.1",
-    "@types/node": "^22.13.11",
-    "eslint": "^9.23.0",
-    "turbo": "^2.4.4",
-    "typescript": "^5.8.2",
-    "vitest": "^3.0.9"
+    "@types/node": "^22.14.1",
+    "eslint": "^9.24.0",
+    "turbo": "^2.5.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.1"
   },
   "packageManager": "yarn@4.9.1"
 }

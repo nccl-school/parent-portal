@@ -6,7 +6,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
-import { ConvexProvider, ConvexReactClient } from "convex/react";
+import {  ConvexReactClient } from "convex/react";
 import { rootAuthLoader } from "@clerk/react-router/ssr.server";
 import {
   ClerkProvider,

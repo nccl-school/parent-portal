@@ -3,5 +3,21 @@
   "name": "nccl-parent-portal",
   "compatibility_date": "2025-02-24",
   "main": "./workers/app.ts",
-  "assets": {}
+  "assets": {},
+  "env": {
+    "stage": {
+      "name": "nccl-parent-portal-stage",
+      "observability": {
+        "enabled": true,
+        "head_sampling_rate": 1
+      }
+    },
+    "production": {
+      "name": "nccl-parent-portal",
+      "observability": {
+        "enabled": true,
+        "head_sampling_rate": 1
+      }
+    }
+  }
 }
