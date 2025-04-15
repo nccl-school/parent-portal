@@ -1,19 +1,28 @@
-name: CD - Build and Deploy
+name: CD
 
 on:
   push:
     branches:
-      # - main # Triggers when a PR is merged into main
-      - feat/deployment-pipelines # Triggers when a PR is merged into main
+      # - stage
+      # - main
+      - feat/deployment-pipelines
 
 jobs:
-  build-and-deploy:
+  deploy:
     name: Build and Deploy
     runs-on: ubuntu-latest
+
+    environment:
+      name: ${{ github.ref_name == 'main' && 'production' || 'stage' }}
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Deploy
+        run: |
+          echo "Deploying branch: ${{ github.ref_name }}"
+          echo "To environment: ${{ github.ref_name == 'main' && 'production' || 'stage' }}"
 
       - name: Read Node.js Version
         id: node_version
@@ -39,9 +48,14 @@ jobs:
 
       - name: Deploy Convex
         run: yarn workspace @nccl/parent-portal convex:deploy
+        env:
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
 
       - name: Deploy App
         run: yarn workspace @nccl/parent-portal deploy
+        env:
+          VITE_CONVEX_URL: ${{ secrets.VITE_CONVEX_URL }}
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
 
       # - name: Create Release Pull Request or Publish to npm
       #   id: changesets
