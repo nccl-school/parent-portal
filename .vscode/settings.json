@@ -13,5 +13,6 @@
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "files.associations": {
     "wrangler.json": "jsonc"
-  }
+  },
+  "prettier.prettierPath": ".yarn/sdks/prettier/index.cjs"
 }

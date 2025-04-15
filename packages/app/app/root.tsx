@@ -20,6 +20,12 @@ import { ConvexProviderWithClerk } from "convex/react-clerk";
 
 import type { Route } from "./+types/root";
 
+console.log(`
+  ENV:
+
+  ${import.meta.env}
+`);
+
 const convexClient = new ConvexReactClient(
   import.meta.env.VITE_CONVEX_URL as string
 );

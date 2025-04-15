@@ -40,10 +40,16 @@ jobs:
       - name: Install Dependencies
         run: yarn install --immutable
 
-      - name: Build Project
+      - name: Create .env file
         run: |
-          echo "Building for: ${{ vars.CLOUDFLARE_ENV }}"
-          export CLOUDFLARE_ENV=${{ vars.CLOUDFLARE_ENV }} && yarn build
+          cat <<EOF > ./packages/app/.env
+          CLOUDFLARE_ENV=${{ vars.CLOUDFLARE_ENV }}
+          VITE_CONVEX_URL=${{ vars.VITE_CONVEX_URL }}
+          VITE_CLERK_PUBLISHABLE_KEY=${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
+          EOF
+
+      - name: Build Project
+        run: yarn build
 
       # - name: Test
       #   run: yarn test
@@ -54,11 +60,8 @@ jobs:
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
 
       - name: Deploy App
-        run: export CLOUDFLARE_ENV=${{ vars.CLOUDFLARE_ENV }} && yarn workspace @nccl/parent-portal deploy
+        run: yarn workspace @nccl/parent-portal deploy
         env:
-          VITE_CONVEX_URL: ${{ vars.VITE_CONVEX_URL }}
-          VITE_CLERK_PUBLISHABLE_KEY: ${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
-          CLOUDFLARE_ENV: ${{ vars.CLOUDFLARE_ENV }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
       # - name: Create Release Pull Request or Publish to npm
