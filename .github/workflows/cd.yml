@@ -47,12 +47,12 @@ jobs:
       #   run: yarn test
 
       - name: Deploy Convex
-        run: yarn convex deploy
+        run: yarn workspace @nccl/parent-portal convex:deploy
         env:
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
 
       - name: Deploy App
-        run: yarn wrangler publish --name=${{ github.ref_name == 'main' && 'nccl-parent-portal' || 'nccl-parent-portal-stage' }}"
+        run: yarn workspace @nccl/parent-portal ${{ github.ref_name == 'main' && 'deploy:prod' || 'deploy:stage' }}"
         env:
           VITE_CONVEX_URL: ${{ secrets.VITE_CONVEX_URL }}
           VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}

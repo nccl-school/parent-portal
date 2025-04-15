@@ -4,12 +4,15 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
+    "deploy:stage": "yarn wrangler deploy --name=nccl-parent-portal-stage",
+    "deploy:prod": "yarn wrangler deploy --name=nccl-parent-portal",
     "dev": "react-router dev",
     "preview": "vite preview",
     "start": "wrangler dev",
     "typecheck": "wrangler types && react-router typegen && tsc -b",
     "convex:dev": "yarn convex dev",
-    "convex:dash": "yarn convex dashboard"
+    "convex:dash": "yarn convex dashboard",
+    "convex:deploy": "yarn convex deploy"
   },
   "dependencies": {
     "@clerk/react-router": "^1.2.5",
