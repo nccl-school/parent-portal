@@ -59,7 +59,7 @@ export default function App({ loaderData }: Route.ComponentProps) {
     <ClerkProvider
       loaderData={loaderData}
       signUpFallbackRedirectUrl="/"
-      signInFallbackRedirectUrl="/"
+      signInFallbackRedirectUrl="/dashboard"
     >
       <ConvexProviderWithClerk client={convexClient} useAuth={useAuth}>
         <Outlet />
