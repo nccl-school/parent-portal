@@ -1,0 +1,57 @@
+{
+  "meta": {
+    "created_at": "2025-04-22T15:52:23.596Z"
+  },
+  "config": {
+    "$schema": "https://schemas.greenflash.digital/buttery-tokens.json",
+    "runtime": {
+      "prefix": "nccl",
+      "strict": true,
+      "suppressStrictWarnings": false
+    },
+    "sizeAndSpace": {
+      "baseFontSize": 16,
+      "baselineGrid": 4,
+      "size": {
+        "variants": {}
+      },
+      "space": {
+        "mode": "auto",
+        "variants": 10
+      }
+    },
+    "font": {
+      "source": "manual",
+      "families": {},
+      "variants": {}
+    },
+    "response": {
+      "breakpoints": {
+        "mobile": 480,
+        "tablet": 768,
+        "laptop": 1024,
+        "desktop": 1280,
+        "ultraWide": 1536
+      }
+    },
+    "color": {
+      "brand": {
+        "type": "fluorescent",
+        "colors": {
+          "primary": {
+            "hue": 197,
+            "variants": 13
+          },
+          "secondary": {
+            "hue": 173,
+            "variants": 10
+          }
+        },
+        "saturation": 95,
+        "brightness": 82
+      },
+      "neutral": {}
+    },
+    "custom": {}
+  }
+}

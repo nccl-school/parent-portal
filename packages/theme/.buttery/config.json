@@ -1,0 +1,85 @@
+{
+  "$schema": "https://schemas.greenflash.digital/buttery-tokens.json",
+  "runtime": {
+    "prefix": "nccl",
+    "strict": true,
+    "suppressStrictWarnings": false
+  },
+  "sizeAndSpace": {
+    "baseFontSize": 16,
+    "baselineGrid": 4,
+    "size": {
+      "variants": {
+        "sm": 32,
+        "md": 38,
+        "lg": 44
+      }
+    },
+    "space": {
+      "mode": "auto",
+      "variants": 20
+    }
+  },
+  "font": {
+    "source": "manual",
+    "families": {},
+    "variants": {}
+  },
+  "response": {
+    "breakpoints": {
+      "mobile": 480,
+      "tablet": 768,
+      "laptop": 1024,
+      "desktop": 1280,
+      "ultraWide": 1536
+    }
+  },
+  "color": {
+    "brand": {
+      "type": "earth",
+      "colors": {
+        "primary": {
+          "hue": 216,
+          "variants": 13
+        },
+        "secondary": {
+          "hue": 171,
+          "variants": 13
+        },
+        "tertiary": {
+          "hue": 238,
+          "variants": 13
+        },
+        "success": {
+          "hue": 128,
+          "variants": 10
+        },
+        "warning": {
+          "hue": 48,
+          "variants": 10
+        },
+        "danger": {
+          "hue": 360,
+          "variants": 10
+        }
+      },
+      "saturation": 36,
+      "brightness": 77
+    },
+    "neutral": {
+      "neutral-dark": {
+        "hex": "#29333d",
+        "variants": 13
+      },
+      "hover": {
+        "hex": "#c7d8ea",
+        "variants": 10
+      },
+      "neutral-light": {
+        "hex": "#91969c",
+        "variants": 14
+      }
+    }
+  },
+  "custom": {}
+}

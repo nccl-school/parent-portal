@@ -1,0 +1,29 @@
+{
+  "name": "@nccl/theme",
+  "version": "0.0.1",
+  "description": "A shared package that contains the token definitions, utils, and :root CSS file for the parent portal",
+  "exports": {
+    ".": "./dist/ts/index.js",
+    "./ts": "./dist/ts/index.js",
+    "./scss": "./dist/scss/_index.scss",
+    "./root.css": "./dist/root.css"
+  },
+  "scripts": {
+    "build": "yarn buttery build --library=true",
+    "dev": "yarn buttery dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/nccl-school/parent-portal.git"
+  },
+  "author": "Drew DeCarme (drew@greenflash.digital)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/nccl-school/parent-portal/issues"
+  },
+  "homepage": "https://github.com/nccl-school/parent-portal#readme",
+  "devDependencies": {
+    "buttery-tokens": "^0.3.1",
+    "typescript": "^5.8.3"
+  }
+}
