@@ -4,6 +4,9 @@
   "version": "0.0.1",
   "description": "A collection of packages and libraries that comprise the NCCL parent portal",
   "type": "module",
+  "packageManager": "yarn@4.9.1",
+  "author": "Drew DeCarme (drew@greenflash.digital)",
+  "license": "MIT",
   "workspaces": {
     "packages": [
       "packages/*"
@@ -37,16 +40,13 @@
     "repo-template",
     "build-tooling"
   ],
-  "author": "Drew DeCarme (drew@greenflash.digital)",
-  "license": "MIT",
   "devDependencies": {
-    "@gfdigital/eslint-config": "^0.4.2",
+    "@gfdigital/eslint-config": "^0.4.3",
     "@gfdigital/tsconfig": "^0.3.1",
-    "@types/node": "^22.14.1",
-    "eslint": "^9.25.1",
-    "turbo": "^2.5.0",
+    "@types/node": "^22.15.19",
+    "eslint": "^9.27.0",
+    "turbo": "^2.5.3",
     "typescript": "^5.8.3",
-    "vitest": "^3.1.2"
-  },
-  "packageManager": "yarn@4.9.1"
+    "vitest": "^3.1.4"
+  }
 }

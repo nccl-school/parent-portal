@@ -13,3 +13,4 @@ bin
 *storybook.log
 storybook-static
 .env
+.npmrc

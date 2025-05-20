@@ -22,8 +22,44 @@
   },
   "font": {
     "source": "manual",
-    "families": {},
-    "variants": {}
+    "families": {
+      "heading": {
+        "family": "Montserrat",
+        "fallback": "system-ui, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\"",
+        "styles": [
+          "regular-400",
+          "medium-500",
+          "semiBold-600",
+          "light-300",
+          "bold-700"
+        ]
+      },
+      "body": {
+        "family": "Nunito",
+        "fallback": "system-ui, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\"",
+        "styles": [
+          "regular-400",
+          "medium-500",
+          "semiBold-600",
+          "bold-700",
+          "light-300"
+        ]
+      }
+    },
+    "variants": {
+      "heading1": {
+        "familyToken": "heading",
+        "weight": "medium-500",
+        "size": 24,
+        "lineHeight": 1.3
+      },
+      "heading2": {
+        "familyToken": "heading",
+        "weight": "semiBold-600",
+        "size": 18,
+        "lineHeight": 1.3
+      }
+    }
   },
   "response": {
     "breakpoints": {
@@ -61,6 +97,10 @@
         "danger": {
           "hue": 360,
           "variants": 10
+        },
+        "alt": {
+          "hue": 311,
+          "variants": 10
         }
       },
       "saturation": 36,
@@ -81,5 +121,11 @@
       }
     }
   },
-  "custom": {}
+  "custom": {
+    "navbar--height-mobile": {
+      "type": "rem",
+      "value": 60,
+      "description": "The height of the navbar"
+    }
+  }
 }

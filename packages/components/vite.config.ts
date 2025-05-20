@@ -1,10 +1,22 @@
 import path from "node:path";
 
 import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import wyw from "@wyw-in-js/vite";
 
 import packageJson from "./package.json" with { type: "json"};
 
 export default defineConfig({
+  plugins: [
+    react(),
+    // @ts-expect-error Per documentation, this is correct regardless of types
+    wyw({
+      include: ["**/*.{ts,tsx}"],
+      babelOptions: {
+        presets: ["@babel/preset-typescript", "@babel/preset-react"],
+      },
+    }),
+  ],
   build: {
     emptyOutDir: true,
     outDir: path.resolve(import.meta.dirname, "./dist"),

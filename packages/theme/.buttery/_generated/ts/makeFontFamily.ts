@@ -4,7 +4,7 @@
 //  Any edits that are made will be overwritten the next time the
 //  buttery-tokens CLI is run.
 // -------------------------------------------------------
-export type FontFamily = "";
+export type FontFamily = "heading" | "body";
 export type MakeFontFamily = (fontFamilyName: FontFamily) => string;
 
 /**

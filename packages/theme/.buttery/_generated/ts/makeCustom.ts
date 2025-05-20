@@ -4,7 +4,7 @@
 //  Any edits that are made will be overwritten the next time the
 //  buttery-tokens CLI is run.
 // -------------------------------------------------------
-export type CustomTokens = "";
+export type CustomTokens = "navbar--height-mobile";
 export type MakeCustom = (tokenName: CustomTokens) => string | number;
 
 /**

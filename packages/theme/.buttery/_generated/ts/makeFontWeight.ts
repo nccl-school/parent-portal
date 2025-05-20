@@ -4,7 +4,17 @@
 //  Any edits that are made will be overwritten the next time the
 //  buttery-tokens CLI is run.
 // -------------------------------------------------------
-export type FontFamilyAndWeight = "";
+export type FontFamilyAndWeight =
+  | "heading-regular"
+  | "heading-medium"
+  | "heading-semiBold"
+  | "heading-light"
+  | "heading-bold"
+  | "body-regular"
+  | "body-medium"
+  | "body-semiBold"
+  | "body-bold"
+  | "body-light";
 export type MakeFontWeight = (fontWeightName: FontFamilyAndWeight) => string;
 
 /**
