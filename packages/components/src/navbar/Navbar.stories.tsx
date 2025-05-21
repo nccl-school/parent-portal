@@ -1,4 +1,6 @@
 import type { Meta } from "@storybook/react";
+import type { RefCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Navbar } from "./Navbar.js";
 import { NavbarItem } from "./NavbarItem.js";
@@ -13,42 +15,66 @@ const meta: Meta = {
 export default meta;
 
 export const Basic = () => {
+  const [activeTab, setActiveTab] = useState<
+    "home" | "resources" | "directory" | "calendar" | "settings"
+  >("home");
+
+  const onNavbarMount = useCallback<RefCallback<HTMLElement>>((node) => {
+    if (!node) return;
+    const anchors = node.getElementsByTagName("a");
+
+    function handleClick(e: Event) {
+      setActiveTab(
+        (e.currentTarget as HTMLAnchorElement).id as typeof activeTab
+      );
+    }
+    for (const anchor of anchors) {
+      anchor.addEventListener("click", handleClick);
+    }
+
+    return () => {
+      for (const anchor of anchors) {
+        anchor.removeEventListener("click", handleClick);
+      }
+    };
+  }, []);
+
   return (
-    <Navbar>
-      <NavbarItem>
+    <Navbar ref={onNavbarMount}>
+      <NavbarItem id="home" dxIsActive={activeTab === "home"}>
         <NavbarItemIcon
           dxBaseIcon="home-06-stroke-standard"
           dxActiveIcon="home-06-solid-standard"
         />
         <NavbarItemText>Home</NavbarItemText>
       </NavbarItem>
-      <NavbarItem className="active">
+      <NavbarItem id="resources" dxIsActive={activeTab === "resources"}>
         <NavbarItemIcon
-          dxBaseIcon="home-06-stroke-standard"
-          dxActiveIcon="home-06-solid-standard"
+          dxBaseIcon="folder-02-stroke-standard"
+          dxActiveIcon="folder-02-solid-standard"
         />
-        <NavbarItemText>Home</NavbarItemText>
+        <NavbarItemText>Resources</NavbarItemText>
       </NavbarItem>
-      <NavbarItem>
+      <NavbarItem id="directory" dxIsActive={activeTab === "directory"}>
         <NavbarItemIcon
-          dxBaseIcon="home-06-stroke-standard"
-          dxActiveIcon="home-06-solid-standard"
+          dxBaseIcon="contact-01-stroke-standard"
+          dxActiveIcon="contact-01-solid-standard"
         />
-        <NavbarItemText>Home</NavbarItemText>
+        <NavbarItemText>Directory</NavbarItemText>
       </NavbarItem>
-      <NavbarItem>
+      <NavbarItem id="calendar" dxIsActive={activeTab === "calendar"}>
         <NavbarItemIcon
-          dxBaseIcon="home-06-stroke-standard"
-          dxActiveIcon="home-06-solid-standard"
+          dxBaseIcon="calendar-03-stroke-standard"
+          dxActiveIcon="calendar-03-solid-standard"
         />
-        <NavbarItemText>Home</NavbarItemText>
+        <NavbarItemText>Calendar</NavbarItemText>
       </NavbarItem>
-      <NavbarItem>
+      <NavbarItem id="settings" dxIsActive={activeTab === "settings"}>
         <NavbarItemIcon
-          dxBaseIcon="home-06-stroke-standard"
-          dxActiveIcon="home-06-solid-standard"
+          dxBaseIcon="settings-02-stroke-standard"
+          dxActiveIcon="settings-02-solid-standard"
         />
-        <NavbarItemText>Home</NavbarItemText>
+        <NavbarItemText>Settings</NavbarItemText>
       </NavbarItem>
     </Navbar>
   );

@@ -2,7 +2,7 @@ import { css } from "@linaria/core";
 import { makeRem } from "@nccl/theme";
 import { classes } from "@stratum-ui/core/utils";
 import type { JSX } from "react";
-import { forwardRef } from "react";
+import { forwardRef, useMemo } from "react";
 
 import type { IconNames } from "../icons/Icon.js";
 import { Icon } from "../icons/Icon.js";
@@ -23,6 +23,24 @@ const styles = css`
   aspect-ratio: 1 / 1;
   font-size: ${makeRem(24)};
   position: relative;
+  display: grid;
+  place-content: center;
+
+  @keyframes pulse {
+    0% {
+      display: block;
+      transform: scale(1);
+    }
+    40% {
+      transform: scale(1.2);
+    }
+    90% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
 
   .nav-icon {
     font-size: ${makeRem(24)};
@@ -35,22 +53,34 @@ const styles = css`
     right: 0;
     top: 0;
     bottom: 0;
+    transition: all 0.1s ease-in-out allow-discrete;
 
-    &.base {
-      visibility: visible;
+    &.off {
+      display: block;
+      transform: scale(1);
     }
-    &.active {
-      visibility: hidden;
+    &.on {
+      display: none;
+      transform: scale(1);
     }
   }
 
   &.active {
     .nav-icon {
-      &.base {
-        visibility: hidden;
+      &.off {
+        display: none;
+        transform: 1;
       }
-      &.active {
-        visibility: visible;
+      &.on {
+        display: block;
+        animation: pulse 0.2s ease-in-out;
+        /* transform: scale(1.2); */
+
+        @starting-style {
+          display: block;
+          opacity: 1;
+          transform: scale(1);
+        }
       }
     }
   }
@@ -63,8 +93,15 @@ export const NavbarItemIcon = forwardRef<HTMLDivElement, NavbarItemIconProps>(
   ) {
     return (
       <div {...restProps} className={classes(className, styles)} ref={ref}>
-        <Icon dxIcon={dxBaseIcon} className="nav-icon base" />
-        <Icon dxIcon={dxActiveIcon} className="nav-icon active" />
+        {useMemo(
+          () => (
+            <>
+              <Icon dxIcon={dxBaseIcon} className="nav-icon off" />
+              <Icon dxIcon={dxActiveIcon} className="nav-icon on" />
+            </>
+          ),
+          [dxActiveIcon, dxBaseIcon]
+        )}
       </div>
     );
   }

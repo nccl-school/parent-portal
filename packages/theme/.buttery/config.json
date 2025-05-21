@@ -124,7 +124,7 @@
   "custom": {
     "navbar--height-mobile": {
       "type": "rem",
-      "value": 60,
+      "value": 92,
       "description": "The height of the navbar"
     }
   }
