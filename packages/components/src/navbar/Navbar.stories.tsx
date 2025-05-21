@@ -1,6 +1,6 @@
 import type { Meta } from "@storybook/react";
 import type { RefCallback } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { Navbar } from "./Navbar.js";
 import { NavbarItem } from "./NavbarItem.js";

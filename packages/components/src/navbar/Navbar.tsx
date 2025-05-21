@@ -11,7 +11,7 @@ export type NavbarProps = NavbarPropsNative;
 const styles = css`
   ${makeResponsive({ to: "desktop" })} {
     height: ${makeCustom("navbar--height-mobile")};
-    padding: 0 ${makeRem(8)} ${makeRem(32)} ${makeRem(8)};
+    padding: 0 ${makeRem(8)};
     display: flex;
     position: sticky;
     justify-content: space-evenly;

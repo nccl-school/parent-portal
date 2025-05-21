@@ -28,17 +28,24 @@ const styles = css`
 
   @keyframes pulse {
     0% {
-      display: block;
       transform: scale(1);
+      opacity: 0;
     }
-    40% {
+    50% {
+      transform: scale(1.4);
+      opacity: 1;
+    }
+    60% {
+      transform: scale(1.3);
+      opacity: 1;
+    }
+    80% {
       transform: scale(1.2);
-    }
-    90% {
-      transform: scale(1.1);
+      opacity: 1;
     }
     100% {
       transform: scale(1);
+      opacity: 1;
     }
   }
 
@@ -53,7 +60,6 @@ const styles = css`
     right: 0;
     top: 0;
     bottom: 0;
-    transition: all 0.1s ease-in-out allow-discrete;
 
     &.off {
       display: block;
@@ -73,14 +79,8 @@ const styles = css`
       }
       &.on {
         display: block;
-        animation: pulse 0.2s ease-in-out;
-        /* transform: scale(1.2); */
-
-        @starting-style {
-          display: block;
-          opacity: 1;
-          transform: scale(1);
-        }
+        animation: pulse 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        animation-fill-mode: both; /* keep final state */
       }
     }
   }

@@ -43,7 +43,7 @@
   "devDependencies": {
     "@gfdigital/eslint-config": "^0.4.3",
     "@gfdigital/tsconfig": "^0.3.1",
-    "@types/node": "^22.15.19",
+    "@types/node": "^22.15.21",
     "eslint": "^9.27.0",
     "turbo": "^2.5.3",
     "typescript": "^5.8.3",

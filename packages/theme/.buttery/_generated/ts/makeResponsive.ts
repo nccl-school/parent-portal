@@ -4,6 +4,14 @@
 //  Any edits that are made will be overwritten the next time the
 //  buttery-tokens CLI is run.
 // -------------------------------------------------------
+
+export const breakpoints = {
+  mobile: 480,
+  tablet: 768,
+  laptop: 1024,
+  desktop: 1280,
+  ultraWide: 1536,
+};
 export type Breakpoints =
   | "mobile"
   | "tablet"
@@ -21,12 +29,8 @@ export type MakeResponsive = (params: {
 string that can be interpolated in CSS-in-JS syntax.
 */
 export const makeResponsive: MakeResponsive = (params) => {
-  const from = params?.from
-    ? `var(--nccl-breakpoint-${params.from})`
-    : undefined;
-  const to = params?.to
-    ? `calc(var(--nccl-breakpoint-${params.to}) - 1px)`
-    : undefined;
+  const from = params?.from ? `${breakpoints[params.from]}px` : undefined;
+  const to = params?.to ? `calc(${breakpoints[params.to]}px - 1px)` : undefined;
   if (from && to) {
     return `@media (min-width: ${from}) and @media (max-width:${to})`;
   }
@@ -36,5 +40,5 @@ export const makeResponsive: MakeResponsive = (params) => {
   if (to && !from) {
     return `@media (max-width: ${to})`;
   }
-  throw new Error("You must provide a to or from parameter.");
+  throw new Error("You must provide a 'to' and/or 'from' parameter.");
 };

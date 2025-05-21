@@ -750,9 +750,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@buttery/core@npm:0.3.4":
-  version: 0.3.4
-  resolution: "@buttery/core@npm:0.3.4"
+"@buttery/core@npm:0.3.5":
+  version: 0.3.5
+  resolution: "@buttery/core@npm:0.3.5"
   dependencies:
     "@gfdigital/tsconfig": "npm:0.3.1"
     "@inquirer/prompts": "npm:7.5.1"
@@ -767,25 +767,25 @@ __metadata:
     ts-pattern: "npm:5.7.1"
     typescript: "npm:5.8.3"
     zod: "npm:3.25.4"
-  checksum: 10c0/5c5e217b32ac5da6b8e69a0dfe895ce647f90541c8c41d67dcd0a4f67b5a7558480872c782e505c2de7523700ba53d905d363a60cb17342dd7ec6be0bc52edc0
+  checksum: 10c0/9248693abd5c4ac012db31a9fab0163414413846b402d058616a650e75ef0684977b9336bef04180a5d870f46ed58ff68945488bd7b41fa84e4010dc3ba90573
   languageName: node
   linkType: hard
 
-"@buttery/studio-tokens@npm:0.3.4":
-  version: 0.3.4
-  resolution: "@buttery/studio-tokens@npm:0.3.4"
+"@buttery/studio-tokens@npm:0.3.5":
+  version: 0.3.5
+  resolution: "@buttery/studio-tokens@npm:0.3.5"
   dependencies:
     "@gfdigital/tsconfig": "npm:0.3.1"
     typescript: "npm:5.8.3"
-  checksum: 10c0/e0024dbf0ef90a58ed07a65862d956ebfa6a022fcfece1f562f5c3d8b701c8ca907943bcaca1ae9c48e9dcf91f076bfe09e50af9288504b84164795cee1dde7a
+  checksum: 10c0/744519387db96c41fb6d5b71c1c2c37b8d4df9f6f179f0c7c5312a15f3e8baa52123935bed49a899d71146680db6100292db54039ac35ffb5aea41f08c97305a
   languageName: node
   linkType: hard
 
-"@buttery/studio@npm:0.3.4":
-  version: 0.3.4
-  resolution: "@buttery/studio@npm:0.3.4"
+"@buttery/studio@npm:0.3.5":
+  version: 0.3.5
+  resolution: "@buttery/studio@npm:0.3.5"
   dependencies:
-    "@buttery/studio-tokens": "npm:0.3.4"
+    "@buttery/studio-tokens": "npm:0.3.5"
     "@linaria/server": "npm:6.3.0"
     "@monaco-editor/react": "npm:4.7.0"
     "@react-router/express": "npm:7.6.0"
@@ -809,7 +809,7 @@ __metadata:
     use-immer: "npm:0.11.0"
     vite-plugin-monaco-editor: "npm:1.1.0"
     zod: "npm:3.25.4"
-  checksum: 10c0/cb4409047b61a215bc9643cf212c009837da8f568e287884a5fe61292e1eeaf31b60388024ecdfa588f2553ec576f4a6a537499ba7d7d7441fc55e1d29b3c9cb
+  checksum: 10c0/49e6fa012d05085cbda82119fef7e016a00df95a23dcbbfc6e27aab33b1d6780185905188fe7f61e1b39c7d0486e9cb0e23a0c3631c973da9c525aae7fcc801b
   languageName: node
   linkType: hard
 
@@ -1272,10 +1272,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cloudflare/workers-types@npm:^4.20250520.0":
-  version: 4.20250520.0
-  resolution: "@cloudflare/workers-types@npm:4.20250520.0"
-  checksum: 10c0/c945f047bb58549d50b2734fb02f4df82551f0dde6fd0f6904624a5e52860369b8b0c333b2a867ac3eb187c66cddac73f052f6e39b7801b1c9c91adc382450af
+"@cloudflare/workers-types@npm:^4.20250521.0":
+  version: 4.20250521.0
+  resolution: "@cloudflare/workers-types@npm:4.20250521.0"
+  checksum: 10c0/69465fd3486ade8267183b477b621264cc65250f7e307c9247187bd6ccb217f277ba8c2c565ff9be00838d684fa08bc21d8874ff2c11adff6136401ef997d866
   languageName: node
   linkType: hard
 
@@ -2755,8 +2755,8 @@ __metadata:
     "@stratum-ui/core": "npm:0.2.0"
     "@stratum-ui/react": "npm:0.2.0"
     "@types/babel__core": "npm:^7.20.5"
-    "@types/node": "npm:22.15.19"
-    "@types/react": "npm:19.1.4"
+    "@types/node": "npm:22.15.21"
+    "@types/react": "npm:19.1.5"
     "@types/react-dom": "npm:19.1.5"
     "@vitejs/plugin-react": "npm:4.4.1"
     "@wyw-in-js/vite": "npm:0.6.0"
@@ -2777,13 +2777,13 @@ __metadata:
     "@babel/preset-typescript": "npm:^7.27.1"
     "@clerk/react-router": "npm:^1.4.5"
     "@cloudflare/vite-plugin": "npm:^1.2.3"
-    "@cloudflare/workers-types": "npm:^4.20250520.0"
+    "@cloudflare/workers-types": "npm:^4.20250521.0"
     "@gfdigital/tsconfig": "npm:^0.3.1"
     "@linaria/core": "npm:^6.3.0"
     "@react-router/dev": "npm:^7.6.0"
     "@types/babel__core": "npm:^7.20.5"
-    "@types/node": "npm:^22.15.19"
-    "@types/react": "npm:^19.1.4"
+    "@types/node": "npm:^22.15.21"
+    "@types/react": "npm:^19.1.5"
     "@types/react-dom": "npm:^19.1.5"
     "@wyw-in-js/vite": "npm:^0.6.0"
     convex: "npm:^1.24.1"
@@ -2803,7 +2803,7 @@ __metadata:
   resolution: "@nccl/theme@workspace:packages/theme"
   dependencies:
     "@gfdigital/tsconfig": "npm:0.3.1"
-    buttery-tokens: "npm:^0.3.4"
+    buttery-tokens: "npm:^0.3.5"
     typescript: "npm:^5.8.3"
   languageName: unknown
   linkType: soft
@@ -4035,12 +4035,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:22.15.19, @types/node@npm:^22.15.19":
-  version: 22.15.19
-  resolution: "@types/node@npm:22.15.19"
+"@types/node@npm:22.15.21, @types/node@npm:^22.15.21":
+  version: 22.15.21
+  resolution: "@types/node@npm:22.15.21"
   dependencies:
     undici-types: "npm:~6.21.0"
-  checksum: 10c0/8ef52fa1a91b1c8891616d46f3921a9f3c65ad1c6bb62db7899c8c28643c13bf9d607a2403b1e5aceb3e6fa6749efc9e0ba5c39618a4872da6946437b0edbfbe
+  checksum: 10c0/f092bbccda2131c2b2c8f720338080aa0ef1d928f5f1062c03954a4f7dafa7ee3ed29bc3e51bd4e2584473b3d943c637a2b39ad7174898970818270187cf10c1
   languageName: node
   linkType: hard
 
@@ -4060,12 +4060,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:19.1.4, @types/react@npm:^19.1.4":
-  version: 19.1.4
-  resolution: "@types/react@npm:19.1.4"
+"@types/react@npm:19.1.5, @types/react@npm:^19.1.5":
+  version: 19.1.5
+  resolution: "@types/react@npm:19.1.5"
   dependencies:
     csstype: "npm:^3.0.2"
-  checksum: 10c0/501350d4f9cef13c5dd1b1496fa70ebaff52f6fa359b623b51c9d817e5bc4333fa3c8b7a6a4cbc88c643385052d66a243c3ceccfd6926062f917a2dd0535f6b3
+  checksum: 10c0/e0811aadc65cf4030e2418c7975b524f126db806bacb85cffdbe5e50c3606e9a5ffe89ffe6bf9c945e03f5e8d5ed992686bc6bb478db1f3127cc50933f648e1e
   languageName: node
   linkType: hard
 
@@ -5129,17 +5129,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"buttery-tokens@npm:^0.3.4":
-  version: 0.3.4
-  resolution: "buttery-tokens@npm:0.3.4"
+"buttery-tokens@npm:^0.3.5":
+  version: 0.3.5
+  resolution: "buttery-tokens@npm:0.3.5"
   dependencies:
-    "@buttery/core": "npm:0.3.4"
-    "@buttery/studio": "npm:0.3.4"
+    "@buttery/core": "npm:0.3.5"
+    "@buttery/studio": "npm:0.3.5"
     "@fizmoo/runtime": "npm:0.1.4"
     fizmoo: "npm:0.1.4"
   bin:
     buttery: bin/index.js
-  checksum: 10c0/4b8ba5aed0285bbe7bc9a60f6c2fa641add97a941682b1c683d0ce53c2dadc3040a79130a739547bc6252288c56241f44fb04156a8b3dacbc7719d4e9cd4093a
+  checksum: 10c0/115ce933a50065eb83526fb06e38662379383a5668c35cb2e020a99597cb132bb97ce38332773623883eab4cf810e022bd242fd235407532ebc94a4327baf2db
   languageName: node
   linkType: hard
 
@@ -8975,7 +8975,7 @@ __metadata:
   dependencies:
     "@gfdigital/eslint-config": "npm:^0.4.3"
     "@gfdigital/tsconfig": "npm:^0.3.1"
-    "@types/node": "npm:^22.15.19"
+    "@types/node": "npm:^22.15.21"
     eslint: "npm:^9.27.0"
     turbo: "npm:^2.5.3"
     typescript: "npm:^5.8.3"
