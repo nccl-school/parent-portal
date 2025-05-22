@@ -7,7 +7,25 @@ import {
 
 export default [
   layout("./features/root/Root.layout.tsx", [
-    index("features/root/Root.index.tsx"),
+    // - /
+    index("./features/root/Root.index.tsx"),
+    // - /resources
+    layout("./features/resources/Resources.layout.tsx", [
+      route("/resources", "./features/resources/Resources.route.tsx"),
+    ]),
+    // - /directory
+    layout("./features/directory/Directory.layout.tsx", [
+      route("/directory", "./features/directory/Directory.route.tsx"),
+    ]),
+    // - /calendar
+    layout("./features/calendar/Calendar.layout.tsx", [
+      route("/calendar", "./features/calendar/Calendar.route.tsx"),
+    ]),
+    // - /more
+    layout("./features/more/More.layout.tsx", [
+      route("/more", "./features/more/More.route.tsx"),
+    ]),
   ]),
+  // - /sign-in/*
   route("sign-in/*", "features/sign-in/SignIn.route.tsx"),
 ] satisfies RouteConfig;
