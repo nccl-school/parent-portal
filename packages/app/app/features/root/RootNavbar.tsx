@@ -53,10 +53,10 @@ export function RootNavbar() {
       </RootNavbarItem>
       <RootNavbarItem to="/settings">
         <NavbarItemIcon
-          dxBaseIcon="settings-02-stroke-standard"
-          dxActiveIcon="settings-02-solid-standard"
+          dxBaseIcon="more-01-stroke-standard"
+          dxActiveIcon="more-01-solid-standard"
         />
-        <NavbarItemText>Settings</NavbarItemText>
+        <NavbarItemText>More</NavbarItemText>
       </RootNavbarItem>
     </Navbar>
   );

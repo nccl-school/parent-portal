@@ -19,17 +19,23 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
 
 const styles = css`
   width: 100vw;
-  height: 100vh;
   display: grid;
 
   ${makeResponsive({ to: "desktop" })} {
     grid-template-rows: 1fr auto;
     grid-template-areas:
+      "head"
       "main"
       "nav";
   }
 
   ${makeResponsive({ from: "desktop" })} {
+  }
+
+  .layout-head {
+    grid-area: head;
+    position: sticky;
+    top: 0;
   }
 
   .layout-main {
@@ -47,6 +53,9 @@ const styles = css`
 export default function RootLayout() {
   return (
     <div className={styles}>
+      <div className="layout-head">
+        <header>this be the head</header>
+      </div>
       <div className="layout-main">
         <Outlet />
         <div style={{ height: 10000 }} />
