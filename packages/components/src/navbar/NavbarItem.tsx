@@ -1,5 +1,5 @@
 import { css } from "@linaria/core";
-import { makeColor, makeRem, makeResponsive } from "@nccl/theme";
+import { makeColor, makeCustom, makeResponsive } from "@nccl/theme";
 import { classes } from "@stratum-ui/core/utils";
 import type { JSX } from "react";
 import React, { forwardRef } from "react";
@@ -16,17 +16,18 @@ export type NavbarItemProps = NavbarItemPropsNative & NavbarItemPropsCustom;
 
 const styles = css`
   width: 100%;
-  height: ${makeRem(60)};
+  height: ${makeCustom("navbar--height-mobile")};
+  aspect-ratio: 1 / 1;
   display: flex;
   align-items: center;
   flex-direction: column;
   justify-content: center;
 
   &.active {
-    color: ${makeColor("secondary-1200")};
+    color: ${makeColor("primary-1100")};
   }
 
-  ${makeResponsive({ from: "desktop" })} {
+  ${makeResponsive({ from: "laptop" })} {
     &:hover {
       cursor: pointer;
       transition: all 0.15s ease-in-out;

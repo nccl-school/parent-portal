@@ -503,7 +503,9 @@
   --nccl-color-neutral-light-hex: #91969c;
   --nccl-color-neutral-light-hsl: 213, 5, 59;
   --nccl-color-neutral-light-rgb: 145, 150, 156;
-  --nccl-custom-navbar--height-mobile: 3.75rem;
+  --nccl-custom-navbar--height-mobile: 4.5rem;
+  --nccl-custom-navbar--width-desktop: 4.5rem;
+  --nccl-custom-header--height-desktop: 4.5rem;
   --nccl-font-base: 16;
   --nccl-font-family-heading:
     "heading", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,

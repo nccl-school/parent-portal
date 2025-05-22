@@ -124,8 +124,18 @@
   "custom": {
     "navbar--height-mobile": {
       "type": "rem",
-      "value": 60,
+      "value": 72,
       "description": "The height of the navbar"
+    },
+    "navbar--width-desktop": {
+      "type": "rem",
+      "value": 72,
+      "description": "The width of the navbar"
+    },
+    "header--height-desktop": {
+      "type": "rem",
+      "value": 72,
+      "description": "The height of the header"
     }
   }
 }

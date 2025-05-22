@@ -21,7 +21,7 @@ const styles = css`
   width: 100vw;
   display: grid;
 
-  ${makeResponsive({ to: "desktop" })} {
+  ${makeResponsive({ to: "laptop" })} {
     grid-template-rows: 1fr auto;
     grid-template-areas:
       "head"
@@ -29,7 +29,12 @@ const styles = css`
       "nav";
   }
 
-  ${makeResponsive({ from: "desktop" })} {
+  ${makeResponsive({ from: "laptop" })} {
+    grid-template-rows: auto 1fr;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "nav head"
+      "nav main";
   }
 
   .layout-head {
@@ -46,7 +51,16 @@ const styles = css`
   .layout-nav {
     grid-area: nav;
     position: sticky;
-    bottom: 0;
+
+    ${makeResponsive({ to: "laptop" })} {
+      position: sticky;
+      bottom: 0;
+    }
+
+    ${makeResponsive({ from: "laptop" })} {
+      top: 0;
+      height: 100vh;
+    }
   }
 `;
 
