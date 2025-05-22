@@ -17,7 +17,8 @@
     "access": "public"
   },
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.js",
+    "./css": "./dist/components.css"
   },
   "scripts": {
     "icons": "yarn stratum icons build root=./src/icons",
@@ -52,7 +53,7 @@
     "@storybook/react": "^8.6.14",
     "@storybook/react-vite": "^8.6.14",
     "@storybook/test": "^8.6.14",
-    "@stratum-ui/cli": "0.3.0",
+    "@stratum-ui/cli": "0.4.0",
     "@types/babel__core": "^7.20.5",
     "@types/node": "22.15.21",
     "@types/react": "19.1.5",

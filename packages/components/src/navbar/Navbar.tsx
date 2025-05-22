@@ -13,11 +13,15 @@ const styles = css`
     height: ${makeCustom("navbar--height-mobile")};
     padding: 0 ${makeRem(8)};
     display: flex;
-    position: sticky;
     justify-content: space-evenly;
-    top: 100%;
     box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.06);
     border-top: 1px solid ${makeColor("neutral-dark-50", { opacity: 0.1 })};
+
+    & > a {
+      width: 100%;
+      text-decoration: none;
+      color: unset;
+    }
   }
 
   ${makeResponsive({ from: "desktop" })} {

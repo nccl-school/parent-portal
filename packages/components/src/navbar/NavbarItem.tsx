@@ -1,10 +1,10 @@
 import { css } from "@linaria/core";
-import { makeColor, makeRem } from "@nccl/theme";
+import { makeColor, makeRem, makeResponsive } from "@nccl/theme";
 import { classes } from "@stratum-ui/core/utils";
 import type { JSX } from "react";
 import React, { forwardRef } from "react";
 
-export type NavbarItemPropsNative = JSX.IntrinsicElements["a"];
+export type NavbarItemPropsNative = JSX.IntrinsicElements["div"];
 export type NavbarItemPropsCustom = {
   /**
    * Toggles the active style on and off
@@ -25,15 +25,23 @@ const styles = css`
   &.active {
     color: ${makeColor("secondary-1200")};
   }
+
+  ${makeResponsive({ from: "desktop" })} {
+    &:hover {
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
+      color: ${makeColor("secondary-1200")};
+    }
+  }
 `;
 
-export const NavbarItem = forwardRef<HTMLAnchorElement, NavbarItemProps>(
+export const NavbarItem = forwardRef<HTMLDivElement, NavbarItemProps>(
   function NavbarItem(
     { children, className, dxIsActive = false, ...restProps },
     ref
   ) {
     return (
-      <a
+      <div
         {...restProps}
         className={classes(className, styles, { active: dxIsActive })}
         ref={ref}
@@ -44,7 +52,7 @@ export const NavbarItem = forwardRef<HTMLAnchorElement, NavbarItemProps>(
             className: classes(className, { active: dxIsActive }),
           });
         })}
-      </a>
+      </div>
     );
   }
 );

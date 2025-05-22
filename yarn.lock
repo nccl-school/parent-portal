@@ -1216,9 +1216,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cloudflare/vite-plugin@npm:^1.2.3":
-  version: 1.2.3
-  resolution: "@cloudflare/vite-plugin@npm:1.2.3"
+"@cloudflare/vite-plugin@npm:^1.2.4":
+  version: 1.2.4
+  resolution: "@cloudflare/vite-plugin@npm:1.2.4"
   dependencies:
     "@cloudflare/unenv-preset": "npm:2.3.2"
     "@mjackson/node-fetch-server": "npm:^0.6.1"
@@ -1228,12 +1228,12 @@ __metadata:
     picocolors: "npm:^1.1.1"
     tinyglobby: "npm:^0.2.12"
     unenv: "npm:2.0.0-rc.17"
-    wrangler: "npm:4.16.0"
+    wrangler: "npm:4.16.1"
     ws: "npm:8.18.0"
   peerDependencies:
     vite: ^6.1.0
     wrangler: ^3.101.0 || ^4.0.0
-  checksum: 10c0/542c0d2192cdd3414a149a32811e395f5b43839a546a40faab6196059d7aad92410ea5274f084ae654af0225681b31f739f7f1ce944406405aaf91c50e117110
+  checksum: 10c0/7a2de62aa2f8762ed2709528baf5e7e038eb8131541db770dc640ef5598c19a16d8d3f187ae114e77c25554d6d7347b5465e0e51e8d6f8e9671146856bd5a2a9
   languageName: node
   linkType: hard
 
@@ -1272,10 +1272,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cloudflare/workers-types@npm:^4.20250521.0":
-  version: 4.20250521.0
-  resolution: "@cloudflare/workers-types@npm:4.20250521.0"
-  checksum: 10c0/69465fd3486ade8267183b477b621264cc65250f7e307c9247187bd6ccb217f277ba8c2c565ff9be00838d684fa08bc21d8874ff2c11adff6136401ef997d866
+"@cloudflare/workers-types@npm:^4.20250522.0":
+  version: 4.20250522.0
+  resolution: "@cloudflare/workers-types@npm:4.20250522.0"
+  checksum: 10c0/22294ba5fe74bc9d2cc9ad6b7f2fb1cc4349223fb739486f6fa06fdb86b2e827dd955363b166110213176c4b040b695c37c72feb579e0b88a819c1526bd88f5d
   languageName: node
   linkType: hard
 
@@ -2020,7 +2020,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gfdigital/eslint-config@npm:^0.4.3":
+"@gfdigital/eslint-config@npm:0.4.3":
   version: 0.4.3
   resolution: "@gfdigital/eslint-config@npm:0.4.3"
   dependencies:
@@ -2730,7 +2730,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nccl/components@workspace:packages/components":
+"@nccl/components@workspace:*, @nccl/components@workspace:packages/components":
   version: 0.0.0-use.local
   resolution: "@nccl/components@workspace:packages/components"
   dependencies:
@@ -2751,7 +2751,7 @@ __metadata:
     "@storybook/react": "npm:^8.6.14"
     "@storybook/react-vite": "npm:^8.6.14"
     "@storybook/test": "npm:^8.6.14"
-    "@stratum-ui/cli": "npm:0.3.0"
+    "@stratum-ui/cli": "npm:0.4.0"
     "@stratum-ui/core": "npm:0.2.0"
     "@stratum-ui/react": "npm:0.2.0"
     "@types/babel__core": "npm:^7.20.5"
@@ -2776,10 +2776,12 @@ __metadata:
     "@babel/preset-react": "npm:^7.27.1"
     "@babel/preset-typescript": "npm:^7.27.1"
     "@clerk/react-router": "npm:^1.4.5"
-    "@cloudflare/vite-plugin": "npm:^1.2.3"
-    "@cloudflare/workers-types": "npm:^4.20250521.0"
+    "@cloudflare/vite-plugin": "npm:^1.2.4"
+    "@cloudflare/workers-types": "npm:^4.20250522.0"
     "@gfdigital/tsconfig": "npm:^0.3.1"
     "@linaria/core": "npm:^6.3.0"
+    "@nccl/components": "workspace:*"
+    "@nccl/theme": "workspace:^"
     "@react-router/dev": "npm:^7.6.0"
     "@types/babel__core": "npm:^7.20.5"
     "@types/node": "npm:^22.15.21"
@@ -2794,11 +2796,11 @@ __metadata:
     typescript: "npm:^5.8.3"
     vite: "npm:^6.3.5"
     vite-tsconfig-paths: "npm:^5.1.4"
-    wrangler: "npm:^4.16.0"
+    wrangler: "npm:^4.16.1"
   languageName: unknown
   linkType: soft
 
-"@nccl/theme@npm:0.0.1, @nccl/theme@workspace:packages/theme":
+"@nccl/theme@npm:0.0.1, @nccl/theme@workspace:^, @nccl/theme@workspace:packages/theme":
   version: 0.0.0-use.local
   resolution: "@nccl/theme@workspace:packages/theme"
   dependencies:
@@ -3668,9 +3670,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stratum-ui/cli@npm:0.3.0":
-  version: 0.3.0
-  resolution: "@stratum-ui/cli@npm:0.3.0"
+"@stratum-ui/cli@npm:0.4.0":
+  version: 0.4.0
+  resolution: "@stratum-ui/cli@npm:0.4.0"
   dependencies:
     "@babel/core": "npm:^7.27.1"
     "@babel/parser": "npm:^7.27.2"
@@ -3685,7 +3687,7 @@ __metadata:
     isoscribe: "npm:^0.2.0"
   bin:
     stratum: bin/index.js
-  checksum: 10c0/3c7b0ebe10d471f33843cb59eee4b13838377ff6137cfbe1c901412696f34ce01a6f9fd4e4efd76017c6fe70e482acf6579b16390ebaa3cdb8b4388098a9bbb6
+  checksum: 10c0/fda45d2e63e30f86294a81604892c2eb7ab60c025022dea561ca07527aeac8fb9f78fd7f5b50db8a59f0999775f65578dc607c95aa08764dd587b744a276fba3
   languageName: node
   linkType: hard
 
@@ -6678,6 +6680,56 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint@npm:9.27.0":
+  version: 9.27.0
+  resolution: "eslint@npm:9.27.0"
+  dependencies:
+    "@eslint-community/eslint-utils": "npm:^4.2.0"
+    "@eslint-community/regexpp": "npm:^4.12.1"
+    "@eslint/config-array": "npm:^0.20.0"
+    "@eslint/config-helpers": "npm:^0.2.1"
+    "@eslint/core": "npm:^0.14.0"
+    "@eslint/eslintrc": "npm:^3.3.1"
+    "@eslint/js": "npm:9.27.0"
+    "@eslint/plugin-kit": "npm:^0.3.1"
+    "@humanfs/node": "npm:^0.16.6"
+    "@humanwhocodes/module-importer": "npm:^1.0.1"
+    "@humanwhocodes/retry": "npm:^0.4.2"
+    "@types/estree": "npm:^1.0.6"
+    "@types/json-schema": "npm:^7.0.15"
+    ajv: "npm:^6.12.4"
+    chalk: "npm:^4.0.0"
+    cross-spawn: "npm:^7.0.6"
+    debug: "npm:^4.3.2"
+    escape-string-regexp: "npm:^4.0.0"
+    eslint-scope: "npm:^8.3.0"
+    eslint-visitor-keys: "npm:^4.2.0"
+    espree: "npm:^10.3.0"
+    esquery: "npm:^1.5.0"
+    esutils: "npm:^2.0.2"
+    fast-deep-equal: "npm:^3.1.3"
+    file-entry-cache: "npm:^8.0.0"
+    find-up: "npm:^5.0.0"
+    glob-parent: "npm:^6.0.2"
+    ignore: "npm:^5.2.0"
+    imurmurhash: "npm:^0.1.4"
+    is-glob: "npm:^4.0.0"
+    json-stable-stringify-without-jsonify: "npm:^1.0.1"
+    lodash.merge: "npm:^4.6.2"
+    minimatch: "npm:^3.1.2"
+    natural-compare: "npm:^1.4.0"
+    optionator: "npm:^0.9.3"
+  peerDependencies:
+    jiti: "*"
+  peerDependenciesMeta:
+    jiti:
+      optional: true
+  bin:
+    eslint: bin/eslint.js
+  checksum: 10c0/135d301e37cd961000a9c1d3f0e1863bed29a61435dfddedba3db295973193024382190fd8790a8de83777d10f450082a29eaee8bc9ce0fb1bc1f2b0bb882280
+  languageName: node
+  linkType: hard
+
 "eslint@npm:^9.21.0":
   version: 9.24.0
   resolution: "eslint@npm:9.24.0"
@@ -6725,56 +6777,6 @@ __metadata:
   bin:
     eslint: bin/eslint.js
   checksum: 10c0/f758ff1b9d2f2af5335f562f3f40aa8f71607b3edca33f7616840a222ed224555aeb3ac6943cc86e4f9ac5dc124a60bbfde624d054fb235631a8c04447e39ecc
-  languageName: node
-  linkType: hard
-
-"eslint@npm:^9.27.0":
-  version: 9.27.0
-  resolution: "eslint@npm:9.27.0"
-  dependencies:
-    "@eslint-community/eslint-utils": "npm:^4.2.0"
-    "@eslint-community/regexpp": "npm:^4.12.1"
-    "@eslint/config-array": "npm:^0.20.0"
-    "@eslint/config-helpers": "npm:^0.2.1"
-    "@eslint/core": "npm:^0.14.0"
-    "@eslint/eslintrc": "npm:^3.3.1"
-    "@eslint/js": "npm:9.27.0"
-    "@eslint/plugin-kit": "npm:^0.3.1"
-    "@humanfs/node": "npm:^0.16.6"
-    "@humanwhocodes/module-importer": "npm:^1.0.1"
-    "@humanwhocodes/retry": "npm:^0.4.2"
-    "@types/estree": "npm:^1.0.6"
-    "@types/json-schema": "npm:^7.0.15"
-    ajv: "npm:^6.12.4"
-    chalk: "npm:^4.0.0"
-    cross-spawn: "npm:^7.0.6"
-    debug: "npm:^4.3.2"
-    escape-string-regexp: "npm:^4.0.0"
-    eslint-scope: "npm:^8.3.0"
-    eslint-visitor-keys: "npm:^4.2.0"
-    espree: "npm:^10.3.0"
-    esquery: "npm:^1.5.0"
-    esutils: "npm:^2.0.2"
-    fast-deep-equal: "npm:^3.1.3"
-    file-entry-cache: "npm:^8.0.0"
-    find-up: "npm:^5.0.0"
-    glob-parent: "npm:^6.0.2"
-    ignore: "npm:^5.2.0"
-    imurmurhash: "npm:^0.1.4"
-    is-glob: "npm:^4.0.0"
-    json-stable-stringify-without-jsonify: "npm:^1.0.1"
-    lodash.merge: "npm:^4.6.2"
-    minimatch: "npm:^3.1.2"
-    natural-compare: "npm:^1.4.0"
-    optionator: "npm:^0.9.3"
-  peerDependencies:
-    jiti: "*"
-  peerDependenciesMeta:
-    jiti:
-      optional: true
-  bin:
-    eslint: bin/eslint.js
-  checksum: 10c0/135d301e37cd961000a9c1d3f0e1863bed29a61435dfddedba3db295973193024382190fd8790a8de83777d10f450082a29eaee8bc9ce0fb1bc1f2b0bb882280
   languageName: node
   linkType: hard
 
@@ -8973,13 +8975,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "nccl-parent-portal@workspace:."
   dependencies:
-    "@gfdigital/eslint-config": "npm:^0.4.3"
-    "@gfdigital/tsconfig": "npm:^0.3.1"
-    "@types/node": "npm:^22.15.21"
-    eslint: "npm:^9.27.0"
-    turbo: "npm:^2.5.3"
-    typescript: "npm:^5.8.3"
-    vitest: "npm:^3.1.4"
+    "@gfdigital/eslint-config": "npm:0.4.3"
+    "@gfdigital/tsconfig": "npm:0.3.1"
+    "@types/node": "npm:22.15.21"
+    eslint: "npm:9.27.0"
+    prettier: "npm:3.5.3"
+    turbo: "npm:2.5.3"
+    typescript: "npm:5.8.3"
+    vitest: "npm:3.1.4"
   languageName: unknown
   linkType: soft
 
@@ -11396,7 +11399,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"turbo@npm:^2.5.3":
+"turbo@npm:2.5.3":
   version: 2.5.3
   resolution: "turbo@npm:2.5.3"
   dependencies:
@@ -12068,7 +12071,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitest@npm:^3.1.4":
+"vitest@npm:3.1.4":
   version: 3.1.4
   resolution: "vitest@npm:3.1.4"
   dependencies:
@@ -12282,9 +12285,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wrangler@npm:4.16.0, wrangler@npm:^4.16.0":
-  version: 4.16.0
-  resolution: "wrangler@npm:4.16.0"
+"wrangler@npm:4.16.1, wrangler@npm:^4.16.1":
+  version: 4.16.1
+  resolution: "wrangler@npm:4.16.1"
   dependencies:
     "@cloudflare/kv-asset-handler": "npm:0.4.0"
     "@cloudflare/unenv-preset": "npm:2.3.2"
@@ -12309,7 +12312,7 @@ __metadata:
   bin:
     wrangler: bin/wrangler.js
     wrangler2: bin/wrangler.js
-  checksum: 10c0/2513fed625656d22e2ac2ea87958356cf79920365b968b3c69ba72c44755d95eea73448e9b23bab7e2edfe871767d06909879f5110f5681c3f6359fefbb215e9
+  checksum: 10c0/74fdd871fd7bc82ca331aca0af4d4bbc9155645041ce4bba7014286970a5077e796cb27161043b55e97bbba72c00a54454f75065c5e02a247f898516b8b478c7
   languageName: node
   linkType: hard
 

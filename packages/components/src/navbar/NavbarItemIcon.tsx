@@ -35,14 +35,6 @@ const styles = css`
       transform: scale(1.4);
       opacity: 1;
     }
-    60% {
-      transform: scale(1.3);
-      opacity: 1;
-    }
-    80% {
-      transform: scale(1.2);
-      opacity: 1;
-    }
     100% {
       transform: scale(1);
       opacity: 1;
@@ -79,7 +71,7 @@ const styles = css`
       }
       &.on {
         display: block;
-        animation: pulse 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: pulse 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         animation-fill-mode: both; /* keep final state */
       }
     }
