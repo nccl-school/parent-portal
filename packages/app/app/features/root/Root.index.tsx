@@ -3,10 +3,12 @@ import { SignOutButton } from "@clerk/react-router";
 
 import type { Route } from "./+types/Root.index";
 
+import { assembleTitle } from "../../utils/util.assemble-title";
+
 export function meta(metaArgs: Route.MetaArgs) {
   console.log({ metaArgs });
   return [
-    { title: "New React Router App" },
+    { title: assembleTitle("Home") },
     { name: "description", content: "Welcome to React Router!" },
   ];
 }
