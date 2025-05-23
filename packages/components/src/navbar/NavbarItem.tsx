@@ -22,6 +22,7 @@ const styles = css`
   align-items: center;
   flex-direction: column;
   justify-content: center;
+  color: ${makeColor("neutral-light-900")};
 
   &.active {
     color: ${makeColor("primary-1100")};
@@ -31,7 +32,7 @@ const styles = css`
     &:hover {
       cursor: pointer;
       transition: all 0.15s ease-in-out;
-      color: ${makeColor("secondary-1200")};
+      color: ${makeColor("primary-1100")};
     }
   }
 `;

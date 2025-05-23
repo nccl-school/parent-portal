@@ -508,10 +508,10 @@
   --nccl-custom-header--height-desktop: 4.5rem;
   --nccl-font-base: 16;
   --nccl-font-family-heading:
-    "heading", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+    "Montserrat", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   --nccl-font-family-body:
-    "body", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+    "Nunito", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   --nccl-font-weight-heading-regular: 400;
   --nccl-font-weight-heading-medium: 500;

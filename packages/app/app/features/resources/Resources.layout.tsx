@@ -1,10 +1,15 @@
 import { Outlet } from "react-router";
 
+import { PageHeader } from "../../components/page";
+
 export default function ResourcesLayout() {
   return (
-    <div>
-      <h6>Resources</h6>
+    <>
+      <PageHeader
+        dxTitle="Resources"
+        dxSubtitle="Quick access to important NCCL documents and contacts"
+      />
       <Outlet />
-    </div>
+    </>
   );
 }

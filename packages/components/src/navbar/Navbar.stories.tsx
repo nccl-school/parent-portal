@@ -9,6 +9,8 @@ import { NavbarItemText } from "./NavbarItemText.js";
 import { NavbarLogo } from "./NavbarLogo.js";
 import { NavbarGroup } from "./NavbarGroup.js";
 
+import { Avatar } from "../avatar/Avatar.js";
+
 const meta: Meta = {
   title: "Navbar",
   component: Navbar,
@@ -85,6 +87,13 @@ export const Basic = () => {
         </NavbarItem>
       </NavbarGroup>
       <NavbarGroup>
+        <NavbarItem>
+          <Avatar
+            dxSize="lg"
+            dxFirstName="Drew"
+            dxSrc="https://i.pravatar.cc/300"
+          />
+        </NavbarItem>
         <NavbarItem>
           <NavbarItemIcon
             dxBaseIcon="help-circle-stroke-standard"

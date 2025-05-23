@@ -1,0 +1,42 @@
+import { forwardRef, type JSX } from "react";
+import { classes } from "@stratum-ui/core/utils";
+import { Typography } from "@nccl/components";
+import { css } from "@linaria/core";
+import { makeRem } from "@nccl/theme";
+
+export type PageHeaderPropsNative = JSX.IntrinsicElements["div"];
+export type PageHeaderPropsCustom = {
+  dxTitle: string;
+  dxSubtitle?: string;
+};
+export type PageHeaderProps = PageHeaderPropsNative & PageHeaderPropsCustom;
+
+const styles = css`
+  padding: ${makeRem(32)};
+
+  & > .subtitle {
+    margin-top: ${makeRem(8)};
+  }
+`;
+
+export const PageHeader = forwardRef<HTMLDivElement, PageHeaderProps>(
+  function PageHeader(
+    { children, className, dxTitle, dxSubtitle, ...restProps },
+    ref
+  ) {
+    return (
+      <div {...restProps} className={classes(className, styles)} ref={ref}>
+        <div>
+          <Typography dxVariant="heading1" dxNode="h2">
+            {dxTitle}
+          </Typography>
+          {dxSubtitle && (
+            <Typography dxVariant="body1" dxNode="div" className="subtitle">
+              {dxSubtitle}
+            </Typography>
+          )}
+        </div>
+      </div>
+    );
+  }
+);

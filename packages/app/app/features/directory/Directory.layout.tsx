@@ -1,10 +1,15 @@
 import { Outlet } from "react-router";
 
+import { PageHeader } from "../../components/page";
+
 export default function DirectoryLayout() {
   return (
-    <div>
-      <h6>Directory</h6>
+    <>
+      <PageHeader
+        dxTitle="Directory"
+        dxSubtitle="Discover families, students, and staff in the NCCL network"
+      />
       <Outlet />
-    </div>
+    </>
   );
 }

@@ -1,3 +1,4 @@
+import { SignOutButton } from "@clerk/react-router";
 import {
   Navbar,
   NavbarGroup,
@@ -76,13 +77,15 @@ export function RootNavbar() {
           />
           <NavbarItemText>Help</NavbarItemText>
         </NavbarItem>
-        <NavbarItem>
-          <NavbarItemIcon
-            dxBaseIcon="logout-01-stroke-standard"
-            dxActiveIcon="logout-01-stroke-standard"
-          />
-          <NavbarItemText>Logout</NavbarItemText>
-        </NavbarItem>
+        <SignOutButton redirectUrl="/sign-in">
+          <NavbarItem>
+            <NavbarItemIcon
+              dxBaseIcon="logout-01-stroke-standard"
+              dxActiveIcon="logout-01-stroke-standard"
+            />
+            <NavbarItemText>Logout</NavbarItemText>
+          </NavbarItem>
+        </SignOutButton>
       </NavbarGroup>
     </Navbar>
   );
