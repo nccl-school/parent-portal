@@ -6,6 +6,10 @@ import { Typography } from "@nccl/components";
 import { assembleTitle } from "../../utils/util.assemble-title";
 
 const styles = css`
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+
   /* Clerk Overrides */
   .cl-cardBox {
     box-shadow: unset;
@@ -22,6 +26,7 @@ const styles = css`
 
   /* Mobile */
   ${makeResponsive({ to: "laptop" })} {
+    place-content: center;
     padding: 2rem;
     overflow: hidden;
     background: url("./images/NCCLMosaicWall.jpeg");
