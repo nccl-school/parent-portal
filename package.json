@@ -40,6 +40,9 @@
     "repo-template",
     "build-tooling"
   ],
+  "resolutions": {
+    "ts-jolt": "0.2.3"
+  },
   "devDependencies": {
     "@gfdigital/eslint-config": "0.4.3",
     "@gfdigital/tsconfig": "0.3.1",
