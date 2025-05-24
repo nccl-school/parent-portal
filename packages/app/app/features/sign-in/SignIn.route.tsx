@@ -76,6 +76,10 @@ const styles = css`
         .heading1 {
           margin: 1rem 0;
         }
+
+        div {
+          white-space: nowrap;
+        }
       }
     }
 
