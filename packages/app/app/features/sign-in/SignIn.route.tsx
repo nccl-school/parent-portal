@@ -29,7 +29,7 @@ const styles = css`
     place-content: center;
     padding: 2rem;
     overflow: hidden;
-    background: url("./images/NCCLMosaicWall.jpeg");
+    background: url("/images/NCCLMosaicWall.jpeg");
     background-size: cover;
     background-blend-mode: color;
     font-family: ${makeFontFamily("body")};
