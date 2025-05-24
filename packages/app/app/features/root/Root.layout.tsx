@@ -55,11 +55,14 @@ const styles = css`
     grid-area: main;
     padding-bottom: ${makeCustom("navbar--height-mobile")};
     background: ${makeColor("neutral-light-50", { opacity: 0.2 })};
+    min-height: ${`calc(100vh - ${makeCustom("navbar--height-mobile")} - ${makeCustom("header--height-desktop")} - 1px)`};
   }
 
   .layout-nav {
     grid-area: nav;
     position: sticky;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.9);
 
     ${makeResponsive({ to: "laptop" })} {
       position: sticky;
@@ -84,7 +87,6 @@ export default function RootLayout() {
       </div>
       <div className="layout-main">
         <Outlet />
-        <div style={{ height: 10000 }} />
       </div>
       <div className="layout-nav">
         <RootNavbar />

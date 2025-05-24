@@ -136,6 +136,16 @@
       "type": "rem",
       "value": 72,
       "description": "The height of the header"
+    },
+    "page--gutter-desktop": {
+      "type": "rem",
+      "value": 32,
+      "description": "The padding on the side of each page"
+    },
+    "page--gutter-mobile": {
+      "type": "rem",
+      "value": 24,
+      "description": "The padding on the side of each page"
     }
   }
 }

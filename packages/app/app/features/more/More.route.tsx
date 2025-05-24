@@ -1,3 +1,5 @@
+import { PageSection } from "../../components/page";
+
 export default function MoreRoute() {
-  return <div>content</div>;
+  return <PageSection>content</PageSection>;
 }

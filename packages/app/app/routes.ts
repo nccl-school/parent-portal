@@ -27,7 +27,10 @@ export default [
     layout("./features/more/More.layout.tsx", [
       route("/more", "./features/more/More.route.tsx"),
     ]),
-    route("profile/*", "features/profile/Profile.route.tsx"),
+    // -/profile
+    layout("./features/profile/Profile.layout.tsx", [
+      route("profile/*", "features/profile/Profile.route.tsx"),
+    ]),
   ]),
   // - /sign-in/*
   route("sign-in/*", "features/sign-in/SignIn.route.tsx"),

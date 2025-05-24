@@ -1,3 +1,4 @@
+import { PageSection } from "../../components/page";
 import { assembleTitle } from "../../utils/util.assemble-title";
 
 export function meta() {
@@ -8,5 +9,5 @@ export function meta() {
 }
 
 export default function HomeIndexRoute() {
-  return <>home</>;
+  return <PageSection>content</PageSection>;
 }

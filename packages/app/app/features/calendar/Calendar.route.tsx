@@ -1,3 +1,5 @@
+import { PageSection } from "../../components/page";
+
 export default function CalendarRoute() {
-  return <div>content</div>;
+  return <PageSection>content</PageSection>;
 }

@@ -2,7 +2,7 @@ import { forwardRef, type JSX } from "react";
 import { classes } from "@stratum-ui/core/utils";
 import { Typography } from "@nccl/components";
 import { css } from "@linaria/core";
-import { makeRem } from "@nccl/theme";
+import { makeCustom, makeRem, makeResponsive } from "@nccl/theme";
 
 export type PageHeaderPropsNative = JSX.IntrinsicElements["div"];
 export type PageHeaderPropsCustom = {
@@ -12,7 +12,12 @@ export type PageHeaderPropsCustom = {
 export type PageHeaderProps = PageHeaderPropsNative & PageHeaderPropsCustom;
 
 const styles = css`
-  padding: ${makeRem(32)};
+  ${makeResponsive({ to: "laptop" })} {
+    padding: ${makeCustom("page--gutter-mobile")};
+  }
+  ${makeResponsive({ from: "laptop" })} {
+    padding: ${makeCustom("page--gutter-desktop")};
+  }
 
   & > .subtitle {
     margin-top: ${makeRem(8)};

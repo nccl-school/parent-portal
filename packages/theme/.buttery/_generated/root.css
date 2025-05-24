@@ -506,6 +506,8 @@
   --nccl-custom-navbar--height-mobile: 4.5rem;
   --nccl-custom-navbar--width-desktop: 4.5rem;
   --nccl-custom-header--height-desktop: 4.5rem;
+  --nccl-custom-page--gutter-desktop: 2rem;
+  --nccl-custom-page--gutter-mobile: 1.5rem;
   --nccl-font-base: 16;
   --nccl-font-family-heading:
     "Montserrat", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
