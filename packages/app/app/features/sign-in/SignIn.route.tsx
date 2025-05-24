@@ -57,7 +57,7 @@ const styles = css`
     }
 
     .pane-display {
-      background: url("./images/NCCLMosaicWall.jpeg");
+      background: url("/images/NCCLMosaicWall.jpeg");
       background-size: cover;
       background-blend-mode: color;
       display: grid;
