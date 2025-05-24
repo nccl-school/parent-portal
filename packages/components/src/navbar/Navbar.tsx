@@ -12,7 +12,7 @@ const styles = css`
   ${makeResponsive({ to: "laptop" })} {
     height: ${makeCustom("navbar--height-mobile")};
     box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.06);
-    border-top: 1px solid ${makeColor("neutral-dark-50", { opacity: 0.1 })};
+    border-top: 1px solid ${makeColor("neutral-dark-50", { opacity: 0.2 })};
   }
 
   ${makeResponsive({ from: "laptop" })} {
@@ -21,7 +21,7 @@ const styles = css`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border-right: 1px solid ${makeColor("neutral-dark-50", { opacity: 0.1 })};
+    border-right: 1px solid ${makeColor("neutral-dark-50", { opacity: 0.2 })};
   }
 
   a {

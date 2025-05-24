@@ -1,5 +1,5 @@
 import { css } from "@linaria/core";
-import { makeCustom } from "@nccl/theme";
+import { makeColor, makeCustom } from "@nccl/theme";
 import { classes } from "@stratum-ui/core/utils";
 import type { JSX } from "react";
 import { forwardRef } from "react";
@@ -12,6 +12,7 @@ const styles = css`
   align-items: center;
   height: ${makeCustom("header--height-desktop")};
   width: 100%;
+  border-bottom: 1px solid ${makeColor("neutral-dark-50", { opacity: 0.2 })};
 `;
 
 export const Header = forwardRef<HTMLElement, HeaderProps>(function Header(

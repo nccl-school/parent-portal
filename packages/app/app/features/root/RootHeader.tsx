@@ -1,9 +1,6 @@
-import {
-  Header,
-  HeaderActions,
-  HeaderActionsItem,
-  Avatar,
-} from "@nccl/components";
+import { Header, HeaderActions, HeaderActionsItem } from "@nccl/components";
+
+import { RootHeaderUser } from "./RootHeaderUser";
 
 export function RootHeader() {
   return (
@@ -16,11 +13,7 @@ export function RootHeader() {
           <Icon dxIcon="search-01-stroke-standard" />
         </HeaderActionsItem> */}
         <HeaderActionsItem>
-          <Avatar
-            dxFirstName="Guy"
-            dxSize="lg"
-            dxSrc="https://i.pravatar.cc/300"
-          />
+          <RootHeaderUser />
         </HeaderActionsItem>
       </HeaderActions>
     </Header>
