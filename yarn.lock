@@ -2044,36 +2044,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hugeicons-pro/core-solid-standard@npm:^1.0.14":
-  version: 1.0.14
-  resolution: "@hugeicons-pro/core-solid-standard@npm:1.0.14"
-  checksum: 10c0/dbac0bb3a24479c1c07ea3b982dfccead53c2f94217414212ebe702c5d297bc296dac551cb3b13cc1698b58469061f3fb17edaa8010e94a5c80e41f62c446f38
-  languageName: node
-  linkType: hard
-
-"@hugeicons-pro/core-stroke-rounded@npm:^1.0.14":
-  version: 1.0.14
-  resolution: "@hugeicons-pro/core-stroke-rounded@npm:1.0.14"
-  checksum: 10c0/fe315aafada9610f60dc2d5a4c57796d7588f738cc228200f6892283d9db017941e5f004b92581c7e1fd568807950a9894b4d918d332835fe7cf070ae5984e5b
-  languageName: node
-  linkType: hard
-
-"@hugeicons-pro/core-stroke-standard@npm:^1.0.14":
-  version: 1.0.14
-  resolution: "@hugeicons-pro/core-stroke-standard@npm:1.0.14"
-  checksum: 10c0/ee9416604ceb51975a83025ba9890bd83070ee050f41055ea947747fb5e2b834c9686da0651af8c4c7f253405043f85513eaef2a9880aa89fdceb754e2ac769e
-  languageName: node
-  linkType: hard
-
-"@hugeicons/react@npm:^1.0.5":
-  version: 1.0.5
-  resolution: "@hugeicons/react@npm:1.0.5"
-  peerDependencies:
-    react: ">=16.0.0"
-  checksum: 10c0/aec07bcd16e673d4f9b56a85bbcd0ef0ff1e1ee34b050b3603c248eb07c01afe88df9c6d02fe576b0bc77fa9e2e7ad154433bf67cac748d1690cf7d1ba3768c8
-  languageName: node
-  linkType: hard
-
 "@humanfs/core@npm:^0.19.1":
   version: 0.19.1
   resolution: "@humanfs/core@npm:0.19.1"
@@ -2738,10 +2708,6 @@ __metadata:
     "@babel/preset-react": "npm:7.27.1"
     "@babel/preset-typescript": "npm:7.27.1"
     "@gfdigital/tsconfig": "npm:0.3.1"
-    "@hugeicons-pro/core-solid-standard": "npm:^1.0.14"
-    "@hugeicons-pro/core-stroke-rounded": "npm:^1.0.14"
-    "@hugeicons-pro/core-stroke-standard": "npm:^1.0.14"
-    "@hugeicons/react": "npm:^1.0.5"
     "@linaria/core": "npm:6.3.0"
     "@nccl/theme": "npm:0.0.1"
     "@storybook/addon-essentials": "npm:^8.6.14"

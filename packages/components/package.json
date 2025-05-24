@@ -30,10 +30,6 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@hugeicons-pro/core-solid-standard": "^1.0.14",
-    "@hugeicons-pro/core-stroke-rounded": "^1.0.14",
-    "@hugeicons-pro/core-stroke-standard": "^1.0.14",
-    "@hugeicons/react": "^1.0.5",
     "@nccl/theme": "0.0.1",
     "@stratum-ui/core": "0.2.0",
     "@stratum-ui/react": "0.2.0",
