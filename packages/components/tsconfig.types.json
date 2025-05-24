@@ -8,5 +8,5 @@
     "declarationDir": "./dist",
     "emitDeclarationOnly": true
   },
-  "include": ["src/index.ts"]
+  "include": ["src/index.ts", "src/*.d.ts"]
 }
