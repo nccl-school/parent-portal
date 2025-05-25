@@ -7,10 +7,7 @@ import type { Route } from "./+types/Home.layout";
 import { PageHeader } from "../../components/page";
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
-  // Use `getAuth()` to get the user's ID
   const { userId } = await getAuth(loaderArgs);
-  // const product = await fakeDb.getProduct(params.pid);
-  // return product;
   // Protect the route by checking if the user is signed in
   if (!userId) {
     return redirect("/sign-in?redirect_url=" + loaderArgs.request.url);

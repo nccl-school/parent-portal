@@ -10,6 +10,8 @@ import {
 import type { ReactNode } from "react";
 import { href, NavLink, type NavLinkProps } from "react-router";
 
+import { Restrict } from "../auth/Restrict";
+
 function RootNavbarItem({
   children,
   ...restProps
@@ -68,6 +70,15 @@ export function RootNavbar() {
           />
           <NavbarItemText>More</NavbarItemText>
         </RootNavbarItem>
+        <Restrict role="admin">
+          <RootNavbarItem to="/admin">
+            <NavbarItemIcon
+              dxBaseIcon="tools-stroke-standard"
+              dxActiveIcon="tools-solid-standard"
+            />
+            <NavbarItemText>Admin</NavbarItemText>
+          </RootNavbarItem>
+        </Restrict>
       </NavbarGroup>
       <NavbarGroup>
         <NavbarItem>

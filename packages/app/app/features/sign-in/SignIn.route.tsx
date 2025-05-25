@@ -35,7 +35,7 @@ const styles = css`
     font-family: ${makeFontFamily("body")};
 
     .pane-display {
-      display: none;
+      display: none !important;
     }
 
     .cl-card {
@@ -48,7 +48,7 @@ const styles = css`
     width: 100vw;
     height: 100vh;
     display: grid;
-    grid-template-columns: 1fr ${makeRem(500)};
+    grid-template-columns: minmax(50%, 60%) minmax(500px, 1fr);
     gap: 3rem;
     padding: 3rem;
 

@@ -26,7 +26,7 @@ export type IconProps = IconPropsNative & IconPropsCustom;
 
 const styles = css`
   --icon-size: ${makeRem(24)};
-  --icon-color: inherit;
+  --icon-color: ${makeColor("neutral-dark")};
 
   font-size: var(--icon-size);
   color: var(--icon-color);
@@ -50,8 +50,7 @@ export const Icon = forwardRef<HTMLDivElement, IconProps>(function Icon(
     return {
       ...style,
       "--icon-size": `${dxSize}px`,
-      "--icon-color":
-        dxColor === "inherit" ? "inherit" : makeColor("neutral-dark"),
+      "--icon-color": dxColor === "inherit" ? "inherit" : makeColor(dxColor),
     };
   }, [dxColor, dxSize, style]);
 
