@@ -1,6 +1,8 @@
 import type { Meta } from "@storybook/react";
 
 import { useModal } from "./modal.useModal.js";
+import { Modal } from "./Modal.js";
+import { ModalHeader } from "./ModalHeader.js";
 
 import styles from "../_core/modal/modal.module.scss";
 import { ModalEngine } from "../_core/modal/index.js";
@@ -113,6 +115,69 @@ export const WithDefaultStyles = () => {
           <button onClick={engine.close}>close</button>
         </footer>
       </dialog>
+    </>
+  );
+};
+
+export const WithComponent = () => {
+  const engine = useModal();
+  return (
+    <>
+      <button onClick={engine.open}>Open Modal</button>
+      <Modal ref={engine.onMount} dxVariant="drawer-ltr">
+        <header>Header</header>
+        <div>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni culpa
+          earum necessitatibus nemo officia quam illo reiciendis. Quia harum
+          doloribus officiis. Aliquam voluptate porro hic molestias possimus ea
+          voluptatum libero?
+        </div>
+        <footer>
+          <button onClick={engine.close}>close</button>
+        </footer>
+      </Modal>
+    </>
+  );
+};
+
+export const VariantBasic = () => {
+  const engine = useModal();
+  return (
+    <>
+      <button onClick={engine.open}>Open Modal</button>
+      <Modal ref={engine.onMount} dxVariant="basic">
+        <ModalHeader>Header</ModalHeader>
+        <div>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni culpa
+          earum necessitatibus nemo officia quam illo reiciendis. Quia harum
+          doloribus officiis. Aliquam voluptate porro hic molestias possimus ea
+          voluptatum libero?
+        </div>
+        <footer>
+          <button onClick={engine.close}>close</button>
+        </footer>
+      </Modal>
+    </>
+  );
+};
+
+export const VariantDrawerLTR = () => {
+  const engine = useModal();
+  return (
+    <>
+      <button onClick={engine.open}>Open Modal</button>
+      <Modal ref={engine.onMount} dxVariant="drawer-ltr" style={{ width: 500 }}>
+        <ModalHeader>Header</ModalHeader>
+        <div>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni culpa
+          earum necessitatibus nemo officia quam illo reiciendis. Quia harum
+          doloribus officiis. Aliquam voluptate porro hic molestias possimus ea
+          voluptatum libero?
+        </div>
+        <footer>
+          <button onClick={engine.close}>close</button>
+        </footer>
+      </Modal>
     </>
   );
 };
