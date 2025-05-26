@@ -9,5 +9,5 @@ export function meta() {
 }
 
 export default function AdminRoute() {
-  return <PageSection>content</PageSection>;
+  return <PageSection>Work in progress</PageSection>;
 }
