@@ -29,11 +29,8 @@ export default [
     layout("./features/profile/Profile.layout.tsx", [
       route("profile/*", "features/profile/Profile.route.tsx"),
     ]),
-    // -/admin
     route("admin", "./features/admin/Admin.route.tsx", [
-      layout("./features/admin-users/AdminUsers.layout.tsx", [
-        index("./features/admin-users/AdminUsers.route.tsx"),
-      ]),
+      index("./features/admin-users/AdminUsers.route.tsx"),
       route("resources", "./features/admin-resources/AdminResources.route.tsx"),
     ]),
   ]),

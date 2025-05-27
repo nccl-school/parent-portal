@@ -88,7 +88,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App({ loaderData }: Route.ComponentProps) {
-  console.log("🧪 loaderData in App:", loaderData);
   return (
     <ClerkProvider
       loaderData={loaderData}
