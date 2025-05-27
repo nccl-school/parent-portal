@@ -2,6 +2,7 @@ import {
   type RouteConfig,
   index,
   layout,
+  prefix,
   route,
 } from "@react-router/dev/routes";
 
@@ -32,8 +33,12 @@ export default [
       route("profile/*", "features/profile/Profile.route.tsx"),
     ]),
     // -/admin
-    layout("./features/admin/Admin.layout.tsx", [
-      route("/admin", "features/admin/Admin.route.tsx"),
+    ...prefix("admin", [
+      layout("./features/admin/Admin.layout.tsx", [
+        layout("./features/admin-users/AdminUsers.layout.tsx", [
+          index("./features/admin-users/AdminUsers.route.tsx"),
+        ]),
+      ]),
     ]),
   ]),
   // - /sign-in/*

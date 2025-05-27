@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import { href, NavLink, Outlet } from "react-router";
 import { css } from "@linaria/core";
 import {
   NavbarSecondary,
@@ -8,22 +8,13 @@ import {
   NavbarSecondaryItemText,
 } from "@nccl/components";
 import { makeColor } from "@nccl/theme";
+import type { ReactNode } from "react";
 
 import type { Route } from "./+types/Admin.layout";
 
 import { PageHeader } from "../../components/page";
 import { RBAC } from "../auth/auth.utils";
 import { Unauthorized } from "../auth/Unauthorized";
-
-export async function loader(loaderArgs: Route.LoaderArgs) {
-  const rbac = new RBAC(loaderArgs);
-  const isAdmin = await rbac.isAdmin();
-  if (!isAdmin) {
-    return { hasAccess: false };
-  }
-
-  return { hasAccess: true };
-}
 
 const styles = css`
   /* TODO: Mobile styles next */
@@ -50,6 +41,32 @@ const styles = css`
   }
 `;
 
+export async function loader(loaderArgs: Route.LoaderArgs) {
+  const rbac = new RBAC(loaderArgs);
+  const isAdmin = await rbac.isAdmin();
+  if (!isAdmin) {
+    return { hasAccess: false };
+  }
+
+  return { hasAccess: true };
+}
+
+function ListItem({ to, children }: { to: string; children: ReactNode }) {
+  return (
+    <li>
+      <NavLink to={to}>
+        {({ isActive }) => {
+          return (
+            <NavbarSecondaryItem dxIsActive={isActive}>
+              {children}
+            </NavbarSecondaryItem>
+          );
+        }}
+      </NavLink>
+    </li>
+  );
+}
+
 export default function AdminLayout({ loaderData }: Route.ComponentProps) {
   if (!loaderData.hasAccess) {
     return <Unauthorized />;
@@ -63,14 +80,14 @@ export default function AdminLayout({ loaderData }: Route.ComponentProps) {
       />
       <div className="nav">
         <NavbarSecondary>
-          <NavbarSecondaryGroup dxTitle="General">
-            <NavbarSecondaryItem dxIsActive>
+          <NavbarSecondaryGroup dxTitle="People">
+            <ListItem to={href("/admin")}>
               <NavbarSecondaryItemIcon
                 dxBaseIcon="contact-01-stroke-standard"
                 dxActiveIcon="contact-01-solid-standard"
               />
-              <NavbarSecondaryItemText>Contact</NavbarSecondaryItemText>
-            </NavbarSecondaryItem>
+              <NavbarSecondaryItemText>Users</NavbarSecondaryItemText>
+            </ListItem>
             <NavbarSecondaryItem>
               <NavbarSecondaryItemIcon
                 dxBaseIcon="user-group-02-stroke-standard"

@@ -25,6 +25,10 @@ const styles = css`
     color: ${makeColor("neutral-light-900")};
   }
 
+  a {
+    text-decoration: none;
+  }
+
   ul {
     ${makeReset("ul")};
     height: 100%;
