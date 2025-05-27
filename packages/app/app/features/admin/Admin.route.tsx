@@ -34,23 +34,20 @@ const styles = css`
   }
 `;
 
-// export async function loader(loaderArgs: Route.LoaderArgs) {
-//   // const rbac = new RBAC(loaderArgs);
-//   // const isAdmin = await rbac.isAdmin();
-//   // if (!isAdmin) {
-//   //   return { hasAccess: false };
-//   // }
+export async function loader(loaderArgs: Route.LoaderArgs) {
+  const rbac = new RBAC(loaderArgs);
+  const isAdmin = await rbac.isAdmin();
+  if (!isAdmin) {
+    return { hasAccess: false };
+  }
 
-//   // return { hasAccess: true };
-//   return { hasAccess: true };
-// }
+  return { hasAccess: true };
+}
 
-export default function AdminRoute() {
-  console.log("🔁 Admin.route.tsx");
-
-  // if (!loaderData.hasAccess) {
-  //   return <Unauthorized />;
-  // }
+export default function AdminRoute({ loaderData }: Route.ComponentProps) {
+  if (!loaderData.hasAccess) {
+    return <Unauthorized />;
+  }
   return (
     <div className={styles}>
       <PageHeader

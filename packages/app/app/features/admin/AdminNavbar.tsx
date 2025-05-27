@@ -4,6 +4,7 @@ import {
   NavbarSecondaryGroup,
   // NavbarSecondaryItemIcon,
   NavbarSecondaryItemText,
+  NavbarSecondaryItemIcon,
 } from "@nccl/components";
 import type { ReactNode } from "react";
 import { href, NavLink, type NavLinkProps } from "react-router";
@@ -33,29 +34,29 @@ export function AdminNavbar() {
       <NavbarSecondary>
         <NavbarSecondaryGroup dxTitle="Manage">
           <ListItem to={href("/admin")} end>
-            {/* <NavbarSecondaryItemIcon
+            <NavbarSecondaryItemIcon
               dxBaseIcon="contact-01-stroke-standard"
               dxActiveIcon="contact-01-solid-standard"
-            /> */}
+            />
             <NavbarSecondaryItemText>Users</NavbarSecondaryItemText>
           </ListItem>
           <ListItem to={href("/admin/resources")} end>
-            {/* <NavbarSecondaryItemIcon
+            <NavbarSecondaryItemIcon
               dxBaseIcon="folder-02-stroke-standard"
               dxActiveIcon="folder-02-solid-standard"
-            /> */}
+            />
             <NavbarSecondaryItemText>Resources</NavbarSecondaryItemText>
           </ListItem>
         </NavbarSecondaryGroup>
-        {/* <NavbarSecondaryGroup dxTitle="Advanced">
-    <NavbarSecondaryItem>
-      <NavbarSecondaryItemIcon
-        dxBaseIcon="contact-01-stroke-standard"
-        dxActiveIcon="contact-01-solid-standard"
-      />
-      <NavbarSecondaryItemText>APIs</NavbarSecondaryItemText>
-    </NavbarSecondaryItem>
-  </NavbarSecondaryGroup> */}
+        <NavbarSecondaryGroup dxTitle="Advanced">
+          <NavbarSecondaryItem>
+            <NavbarSecondaryItemIcon
+              dxBaseIcon="contact-01-stroke-standard"
+              dxActiveIcon="contact-01-solid-standard"
+            />
+            <NavbarSecondaryItemText>APIs</NavbarSecondaryItemText>
+          </NavbarSecondaryItem>
+        </NavbarSecondaryGroup>
       </NavbarSecondary>
     </div>
   );
