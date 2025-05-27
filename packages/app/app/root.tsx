@@ -22,9 +22,7 @@ const convexClient = new ConvexReactClient(
 );
 
 export async function loader(args: Route.LoaderArgs) {
-  return rootAuthLoader(args, {
-    secretKey: args.context.cloudflare.env.CLERK_SECRET_KEY,
-  });
+  return rootAuthLoader(args);
 }
 
 const rootStyles = css`
@@ -90,6 +88,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App({ loaderData }: Route.ComponentProps) {
+  console.log("🧪 loaderData in App:", loaderData);
   return (
     <ClerkProvider
       loaderData={loaderData}

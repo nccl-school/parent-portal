@@ -46,7 +46,7 @@
   "devDependencies": {
     "@gfdigital/eslint-config": "0.4.3",
     "@gfdigital/tsconfig": "0.3.1",
-    "@types/node": "22.15.21",
+    "@types/node": "22.15.23",
     "eslint": "9.27.0",
     "prettier": "3.5.3",
     "turbo": "2.5.3",

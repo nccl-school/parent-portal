@@ -35,6 +35,14 @@ const styles = css`
   aspect-ratio: 1 / 1;
 `;
 
+function IconFallback() {
+  return <span className={`icon icon--loading`} />;
+}
+
+const lazyIconManifest = Object.fromEntries(
+  Object.entries(iconManifest).map(([name, importFn]) => [name, lazy(importFn)])
+);
+
 export const Icon = forwardRef<HTMLDivElement, IconProps>(function Icon(
   {
     className,
@@ -54,7 +62,7 @@ export const Icon = forwardRef<HTMLDivElement, IconProps>(function Icon(
     };
   }, [dxColor, dxSize, style]);
 
-  const LazyIcon = lazy(iconManifest[dxIcon]);
+  const LazyIcon = lazyIconManifest[dxIcon];
   return (
     <div
       {...restProps}
@@ -62,9 +70,7 @@ export const Icon = forwardRef<HTMLDivElement, IconProps>(function Icon(
       style={inlineStyles}
       ref={ref}
     >
-      <Suspense
-        fallback={<span className={`icon icon--loading ${className ?? ""}`} />}
-      >
+      <Suspense fallback={<IconFallback />}>
         <LazyIcon className="icon" aria-hidden="true" fill="currentColor" />
       </Suspense>
     </div>

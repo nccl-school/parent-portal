@@ -10,7 +10,8 @@ export function meta() {
   ];
 }
 
-export default function AdminUsersRoute() {
+export default function AdminUsersLayout() {
+  console.log("🔁 AdminUsers.layout.tsx");
   return (
     <>
       <InnerPageHeader dxTitle="Users" />

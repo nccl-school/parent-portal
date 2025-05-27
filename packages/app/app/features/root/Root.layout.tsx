@@ -1,5 +1,4 @@
-import { getAuth } from "@clerk/react-router/ssr.server";
-import { Outlet, redirect } from "react-router";
+import { Outlet } from "react-router";
 import { css } from "@linaria/core";
 import { makeColor, makeCustom, makeResponsive } from "@nccl/theme";
 
@@ -7,16 +6,10 @@ import type { Route } from "./+types/Root.layout";
 import { RootNavbar } from "./RootNavbar";
 import { RootHeader } from "./RootHeader";
 
+import { ensureUser } from "../../utils/server";
+
 export async function loader(loaderArgs: Route.LoaderArgs) {
-  // Use `getAuth()` to get the user's ID
-  const { userId } = await getAuth(loaderArgs);
-  // const product = await fakeDb.getProduct(params.pid);
-  // return product;
-  // Protect the route by checking if the user is signed in
-  if (!userId) {
-    console.log({ userId });
-    return redirect("/sign-in?redirect_url=" + loaderArgs.request.url);
-  }
+  await ensureUser(loaderArgs);
 }
 
 const styles = css`

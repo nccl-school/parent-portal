@@ -6,13 +6,13 @@ import type { Route } from "./+types/Home.layout";
 
 import { PageHeader } from "../../components/page";
 
-export async function loader(loaderArgs: Route.LoaderArgs) {
-  const { userId } = await getAuth(loaderArgs);
-  // Protect the route by checking if the user is signed in
-  if (!userId) {
-    return redirect("/sign-in?redirect_url=" + loaderArgs.request.url);
-  }
-}
+// export async function loader(loaderArgs: Route.LoaderArgs) {
+//   const { userId } = await getAuth(loaderArgs);
+//   // Protect the route by checking if the user is signed in
+//   if (!userId) {
+//     return redirect("/sign-in?redirect_url=" + loaderArgs.request.url);
+//   }
+// }
 
 export default function HomeLayout() {
   const { user } = useUser();
