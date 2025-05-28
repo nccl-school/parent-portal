@@ -3,6 +3,7 @@ import { Label, type LabelVariants } from "@nccl/components";
 import { match, P } from "ts-pattern";
 
 import type { Roles } from "../../global";
+import { capitalizeFirstLetter } from "../../utils/isomorphic";
 
 export function AdminUsersTableCellRole(user: Pick<User, "publicMetadata">) {
   const dxVariant = match<Roles | undefined, LabelVariants>(
@@ -16,7 +17,7 @@ export function AdminUsersTableCellRole(user: Pick<User, "publicMetadata">) {
 
   return (
     <Label dxVariant={dxVariant}>
-      {user.publicMetadata?.role ?? "No Role Assigned"}
+      {capitalizeFirstLetter(user.publicMetadata?.role ?? "no role assigned")}
     </Label>
   );
 }

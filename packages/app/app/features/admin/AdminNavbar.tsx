@@ -1,37 +1,55 @@
-import {
-  NavbarSecondary,
-  NavbarSecondaryItem,
-  NavbarSecondaryGroup,
-  // NavbarSecondaryItemIcon,
-  NavbarSecondaryItemText,
-  NavbarSecondaryItemIcon,
-} from "@nccl/components";
-import type { ReactNode } from "react";
+import { css } from "@linaria/core";
+import { type IconNames, Tab, Tabs } from "@nccl/components";
+import { makeCustom, makeResponsive } from "@nccl/theme";
 import { href, NavLink, type NavLinkProps } from "react-router";
 
-function ListItem({
-  children,
-  ...navLinkProps
-}: NavLinkProps & { children: ReactNode }) {
-  return (
-    <li>
-      <NavLink {...navLinkProps}>
-        {({ isActive }) => {
-          return (
-            <NavbarSecondaryItem dxIsActive={isActive}>
-              {children}
-            </NavbarSecondaryItem>
-          );
-        }}
-      </NavLink>
-    </li>
-  );
-}
+const tabs: (NavLinkProps & {
+  baseIcon: IconNames;
+  activeIcon: IconNames;
+  copy: string;
+})[] = [
+  {
+    to: href("/admin"),
+    end: true,
+    baseIcon: "contact-01-stroke-standard",
+    activeIcon: "contact-01-solid-standard",
+    copy: "Users",
+  },
+  {
+    to: href("/admin/resources"),
+    copy: "Resources",
+    end: true,
+    baseIcon: "folder-02-stroke-standard",
+    activeIcon: "folder-02-solid-standard",
+  },
+];
+
+const laptopStyles = css`
+  ${makeResponsive({ to: "laptop" })} {
+    display: none;
+  }
+  padding: 0 ${makeCustom("page--gutter-desktop")};
+`;
 
 export function AdminNavbar() {
   return (
-    <div className="nav">
-      <NavbarSecondary>
+    <div className={laptopStyles}>
+      <Tabs>
+        {tabs.map(
+          ({ baseIcon: _, activeIcon: __, copy, ...navLinkProps }, i) => (
+            <li key={i.toString()}>
+              <NavLink {...navLinkProps}>
+                {({ isActive }) => <Tab dxActive={isActive}>{copy}</Tab>}
+              </NavLink>
+            </li>
+          )
+        )}
+      </Tabs>
+    </div>
+  );
+}
+
+/* <NavbarSecondary>
         <NavbarSecondaryGroup dxTitle="Manage">
           <ListItem to={href("/admin")} end>
             <NavbarSecondaryItemIcon
@@ -57,7 +75,4 @@ export function AdminNavbar() {
             <NavbarSecondaryItemText>APIs</NavbarSecondaryItemText>
           </NavbarSecondaryItem>
         </NavbarSecondaryGroup>
-      </NavbarSecondary>
-    </div>
-  );
-}
+      </NavbarSecondary> */

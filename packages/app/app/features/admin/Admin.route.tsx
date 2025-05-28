@@ -12,22 +12,22 @@ import { Unauthorized } from "../auth/Unauthorized";
 const styles = css`
   /* TODO: Mobile styles next */
   display: grid;
-  grid-template-rows: auto 1fr;
-  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto 1fr;
   grid-template-areas:
-    "title title"
-    "nav main";
+    "title"
+    "nav"
+    "main";
   height: 100%;
   width: 100%;
 
   .title {
     grid-area: title;
     background: white;
-    border-bottom: 1px solid ${makeColor("neutral-dark-50", { opacity: 0.2 })};
   }
   .nav {
     grid-area: nav;
     background: white;
+    border-bottom: 1px solid ${makeColor("neutral-dark-50", { opacity: 0.2 })};
   }
   .main {
     grid-area: main;
@@ -55,7 +55,9 @@ export default function AdminRoute({ loaderData }: Route.ComponentProps) {
         dxSubtitle="Invite parents, manage groups, add content, send notifications, etc..."
         className="title"
       />
-      <AdminNavbar />
+      <div className="nav">
+        <AdminNavbar />
+      </div>
       <div className="main">
         <Outlet />
       </div>

@@ -6,8 +6,8 @@ import {
   InputCheckbox,
   TableBody,
   TableBodyCol,
-  Icon,
 } from "@nccl/components";
+import { makeRem } from "@nccl/theme";
 
 import type { Route } from "./+types/AdminUsers.route";
 import { AdminUsersTableCellName } from "./AdminUsersTableCellName";
@@ -54,14 +54,14 @@ export default function AdminUsersRoute(args: Route.ComponentProps) {
                 <TableBodyCol>
                   <InputCheckbox />
                 </TableBodyCol>
-                <TableBodyCol className="">
+                <TableBodyCol>
                   <AdminUsersTableCellName {...user} />
                 </TableBodyCol>
                 <TableBodyCol>
                   <AdminUsersTableCellRole {...user} />
                 </TableBodyCol>
                 <TableBodyCol>{user.lastActiveAt}</TableBodyCol>
-                <TableBodyCol>
+                <TableBodyCol style={{ width: makeRem(24) }}>
                   <AdminUsersTableCellMenu {...user} />
                 </TableBodyCol>
               </TableRow>

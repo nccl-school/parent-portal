@@ -68,6 +68,7 @@ export const ButtonIcon = forwardRef<HTMLButtonElement, ButtonIconProps>(
       dxColor,
       dxSize = "sm",
       dxStyle = "basic",
+      type = "button",
       ...restProps
     },
     ref
@@ -75,6 +76,7 @@ export const ButtonIcon = forwardRef<HTMLButtonElement, ButtonIconProps>(
     return (
       <button
         {...restProps}
+        type={type}
         className={classes(className, styles, dxSize, dxStyle)}
         ref={ref}
       >
