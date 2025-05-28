@@ -2805,6 +2805,7 @@ __metadata:
     "@gfdigital/tsconfig": "npm:0.3.1"
     "@linaria/core": "npm:6.3.0"
     "@nccl/theme": "npm:0.0.1"
+    "@ngneat/falso": "npm:^7.3.0"
     "@storybook/addon-essentials": "npm:8.6.14"
     "@storybook/addon-interactions": "npm:8.6.14"
     "@storybook/addon-onboarding": "npm:8.6.14"
@@ -2822,6 +2823,7 @@ __metadata:
     "@vitejs/plugin-react": "npm:4.5.0"
     "@wyw-in-js/vite": "npm:0.6.0"
     immer: "npm:10.1.1"
+    mockingjson: "npm:0.0.4"
     react: "npm:19.1.0"
     react-dom: "npm:19.1.0"
     sass: "npm:1.89.0"
@@ -2874,6 +2876,16 @@ __metadata:
     typescript: "npm:5.8.3"
   languageName: unknown
   linkType: soft
+
+"@ngneat/falso@npm:^7.3.0":
+  version: 7.3.0
+  resolution: "@ngneat/falso@npm:7.3.0"
+  dependencies:
+    seedrandom: "npm:3.0.5"
+    uuid: "npm:8.3.2"
+  checksum: 10c0/9f7838355e0c75957f8e99cfa9c0d827bac79ceafab4a99b7d98403470a23a0146acd4526fbcd1acf8be33cf8712db9160e6f5f1bdeecf548b6fb73cd05fee44
+  languageName: node
+  linkType: hard
 
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
@@ -9149,6 +9161,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mockingjson@npm:0.0.4":
+  version: 0.0.4
+  resolution: "mockingjson@npm:0.0.4"
+  checksum: 10c0/040bf2a84272f8ddaa0af87cfea3c99c6b21de1040de7c096d1086e856343ee2876488307a98bd43ea982ad32e44ee3cffdd247c1311c2cbc98db4fdefe9c4f0
+  languageName: node
+  linkType: hard
+
 "monaco-editor@npm:0.52.2":
   version: 0.52.2
   resolution: "monaco-editor@npm:0.52.2"
@@ -10606,6 +10625,13 @@ __metadata:
   version: 0.26.0
   resolution: "scheduler@npm:0.26.0"
   checksum: 10c0/5b8d5bfddaae3513410eda54f2268e98a376a429931921a81b5c3a2873aab7ca4d775a8caac5498f8cbc7d0daeab947cf923dbd8e215d61671f9f4e392d34356
+  languageName: node
+  linkType: hard
+
+"seedrandom@npm:3.0.5":
+  version: 3.0.5
+  resolution: "seedrandom@npm:3.0.5"
+  checksum: 10c0/929752ac098ff4990b3f8e0ac39136534916e72879d6eb625230141d20db26e2f44c4d03d153d457682e8cbaab0fb7d58a1e7267a157cf23fd8cf34e25044e88
   languageName: node
   linkType: hard
 
@@ -12120,6 +12146,15 @@ __metadata:
   version: 1.0.1
   resolution: "utils-merge@npm:1.0.1"
   checksum: 10c0/02ba649de1b7ca8854bfe20a82f1dfbdda3fb57a22ab4a8972a63a34553cf7aa51bc9081cf7e001b035b88186d23689d69e71b510e610a09a4c66f68aa95b672
+  languageName: node
+  linkType: hard
+
+"uuid@npm:8.3.2":
+  version: 8.3.2
+  resolution: "uuid@npm:8.3.2"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 10c0/bcbb807a917d374a49f475fae2e87fdca7da5e5530820ef53f65ba1d12131bd81a92ecf259cc7ce317cbe0f289e7d79fdfebcef9bfa3087c8c8a2fa304c9be54
   languageName: node
   linkType: hard
 

@@ -5,3 +5,5 @@ export * from "./typography/index.js";
 export * from "./avatar/index.js";
 export * from "./header/index.js";
 export * from "./modal/index.js";
+export * from "./input-checkbox/index.js";
+export * from "./table/index.js";

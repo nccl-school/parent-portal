@@ -44,6 +44,7 @@
     "@babel/preset-typescript": "7.27.1",
     "@gfdigital/tsconfig": "0.3.1",
     "@linaria/core": "6.3.0",
+    "@ngneat/falso": "^7.3.0",
     "@storybook/addon-essentials": "8.6.14",
     "@storybook/addon-interactions": "8.6.14",
     "@storybook/addon-onboarding": "8.6.14",
@@ -58,6 +59,7 @@
     "@types/react-dom": "19.1.5",
     "@vitejs/plugin-react": "4.5.0",
     "@wyw-in-js/vite": "0.6.0",
+    "mockingjson": "0.0.4",
     "storybook": "8.6.14",
     "typescript": "5.8.3",
     "vite": "6.3.5"

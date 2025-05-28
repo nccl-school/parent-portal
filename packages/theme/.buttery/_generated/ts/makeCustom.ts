@@ -9,7 +9,9 @@ export type CustomTokens =
   | "navbar--width-desktop"
   | "header--height-desktop"
   | "page--gutter-desktop"
-  | "page--gutter-mobile";
+  | "page--gutter-mobile"
+  | "table--cell-padding"
+  | "table--body-cell-padding-v";
 export type MakeCustom = (tokenName: CustomTokens) => string | number;
 
 /**
