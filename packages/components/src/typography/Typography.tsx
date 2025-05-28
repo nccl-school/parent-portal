@@ -187,7 +187,7 @@ export const Typography = forwardRef<HTMLHeadingElement, TypographyProps>(
       case "span": {
         const { dxNode, dxVariant, className, ...restProps } = props;
         return (
-          <h3
+          <span
             {...restProps}
             className={classes(className, styles, dxVariant)}
             ref={ref}

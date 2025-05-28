@@ -2828,6 +2828,7 @@ __metadata:
     react-dom: "npm:19.1.0"
     sass: "npm:1.89.0"
     storybook: "npm:8.6.14"
+    ts-pattern: "npm:^5.7.1"
     typescript: "npm:5.8.3"
     vite: "npm:6.3.5"
   languageName: unknown
@@ -2859,6 +2860,7 @@ __metadata:
     react: "npm:19.1.0"
     react-dom: "npm:19.1.0"
     react-router: "npm:7.6.1"
+    ts-pattern: "npm:^5.7.1"
     typescript: "npm:5.8.3"
     vite: "npm:6.3.5"
     vite-plugin-devtools-json: "npm:^0.1.0"
@@ -11611,7 +11613,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-pattern@npm:5.7.1":
+"ts-pattern@npm:5.7.1, ts-pattern@npm:^5.7.1":
   version: 5.7.1
   resolution: "ts-pattern@npm:5.7.1"
   checksum: 10c0/815592dcc8058c90f2329ca88ab4377eb89d794520055fb9a937424babeb87be29f60ad51505206e4ac130b7cbc70ae7c0b3c615469e7f379b7c749c0911265f

@@ -6,10 +6,13 @@ import {
   InputCheckbox,
   TableBody,
   TableBodyCol,
+  Icon,
 } from "@nccl/components";
 
 import type { Route } from "./+types/AdminUsers.route";
 import { AdminUsersTableCellName } from "./AdminUsersTableCellName";
+import { AdminUsersTableCellRole } from "./AdminUsersTableCellRole";
+import { AdminUsersTableCellMenu } from "./AdminUsersTableCellMenu";
 
 import { InnerPageHeader, PageSection } from "../../components/page";
 import { getClerkClient } from "../../utils/server";
@@ -42,6 +45,7 @@ export default function AdminUsersRoute(args: Route.ComponentProps) {
               <TableHeadCol>Name</TableHeadCol>
               <TableHeadCol>Role</TableHeadCol>
               <TableHeadCol>Last Active</TableHeadCol>
+              <TableHeadCol></TableHeadCol>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -54,9 +58,12 @@ export default function AdminUsersRoute(args: Route.ComponentProps) {
                   <AdminUsersTableCellName {...user} />
                 </TableBodyCol>
                 <TableBodyCol>
-                  {user.publicMetadata.role ?? "No role defined"}
+                  <AdminUsersTableCellRole {...user} />
                 </TableBodyCol>
                 <TableBodyCol>{user.lastActiveAt}</TableBodyCol>
+                <TableBodyCol>
+                  <AdminUsersTableCellMenu {...user} />
+                </TableBodyCol>
               </TableRow>
             ))}
           </TableBody>

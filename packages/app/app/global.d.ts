@@ -9,4 +9,7 @@ declare global {
       role?: Roles;
     };
   }
+  interface UserPublicMetadata {
+    role?: Roles;
+  }
 }
