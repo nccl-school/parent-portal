@@ -8,21 +8,24 @@ import {
 } from "@nccl/components";
 import { useCallback, type MouseEventHandler } from "react";
 
+import { AdminUserPermissions } from "../admin-user-permissions";
+
 export function AdminUsersMenu({
   popover,
   userId,
-  launchUserPermission,
 }: {
   userId: string;
   popover: PopoverEngine;
-  launchUserPermission: (userId: string) => void;
 }) {
   const handleLaunchUserPermissions = useCallback<
     MouseEventHandler<HTMLButtonElement>
-  >(() => {
-    launchUserPermission(userId);
-    popover.hide();
-  }, [launchUserPermission, popover, userId]);
+  >(
+    (e) => {
+      AdminUserPermissions.launch(e, { userId });
+      popover.hide();
+    },
+    [popover, userId]
+  );
 
   return (
     <Popover ref={popover.setPopover}>

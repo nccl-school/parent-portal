@@ -15,9 +15,12 @@ import { AdminUsersTableCellMenu } from "./AdminUsersTableCellMenu";
 import { AdminUsersTableCellName } from "./AdminUsersTableCellName";
 import { AdminUsersTableCellRole } from "./AdminUsersTableCellRole";
 
+import { AdminUserPermissions } from "../admin-user-permissions";
+
 export function AdminUsersTable({ data }: { data: Omit<User, "_raw">[] }) {
   return (
     <>
+      <AdminUserPermissions.Component />
       <Table>
         {useMemo(
           () => (

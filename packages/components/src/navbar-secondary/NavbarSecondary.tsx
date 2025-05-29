@@ -5,8 +5,6 @@ import { css } from "@linaria/core";
 import { makeColor, makeRem, makeReset, makeResponsive } from "@nccl/theme";
 
 import { useModal } from "../modal/modal.useModal.js";
-import { Modal } from "../modal/Modal.js";
-import { Icon } from "../icons/Icon.js";
 
 export type NavbarSecondaryPropsNative = JSX.IntrinsicElements["nav"];
 // export type NavbarSecondaryPropsCustom = {};
@@ -54,14 +52,14 @@ export const NavbarSecondary = forwardRef<HTMLElement, NavbarSecondaryProps>(
     return (
       <div className={styles}>
         <button onClick={engine.open}>Open</button>
-        <Modal dxEngine={engine} dxVariant="drawer-ltr">
+        {/* <Modal dxEngine={engine} dxVariant="drawer-ltr">
           <button className="close" onClick={engine.close}>
             <Icon dxIcon="cancel-01-stroke-standard" dxSize={24} />
           </button>
           <nav {...restProps} className={classes(className)} ref={ref}>
             {children}
           </nav>
-        </Modal>
+        </Modal> */}
         <nav {...restProps} className={classes(className, "desktop")} ref={ref}>
           {children}
         </nav>

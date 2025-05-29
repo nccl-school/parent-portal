@@ -41,10 +41,10 @@ export const WithEngine = () => {
 };
 
 export const WithHook = () => {
-  const engine = useModal();
+  const { engine, open, close } = useModal();
   return (
     <>
-      <button onClick={engine.open}>Open Modal</button>
+      <button onClick={open}>Open Modal</button>
       <dialog ref={engine.onMount}>
         <header>Header</header>
         <div>
@@ -54,7 +54,7 @@ export const WithHook = () => {
           voluptatum libero?
         </div>
         <footer>
-          <button onClick={engine.close}>close</button>
+          <button onClick={close}>close</button>
         </footer>
       </dialog>
     </>
@@ -62,10 +62,10 @@ export const WithHook = () => {
 };
 
 export const CloseOnBackdropClick = () => {
-  const engine = useModal({ closeOnBackdropClick: true });
+  const { engine, open, close } = useModal({ closeOnBackdropClick: true });
   return (
     <>
-      <button onClick={engine.open}>Open Modal</button>
+      <button onClick={open}>Open Modal</button>
       <dialog ref={engine.onMount}>
         <header>Header</header>
         <div>
@@ -75,7 +75,7 @@ export const CloseOnBackdropClick = () => {
           voluptatum libero?
         </div>
         <footer>
-          <button onClick={engine.close}>close</button>
+          <button onClick={close}>close</button>
         </footer>
       </dialog>
     </>
@@ -83,10 +83,10 @@ export const CloseOnBackdropClick = () => {
 };
 
 export const PreventClosingOnEscape = () => {
-  const engine = useModal({ disableCloseOnEscapePress: true });
+  const { engine, open, close } = useModal({ disableCloseOnEscapePress: true });
   return (
     <>
-      <button onClick={engine.open}>Open Modal</button>
+      <button onClick={open}>Open Modal</button>
       <dialog ref={engine.onMount}>
         <header>Header</header>
         <div>
@@ -96,7 +96,7 @@ export const PreventClosingOnEscape = () => {
           voluptatum libero?
         </div>
         <footer>
-          <button onClick={engine.close}>close</button>
+          <button onClick={close}>close</button>
         </footer>
       </dialog>
     </>
@@ -104,10 +104,10 @@ export const PreventClosingOnEscape = () => {
 };
 
 export const WithDefaultStyles = () => {
-  const engine = useModal();
+  const { engine, open, close } = useModal();
   return (
     <>
-      <button onClick={engine.open}>Open Modal</button>
+      <button onClick={open}>Open Modal</button>
       <dialog ref={engine.onMount} className={styles.base}>
         <header>Header</header>
         <div>
@@ -117,7 +117,7 @@ export const WithDefaultStyles = () => {
           voluptatum libero?
         </div>
         <footer>
-          <button onClick={engine.close}>close</button>
+          <button onClick={close}>close</button>
         </footer>
       </dialog>
     </>
@@ -125,10 +125,10 @@ export const WithDefaultStyles = () => {
 };
 
 export const WithComponent = () => {
-  const engine = useModal();
+  const { engine, open, close } = useModal();
   return (
     <>
-      <button onClick={engine.open}>Open Modal</button>
+      <button onClick={open}>Open Modal</button>
       <Modal dxEngine={engine} dxVariant="drawer-ltr">
         <header>Header</header>
         <div>
@@ -138,7 +138,7 @@ export const WithComponent = () => {
           voluptatum libero?
         </div>
         <footer>
-          <button onClick={engine.close}>close</button>
+          <button onClick={close}>close</button>
         </footer>
       </Modal>
     </>
@@ -146,10 +146,10 @@ export const WithComponent = () => {
 };
 
 export const VariantBasic = () => {
-  const engine = useModal();
+  const { engine, open, close } = useModal();
   return (
     <>
-      <button onClick={engine.open}>Open Modal</button>
+      <button onClick={open}>Open Modal</button>
       <Modal dxEngine={engine} dxVariant="basic">
         <ModalHeader>Header</ModalHeader>
         <ModalBody>
@@ -168,7 +168,7 @@ export const VariantBasic = () => {
           </Typography>
         </ModalBody>
         <ModalFooter>
-          <button onClick={engine.close}>close</button>
+          <button onClick={close}>close</button>
         </ModalFooter>
       </Modal>
     </>
@@ -176,10 +176,10 @@ export const VariantBasic = () => {
 };
 
 export const VariantDrawerLTR = () => {
-  const engine = useModal();
+  const { engine, open, close } = useModal();
   return (
     <>
-      <button onClick={engine.open}>Open Modal</button>
+      <button onClick={open}>Open Modal</button>
       <Modal dxEngine={engine} dxVariant="drawer-ltr" style={{ width: 500 }}>
         <ModalHeader>Header</ModalHeader>
         <ModalBody>
@@ -189,7 +189,7 @@ export const VariantDrawerLTR = () => {
           voluptatum libero?
         </ModalBody>
         <ModalFooter>
-          <button onClick={engine.close}>close</button>
+          <button onClick={close}>close</button>
         </ModalFooter>
       </Modal>
     </>
@@ -197,10 +197,10 @@ export const VariantDrawerLTR = () => {
 };
 
 export const VariantDrawerRTL = () => {
-  const engine = useModal();
+  const { engine, open, close } = useModal();
   return (
     <>
-      <button onClick={engine.open}>Open Modal</button>
+      <button onClick={open}>Open Modal</button>
       <Modal dxEngine={engine} dxVariant="drawer-rtl" style={{ width: 500 }}>
         <ModalHeader>Header</ModalHeader>
         <ModalBody>
@@ -210,7 +210,7 @@ export const VariantDrawerRTL = () => {
           voluptatum libero?
         </ModalBody>
         <ModalFooter>
-          <button onClick={engine.close}>close</button>
+          <button onClick={close}>close</button>
         </ModalFooter>
       </Modal>
     </>

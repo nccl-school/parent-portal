@@ -6,6 +6,7 @@ import {
 } from "@nccl/components";
 import { href, useFetcher } from "react-router";
 import { makeRem } from "@nccl/theme";
+import { useEffect } from "react";
 
 import { useAdminUserPermissionsModalContext } from "./admin-user-permission.useModal";
 import type { AdminUserPermissionsModalState } from "./admin-user-permission.utils";
@@ -21,16 +22,20 @@ export const AdminUserPermissions =
     options: {
       closeOnBackdropClick: true,
     },
+    ModalContent,
   });
 
-AdminUserPermissions.Component = function AdminUserPermissions() {
+function ModalContent() {
   const {
     close,
     state: { userId },
   } = useAdminUserPermissionsModalContext();
+  console.log(userId);
   const fetcher = useFetcher();
 
-  fetcher.load(href("/api/user/:id", { id: userId }));
+  useEffect(() => {
+    fetcher.load(href("/api/user/:id", { id: userId }));
+  }, [userId]);
 
   console.log(userId, fetcher.data);
 
@@ -45,4 +50,4 @@ AdminUserPermissions.Component = function AdminUserPermissions() {
       </ModalFooter>
     </>
   );
-};
+}

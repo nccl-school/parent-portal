@@ -1,4 +1,4 @@
-import type { ReactNode, MouseEvent } from "react";
+import { type ReactNode, type MouseEvent, useMemo } from "react";
 import { castDraft } from "immer";
 
 import { Modal, type ModalProps } from "./Modal.js";
@@ -52,15 +52,18 @@ export class ModalController<
   }
 
   Component(props?: ModalContentProps) {
-    return (
-      <Modal
-        // @ts-expect-error Passing in this as engine is appropriate here
-        dxEngine={this}
-        {...this._props}
-        {...props}
-      >
-        <this.ModalContent />
-      </Modal>
+    const engine = this;
+    const thisProps = this._props;
+    const Component = this.ModalContent;
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useMemo(
+      () => (
+        // @ts-expect-error it's an error for now
+        <Modal dxEngine={engine} {...thisProps} {...props}>
+          <Component />
+        </Modal>
+      ),
+      [Component, engine, props, thisProps]
     );
   }
 }
