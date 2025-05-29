@@ -217,13 +217,14 @@ export const VariantDrawerRTL = () => {
   );
 };
 
-const controlledModal = new ModalController({ openOnMount: true });
-function ControlledModalContent() {
-  const { close } = useModalContext();
+type TestState = { userId: string };
+function ModalContent() {
+  const { close, state } = useModalContext<TestState>();
   return (
     <>
       <ModalHeader>Header</ModalHeader>
       <ModalBody>
+        <div>initState: {state.userId}</div>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni culpa
         earum necessitatibus nemo officia quam illo reiciendis. Quia harum
         doloribus officiis. Aliquam voluptate porro hic molestias possimus ea
@@ -235,8 +236,24 @@ function ControlledModalContent() {
     </>
   );
 }
-controlledModal.Component = ControlledModalContent;
+const ImperativeModal = new ModalController<TestState>({
+  props: { dxVariant: "basic" },
+  ModalContent,
+});
 
 export const WithContoller = () => {
-  return <button onClick={controlledModal.launch}>Open Modal</button>;
+  return (
+    <>
+      <ImperativeModal.Component />
+      <button
+        onClick={(e) =>
+          ImperativeModal.launch(e, {
+            userId: "493f8c0d-684e-5308-8c39-4e6ade3e1c73",
+          })
+        }
+      >
+        Open Modal
+      </button>
+    </>
+  );
 };

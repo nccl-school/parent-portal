@@ -1,9 +1,11 @@
 import { useEffect, useRef } from "react";
 
-import type { ModalOptions, ModalState } from "../_core/modal/index.js";
+import type { ReactModalState } from "./Modal.provider.js";
+
+import type { ModalOptions } from "../_core/modal/index.js";
 import { ModalEngine } from "../_core/modal/index.js";
 
-export function useModal<T extends ModalState = ModalState>(
+export function useModal<T extends ReactModalState = ReactModalState>(
   options?: Partial<ModalOptions>
 ): ModalEngine<T> {
   const ref = useRef<ModalEngine<T>>(new ModalEngine<T>(options));

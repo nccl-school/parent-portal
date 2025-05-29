@@ -3,13 +3,17 @@ import type { JSX, RefCallback } from "react";
 import { forwardRef, useCallback } from "react";
 import { css } from "@linaria/core";
 import { makeRem } from "@nccl/theme";
+import { createPortal } from "react-dom";
 
 import type { ModalVariants } from "./modal.styles.js";
 import { backdropStyles, modalStyles } from "./modal.styles.js";
+import type { ReactModalState } from "./Modal.provider.js";
 import { ModalProvider } from "./Modal.provider.js";
+import { useModalContext } from "./modal.useModalContext.js";
 
 import type { ModalEngine } from "../_core/modal/ModalEngine.js";
 import { useForwardedRef } from "../hooks/hook.useForwardedRef.js";
+import { useDynamicNode } from "../useDynamicNode/index.js";
 
 export type ModalPropsNative = JSX.IntrinsicElements["dialog"];
 export type ModalPropsCustom = {
@@ -17,7 +21,7 @@ export type ModalPropsCustom = {
    * @default basic
    */
   dxVariant?: ModalVariants;
-  dxEngine: ModalEngine;
+  dxEngine: ModalEngine<ReactModalState>;
 };
 export type ModalProps = ModalPropsNative & ModalPropsCustom;
 
@@ -26,22 +30,29 @@ const styles = css`
   border-radius: ${makeRem(8)};
 `;
 
-export const Modal = forwardRef<HTMLDialogElement, ModalProps>(function Modal(
-  { children, className, dxEngine, dxVariant = "basic", ...restProps },
-  ref
-) {
-  const modalRef = useForwardedRef(ref);
+export const ModalContent = forwardRef<HTMLDialogElement, ModalProps>(
+  function Modal(
+    { children, className, dxEngine, dxVariant = "basic", ...restProps },
+    ref
+  ) {
+    const modalRef = useForwardedRef(ref);
+    const dynamicNode = useDynamicNode();
+    const { state } = useModalContext();
 
-  const handleOnMount = useCallback<RefCallback<HTMLDialogElement>>(
-    (node) => {
-      modalRef.current = node;
-      dxEngine.onMount(node);
-    },
-    [dxEngine, modalRef]
-  );
+    const handleOnMount = useCallback<RefCallback<HTMLDialogElement>>(
+      (node) => {
+        modalRef.current = node;
+        dxEngine.onMount(node, { openOnMount: true });
+      },
+      [dxEngine, modalRef]
+    );
 
-  return (
-    <ModalProvider dxEngine={dxEngine}>
+    if (!state.isOpen) {
+      dynamicNode.destroyNode();
+      return;
+    }
+
+    return createPortal(
       <dialog
         {...restProps}
         className={classes(
@@ -53,7 +64,19 @@ export const Modal = forwardRef<HTMLDialogElement, ModalProps>(function Modal(
         ref={handleOnMount}
       >
         {children}
-      </dialog>
+      </dialog>,
+      dynamicNode.getDynamicNode()
+    );
+  }
+);
+
+export const Modal = forwardRef<HTMLDialogElement, ModalProps>(function Modal(
+  { dxEngine, ...restProps },
+  ref
+) {
+  return (
+    <ModalProvider dxEngine={dxEngine}>
+      <ModalContent {...restProps} dxEngine={dxEngine} ref={ref} />
     </ModalProvider>
   );
 });

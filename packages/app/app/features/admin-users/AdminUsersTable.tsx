@@ -9,36 +9,15 @@ import {
   TableBodyCol,
 } from "@nccl/components";
 import { makeRem } from "@nccl/theme";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import { AdminUsersTableCellMenu } from "./AdminUsersTableCellMenu";
 import { AdminUsersTableCellName } from "./AdminUsersTableCellName";
 import { AdminUsersTableCellRole } from "./AdminUsersTableCellRole";
 
-import {
-  AdminUserPermissions,
-  useAdminUserPermissionsModal,
-} from "../admin-user-permissions";
-import {
-  AdminUserProfile,
-  useAdminUserProfileModal,
-} from "../admin-user-profile";
-
 export function AdminUsersTable({ data }: { data: Omit<User, "_raw">[] }) {
-  const userPermissionsModal = useAdminUserPermissionsModal();
-  const userProfileModal = useAdminUserProfileModal();
-
   return (
     <>
-      {useMemo(
-        () => (
-          <>
-            <AdminUserPermissions engine={userPermissionsModal} />
-            <AdminUserProfile engine={userProfileModal} />
-          </>
-        ),
-        [userPermissionsModal, userProfileModal]
-      )}
       <Table>
         {useMemo(
           () => (
@@ -58,7 +37,7 @@ export function AdminUsersTable({ data }: { data: Omit<User, "_raw">[] }) {
         )}
         <TableBody>
           {data.map((user) => (
-            <TableRow>
+            <TableRow key={user.id}>
               <TableBodyCol>
                 <InputCheckbox />
               </TableBodyCol>
@@ -70,13 +49,7 @@ export function AdminUsersTable({ data }: { data: Omit<User, "_raw">[] }) {
               </TableBodyCol>
               <TableBodyCol>{user.lastActiveAt}</TableBodyCol>
               <TableBodyCol style={{ width: makeRem(24) }}>
-                <AdminUsersTableCellMenu
-                  {...user}
-                  launchUserPermissions={(userId) => {
-                    userPermissionsModal.open(undefined, { userId });
-                  }}
-                  launchUserProfile={() => userProfileModal.open()}
-                />
+                <AdminUsersTableCellMenu {...user} />
               </TableBodyCol>
             </TableRow>
           ))}

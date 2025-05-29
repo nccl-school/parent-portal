@@ -1,10 +1,6 @@
-import { useModal, useModalContext } from "@nccl/components";
+import { useModalContext } from "@nccl/components";
 
-type AdminUserPermissionsModalState = { userId: string };
-
-export const useAdminUserPermissionsModal = () => {
-  return useModal<AdminUserPermissionsModalState>();
-};
+import type { AdminUserPermissionsModalState } from "./admin-user-permission.utils";
 
 export const useAdminUserPermissionsModalContext = () => {
   return useModalContext<AdminUserPermissionsModalState>();

@@ -49,9 +49,9 @@ export class ModalEngine<S extends ModalState = ModalState>
     }
   };
 
-  onMount(node: HTMLDialogElement | null, options: ModalOptions): void;
+  onMount(node: HTMLDialogElement | null, options: Partial<ModalOptions>): void;
   onMount(node: HTMLDialogElement | null): void;
-  onMount(node: HTMLDialogElement | null, options?: ModalOptions) {
+  onMount(node: HTMLDialogElement | null, options?: Partial<ModalOptions>) {
     if (options) {
       this._isOpen = options?.openOnMount ?? this._isOpen;
       this._options.closeOnBackdropClick =

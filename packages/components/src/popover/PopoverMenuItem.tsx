@@ -1,11 +1,18 @@
-import type { JSX } from "react";
+import type { JSX, MouseEventHandler } from "react";
 import { forwardRef } from "react";
 import { classes } from "@stratum-ui/core/utils";
 import { css } from "@linaria/core";
 import { makeColor, makeFontWeight, makeRem, makeReset } from "@nccl/theme";
 
-export type PopoverMenuItemPropsNative = JSX.IntrinsicElements["li"];
-export type PopoverMenuItemProps = PopoverMenuItemPropsNative;
+export type PopoverMenuItemPropsNative = Omit<
+  JSX.IntrinsicElements["li"],
+  "onClick"
+>;
+export type PopoverMenuItemPropsCustom = {
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+};
+export type PopoverMenuItemProps = PopoverMenuItemPropsNative &
+  PopoverMenuItemPropsCustom;
 
 const styles = css`
   & + & {
@@ -37,10 +44,15 @@ const styles = css`
 `;
 
 export const PopoverMenuItem = forwardRef<HTMLLIElement, PopoverMenuItemProps>(
-  function PopoverMenuItem({ children, className, ...restProps }, ref) {
+  function PopoverMenuItem(
+    { children, className, onClick, ...restProps },
+    ref
+  ) {
     return (
       <li {...restProps} className={classes(className, styles)} ref={ref}>
-        <button type="button">{children}</button>
+        <button type="button" onClick={onClick}>
+          {children}
+        </button>
       </li>
     );
   }

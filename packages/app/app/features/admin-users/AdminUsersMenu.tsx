@@ -6,33 +6,28 @@ import {
   PopoverMenuItemText,
   type PopoverEngine,
 } from "@nccl/components";
-import { useCallback } from "react";
+import { useCallback, type MouseEventHandler } from "react";
 
 export function AdminUsersMenu({
   popover,
   userId,
-  launchUserProfile,
-  launchUserPermissions,
+  launchUserPermission,
 }: {
   userId: string;
   popover: PopoverEngine;
-  launchUserProfile: (userId: string) => void;
-  launchUserPermissions: (userId: string) => void;
+  launchUserPermission: (userId: string) => void;
 }) {
-  const handleLaunchUserProfile = useCallback(() => {
-    launchUserProfile(userId);
+  const handleLaunchUserPermissions = useCallback<
+    MouseEventHandler<HTMLButtonElement>
+  >(() => {
+    launchUserPermission(userId);
     popover.hide();
-  }, [launchUserProfile, popover, userId]);
-
-  const handleLaunchUserPermissions = useCallback(() => {
-    launchUserPermissions(userId);
-    popover.hide();
-  }, [launchUserPermissions, popover, userId]);
+  }, [launchUserPermission, popover, userId]);
 
   return (
     <Popover ref={popover.setPopover}>
       <PopoverMenu>
-        <PopoverMenuItem onClick={handleLaunchUserProfile}>
+        <PopoverMenuItem>
           <PopoverMenuItemIcon dxIcon="user-02-stroke-standard" />
           <PopoverMenuItemText>View Profile</PopoverMenuItemText>
         </PopoverMenuItem>

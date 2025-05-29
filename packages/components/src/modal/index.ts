@@ -6,3 +6,4 @@ export * from "./modal.useModal.js";
 export * from "./modal.useModalContext.js";
 export * from "./ModalFooter.js";
 export * from "./modal.utils.js";
+export * from "./Modal.controller.js";

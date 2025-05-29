@@ -1,70 +1,66 @@
-import { createRoot } from "react-dom/client";
-import { createPortal } from "react-dom";
 import type { ReactNode, MouseEvent } from "react";
-import type { ModalOptions, ModalState } from "@stratum-ui/core/modal";
 import { castDraft } from "immer";
 
-import { Modal } from "./Modal.js";
+import { Modal, type ModalProps } from "./Modal.js";
 
+import type { ModalOptions, ModalState } from "../_core/modal/ModalEngine.js";
 import { ModalEngine } from "../_core/modal/ModalEngine.js";
+
+type ModalContentProps = Partial<Omit<ModalProps, "dxEngine">>;
+type ModalControllerOptions = Partial<Omit<ModalOptions, "openOnMount">>;
 
 export class ModalController<
   S extends ModalState = ModalState,
 > extends ModalEngine<S> {
-  private _container: HTMLDivElement | null = null;
-  private _root: ReturnType<typeof createRoot> | null = null;
+  private _props: ModalContentProps | undefined = undefined;
+  ModalContent: () => ReactNode;
 
-  constructor(args: Partial<ModalOptions>) {
+  constructor({
+    props,
+    options,
+    ModalContent,
+  }: {
+    props?: ModalContentProps;
+    options?: ModalControllerOptions;
+    ModalContent: () => ReactNode;
+  }) {
     super({
-      ...args,
+      ...(options ?? {}),
       openOnMount: true,
     });
+    this._props = { ...props, dxVariant: props?.dxVariant ?? "basic" };
     this.launch = this.launch.bind(this);
+    this.ModalContent = ModalContent;
+    this.Component = this.Component.bind(this);
   }
 
-  Component?: () => ReactNode;
-
-  launch<E extends HTMLElement, InitState extends ModalState = S>(
-    e: MouseEvent<E>,
-    state?: InitState
+  launch<E extends HTMLElement>(event?: MouseEvent<E>): void;
+  launch<E extends HTMLElement, T extends S = S>(
+    event: MouseEvent<E>,
+    state: T
+  ): void;
+  launch<E extends HTMLElement, T extends S = S>(
+    _event?: MouseEvent<E>,
+    state?: T
   ): void {
-    if (!this.Component) {
-      throw new Error(
-        "ModalController.Component must be set before calling open()"
-      );
-    }
+    this.setState(() =>
+      castDraft({
+        ...(state ?? {}),
+        isOpen: true,
+      })
+    );
+  }
 
-    if (state) this._queue.setState(() => castDraft(state));
-
-    const target = e.target as HTMLElement;
-    if (!target) {
-      throw new Error("You must pass a valid MouseEvent to attach the modal");
-    }
-
-    this._container = document.createElement("div");
-    this._container.id = crypto.randomUUID();
-    target.insertAdjacentElement("afterend", this._container);
-    this._root = createRoot(this._container);
-
-    const originalClose = this.close.bind(this);
-    this.close = async () => {
-      await originalClose();
-      this.destroy();
-      setTimeout(() => {
-        this._root?.unmount();
-        this._container?.remove();
-      }, 500);
-    };
-
-    const ModalContentComponent = this.Component;
-    this._root.render(
-      createPortal(
-        // @ts-expect-error The engine is instantiated correctly
-        <Modal dxEngine={this} dxVariant="basic">
-          <ModalContentComponent />
-        </Modal>,
-        this._container
-      )
+  Component(props?: ModalContentProps) {
+    return (
+      <Modal
+        // @ts-expect-error Passing in this as engine is appropriate here
+        dxEngine={this}
+        {...this._props}
+        {...props}
+      >
+        <this.ModalContent />
+      </Modal>
     );
   }
 }

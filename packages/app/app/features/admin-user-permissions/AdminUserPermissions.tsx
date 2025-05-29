@@ -1,22 +1,38 @@
 import {
-  Modal,
   ModalBody,
+  ModalController,
   ModalFooter,
   ModalHeader,
-  type ModalEngine,
 } from "@nccl/components";
 import { href, useFetcher } from "react-router";
+import { makeRem } from "@nccl/theme";
 
 import { useAdminUserPermissionsModalContext } from "./admin-user-permission.useModal";
+import type { AdminUserPermissionsModalState } from "./admin-user-permission.utils";
 
-function ModalContent() {
+export const AdminUserPermissions =
+  new ModalController<AdminUserPermissionsModalState>({
+    props: {
+      dxVariant: "drawer-rtl",
+      style: {
+        width: makeRem(500),
+      },
+    },
+    options: {
+      closeOnBackdropClick: true,
+    },
+  });
+
+AdminUserPermissions.Component = function AdminUserPermissions() {
   const {
     close,
     state: { userId },
   } = useAdminUserPermissionsModalContext();
-
   const fetcher = useFetcher();
+
   fetcher.load(href("/api/user/:id", { id: userId }));
+
+  console.log(userId, fetcher.data);
 
   return (
     <>
@@ -29,12 +45,4 @@ function ModalContent() {
       </ModalFooter>
     </>
   );
-}
-
-export function AdminUserPermissions({ engine }: { engine: ModalEngine }) {
-  return (
-    <Modal dxEngine={engine} dxVariant="drawer-rtl" style={{ width: 500 }}>
-      <ModalContent />
-    </Modal>
-  );
-}
+};
