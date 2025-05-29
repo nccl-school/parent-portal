@@ -54,7 +54,7 @@ export const NavbarSecondary = forwardRef<HTMLElement, NavbarSecondaryProps>(
     return (
       <div className={styles}>
         <button onClick={engine.open}>Open</button>
-        <Modal ref={engine.onMount} dxVariant="drawer-ltr">
+        <Modal dxEngine={engine} dxVariant="drawer-ltr">
           <button className="close" onClick={engine.close}>
             <Icon dxIcon="cancel-01-stroke-standard" dxSize={24} />
           </button>

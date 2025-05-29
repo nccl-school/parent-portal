@@ -1,4 +1,5 @@
 import type { MouseEvent } from "react";
+import { castDraft } from "immer";
 
 import type {
   DialogOptions,
@@ -66,6 +67,10 @@ export class ModalEngine<S extends ModalState = ModalState>
     node.addEventListener("cancel", this._onCancel);
     node.addEventListener("close", this._onClose);
     node.addEventListener("click", this._onBackdropClick);
+
+    if (this._isOpen || options?.openOnMount) {
+      this.open();
+    }
   }
 
   destroy() {
@@ -80,10 +85,12 @@ export class ModalEngine<S extends ModalState = ModalState>
    * can be run inside of click handler for a button where some initial state
    * can be loaded
    */
-  open<E extends HTMLElement>(_e?: MouseEvent<E>): void {
+  open<E extends HTMLElement, InitState extends ModalState = S>(
+    _e?: MouseEvent<E>,
+    state?: InitState
+  ): void {
+    if (state) this._queue.setState(() => castDraft(state));
     const dialog = this._getDialog();
-
-    // show the dialog as a modal dialog
     dialog.showModal();
   }
 

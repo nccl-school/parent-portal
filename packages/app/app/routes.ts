@@ -2,6 +2,7 @@ import {
   type RouteConfig,
   index,
   layout,
+  prefix,
   route,
 } from "@react-router/dev/routes";
 
@@ -36,4 +37,9 @@ export default [
   ]),
   // - /sign-in/*
   route("sign-in/*", "features/sign-in/SignIn.route.tsx"),
+  // APIs
+  ...prefix("api", [
+    route("user/:id", "./api/user.ts", [route("role", "./api/user.role.ts")]),
+  ]),
+  // route("/api/user/role:id", "./api/user/role"),
 ] satisfies RouteConfig;

@@ -11,7 +11,8 @@ export type CustomTokens =
   | "page--gutter-desktop"
   | "page--gutter-mobile"
   | "table--cell-padding"
-  | "table--body-cell-padding-v";
+  | "table--body-cell-padding-v"
+  | "modal--gutters";
 export type MakeCustom = (tokenName: CustomTokens) => string | number;
 
 /**

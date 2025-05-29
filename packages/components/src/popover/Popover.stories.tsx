@@ -1,11 +1,15 @@
 import type { Meta } from "@storybook/react";
-import type { PopoverPosition } from "../_core/popover/index.js";
-import { PopoverEngine, popoverPositions } from "../_core/popover/index.js";
-import { classes } from "../_core/utils/index.js";
-import styles from "../_core/popover/popover.module.scss";
 
 import { usePopover } from "./popover.usePopover.js";
 import storyStyles from "./_stories.module.scss";
+import { Popover } from "./Popover.js";
+import { PopoverMenu } from "./PopoverMenu.js";
+import { PopoverMenuItem } from "./PopoverMenuItem.js";
+import { PopoverMenuItemIcon } from "./PopoverMenuItemIcon.js";
+import { PopoverMenuItemText } from "./PopoverMenuItemText.js";
+
+import type { PopoverPosition } from "../_core/popover/index.js";
+import { PopoverEngine, popoverPositions } from "../_core/popover/index.js";
 
 const meta: Meta = {
   title: "Overlay / Popover",
@@ -26,10 +30,10 @@ export const WithInstance = () => {
       >
         Open Popover
       </button>
-      <div ref={PopoverInstance.setPopover}>
+      <Popover ref={PopoverInstance.setPopover}>
         <h3>I'm a popover</h3>
         <button onClick={PopoverInstance.hide}>Close me</button>
-      </div>
+      </Popover>
     </>
   );
 };
@@ -41,25 +45,10 @@ export const WithHook = () => {
       <button onClick={popover.show} ref={popover.setPopoverTarget}>
         Open Popover
       </button>
-      <div ref={popover.setPopover}>
+      <Popover ref={popover.setPopover}>
         <h3>I'm a popover</h3>
         <button onClick={popover.hide}>Close me</button>
-      </div>
-    </>
-  );
-};
-
-export const WithDefaultStyles = () => {
-  const popover = usePopover();
-  return (
-    <>
-      <button onClick={popover.show} ref={popover.setPopoverTarget}>
-        Open Popover
-      </button>
-      <div ref={popover.setPopover} className={styles.base}>
-        <h3>I'm a popover</h3>
-        <button onClick={popover.hide}>Close me</button>
-      </div>
+      </Popover>
     </>
   );
 };
@@ -82,10 +71,10 @@ export const Positioning = () => {
         >
           Open Popover
         </button>
-        <div ref={popover.setPopover} className={classes(styles.base)}>
+        <Popover ref={popover.setPopover}>
           <h3>I'm a popover</h3>
           <button onClick={popover.hide}>Close me</button>
-        </div>
+        </Popover>
       </div>
       <div style={{ gridArea: "side" }}>
         <h2>Offset</h2>
@@ -119,5 +108,28 @@ export const Positioning = () => {
         ))}
       </div>
     </div>
+  );
+};
+
+export const WithMenu = () => {
+  const popover = usePopover();
+  return (
+    <>
+      <button onClick={popover.show} ref={popover.setPopoverTarget}>
+        Open Popover
+      </button>
+      <Popover ref={popover.setPopover}>
+        <PopoverMenu>
+          <PopoverMenuItem>
+            <PopoverMenuItemIcon dxIcon="user-02-stroke-standard" />
+            <PopoverMenuItemText>View Profile</PopoverMenuItemText>
+          </PopoverMenuItem>
+          <PopoverMenuItem>
+            <PopoverMenuItemIcon dxIcon="key-02-stroke-standard" />
+            <PopoverMenuItemText>Change Permission</PopoverMenuItemText>
+          </PopoverMenuItem>
+        </PopoverMenu>
+      </Popover>
+    </>
   );
 };

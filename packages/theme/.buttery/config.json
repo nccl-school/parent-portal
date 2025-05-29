@@ -156,6 +156,11 @@
       "type": "rem",
       "description": "The vertical padding on each body cell",
       "value": 16
+    },
+    "modal--gutters": {
+      "type": "rem",
+      "description": "The size of the gutters for the modal header footer and body",
+      "value": 32
     }
   }
 }

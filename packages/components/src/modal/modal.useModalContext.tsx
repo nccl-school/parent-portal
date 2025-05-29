@@ -3,10 +3,10 @@ import { useContext } from "react";
 import type { ModalContextType } from "./modal.utils.js";
 import { ModalContext } from "./modal.utils.js";
 
-import type { DialogState } from "../_core/dialog/index.js";
+import type { ModalState } from "../_core/modal/ModalEngine.js";
 
 export function useModalContext<
-  S extends DialogState = DialogState,
+  S extends ModalState = ModalState,
 >(): ModalContextType<S> {
   const context = useContext(ModalContext);
   if (!context) {

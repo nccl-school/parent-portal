@@ -1,10 +1,12 @@
 import { useEffect, useRef } from "react";
 
-import type { ModalOptions } from "../_core/modal/index.js";
+import type { ModalOptions, ModalState } from "../_core/modal/index.js";
 import { ModalEngine } from "../_core/modal/index.js";
 
-export function useModal(options?: Partial<ModalOptions>): ModalEngine {
-  const ref = useRef<ModalEngine>(new ModalEngine(options));
+export function useModal<T extends ModalState = ModalState>(
+  options?: Partial<ModalOptions>
+): ModalEngine<T> {
+  const ref = useRef<ModalEngine<T>>(new ModalEngine<T>(options));
 
   useEffect(() => {
     const modal = ref.current;

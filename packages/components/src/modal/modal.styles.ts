@@ -1,14 +1,21 @@
 import { css } from "@linaria/core";
 import { makeRem } from "@nccl/theme";
 
-export type ModalVariants = "basic" | "drawer-ltr";
-export const baseStyles = css`
+export type ModalVariants = "basic" | "drawer-ltr" | "drawer-rtl";
+export const backdropStyles = css`
   --modal-animation-duration: 0.3s;
+  --shadow-color: 0deg 0% 37%;
+  --drawer-shadow:
+    0.2px 0px 0.2px hsl(var(--shadow-color) / 0.36),
+    0.7px 0px 0.8px -0.8px hsl(var(--shadow-color) / 0.36),
+    1.7px 0px 1.9px -1.7px hsl(var(--shadow-color) / 0.36),
+    4.1px 0px 4.6px -2.5px hsl(var(--shadow-color) / 0.36);
 
   // Open state
   &[open] {
     &::backdrop {
       background-color: rgb(0 0 0 / 25%);
+      backdrop-filter: blur(10px);
     }
   }
 
@@ -62,13 +69,6 @@ export const modalStyles: { [key in ModalVariants]: ReturnType<typeof css> } = {
     }
   `,
   "drawer-ltr": css`
-    --shadow-color: 0deg 0% 37%;
-    --drawer-shadow:
-      0.2px 0px 0.2px hsl(var(--shadow-color) / 0.36),
-      0.7px 0px 0.8px -0.8px hsl(var(--shadow-color) / 0.36),
-      1.7px 0px 1.9px -1.7px hsl(var(--shadow-color) / 0.36),
-      4.1px 0px 4.6px -2.5px hsl(var(--shadow-color) / 0.36);
-
     // Open state
     &[open] {
       transform: translateX(0);
@@ -92,6 +92,36 @@ export const modalStyles: { [key in ModalVariants]: ReturnType<typeof css> } = {
     @starting-style {
       &[open] {
         transform: translateX(-100%);
+      }
+    }
+  `,
+  "drawer-rtl": css`
+    // Open state
+    &[open] {
+      transform: translateX(0);
+    }
+
+    // Closed state
+    position: fixed !important;
+    top: 0;
+    right: 0;
+    left: unset;
+    height: 100vh;
+    width: max-content;
+    margin: 0;
+    max-height: unset;
+    max-width: unset;
+    transform: translateX(100%);
+    border-top-left-radius: ${makeRem(8)};
+    border-bottom-left-radius: ${makeRem(8)};
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    box-shadow: var(--drawer-shadow);
+
+    // Starting style
+    @starting-style {
+      &[open] {
+        transform: translateX(100%);
       }
     }
   `,
