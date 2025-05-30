@@ -9,6 +9,7 @@ import {
   TableBodyCol,
   Typography,
   InputSearch,
+  Button,
 } from "@nccl/components";
 import { makeFontWeight, makeRem } from "@nccl/theme";
 import { useMemo } from "react";
@@ -54,12 +55,22 @@ export function AdminUsersTable({ data }: { data: Omit<User, "_raw">[] }) {
         </Typography>
         <div className="right">
           <InputSearch placeholder="Search" />
-          <div>
-            <button type="button">filters</button>
-          </div>
-          <div>
-            <button type="button">invite users</button>
-          </div>
+          <Button
+            dxVariant="outlined"
+            dxStartIcon="filter-stroke-standard"
+            dxSize="md"
+            dxColor="secondary"
+          >
+            Filters
+          </Button>
+          <Button
+            dxVariant="contained"
+            dxStartIcon="user-add-01-stroke-standard"
+            dxSize="md"
+            dxColor="alt"
+          >
+            Invite user
+          </Button>
         </div>
       </div>
       <Table>

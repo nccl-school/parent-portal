@@ -10,6 +10,8 @@ import { classes } from "@stratum-ui/core/utils";
 import type { JSX } from "react";
 import { forwardRef, useId, useMemo } from "react";
 
+import { fontSizeStyles, type IntrinsicSizes } from "../shared/index.js";
+
 export type InputTextPropsNative = JSX.IntrinsicElements["input"];
 export type InputTextPropsCustom = {
   /**
@@ -21,7 +23,7 @@ export type InputTextPropsCustom = {
    * The size of the input
    * @default "md"
    */
-  dxSize?: "sm" | "md" | "lg";
+  dxSize?: IntrinsicSizes;
   /**
    * Adds a label above the input
    */
@@ -47,18 +49,6 @@ export type InputTextProps = InputTextPropsNative & InputTextPropsCustom;
 
 const containerStyles = css`
   font-family: ${makeFontFamily("body")};
-
-  &.sm {
-    font-size: ${makeRem(12)};
-  }
-
-  &.md {
-    font-size: ${makeRem(16)};
-  }
-
-  &.lg {
-    font-size: ${makeRem(20)};
-  }
 
   .error {
     margin-top: ${makeRem(4)};
@@ -164,16 +154,16 @@ export const InputText = forwardRef<HTMLInputElement, InputTextProps>(
     const inputId = useMemo(() => id ?? autoId, [autoId, id]);
 
     return (
-      <div className={classes(containerStyles, dxSize)}>
-        {useMemo(
-          () => (
+      <div className={classes(containerStyles, dxSize, fontSizeStyles)}>
+        {useMemo(() => {
+          if (!dxLabel) return null;
+          return (
             <label className={labelStyles} htmlFor={inputId}>
               {dxLabel && <div>{dxLabel}</div>}
               {dxHint && <div className="hint">{dxHint}</div>}
             </label>
-          ),
-          [dxHint, dxLabel, inputId]
-        )}
+          );
+        }, [dxHint, dxLabel, inputId])}
         <div className={wrapperStyles}>
           {useMemo(
             () =>
