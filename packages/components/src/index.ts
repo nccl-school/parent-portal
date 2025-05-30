@@ -15,4 +15,5 @@ export * from "./_core/popover/index.js";
 export * from "./_core/modal/index.js";
 export * from "./input-checkbox/index.js";
 export * from "./input-radio/index.js";
-export * from "./input/index.js";
+export * from "./input-text/index.js";
+export * from "./input-search/index.js";

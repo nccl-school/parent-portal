@@ -8,6 +8,7 @@ import {
   TableBody,
   TableBodyCol,
   Typography,
+  InputSearch,
 } from "@nccl/components";
 import { makeFontWeight, makeRem } from "@nccl/theme";
 import { useMemo } from "react";
@@ -23,8 +24,9 @@ import { AdminUserProfile } from "../admin-user-profile";
 const styles = css`
   display: grid;
   grid-template-columns: auto 1fr;
+  align-items: center;
   width: 100%;
-  height: ${makeRem(44)};
+  height: ${makeRem(72)};
 
   & > div {
     &.left {
@@ -36,6 +38,7 @@ const styles = css`
       justify-self: end;
       display: flex;
       gap: 1rem;
+      align-items: center;
     }
   }
 `;
@@ -50,9 +53,7 @@ export function AdminUsersTable({ data }: { data: Omit<User, "_raw">[] }) {
           Viewing {data.length} Users
         </Typography>
         <div className="right">
-          <div>
-            <input type="search" placeholder="Search" />
-          </div>
+          <InputSearch placeholder="Search" />
           <div>
             <button type="button">filters</button>
           </div>

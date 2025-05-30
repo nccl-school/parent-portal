@@ -10,8 +10,8 @@ import { classes } from "@stratum-ui/core/utils";
 import type { JSX } from "react";
 import { forwardRef, useId, useMemo } from "react";
 
-export type InputPropsNative = Omit<JSX.IntrinsicElements["input"], "type">;
-export type InputPropsCustom = {
+export type InputTextPropsNative = JSX.IntrinsicElements["input"];
+export type InputTextPropsCustom = {
   /**
    * The pre-defined style of the input
    * @default "transparent"
@@ -43,7 +43,7 @@ export type InputPropsCustom = {
    */
   DXAdornmentEnd?: () => JSX.Element;
 };
-export type InputProps = InputPropsNative & InputPropsCustom;
+export type InputTextProps = InputTextPropsNative & InputTextPropsCustom;
 
 const containerStyles = css`
   font-family: ${makeFontFamily("body")};
@@ -143,68 +143,72 @@ const styles = css`
   }
 `;
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
-  {
-    className,
-    dxVariant = "transparent",
-    dxSize = "md",
-    dxLabel,
-    dxHint,
-    dxError,
-    id,
-    DXAdornmentEnd,
-    DXAdornmentStart,
-    ...restProps
-  },
-  ref
-) {
-  const autoId = useId();
-  const inputId = useMemo(() => id ?? autoId, [autoId, id]);
+export const InputText = forwardRef<HTMLInputElement, InputTextProps>(
+  function InputText(
+    {
+      className,
+      dxVariant = "transparent",
+      dxSize = "md",
+      dxLabel,
+      type = "text",
+      dxHint,
+      dxError,
+      id,
+      DXAdornmentEnd,
+      DXAdornmentStart,
+      ...restProps
+    },
+    ref
+  ) {
+    const autoId = useId();
+    const inputId = useMemo(() => id ?? autoId, [autoId, id]);
 
-  return (
-    <div className={classes(containerStyles, dxSize)}>
-      {useMemo(
-        () => (
-          <label className={labelStyles} htmlFor={inputId}>
-            {dxLabel && <div>{dxLabel}</div>}
-            {dxHint && <div className="hint">{dxHint}</div>}
-          </label>
-        ),
-        [dxHint, dxLabel, inputId]
-      )}
-      <div className={wrapperStyles}>
+    return (
+      <div className={classes(containerStyles, dxSize)}>
         {useMemo(
-          () =>
-            DXAdornmentStart && (
-              <div className="adornment start">
-                <DXAdornmentStart />
+          () => (
+            <label className={labelStyles} htmlFor={inputId}>
+              {dxLabel && <div>{dxLabel}</div>}
+              {dxHint && <div className="hint">{dxHint}</div>}
+            </label>
+          ),
+          [dxHint, dxLabel, inputId]
+        )}
+        <div className={wrapperStyles}>
+          {useMemo(
+            () =>
+              DXAdornmentStart && (
+                <div className="adornment start">
+                  <DXAdornmentStart />
+                </div>
+              ),
+            [DXAdornmentStart]
+          )}
+          {useMemo(
+            () => (
+              <input
+                {...restProps}
+                type={type}
+                id={inputId}
+                className={classes(className, styles, dxVariant, {
+                  invalid: !!dxError,
+                })}
+                ref={ref}
+              />
+            ),
+            [className, dxError, dxVariant, inputId, ref, restProps, type]
+          )}
+          {useMemo(
+            () => (
+              <div className="adornment end">
+                {DXAdornmentEnd && <DXAdornmentEnd />}
               </div>
             ),
-          [DXAdornmentStart]
-        )}
-        {useMemo(
-          () => (
-            <input
-              {...restProps}
-              id={inputId}
-              className={classes(className, styles, dxVariant, {
-                invalid: !!dxError,
-              })}
-              ref={ref}
-            />
-          ),
-          [className, dxError, dxVariant, inputId, ref, restProps]
-        )}
-        {useMemo(
-          () => (
-            <div className="adornment end">
-              {DXAdornmentEnd && <DXAdornmentEnd />}
-            </div>
-          ),
-          [DXAdornmentEnd]
-        )}
+            [DXAdornmentEnd]
+          )}
+        </div>
+        {dxError && <div className="error">{dxError}</div>}
       </div>
-      {dxError && <div className="error">{dxError}</div>}
-    </div>
-  );
-});
+    );
+  }
+);
