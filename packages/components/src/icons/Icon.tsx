@@ -25,7 +25,7 @@ export type IconPropsCustom = {
 export type IconProps = IconPropsNative & IconPropsCustom;
 
 const styles = css`
-  --icon-size: ${makeRem(24)};
+  --icon-size: inherit;
   --icon-color: ${makeColor("neutral-dark")};
 
   font-size: var(--icon-size);
@@ -33,6 +33,8 @@ const styles = css`
 
   height: var(--icon-size);
   aspect-ratio: 1 / 1;
+  display: grid;
+  place-content: center;
 `;
 
 function IconFallback() {
@@ -44,20 +46,13 @@ const lazyIconManifest = Object.fromEntries(
 );
 
 export const Icon = forwardRef<HTMLDivElement, IconProps>(function Icon(
-  {
-    className,
-    dxIcon,
-    dxSize = 24,
-    style = {},
-    dxColor = "inherit",
-    ...restProps
-  },
+  { className, dxIcon, dxSize, style = {}, dxColor = "inherit", ...restProps },
   ref
 ) {
   const inlineStyles = useMemo<React.CSSProperties>(() => {
     return {
       ...style,
-      "--icon-size": `${dxSize}px`,
+      "--icon-size": dxSize ? makeRem(dxSize) : "inherit",
       "--icon-color": dxColor === "inherit" ? "inherit" : makeColor(dxColor),
     };
   }, [dxColor, dxSize, style]);
