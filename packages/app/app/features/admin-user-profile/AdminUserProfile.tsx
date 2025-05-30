@@ -1,20 +1,57 @@
-import { Modal, ModalHeader, type ModalEngine } from "@nccl/components";
+import {
+  Avatar,
+  ModalBody,
+  ModalController,
+  ModalFooter,
+  Typography,
+} from "@nccl/components";
 
-export function AdminUserProfile({ engine }: { engine: ModalEngine }) {
+import { useAdminUserProfileModalContext } from "./admin-user-profile.useModal";
+import type { AdminUserProfileModalState } from "./admin-user-profile.utils";
+
+export const AdminUserProfile = new ModalController<AdminUserProfileModalState>(
+  {
+    props: {
+      dxVariant: "drawer-rtl",
+      style: {
+        width: "45vh",
+      },
+    },
+    ModalContent,
+  }
+);
+
+function ModalContent() {
+  const {
+    close,
+    state: { user },
+  } = useAdminUserProfileModalContext();
+  console.log(user);
+
   return (
-    <Modal dxEngine={engine} dxVariant="drawer-ltr" style={{ width: 500 }}>
-      <ModalHeader>User Profile</ModalHeader>
-      <div>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni culpa
-        earum necessitatibus nemo officia quam illo reiciendis. Quia harum
-        doloribus officiis. Aliquam voluptate porro hic molestias possimus ea
-        voluptatum libero?
-      </div>
-      <footer>
-        <button type="button" onClick={engine.close}>
+    <>
+      <ModalBody>
+        <Typography dxVariant="heading3" dxNode="h3">
+          {user.firstName ?? "-- --"}
+        </Typography>
+        <Avatar
+          dxFirstName={user.firstName ?? ""}
+          dxSize={64}
+          dxLastName={user.lastName ?? undefined}
+          dxSrc={user.imageUrl}
+        />
+        <Typography dxVariant="heading4" dxNode="h4">
+          Permissions
+        </Typography>
+        <Typography dxVariant="body1" dxNode="div">
+          {user.publicMetadata.role ?? "Unassigned"}
+        </Typography>
+      </ModalBody>
+      <ModalFooter>
+        <button type="button" onClick={close}>
           close
         </button>
-      </footer>
-    </Modal>
+      </ModalFooter>
+    </>
   );
 }

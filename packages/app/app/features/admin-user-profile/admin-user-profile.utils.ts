@@ -1,11 +1,11 @@
 import type { User } from "@clerk/react-router/ssr.server";
 import type { MouseEvent } from "react";
 
-export type AdminUserPermissionsModalState = {
+export type AdminUserProfileModalState = {
   user: Omit<User, "_raw">;
 };
 
-export type LaunchAdminUserPermissionsModal = (
+export type LaunchAdminUserProfileModal = (
   e: MouseEvent<HTMLButtonElement>,
-  state: AdminUserPermissionsModalState
+  state: AdminUserProfileModalState
 ) => void;

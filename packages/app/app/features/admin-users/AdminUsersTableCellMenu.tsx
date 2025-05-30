@@ -4,7 +4,7 @@ import { useCallback, useRef, type RefCallback } from "react";
 
 import { AdminUsersMenu } from "./AdminUsersMenu";
 
-export function AdminUsersTableCellMenu({ id }: Pick<User, "id"> & {}) {
+export function AdminUsersTableCellMenu(user: Omit<User, "_raw">) {
   const popover = usePopover({ offset: 12, position: "bottom-span-left" });
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
@@ -25,7 +25,7 @@ export function AdminUsersTableCellMenu({ id }: Pick<User, "id"> & {}) {
         ref={onButtonMount}
         onClick={popover.show}
       />
-      <AdminUsersMenu popover={popover} userId={id} />
+      <AdminUsersMenu popover={popover} user={user} />
     </>
   );
 }

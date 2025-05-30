@@ -52,6 +52,7 @@ export class ModalController<
   }
 
   Component(props?: ModalContentProps) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const engine = this;
     const thisProps = this._props;
     const Component = this.ModalContent;

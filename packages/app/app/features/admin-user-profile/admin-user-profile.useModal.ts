@@ -1,3 +1,7 @@
-import { useModal } from "@nccl/components";
+import { useModalContext } from "@nccl/components";
 
-export const useAdminUserProfileModal = useModal;
+import type { AdminUserProfileModalState } from "./admin-user-profile.utils";
+
+export const useAdminUserProfileModalContext = () => {
+  return useModalContext<AdminUserProfileModalState>();
+};
