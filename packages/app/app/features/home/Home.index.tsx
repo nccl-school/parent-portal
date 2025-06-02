@@ -13,7 +13,6 @@ export function meta() {
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
   const user = await getCurrentUser(loaderArgs);
-
   return { firstName: user.firstName };
 }
 

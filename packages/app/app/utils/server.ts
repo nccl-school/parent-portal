@@ -3,13 +3,11 @@ import { data, redirect, type LoaderFunctionArgs } from "react-router";
 import { createClerkClient } from "@clerk/react-router/api.server";
 
 export async function ensureUser<T extends LoaderFunctionArgs>(args: T) {
-  // Use `getAuth()` to get the user's ID
   const { userId } = await getAuth(args);
-
-  // Protect the route by checking if the user is signed in
   if (!userId) {
-    redirect("/sign-in?redirect_url=" + args.request.url);
+    throw redirect("/sign-in?redirect_url=" + args.request.url);
   }
+  return userId;
 }
 
 export async function getClerkClient<A extends LoaderFunctionArgs>(args: A) {
@@ -21,14 +19,9 @@ export async function getClerkClient<A extends LoaderFunctionArgs>(args: A) {
 }
 
 export async function getCurrentUser<A extends LoaderFunctionArgs>(args: A) {
-  await ensureUser(args);
+  const userId = await ensureUser(args); // guaranteed to return or throw
   const clerkClient = await getClerkClient(args);
-  const { userId } = await getAuth(args);
-  if (!userId) {
-    throw new Error("Unable to get current user");
-  }
-  const user = await clerkClient.users.getUser(userId);
-  return user;
+  return clerkClient.users.getUser(userId);
 }
 
 export class ErrorForbidden extends Error {
