@@ -53,6 +53,7 @@ const styles = css`
   cursor: pointer;
   position: relative;
   outline-color: transparent;
+  text-transform: capitalize;
 
   &:active {
     transform: scale(0.96);

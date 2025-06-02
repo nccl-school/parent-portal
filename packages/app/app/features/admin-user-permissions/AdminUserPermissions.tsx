@@ -1,4 +1,6 @@
 import {
+  Button,
+  InputRadio,
   ModalBody,
   ModalController,
   ModalFooter,
@@ -8,12 +10,16 @@ import {
   Typography,
 } from "@nccl/components";
 import { css } from "@linaria/core";
-import { makeFontWeight, makeRem } from "@nccl/theme";
+import { makeRem } from "@nccl/theme";
+import { href, useFetcher } from "react-router";
+import { useEffect, useMemo } from "react";
 
 import { useAdminUserPermissionsModalContext } from "./admin-user-permission.useModal";
 import type { AdminUserPermissionsModalState } from "./admin-user-permission.utils";
+import { AdminUserPermissionCard } from "./AdminUserPermissionCard";
 
-import { UserRoleBadge } from "../user";
+import { getUserName, userRoles } from "../user";
+import type { Roles } from "../../global";
 
 const className = css`
   width: ${makeRem(600)};
@@ -28,49 +34,92 @@ export const AdminUserPermissions =
     ModalContent,
   });
 
-const currentRoleStyles = css`
-  display: grid;
-  gap: ${makeRem(4)};
+const styles = css`
+  margin-bottom: ${makeRem(16)};
 `;
 
 function ModalContent() {
   const {
-    close,
+    close: closeModal,
     state: { user },
   } = useAdminUserPermissionsModalContext();
-  console.log(user);
+
+  const fetcher = useFetcher();
+  const isSaving = fetcher.state !== "idle";
+
+  useEffect(() => {
+    if (!fetcher.data) return;
+    if (fetcher.data.status !== "success") return;
+    closeModal();
+  }, [closeModal, fetcher.data]);
 
   return (
     <>
-      <ModalHeader>
-        <ModalHeaderTitle>Update Permissions</ModalHeaderTitle>
-        <ModalHeaderSubtitle>
-          Manage the user&apos;s ability to view, edit, and interact with
-          content
-        </ModalHeaderSubtitle>
-      </ModalHeader>
-      <ModalBody>
-        <div className={currentRoleStyles}>
-          <Typography
-            dxVariant="heading4"
-            dxNode="div"
-            style={{
-              marginBottom: makeRem(8),
-              fontWeight: makeFontWeight("body-semiBold"),
-            }}
+      {useMemo(
+        () => (
+          <ModalHeader>
+            <ModalHeaderTitle>Update Permissions</ModalHeaderTitle>
+            <ModalHeaderSubtitle>
+              Manage the user&apos;s ability to view, edit, and interact with
+              content
+            </ModalHeaderSubtitle>
+          </ModalHeader>
+        ),
+        []
+      )}
+      <fetcher.Form
+        action={href("/api/user/:id/role", { id: user.id })}
+        method="POST"
+      >
+        {useMemo(
+          () => (
+            <ModalBody>
+              <Typography dxVariant="body1" dxNode="div" className={styles}>
+                Use the radio button's below to update{" "}
+                <b>{getUserName(user)}'s</b> access
+              </Typography>
+              {Object.entries(userRoles).map(([userRole, roleDef]) => {
+                return (
+                  <InputRadio
+                    key={userRole}
+                    dxVariant="card"
+                    dxSize="md"
+                    name="role"
+                    value={userRole}
+                    defaultChecked={userRole === user.publicMetadata.role}
+                  >
+                    <AdminUserPermissionCard
+                      role={userRole as Roles}
+                      {...roleDef}
+                    />
+                  </InputRadio>
+                );
+              })}
+            </ModalBody>
+          ),
+          [user]
+        )}
+        <ModalFooter>
+          <Button
+            dxVariant="outlined"
+            dxColor="primary"
+            dxSize="md"
+            type="button"
+            onClick={closeModal}
           >
-            Current Role
-          </Typography>
-          <div>
-            <UserRoleBadge publicMetadata={user.publicMetadata} />
-          </div>
-        </div>
-      </ModalBody>
-      <ModalFooter>
-        <button type="button" onClick={close}>
-          close
-        </button>
-      </ModalFooter>
+            close
+          </Button>
+          <Button
+            dxVariant="contained"
+            dxColor="primary"
+            dxSize="md"
+            type="submit"
+            disabled={isSaving}
+          >
+            {isSaving ? "Saving..." : "Save"}
+          </Button>
+        </ModalFooter>
+      </fetcher.Form>
     </>
   );
 }

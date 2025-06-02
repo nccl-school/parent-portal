@@ -7,6 +7,8 @@ import { ModalBody } from "./ModalBody.js";
 import { ModalFooter } from "./ModalFooter.js";
 import { ModalController } from "./Modal.controller.js";
 import { useModalContext } from "./modal.useModalContext.js";
+import { ModalHeaderTitle } from "./ModalHeaderTitle.js";
+import { ModalHeaderSubtitle } from "./ModalHeaderSubtitle.js";
 
 import styles from "../_core/modal/modal.module.scss";
 import { ModalEngine } from "../_core/modal/index.js";
@@ -222,7 +224,12 @@ function ModalContent() {
   const { close, state } = useModalContext<TestState>();
   return (
     <>
-      <ModalHeader>Header</ModalHeader>
+      <ModalHeader>
+        <ModalHeaderTitle>Test title</ModalHeaderTitle>
+        <ModalHeaderSubtitle>
+          This is an optional short description of the modal title
+        </ModalHeaderSubtitle>
+      </ModalHeader>
       <ModalBody>
         <div>initState: {state.userId}</div>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni culpa

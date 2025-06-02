@@ -21,6 +21,7 @@ import { AdminUsersTableCellRole } from "./AdminUsersTableCellRole";
 
 import { AdminUserPermissions } from "../admin-user-permissions";
 import { AdminUserProfile } from "../admin-user-profile";
+import { dates } from "../../utils/client";
 
 const styles = css`
   display: grid;
@@ -47,8 +48,15 @@ const styles = css`
 export function AdminUsersTable({ data }: { data: Omit<User, "_raw">[] }) {
   return (
     <>
-      <AdminUserPermissions.Component />
-      <AdminUserProfile.Component />
+      {useMemo(
+        () => (
+          <>
+            <AdminUserPermissions.Component />
+            <AdminUserProfile.Component />
+          </>
+        ),
+        []
+      )}
       <div className={styles}>
         <Typography dxVariant="body1" dxNode="div">
           Viewing {data.length} Users
@@ -59,7 +67,7 @@ export function AdminUsersTable({ data }: { data: Omit<User, "_raw">[] }) {
             dxVariant="outlined"
             dxStartIcon="filter-stroke-standard"
             dxSize="md"
-            dxColor="secondary"
+            dxColor="alt"
           >
             Filters
           </Button>
@@ -102,7 +110,9 @@ export function AdminUsersTable({ data }: { data: Omit<User, "_raw">[] }) {
               <TableBodyCol>
                 <AdminUsersTableCellRole {...user} />
               </TableBodyCol>
-              <TableBodyCol>{user.lastActiveAt}</TableBodyCol>
+              <TableBodyCol>
+                {dates.format(user.lastActiveAt, "Relative")}
+              </TableBodyCol>
               <TableBodyCol style={{ width: makeRem(24) }}>
                 <AdminUsersTableCellMenu {...user} />
               </TableBodyCol>

@@ -1,5 +1,5 @@
 import { getAuth } from "@clerk/react-router/ssr.server";
-import { redirect, type LoaderFunctionArgs } from "react-router";
+import { data, redirect, type LoaderFunctionArgs } from "react-router";
 import { createClerkClient } from "@clerk/react-router/api.server";
 
 export async function ensureUser<T extends LoaderFunctionArgs>(args: T) {
@@ -29,4 +29,27 @@ export async function getCurrentUser<A extends LoaderFunctionArgs>(args: A) {
   }
   const user = await clerkClient.users.getUser(userId);
   return user;
+}
+
+export class ErrorForbidden extends Error {
+  status = 403;
+  name = "ErrorForbidden";
+
+  constructor(message = "You do not have permission to access this resource.") {
+    super(message);
+    Object.setPrototypeOf(this, ErrorForbidden.prototype);
+  }
+}
+
+export function handleError(error: unknown) {
+  console.error(error);
+  if (error instanceof ErrorForbidden) {
+    return data({ message: error.message, status: error.status });
+  }
+  if (error instanceof Error) {
+    return data({
+      message: error.message ?? "An unknown error occurred.",
+      status: 500,
+    });
+  }
 }

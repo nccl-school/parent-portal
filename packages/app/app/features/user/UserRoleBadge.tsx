@@ -10,9 +10,9 @@ export function UserRoleBadge(user: Pick<User, "publicMetadata">) {
     user.publicMetadata.role
   )
     .with(P.nullish, () => "info")
-    .with("teacher", () => "primary")
-    .with("admin", () => "secondary")
-    .with("parent", () => "tertiary")
+    .with("parent", () => "primary")
+    .with("staff", () => "secondary")
+    .with("admin", () => "alt")
     .exhaustive();
 
   return (

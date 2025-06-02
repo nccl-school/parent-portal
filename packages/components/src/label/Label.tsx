@@ -12,7 +12,7 @@ export type LabelVariants =
   | "warning"
   | "tertiary"
   | "info"
-  | "info"
+  | "alt"
   | "success";
 
 export type LabelPropsNative = Omit<JSX.IntrinsicElements["span"], "children">;
@@ -46,6 +46,11 @@ const styles = css`
     border-color: ${makeColor("tertiary-800")};
     background-color: ${makeColor("tertiary-100")};
     color: ${makeColor("tertiary-1100")};
+  }
+  &.alt {
+    border-color: ${makeColor("alt-800")};
+    background-color: ${makeColor("alt-100")};
+    color: ${makeColor("alt-900")};
   }
   &.success {
     border-color: ${makeColor("success-800")};

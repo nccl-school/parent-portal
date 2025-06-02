@@ -1,6 +1,6 @@
 import { classes } from "@stratum-ui/core/utils";
 import type { JSX, RefCallback } from "react";
-import { forwardRef, useCallback } from "react";
+import { forwardRef, useCallback, useEffect } from "react";
 import { css } from "@linaria/core";
 import { makeRem } from "@nccl/theme";
 import { createPortal } from "react-dom";
@@ -47,10 +47,12 @@ export const ModalContent = forwardRef<HTMLDialogElement, ModalProps>(
       [dxEngine, modalRef]
     );
 
-    if (!state.isOpen) {
+    useEffect(() => {
+      if (state.isOpen) return;
       dynamicNode.destroyNode();
-      return;
-    }
+    }, [dynamicNode, state.isOpen]);
+
+    if (!state.isOpen) return null;
 
     return createPortal(
       <dialog
