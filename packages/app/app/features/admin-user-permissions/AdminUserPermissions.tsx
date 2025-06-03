@@ -14,7 +14,7 @@ import { makeRem } from "@nccl/theme";
 import { href, useFetcher } from "react-router";
 import { useEffect, useMemo } from "react";
 
-import { useAdminUserPermissionsModalContext } from "./admin-user-permission.useModal";
+import { useAdminUserPermissionsModalContext } from "./admin-user-permission.useModalContext";
 import type { AdminUserPermissionsModalState } from "./admin-user-permission.utils";
 import { AdminUserPermissionCard } from "./AdminUserPermissionCard";
 
@@ -102,7 +102,7 @@ function ModalContent() {
         <ModalFooter>
           <Button
             dxVariant="outlined"
-            dxColor="primary"
+            dxColor="secondary"
             dxSize="md"
             type="button"
             onClick={closeModal}
@@ -111,7 +111,7 @@ function ModalContent() {
           </Button>
           <Button
             dxVariant="contained"
-            dxColor="primary"
+            dxColor="secondary"
             dxSize="md"
             type="submit"
             disabled={isSaving}

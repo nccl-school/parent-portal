@@ -15,7 +15,7 @@ export const ModalHeaderTitle = forwardRef<
   ModalHeaderTitleProps
 >(function ModalHeaderTitle({ children, ...restProps }, ref) {
   return (
-    <Typography dxVariant="heading3" dxNode="div" {...restProps} ref={ref}>
+    <Typography dxVariant="heading2" dxNode="div" {...restProps} ref={ref}>
       {children}
     </Typography>
   );

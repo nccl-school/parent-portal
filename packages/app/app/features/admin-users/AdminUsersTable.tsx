@@ -10,6 +10,7 @@ import {
   Typography,
   InputSearch,
   Button,
+  Icon,
 } from "@nccl/components";
 import { makeFontWeight, makeRem } from "@nccl/theme";
 import { useMemo } from "react";
@@ -22,6 +23,8 @@ import { AdminUsersTableCellRole } from "./AdminUsersTableCellRole";
 import { AdminUserPermissions } from "../admin-user-permissions";
 import { AdminUserProfile } from "../admin-user-profile";
 import { dates } from "../../utils/client";
+import { placeholder } from "../../utils/isomorphic";
+import { AdminUserInvite } from "../admin-user-invite";
 
 const styles = css`
   display: grid;
@@ -53,6 +56,7 @@ export function AdminUsersTable({ data }: { data: Omit<User, "_raw">[] }) {
           <>
             <AdminUserPermissions.Component />
             <AdminUserProfile.Component />
+            <AdminUserInvite.Component />
           </>
         ),
         []
@@ -67,7 +71,7 @@ export function AdminUsersTable({ data }: { data: Omit<User, "_raw">[] }) {
             dxVariant="outlined"
             dxStartIcon="filter-stroke-standard"
             dxSize="md"
-            dxColor="alt"
+            dxColor="secondary"
           >
             Filters
           </Button>
@@ -75,7 +79,8 @@ export function AdminUsersTable({ data }: { data: Omit<User, "_raw">[] }) {
             dxVariant="contained"
             dxStartIcon="user-add-01-stroke-standard"
             dxSize="md"
-            dxColor="alt"
+            dxColor="secondary"
+            onClick={AdminUserInvite.launch}
           >
             Invite user
           </Button>
@@ -91,7 +96,10 @@ export function AdminUsersTable({ data }: { data: Omit<User, "_raw">[] }) {
                 </TableHeadCol>
                 <TableHeadCol>Name</TableHeadCol>
                 <TableHeadCol>Role</TableHeadCol>
+                <TableHeadCol>Phone</TableHeadCol>
+                <TableHeadCol>Created On</TableHeadCol>
                 <TableHeadCol>Last Active</TableHeadCol>
+                <TableHeadCol>Locked</TableHeadCol>
                 <TableHeadCol></TableHeadCol>
               </TableRow>
             </TableHead>
@@ -111,7 +119,20 @@ export function AdminUsersTable({ data }: { data: Omit<User, "_raw">[] }) {
                 <AdminUsersTableCellRole {...user} />
               </TableBodyCol>
               <TableBodyCol>
+                {user.primaryPhoneNumber?.phoneNumber ?? placeholder}
+              </TableBodyCol>
+              <TableBodyCol>
+                {dates.format(user.createdAt, "MM/DD/YYYY")}
+              </TableBodyCol>
+              <TableBodyCol>
                 {dates.format(user.lastActiveAt, "Relative")}
+              </TableBodyCol>
+              <TableBodyCol>
+                {user.locked ? (
+                  <Icon dxIcon="security-lock-stroke-standard" dxSize={16} />
+                ) : (
+                  placeholder
+                )}
               </TableBodyCol>
               <TableBodyCol style={{ width: makeRem(24) }}>
                 <AdminUsersTableCellMenu {...user} />

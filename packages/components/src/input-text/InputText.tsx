@@ -11,6 +11,7 @@ import type { JSX } from "react";
 import { forwardRef, useId, useMemo } from "react";
 
 import { fontSizeStyles, type IntrinsicSizes } from "../shared/index.js";
+import { InputLabelContent } from "../input-label/InputLabelContent.js";
 
 export type InputTextPropsNative = JSX.IntrinsicElements["input"];
 export type InputTextPropsCustom = {
@@ -49,11 +50,31 @@ export type InputTextProps = InputTextPropsNative & InputTextPropsCustom;
 
 const containerStyles = css`
   font-family: ${makeFontFamily("body")};
+  --input-color: ${makeColor("neutral-light-900")};
+  --input-color--focus: ${makeColor("neutral-light-1200")};
+  --input-border-color: ${makeColor("neutral-light-900")};
+  --input-border-color--focus: ${makeColor("neutral-light-1200")};
 
   .error {
     margin-top: ${makeRem(4)};
     font-size: 0.8em;
     font-weight: ${makeFontWeight("body-bold")};
+  }
+
+  label {
+    color: var(--input-color) !important;
+    display: flex;
+  }
+
+  &:has(input:focus) {
+    label {
+      color: var(--input-color--focus) !important;
+    }
+
+    input {
+      border-color: var(--input-border-color--focus);
+      color: var(--input-color--focus);
+    }
   }
 
   &:has(input.invalid),
@@ -69,18 +90,6 @@ const containerStyles = css`
       border-color: ${makeColor("danger-600")};
       background-color: ${makeColor("danger", { opacity: 0.1 })} !important;
     }
-  }
-`;
-
-const labelStyles = css`
-  font-weight: ${makeFontWeight("body-bold")};
-  display: block;
-  margin-bottom: ${makeRem(4)};
-  color: ${makeColor("neutral-dark")};
-
-  .hint {
-    font-size: 0.8em;
-    font-weight: ${makeFontWeight("body-regular")};
   }
 `;
 
@@ -119,17 +128,18 @@ const styles = css`
   padding: 0.5em 1em;
   border-radius: ${makeRem(4)};
   font-family: ${makeFontFamily("body")};
-  color: ${makeColor("neutral-dark")};
+  color: var(--input-color);
   width: 100%;
+  transition: all 0.15s ease-in-out;
 
   &.transparent {
-    border: 1px solid ${makeColor("neutral-dark-300")};
+    border: 1px solid ${makeColor("neutral-light-300")};
     background: transparent;
   }
 
   &.contrasted {
-    border: 1px solid ${makeColor("neutral-dark-300")};
-    background: ${makeColor("neutral-light-50")};
+    border: 1px solid transparent;
+    background: ${makeColor("neutral-light-100", { opacity: 0.3 })};
   }
 `;
 
@@ -158,9 +168,8 @@ export const InputText = forwardRef<HTMLInputElement, InputTextProps>(
         {useMemo(() => {
           if (!dxLabel) return null;
           return (
-            <label className={labelStyles} htmlFor={inputId}>
-              {dxLabel && <div>{dxLabel}</div>}
-              {dxHint && <div className="hint">{dxHint}</div>}
+            <label htmlFor={inputId}>
+              <InputLabelContent dxLabel={dxLabel} dxHint={dxHint} />
             </label>
           );
         }, [dxHint, dxLabel, inputId])}

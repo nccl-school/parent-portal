@@ -11,7 +11,8 @@ export type ModalHeaderProps = ModalHeaderPropsNative;
 
 const styles = css`
   padding: ${makeRem(32)} ${makeCustom("modal--gutters")};
-  border-bottom: 1px solid ${makeColor("neutral-light-100")};
+  /* border-bottom: 1px solid ${makeColor("neutral-light-100")}; */
+  padding-bottom: ${makeRem(16)};
   display: flex;
   justify-content: space-between;
 `;

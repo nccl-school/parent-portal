@@ -1,4 +1,3 @@
-export * from "./Modal.stories.js";
 export * from "./Modal.js";
 export * from "./ModalHeader.js";
 export * from "./ModalHeaderTitle.js";

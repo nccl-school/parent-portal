@@ -5,3 +5,5 @@ export function capitalizeFirstLetter(str: string): string {
 export function pause(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export const placeholder = "-- --";
