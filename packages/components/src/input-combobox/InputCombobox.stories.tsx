@@ -1,6 +1,8 @@
 import type { Meta } from "@storybook/react";
 import { randUser, randUuid } from "@ngneat/falso";
 import { memo, useState } from "react";
+import { makeColor, makeRem } from "@nccl/theme";
+import { css } from "@linaria/core";
 
 import { InputCombobox } from "./InputCombobox.js";
 import type { InputComboboxComponent } from "./input-combobox.utils.js";
@@ -18,32 +20,41 @@ const meta: Meta = {
 
 export default meta;
 
-const users = [...randUser({ length: 100 })].map((user) => ({
-  ...user,
-  id: randUuid(),
-  label: user.firstName,
-  value: user.id,
-}));
+const users = [...new Array(500)].map(() => {
+  const user = randUser();
+  return {
+    ...user,
+    id: randUuid(),
+    label: user.firstName,
+    value: user.id,
+  };
+});
+
+const componentStyles = css`
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  align-items: center;
+  text-align: left;
+  padding: ${makeRem(8)};
+
+  &:hover {
+    background-color: ${makeColor("hover-100")};
+  }
+`;
 
 const ListComponent: InputComboboxComponent<(typeof users)[0]> = memo(
   function InputComboboxComponent(user) {
     return (
-      <div
-        style={{
-          display: "Grid",
-          gridAutoColumns: "auto 1fr",
-          gap: "1rem",
-          alignItems: "center",
-        }}
-      >
+      <div className={componentStyles}>
         <Avatar
           dxFirstName={user.firstName}
-          dxSize={"md"}
+          dxSize={"xl"}
           dxSrc={user.img}
           dxLastName={user.lastName}
         />
         <Typography
-          dxVariant="label"
+          dxVariant="body1"
           dxNode="div"
         >{`${user.firstName} ${user.lastName}`}</Typography>
       </div>
@@ -54,7 +65,7 @@ const ListComponent: InputComboboxComponent<(typeof users)[0]> = memo(
 export const ListOfUsers = () => {
   return (
     <div style={{ width: "60ch" }}>
-      <InputCombobox<(typeof users)[0]>
+      <InputCombobox
         name="user"
         dxLabel="Select a user"
         dxPlaceholder="Click to search"

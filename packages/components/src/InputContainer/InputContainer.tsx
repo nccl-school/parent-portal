@@ -145,7 +145,7 @@ export const InputContainer = forwardRef<HTMLDivElement, InputContainerProps>(
       dxLabel,
       dxHint,
       dxError,
-      id,
+      dxInputId,
       DXAdornmentEnd,
       DXAdornmentStart,
       children,
@@ -162,11 +162,11 @@ export const InputContainer = forwardRef<HTMLDivElement, InputContainerProps>(
         {useMemo(() => {
           if (!dxLabel) return null;
           return (
-            <label htmlFor={id}>
+            <label htmlFor={dxInputId}>
               <InputLabelContent dxLabel={dxLabel} dxHint={dxHint} />
             </label>
           );
-        }, [dxHint, dxLabel, id])}
+        }, [dxHint, dxLabel, dxInputId])}
         <div className={wrapperStyles}>
           {useMemo(
             () =>

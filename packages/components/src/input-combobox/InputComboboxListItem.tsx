@@ -8,6 +8,7 @@ const styles = css`
   button {
     ${makeReset("button")};
     width: 100%;
+    cursor: pointer;
   }
 `;
 

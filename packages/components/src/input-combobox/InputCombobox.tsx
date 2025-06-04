@@ -143,7 +143,6 @@ export function InputCombobox<O extends InputComboboxOption>({
    */
   useEffect(() => {
     if (!containerRef.current || !ulRef.current) return;
-    console.log(containerRef.current.clientWidth);
     ulRef.current.style.width = makePx(containerRef.current.clientWidth - 16);
   }, []);
 
@@ -159,9 +158,9 @@ export function InputCombobox<O extends InputComboboxOption>({
         () => (
           <>
             <InputContainer
+              dxInputId={id}
               DXAdornmentEnd={AdornmentEnd}
               {...restProps}
-              dxInputId={id}
               ref={containerRef}
             >
               <button
