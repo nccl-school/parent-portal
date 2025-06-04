@@ -16,7 +16,7 @@ export function RootHeaderUser() {
   const { user } = useUser();
 
   return (
-    <Link to={href("/profile/*", { "*": "/" })} className={styles}>
+    <Link to={href("/profile/*", { "*": "" })} className={styles}>
       <Avatar
         dxSize="xl"
         dxSrc={user?.imageUrl}
