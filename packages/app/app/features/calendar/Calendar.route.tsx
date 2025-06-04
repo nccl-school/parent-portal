@@ -1,3 +1,5 @@
+import { Typography } from "@nccl/components";
+
 import type { Route } from "./+types/Calendar.route";
 
 import { PageSection } from "../../components/page";
@@ -25,7 +27,11 @@ export async function loader(args: Route.LoaderArgs) {
 
 export default function CalendarRoute(args: Route.ComponentProps) {
   return (
-    <PageSection dxTitle="Data for the next 10 google cal events">
+    <PageSection>
+      <Typography dxVariant="heading3" dxNode="h3">
+        Data for the next 10 google cal events
+      </Typography>
+      <br />
       <code style={{ width: "80%", overflow: "auto" }}>
         {JSON.stringify(args.loaderData.events, null, 2)}
       </code>
