@@ -32,7 +32,7 @@ const styles = css`
 
   & > legend {
     display: block;
-    margin-bottom: ${makeRem(8)};
+    margin-bottom: ${makeRem(12)};
 
     & > .title {
       font-weight: ${makeFontWeight("body-semiBold")};

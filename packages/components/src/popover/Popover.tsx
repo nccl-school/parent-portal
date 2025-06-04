@@ -23,26 +23,27 @@ const styles = css`
   // Closed styles
   display: none;
   opacity: 0;
-  transform: scale(0.9);
+  transform-origin: top;
+  transform: scaleY(0);
   transition: all 0.15s allow-discrete;
   box-shadow: var(--shadow-elevation-high);
   border: 0;
   margin: 0;
   border: 1px solid ${makeColor("neutral-light-50")};
-  padding: ${makeRem(4)};
+  padding: ${makeRem(8)};
   border-radius: ${makeRem(8)};
 
   // When the popover is opened
   &:popover-open {
     display: initial;
     opacity: 1;
-    transform: scale(1);
+    transform: scaleY(1);
   }
 
   @starting-style {
     &:popover-open {
       opacity: 0;
-      transform: scale(0.9);
+      transform: scaleY(0);
     }
   }
 `;

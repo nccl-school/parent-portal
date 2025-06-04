@@ -4,15 +4,16 @@ import { css } from "@linaria/core";
 import { Icon, Typography } from "@nccl/components";
 import { makeFontWeight, makeRem } from "@nccl/theme";
 
-import { UserRoleBadge, type UserRoleDefinition } from "../user";
 import type { Roles } from "../../global";
 
-export type AdminUserPermissionCardPropsNative = JSX.IntrinsicElements["div"];
-export type AdminUserPermissionCardPropsCustom = UserRoleDefinition & {
+import { UserRoleBadge, type UserRoleDefinition } from ".";
+
+export type UserPermissionCardPropsNative = JSX.IntrinsicElements["div"];
+export type UserPermissionCardPropsCustom = UserRoleDefinition & {
   role?: Roles;
 };
-export type AdminUserPermissionCardProps = AdminUserPermissionCardPropsNative &
-  AdminUserPermissionCardPropsCustom;
+export type UserPermissionCardProps = UserPermissionCardPropsNative &
+  UserPermissionCardPropsCustom;
 
 const styles = css`
   display: grid;
@@ -22,13 +23,12 @@ const styles = css`
     "icon title"
     "icon description";
   column-gap: ${makeRem(12)};
-  row-gap: ${makeRem(4)};
 
   .icon {
     grid-area: icon;
   }
   .title {
-    font-weight: ${makeFontWeight("body-semiBold")};
+    font-weight: ${makeFontWeight("body-bold")};
     grid-area: title;
     display: flex;
     justify-content: space-between;
@@ -36,13 +36,14 @@ const styles = css`
   }
   .description {
     grid-area: description;
+    font-weight: ${makeFontWeight("body-regular")};
   }
 `;
 
-export const AdminUserPermissionCard = forwardRef<
+export const UserPermissionCard = forwardRef<
   HTMLDivElement,
-  AdminUserPermissionCardProps
->(function AdminUserPermissionCard(
+  UserPermissionCardProps
+>(function UserPermissionCard(
   { children, className, icon, description, title, role, ...restProps },
   ref
 ) {
@@ -50,12 +51,12 @@ export const AdminUserPermissionCard = forwardRef<
     <div {...restProps} className={classes(className, styles)} ref={ref}>
       <Icon dxIcon={icon} dxSize={32} className="icon" />
       <div className="title">
-        <Typography dxVariant="heading4" dxNode="div" className="title">
+        <Typography dxVariant="body1" dxNode="div" className="title">
           {title}
         </Typography>
         <UserRoleBadge publicMetadata={{ role }} />
       </div>
-      <Typography className="description" dxVariant="body1" dxNode="div">
+      <Typography className="description" dxVariant="label" dxNode="div">
         {description}
       </Typography>
     </div>

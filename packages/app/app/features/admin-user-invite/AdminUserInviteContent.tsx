@@ -5,14 +5,22 @@ import {
   InputText,
   ModalBody,
 } from "@nccl/components";
+import { css } from "@linaria/core";
+
+import { UserPermissionRadioGroup } from "../user";
 
 function AdornmentStart() {
   return <Icon dxIcon="at-stroke-standard" dxSize={20} />;
 }
 
+const styles = css`
+  height: 100%;
+  overflow: auto;
+`;
+
 export function AdminUserInviteContent() {
   return (
-    <ModalBody>
+    <ModalBody className={styles}>
       <FormGroup dxTitle="General information">
         <InputGroup dxLayout="inline-stretch">
           <InputText dxLabel="First name" dxVariant="contrasted" />
@@ -32,7 +40,13 @@ export function AdminUserInviteContent() {
         dxTitle="Permissions"
         dxSubtitle="Indicate the role that the user will have. It will determine what they can view and do inside of the platform"
       >
-        hi there
+        <UserPermissionRadioGroup />
+      </FormGroup>
+      <FormGroup
+        dxTitle="Enrolled Students"
+        dxSubtitle="Select an existing or create a new student to associate to the parent"
+      >
+        <InputText dxVariant="contrasted" />
       </FormGroup>
     </ModalBody>
   );

@@ -1,6 +1,5 @@
 import {
   Button,
-  InputRadio,
   ModalBody,
   ModalController,
   ModalFooter,
@@ -16,10 +15,8 @@ import { useEffect, useMemo } from "react";
 
 import { useAdminUserPermissionsModalContext } from "./admin-user-permission.useModalContext";
 import type { AdminUserPermissionsModalState } from "./admin-user-permission.utils";
-import { AdminUserPermissionCard } from "./AdminUserPermissionCard";
 
-import { getUserName, userRoles } from "../user";
-import type { Roles } from "../../global";
+import { getUserName, UserPermissionRadioGroup } from "../user";
 
 const className = css`
   width: ${makeRem(600)};
@@ -78,23 +75,10 @@ function ModalContent() {
                 Use the radio button's below to update{" "}
                 <b>{getUserName(user)}'s</b> access
               </Typography>
-              {Object.entries(userRoles).map(([userRole, roleDef]) => {
-                return (
-                  <InputRadio
-                    key={userRole}
-                    dxVariant="card"
-                    dxSize="md"
-                    name="role"
-                    value={userRole}
-                    defaultChecked={userRole === user.publicMetadata.role}
-                  >
-                    <AdminUserPermissionCard
-                      role={userRole as Roles}
-                      {...roleDef}
-                    />
-                  </InputRadio>
-                );
-              })}
+              <UserPermissionRadioGroup
+                defaultCheckedRole={user.publicMetadata.role}
+                name="role"
+              />
             </ModalBody>
           ),
           [user]
