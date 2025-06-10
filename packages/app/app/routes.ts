@@ -37,6 +37,7 @@ export default [
   ]),
   // - /sign-in/*
   route("sign-in/*", "features/sign-in/SignIn.route.tsx"),
+  route("sign-up/*", "features/sign-up/SignUp.route.tsx"),
   // APIs
   ...prefix("api", [
     ...prefix("user", [

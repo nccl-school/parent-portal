@@ -17,8 +17,11 @@ import { href, useFetcher } from "react-router";
 
 import { useAdminUserInviteModalContext } from "./admin-user-invite.useModalContext";
 
-import { UserPermissionRadioGroup, type InviteUsersApiRequest } from "../user";
-import type { action as inviteUserAction } from "../../api/api.user.inviteUsers";
+import { UserPermissionRadioGroup } from "../user";
+import type {
+  action as inviteUserAction,
+  InviteUsersApiRequest,
+} from "../../api/api.user.inviteUsers";
 import { getValidationErrors } from "../../utils/client";
 
 const className = css`
