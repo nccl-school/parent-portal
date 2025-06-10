@@ -7,7 +7,7 @@ export function ModalHeaderClose() {
   return (
     <Button
       type="button"
-      dxIcon="cancel-01-stroke-standard"
+      dxIcon="cancel-01-solid-standard"
       dxVariant="icon"
       dxSize="md"
       onClick={closeModal}

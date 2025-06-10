@@ -1,3 +1,5 @@
+import type { ErrorPayloads, ErrorPayloadValidation } from "./server";
+
 export class DateFactory {
   private static instance: DateFactory;
 
@@ -69,3 +71,20 @@ export class DateFactory {
 }
 
 export const dates = DateFactory.getInstance();
+
+function isValidationError<T extends string>(
+  data: unknown
+): data is ErrorPayloadValidation<T> {
+  return (
+    typeof data === "object" &&
+    data !== null &&
+    "error_type" in data &&
+    (data as ErrorPayloads).error_type === "validation"
+  );
+}
+
+export function getValidationErrors<K extends string>(
+  data: unknown
+): ErrorPayloadValidation<K>["errors"] {
+  return isValidationError<K>(data) ? data.errors : {};
+}

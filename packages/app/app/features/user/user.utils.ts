@@ -1,7 +1,7 @@
 import type { IconNames } from "@nccl/components";
 import type { User } from "@clerk/react-router/ssr.server";
 
-import type { Roles } from "../../global";
+import type { UserRole } from "../../models/user.model";
 
 export type UserRoleDefinition = {
   icon: IconNames;
@@ -9,7 +9,7 @@ export type UserRoleDefinition = {
   title: string;
 };
 export const userRoles: {
-  [key in Roles]: UserRoleDefinition;
+  [key in UserRole]: UserRoleDefinition;
 } = {
   admin: {
     icon: "user-lock-01-stroke-standard",

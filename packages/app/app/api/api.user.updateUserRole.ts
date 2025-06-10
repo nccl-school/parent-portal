@@ -1,8 +1,8 @@
-import type { Route } from "./+types/user.role";
+import type { Route } from "./+types/api.user.updateUserRole";
 
-import { isAuthorized } from "../features/auth/auth.utils";
-import { getClerkClient, handleError } from "../utils/server";
-import type { Roles } from "../global";
+import { getClerkClient, ServerResponse } from "../utils/server";
+import { isAuthorized } from "../utils/server/utils.server.auth";
+import type { UserRole } from "../models/user.model";
 
 export async function action(args: Route.ActionArgs) {
   try {
@@ -11,15 +11,14 @@ export async function action(args: Route.ActionArgs) {
     const clerkClient = await getClerkClient(args);
     await clerkClient.users.updateUser(args.params.id, {
       publicMetadata: {
-        role: formData.get("role") as Roles,
+        role: formData.get("role") as UserRole,
       },
     });
-    return {
+    return ServerResponse.success({
       status: "success",
       message: "Successfully changed the users role",
-    };
+    });
   } catch (error) {
-    console.log(error);
-    handleError(error);
+    return ServerResponse.error(error);
   }
 }

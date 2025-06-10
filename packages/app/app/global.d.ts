@@ -1,15 +1,13 @@
 export {};
-
-// Create a type for the roles
-export type Roles = "admin" | "staff" | "parent";
+import type { UserRole } from "./features/user";
 
 declare global {
   interface CustomJwtSessionClaims {
     metadata: {
-      role?: Roles;
+      role?: UserRole;
     };
   }
   interface UserPublicMetadata {
-    role?: Roles;
+    role?: UserRole;
   }
 }

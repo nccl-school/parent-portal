@@ -39,7 +39,11 @@ export default [
   route("sign-in/*", "features/sign-in/SignIn.route.tsx"),
   // APIs
   ...prefix("api", [
-    route("user/:id", "./api/user.ts", [route("role", "./api/user.role.ts")]),
+    ...prefix("user", [
+      route("/invite", "./api/api.user.inviteUsers.ts"),
+      route(":id", "./api/api.user.getUserById.ts", [
+        route("role", "./api/api.user.updateUserRole.ts"),
+      ]),
+    ]),
   ]),
-  // route("/api/user/role:id", "./api/user/role"),
 ] satisfies RouteConfig;

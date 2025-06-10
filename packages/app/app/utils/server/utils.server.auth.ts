@@ -1,8 +1,9 @@
 import { getAuth } from "@clerk/react-router/ssr.server";
 import type { LoaderFunctionArgs } from "react-router";
 
-import type { Roles } from "../../global";
-import { ErrorForbidden } from "../../utils/server";
+import { ServerError } from "./utils.server.response";
+
+import type { UserRole } from "../../models";
 
 export class RBAC {
   #loaderArgs: LoaderFunctionArgs;
@@ -39,17 +40,17 @@ export class RBAC {
  */
 export async function isAuthorized(
   args: LoaderFunctionArgs,
-  roleOrRoles: Roles | Roles[]
+  roleOrRoles: UserRole | UserRole[]
 ) {
   const rbac = new RBAC(args);
   const role = await rbac.getRole();
   if (!role) {
-    throw new ErrorForbidden();
+    throw new ServerError.unauthorized();
   }
   if (typeof roleOrRoles === "string" && role !== roleOrRoles) {
-    throw new ErrorForbidden();
+    throw new ServerError.unauthorized();
   }
   if (Array.isArray(roleOrRoles) && !roleOrRoles.includes(role)) {
-    throw new ErrorForbidden();
+    throw new ServerError.unauthorized();
   }
 }

@@ -1,4 +1,4 @@
-import type { Route } from "./+types/user";
+import type { Route } from "./+types/api.user.getUserById";
 
 import { getClerkClient } from "../utils/server";
 

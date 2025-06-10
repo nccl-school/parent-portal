@@ -22,4 +22,5 @@ export * from "./input-text/index.js";
 export * from "./input-search/index.js";
 export * from "./input-group/index.js";
 export * from "./input-label/index.js";
+export * from "./input-tags/index.js";
 export * from "./form-group/FormGroup.js";

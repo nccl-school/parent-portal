@@ -4,13 +4,13 @@ import { css } from "@linaria/core";
 import { Icon, Typography } from "@nccl/components";
 import { makeFontWeight, makeRem } from "@nccl/theme";
 
-import type { Roles } from "../../global";
+import type { UserRole } from "../../models/user.model";
 
-import { UserRoleBadge, type UserRoleDefinition } from ".";
+import { UserRoleBadge, type UserRoleDefinition } from "./index";
 
 export type UserPermissionCardPropsNative = JSX.IntrinsicElements["div"];
 export type UserPermissionCardPropsCustom = UserRoleDefinition & {
-  role?: Roles;
+  role?: UserRole;
 };
 export type UserPermissionCardProps = UserPermissionCardPropsNative &
   UserPermissionCardPropsCustom;

@@ -1,7 +1,7 @@
 import { useAuth } from "@clerk/react-router";
 import type { ReactNode } from "react";
 
-import type { Roles } from "../../global";
+import type { UserRole } from "../../models";
 
 /**
  * Client side mechanism for preventing specific nodes from rendering. This is to
@@ -13,7 +13,7 @@ export function Restrict({
   role,
 }: {
   children: ReactNode;
-  role: Roles;
+  role: UserRole;
 }) {
   const { sessionClaims } = useAuth();
   if (sessionClaims?.metadata.role !== role) return null;

@@ -80,6 +80,18 @@ const containerStyles = css`
     }
   }
 
+  &:has(div.invalid) {
+    color: ${makeColor("danger-600")} !important;
+
+    div {
+      color: ${makeColor("danger-600")} !important;
+    }
+
+    .field {
+      background: ${makeColor("danger-100", { opacity: 0.2 })};
+    }
+  }
+
   &:has(input.invalid),
   &:has(input:invalid),
   &:has(select.invalid),
@@ -179,11 +191,12 @@ export const InputContainer = forwardRef<HTMLDivElement, InputContainerProps>(
           )}
           {children}
           {useMemo(
-            () => (
-              <div className="adornment end">
-                {DXAdornmentEnd && <DXAdornmentEnd />}
-              </div>
-            ),
+            () =>
+              DXAdornmentEnd && (
+                <div className="adornment end">
+                  {DXAdornmentEnd && <DXAdornmentEnd />}
+                </div>
+              ),
             [DXAdornmentEnd]
           )}
         </div>

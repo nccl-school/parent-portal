@@ -3,11 +3,11 @@ import { InputRadio } from "@nccl/components";
 import { userRoles } from "./user.utils";
 import { UserPermissionCard } from "./UserPermissionCard";
 
-import type { Roles } from "../../global";
+import type { UserRole } from "../../models/user.model";
 
 export function UserPermissionRadioGroup(props: {
   name?: string;
-  defaultCheckedRole?: Roles;
+  defaultCheckedRole?: UserRole;
 }) {
   return Object.entries(userRoles).map(([userRole, roleDef]) => {
     return (
@@ -19,7 +19,7 @@ export function UserPermissionRadioGroup(props: {
         value={userRole}
         defaultChecked={userRole === props.defaultCheckedRole}
       >
-        <UserPermissionCard role={userRole as Roles} {...roleDef} />
+        <UserPermissionCard role={userRole as UserRole} {...roleDef} />
       </InputRadio>
     );
   });

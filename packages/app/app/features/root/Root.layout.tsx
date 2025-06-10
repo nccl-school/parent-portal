@@ -47,7 +47,6 @@ const styles = css`
   .layout-main {
     grid-area: main;
     padding-bottom: ${makeCustom("navbar--height-mobile")};
-    /* background: ${makeColor("neutral-light-200", { opacity: 0.05 })}; */
     min-height: ${`calc(100vh - ${makeCustom("navbar--height-mobile")} - ${makeCustom("header--height-desktop")} - 1px)`};
   }
 

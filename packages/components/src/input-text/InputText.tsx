@@ -44,7 +44,7 @@ export function getInputStyles({
   dxError,
   dxVariant = "transparent",
 }: Pick<InputTextPropsCustom, "dxVariant" | "dxError" | "className">): string {
-  return classes(className, styles, dxVariant, {
+  return classes(className, "field", styles, dxVariant, {
     invalid: !!dxError,
   });
 }

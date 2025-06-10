@@ -6,7 +6,7 @@ import type { Route } from "./+types/Admin.route";
 import { AdminNavbar } from "./AdminNavbar";
 
 import { PageHeader } from "../../components/page";
-import { RBAC } from "../auth/auth.utils";
+import { RBAC } from "../../utils/server/utils.server.auth";
 import { Unauthorized } from "../auth/Unauthorized";
 
 const styles = css`
