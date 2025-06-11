@@ -1,14 +1,12 @@
 import { reactRouter } from "@react-router/dev/vite";
-import { cloudflare } from "@cloudflare/vite-plugin";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import wyw from "@wyw-in-js/vite";
 import devtoolsJson from "vite-plugin-devtools-json";
 
-export default defineConfig({
+export default defineConfig(({ isSsrBuild }) => ({
   plugins: [
     devtoolsJson(),
-    cloudflare({ viteEnvironment: { name: "ssr" } }),
     reactRouter(),
     tsconfigPaths(),
     wyw({
@@ -18,6 +16,13 @@ export default defineConfig({
       },
     }),
   ],
+  build: {
+    rollupOptions: isSsrBuild
+      ? {
+          input: "./server/app.ts",
+        }
+      : undefined,
+  },
   server: {
     port: 5173,
     strictPort: true,
@@ -25,4 +30,4 @@ export default defineConfig({
       port: 5173,
     },
   },
-});
+}));
