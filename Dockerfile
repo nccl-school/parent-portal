@@ -4,13 +4,7 @@ FROM node:24-alpine AS builder
 WORKDIR /repo
 
 # Copy everything needed for workspace resolution
-COPY ./.yarn            ./.yarn
-COPY ./.yarnrc.yml      ./.yarnrc.yml
-COPY ./package.json     ./package.json
-COPY ./yarn.lock        ./yarn.lock
-COPY ./packages         ./packages     
-COPY ./.nvmrc           ./.nvmrc     
-COPY ./turbo.json       ./turbo.json     
+COPY . .
 RUN corepack enable
 
 # Install all dependencies (monorepo-aware)
@@ -29,14 +23,12 @@ COPY ./.yarn            ./.yarn
 COPY ./.yarnrc.yml      ./.yarnrc.yml
 COPY ./package.json     ./package.json
 COPY ./yarn.lock        ./yarn.lock
-COPY ./node_modules     ./node_modules
 
 # Copy app package.json so workspace focus works
 RUN mkdir -p ./packages/app
 COPY ./packages/app/package.json ./packages/app/package.json
 
 RUN corepack enable
-RUN yarn set version 4.9.1
 
 # Copy built output and server file
 COPY --from=builder /repo/packages/app/build ./packages/app/build
