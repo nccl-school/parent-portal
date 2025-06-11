@@ -6,6 +6,7 @@ WORKDIR /repo
 # Copy everything needed for workspace resolution
 COPY . .
 RUN corepack enable
+RUN yarn set version 4.9.1
 
 # Install all dependencies (monorepo-aware)
 RUN yarn install --immutable
@@ -30,6 +31,7 @@ RUN mkdir -p ./packages/app
 COPY ./packages/app/package.json ./packages/app/package.json
 
 RUN corepack enable
+RUN yarn set version 4.9.1
 
 # Copy built output and server file
 COPY --from=builder /repo/packages/app/build ./packages/app/build

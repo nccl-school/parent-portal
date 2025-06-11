@@ -8,6 +8,7 @@
     "start": "node server.js",
     "typecheck": "react-router typegen && tsc -b"
   },
+  "packageManager": "yarn@4.9.1",
   "dependencies": {
     "@clerk/react-router": "1.5.0",
     "@nccl/components": "workspace:*",
