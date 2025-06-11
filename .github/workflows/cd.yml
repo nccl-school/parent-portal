@@ -28,8 +28,8 @@ jobs:
         id: node_version
         run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
 
-      - name: Enable Corepack # Ensures the correct version of yarn is used
-        run: corepack enable
+      # - name: Enable Corepack # Ensures the correct version of yarn is used
+      #   run: corepack enable
 
       - name: Set Up Node.js
         uses: actions/setup-node@v4
@@ -37,8 +37,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "yarn"
 
-      - name: Install Dependencies
-        run: yarn install --immutable
+      # - name: Install Dependencies
+      #   run: yarn install --immutable
 
       - name: Create .env file
         run: |
@@ -46,8 +46,8 @@ jobs:
           VITE_CLERK_PUBLISHABLE_KEY=${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
           EOF
 
-      - name: Build Project
-        run: yarn build
+      # - name: Build Project
+      #   run: yarn build
 
       - name: Google Cloud - Authenticate
         uses: google-github-actions/auth@v2
@@ -73,7 +73,7 @@ jobs:
             SERVICE_NAME="parent-portal-stage"
           fi
 
-          gcloud builds submit ./packages/app --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${SERVICE_NAME}
+          gcloud builds submit . --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${SERVICE_NAME}
 
           gcloud run deploy ${SERVICE_NAME} \
             --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/${SERVICE_NAME} \
