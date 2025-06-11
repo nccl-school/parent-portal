@@ -30,5 +30,6 @@ COPY --from=builder /repo/packages/app/server.js        ./packages/app/server.js
 
 
 EXPOSE 8080
+ENV PORT=8080
 
 CMD ["cd", "packages/app", "node server.js"]
