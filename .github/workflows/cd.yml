@@ -74,8 +74,7 @@ jobs:
           fi
 
           gcloud builds submit . \
-            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${SERVICE_NAME} \
-            --no-stream
+            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${SERVICE_NAME}
 
           gcloud run deploy ${SERVICE_NAME} \
             --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/${SERVICE_NAME} \
