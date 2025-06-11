@@ -3,6 +3,12 @@ FROM node:24-alpine AS builder
 
 WORKDIR /repo
 
+ARG TURBO_TOKEN
+ARG TURBO_TEAM
+
+ENV TURBO_TOKEN=${TURBO_TOKEN}
+ENV TURBO_TEAM=${TURBO_TEAM}
+
 # Copy everything needed for workspace resolution
 COPY . .
 RUN corepack enable
