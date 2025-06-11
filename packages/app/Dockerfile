@@ -4,7 +4,13 @@ FROM node:24-alpine AS builder
 WORKDIR /repo
 
 # Copy everything needed for workspace resolution
-COPY . .
+COPY ./.yarn            ./.yarn
+COPY ./.yarnrc.yml      ./.yarnrc.yml
+COPY ./package.json     ./package.json
+COPY ./yarn.lock        ./yarn.lock
+COPY ./packages         ./packages     
+COPY ./.nvmrc           ./.nvmrc     
+COPY ./turbo.json       ./turbo.json     
 RUN corepack enable
 
 # Install all dependencies (monorepo-aware)
