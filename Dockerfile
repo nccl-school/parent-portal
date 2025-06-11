@@ -3,11 +3,13 @@ FROM node:24-alpine AS builder
 
 WORKDIR /repo
 
+RUN ls
+
 # Copy everything needed for workspace resolution
-COPY ./package.json                  ./package.json
-COPY ./.yarn                         ./.yarn
-COPY ./.yarnrc.yml                   ./.yarnrc.yml
-COPY ./yarn.lock                     ./yarn.lock
+COPY package.json                  ./package.json
+COPY .yarn                         ./.yarn
+COPY .yarnrc.yml                   ./.yarnrc.yml
+COPY yarn.lock                     ./yarn.lock
 
 RUN corepack enable
 
