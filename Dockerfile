@@ -25,7 +25,6 @@ COPY --from=builder /repo/.yarn                         ./.yarn
 COPY --from=builder /repo/.yarnrc.yml                   ./.yarnrc.yml
 COPY --from=builder /repo/yarn.lock                     ./yarn.lock
 
-COPY --from=builder /repo/packages/app/node_modules     ./packages/app/node_modules
 COPY --from=builder /repo/packages/app/package.json     ./packages/app/package.json
 COPY --from=builder /repo/packages/app/build            ./packages/app/build
 COPY --from=builder /repo/packages/app/server.js        ./packages/app/server.js
