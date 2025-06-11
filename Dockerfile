@@ -3,7 +3,7 @@ FROM node:24-alpine AS builder
 
 WORKDIR /repo
 
-RUN ls
+RUN echo "Contents of /repo:" && ls -al /repo && echo "Contents of .yarn:" && ls -al /repo/.yarn
 
 # Copy everything needed for workspace resolution
 COPY package.json                  ./package.json
@@ -27,7 +27,6 @@ WORKDIR /app
 # Copy built output and server file
 COPY --from=builder /repo/package.json                  ./package.json
 COPY --from=builder /repo/node_modules                  ./node_modules
-COPY --from=builder /repo/.yarn                         ./.yarn
 COPY --from=builder /repo/.yarnrc.yml                   ./.yarnrc.yml
 COPY --from=builder /repo/yarn.lock                     ./yarn.lock
 
@@ -35,8 +34,7 @@ COPY --from=builder /repo/packages/app/package.json     ./packages/app/package.j
 COPY --from=builder /repo/packages/app/build            ./packages/app/build
 COPY --from=builder /repo/packages/app/server.js        ./packages/app/server.js
 
-RUN corepack enable
 
 EXPOSE 8080
 
-CMD ["yarn", "workspace", "@nccl/parent-portal", "start"]
+CMD ["cd", "packages/app", "node server.js"]
