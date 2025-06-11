@@ -74,9 +74,7 @@ jobs:
           fi
 
           gcloud builds submit . \
-            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${SERVICE_NAME} \
-            --substitutions TURBO_TOKEN=${{secrets.NCCL_TURBO_TOKEN}}
-            --substitutions TURBO_TEAM=${{secrets.NCCL_TURBO_TEAM}}
+            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${SERVICE_NAME} 
 
           gcloud run deploy ${SERVICE_NAME} \
             --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/${SERVICE_NAME} \

@@ -3,14 +3,12 @@ FROM node:24-alpine AS builder
 
 WORKDIR /repo
 
-ARG TURBO_TOKEN
-ARG TURBO_TEAM
-
-ENV TURBO_TOKEN=${TURBO_TOKEN}
-ENV TURBO_TEAM=${TURBO_TEAM}
-
 # Copy everything needed for workspace resolution
-COPY . .
+COPY ./package.json                  ./package.json
+COPY ./.yarn                         ./.yarn
+COPY ./.yarnrc.yml                   ./.yarnrc.yml
+COPY ./yarn.lock                     ./yarn.lock
+
 RUN corepack enable
 
 # Install all dependencies (monorepo-aware)
