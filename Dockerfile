@@ -18,21 +18,19 @@ FROM node:24-alpine
 
 WORKDIR /app
 
-# Copy yarn context and root deps
-COPY ./.yarn            ./.yarn
-COPY ./.yarnrc.yml      ./.yarnrc.yml
-COPY ./package.json     ./package.json
-COPY ./yarn.lock        ./yarn.lock
+# Copy built output and server file
+COPY --from=builder /repo/package.json                  ./package.json
+COPY --from=builder /repo/node_modules                  ./node_modules
+COPY --from=builder /repo/.yarn                         ./.yarn
+COPY --from=builder /repo/.yarnrc.yml                   ./.yarnrc.yml
+COPY --from=builder /repo/yarn.lock                     ./yarn.lock
 
-# Copy app package.json so workspace focus works
-RUN mkdir -p ./packages/app
-COPY ./packages/app/package.json ./packages/app/package.json
+COPY --from=builder /repo/packages/app/node_modules     ./packages/app/node_modules
+COPY --from=builder /repo/packages/app/package.json     ./packages/app/package.json
+COPY --from=builder /repo/packages/app/build            ./packages/app/build
+COPY --from=builder /repo/packages/app/server.js        ./packages/app/server.js
 
 RUN corepack enable
-
-# Copy built output and server file
-COPY --from=builder /repo/packages/app/build ./packages/app/build
-COPY --from=builder /repo/packages/app/server.js ./packages/app/server.js
 
 EXPOSE 8080
 
