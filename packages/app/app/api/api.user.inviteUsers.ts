@@ -52,8 +52,7 @@ export async function action(args: Route.ActionArgs) {
         clerkClient.invitations.createInvitation({
           emailAddress,
           ignoreExisting: true,
-          redirectUrl:
-            args.context.cloudflare.env.NCCL_APP_URL.concat("/sign-up"),
+          redirectUrl: args.context.env.NCCL_APP_URL.concat("/sign-up"),
           publicMetadata: {
             role: data.role,
           },

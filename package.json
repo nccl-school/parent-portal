@@ -16,7 +16,8 @@
     "build": "yarn turbo build",
     "release": "npx changeset publish",
     "test": "yarn vitest --run",
-    "lint": "eslint packages/*/src/**/* --fix"
+    "lint": "eslint packages/*/src/**/* --fix",
+    "docker-build:local": "docker build . -f packages/app/Dockerfile -t parent-portal-local"
   },
   "keywords": [
     "typescript",
@@ -46,11 +47,11 @@
   "devDependencies": {
     "@gfdigital/eslint-config": "0.4.3",
     "@gfdigital/tsconfig": "0.3.1",
-    "@types/node": "22.15.23",
-    "eslint": "9.27.0",
+    "@types/node": "24.0.0",
+    "eslint": "9.28.0",
     "prettier": "3.5.3",
-    "turbo": "2.5.3",
+    "turbo": "2.5.4",
     "typescript": "5.8.3",
-    "vitest": "3.1.4"
+    "vitest": "3.2.3"
   }
 }

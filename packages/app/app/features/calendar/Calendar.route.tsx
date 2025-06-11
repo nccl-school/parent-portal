@@ -6,12 +6,9 @@ import { PageSection } from "../../components/page";
 
 export async function loader(args: Route.LoaderArgs) {
   const url = new URL(
-    `https://www.googleapis.com/calendar/v3/calendars/${args.context.cloudflare.env.GOOGLE_CALENDAR_ID_NCCL_PUBLIC}/events`
+    `https://www.googleapis.com/calendar/v3/calendars/${args.context.env.GOOGLE_CALENDAR_ID_NCCL_PUBLIC}/events`
   );
-  url.searchParams.set(
-    "key",
-    args.context.cloudflare.env.GOOGLE_CALENDAR_API_KEY
-  );
+  url.searchParams.set("key", args.context.env.GOOGLE_CALENDAR_API_KEY);
   url.searchParams.set("maxResults", "10");
   url.searchParams.set("orderBy", "startTime");
   url.searchParams.set("singleEvents", "true");

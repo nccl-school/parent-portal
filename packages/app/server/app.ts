@@ -1,0 +1,42 @@
+import "react-router";
+import { createRequestHandler } from "@react-router/express";
+import express from "express";
+
+type EnvVars = {
+  // run time
+  CLERK_SECRET_KEY: string;
+  GOOGLE_CALENDAR_API_KEY: string;
+  GOOGLE_CALENDAR_ID_NCCL_PUBLIC: string;
+  NCCL_APP_URL: string;
+};
+
+declare module "react-router" {
+  interface AppLoadContext {
+    env: EnvVars;
+  }
+}
+
+function envVar(key: keyof EnvVars) {
+  return process.env[key] ?? "NO_KEY_DEFINED";
+}
+
+export const app = express();
+
+app.use(
+  createRequestHandler({
+    // eslint-disable-next-line import/no-unresolved
+    build: () => import("virtual:react-router/server-build"),
+    getLoadContext() {
+      return {
+        env: {
+          CLERK_SECRET_KEY: envVar("CLERK_SECRET_KEY"),
+          GOOGLE_CALENDAR_API_KEY: envVar("GOOGLE_CALENDAR_API_KEY"),
+          GOOGLE_CALENDAR_ID_NCCL_PUBLIC: envVar(
+            "GOOGLE_CALENDAR_ID_NCCL_PUBLIC"
+          ),
+          NCCL_APP_URL: envVar("NCCL_APP_URL"),
+        },
+      };
+    },
+  })
+);
