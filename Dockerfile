@@ -3,12 +3,9 @@ FROM node:24-alpine AS builder
 
 WORKDIR /repo
 
-
 # Copy everything needed for workspace resolution
 COPY . .
 RUN corepack enable
-
-RUN echo "Contents of /repo:" && ls -al /repo && echo "Contents of .yarn:" && ls -al /repo/.yarn
 
 # Install all dependencies (monorepo-aware)
 RUN yarn install --immutable
