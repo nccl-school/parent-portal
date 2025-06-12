@@ -16,7 +16,15 @@ import "@nccl/components/css";
 import type { Route } from "./+types/root";
 
 export async function loader(args: Route.LoaderArgs) {
-  return rootAuthLoader(args);
+  return rootAuthLoader(
+    args,
+    () => {
+      return { publishableKey: import.meta.env.VITE_CLERK_PUBLISHABLE_KEY };
+    },
+    {
+      publishableKey: import.meta.env.VITE_CLERK_PUBLISHABLE_KEY,
+    }
+  );
 }
 
 const rootStyles = css`
@@ -82,11 +90,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App({ loaderData }: Route.ComponentProps) {
-  console.log(import.meta.env);
   return (
     <ClerkProvider
       loaderData={loaderData}
-      publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}
       signUpFallbackRedirectUrl="/"
       signInFallbackRedirectUrl="/"
     >
