@@ -59,3 +59,10 @@ ENV PORT=8080
 EXPOSE 8080
 
 CMD ["yarn", "workspace", "@nccl/parent-portal", "start"]
+
+
+# run: |
+#     echo "Building $SERVICE_NAME"
+#     gcloud builds submit . \
+#       --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${SERVICE_NAME} \
+#       --substitutions=_TURBO_TOKEN="${{secrets.TURBO_TOKEN}}",_TURBO_TEAM_ID="${{secrets.TURBO_TEAM_ID}},_SERVICE_NAME="${{secrets.SERVICE_NAME}}",

@@ -76,13 +76,13 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: GCP - Build in Cloud Build
+      - name: GCP - Build using Cloud Build
         env:
           SERVICE_NAME: ${{env.SERVICE_NAME}}
         run: |
           echo "Building $SERVICE_NAME"
-          gcloud builds submit . \
-            --config cloudbuild.yaml \
+          gcloud builds submit \
+            --config ./cloudbuild.yaml \
             --substitutions=_TURBO_TOKEN="${{secrets.TURBO_TOKEN}}",_TURBO_TEAM_ID="${{secrets.TURBO_TEAM_ID}},_SERVICE_NAME="${{secrets.SERVICE_NAME}}",
 
       - name: GCP - Deploy to Cloud Run
@@ -99,9 +99,3 @@ jobs:
             --set-env-vars "CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }}"
             --set-env-vars "GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }}"
             --set-env-vars "GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}"
-
-      # run: |
-      #     echo "Building $SERVICE_NAME"
-      #     gcloud builds submit . \
-      #       --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${SERVICE_NAME} \
-      #       --substitutions=_TURBO_TOKEN="${{secrets.TURBO_TOKEN}}",_TURBO_TEAM_ID="${{secrets.TURBO_TEAM_ID}},_SERVICE_NAME="${{secrets.SERVICE_NAME}}",
