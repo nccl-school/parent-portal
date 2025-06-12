@@ -44,27 +44,11 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      # - name: Install Dependencies
-      #   run: yarn install --immutable
-
       - name: Create .env file
         run: |
           cat <<EOF > ./packages/app/.env
           VITE_CLERK_PUBLISHABLE_KEY=${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
           EOF
-
-      - name: Set Service Name
-        env:
-          GITHUB_REF_NAME: ${{ github.ref_name }}
-        run: |
-          if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
-            echo "SERVICE_NAME=parent-portal" >> "$GITHUB_ENV"
-          else
-            echo "SERVICE_NAME=parent-portal-stage" >> "$GITHUB_ENV"
-          fi
-
-      # - name: Build Project
-      #   run: yarn build
 
       - name: GCP - Authenticate
         uses: google-github-actions/auth@v2
@@ -77,21 +61,16 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: GCP - Build using Cloud Build
-        env:
-          SERVICE_NAME: ${{env.SERVICE_NAME}}
         run: |
-          echo "Building $SERVICE_NAME"
-          gcloud builds submit \
-            --config ./cloudbuild.yaml \
-            --substitutions=_TURBO_TOKEN="${{secrets.TURBO_TOKEN}}",_TURBO_TEAM_ID="${{secrets.TURBO_TEAM_ID}}",_SERVICE_NAME="${{env.SERVICE_NAME}}"
+          echo "Building ${{vars.SERVICE_NAME}}"
+          gcloud builds submit . \
+            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{vars.SERVICE_NAME}} \
 
       - name: GCP - Deploy to Cloud Run
-        env:
-          GITHUB_REF_NAME: ${{ github.ref_name }}
         run: |
-          echo "Deploying $SERVICE_NAME to Google Cloud Run"
-          gcloud run deploy ${SERVICE_NAME} \
-            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/${SERVICE_NAME} \
+          echo "Deploying ${{vars.SERVICE_NAME}} to Google Cloud Run"
+          gcloud run deploy ${{vars.SERVICE_NAME}} \
+            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{vars.SERVICE_NAME}} \
             --platform managed \
             --region us-central1 \
             --set-env-vars "NODE_ENV=production"
