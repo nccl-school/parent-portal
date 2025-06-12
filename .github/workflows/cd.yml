@@ -57,6 +57,10 @@ jobs:
           TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
           TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
+      - name: --- DEBUG BUILD FILE ---
+        run: |
+          cat ./packages/app/build/server/index.js
+
       - name: GCP - Authenticate
         uses: google-github-actions/auth@v2
         with:
