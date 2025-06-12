@@ -2,7 +2,6 @@ substitutions:
   _TURBO_TOKEN: ""
   _TURBO_TEAM_ID: ""
   _SERVICE_NAME: "parent-portal"
-  _REGION: "us-central1"
 
 steps:
   # Step 1: Enable Corepack and install dependencies
