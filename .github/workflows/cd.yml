@@ -33,11 +33,11 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      # - name: Create .env file
-      #   run: |
-      #     cat <<EOF > ./packages/app/.env.local
-      #     VITE_CLERK_PUBLISHABLE_KEY=${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
-      #     EOF
+      - name: Create .env file
+        run: |
+          cat <<EOF > ./packages/app/.env.local
+          VITE_CLERK_PUBLISHABLE_KEY=${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
+          EOF
 
       # - name: DEBUG
       #   run: |
