@@ -31,11 +31,18 @@ jobs:
       - name: Enable Corepack # Ensures the correct version of yarn is used
         run: corepack enable
 
+      - name: Setup Cache
+        uses: actions/cache@v3
+        with:
+          path: .yarn/cache
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
       - name: Set Up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "yarn"
 
       # - name: Install Dependencies
       #   run: yarn install --immutable
@@ -75,8 +82,8 @@ jobs:
         run: |
           echo "Building $SERVICE_NAME"
           gcloud builds submit . \
-            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${SERVICE_NAME} \
-            --substitutions=_TURBO_TOKEN="${{secrets.TURBO_TOKEN}}",_TURBO_TEAM_ID="${{secrets.TURBO_TEAM_ID}}",
+            --config cloudbuild.yaml \
+            --substitutions=_TURBO_TOKEN="${{secrets.TURBO_TOKEN}}",_TURBO_TEAM_ID="${{secrets.TURBO_TEAM_ID}},_SERVICE_NAME="${{secrets.SERVICE_NAME}}",
 
       - name: GCP - Deploy to Cloud Run
         env:
@@ -92,3 +99,9 @@ jobs:
             --set-env-vars "CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }}"
             --set-env-vars "GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }}"
             --set-env-vars "GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}"
+
+      # run: |
+      #     echo "Building $SERVICE_NAME"
+      #     gcloud builds submit . \
+      #       --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${SERVICE_NAME} \
+      #       --substitutions=_TURBO_TOKEN="${{secrets.TURBO_TOKEN}}",_TURBO_TEAM_ID="${{secrets.TURBO_TEAM_ID}},_SERVICE_NAME="${{secrets.SERVICE_NAME}}",
