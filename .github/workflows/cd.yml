@@ -44,8 +44,7 @@ jobs:
       - name: Create .env file
         run: |
           cat <<EOF > ./packages/app/.env
-          TURBO_TOKEN=${{secrets.TURBO_TOKEN}}
-          TURBO_TEAM_ID=${{secrets.TURBO_TEAM_ID}}
+
           VITE_CLERK_PUBLISHABLE_KEY=${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
           EOF
 
@@ -57,6 +56,9 @@ jobs:
 
       - name: Build Project
         run: yarn build
+        env:
+          TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
+          TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
       - name: GCP - Authenticate
         uses: google-github-actions/auth@v2
