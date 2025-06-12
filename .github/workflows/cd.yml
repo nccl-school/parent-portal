@@ -43,7 +43,7 @@ jobs:
 
       - name: Create .env file
         run: |
-          cat <<EOF > ./packages/app/.env
+          cat <<EOF > ./packages/app/.env.local
           VITE_CLERK_PUBLISHABLE_KEY=${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
           EOF
 
