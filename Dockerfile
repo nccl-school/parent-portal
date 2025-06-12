@@ -28,8 +28,9 @@ COPY --from=builder /repo/packages/app/package.json     ./packages/app/package.j
 COPY --from=builder /repo/packages/app/build            ./packages/app/build
 COPY --from=builder /repo/packages/app/server.js        ./packages/app/server.js
 
+RUN corepack enable
 
+ENV PORT=8080
 EXPOSE 8080
-ENV PORT 8080
 
 CMD ["yarn", "workspace", "@nccl/parent-portal", "start"]
