@@ -1,8 +1,9 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": [".env", ".env.local"],
   "tasks": {
     "build": {
+      "env": ["VITE_CLERK_PUBLISHABLE_KEY"],
+      "inputs": ["$TURBO_DEFAULT$", ".env.local", ".env"],
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**", "build/**"]
     }
