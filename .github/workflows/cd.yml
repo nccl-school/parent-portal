@@ -38,7 +38,7 @@ jobs:
       #     cat <<EOF > ./packages/app/.env.local
       #     VITE_CLERK_PUBLISHABLE_KEY=${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
       #     EOF
-s
+
       # - name: DEBUG
       #   run: |
       #     echo "VITE_CLERK_PUBLISHABLE_KEY=${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}"
