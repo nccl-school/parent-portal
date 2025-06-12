@@ -33,16 +33,16 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Create .env file
-        run: |
-          cat <<EOF > ./packages/app/.env.local
-          VITE_CLERK_PUBLISHABLE_KEY=${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
-          EOF
-
-      - name: DEBUG
-        run: |
-          echo "VITE_CLERK_PUBLISHABLE_KEY=${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}"
-          cat ./packages/app/.env.local
+      # - name: Create .env file
+      #   run: |
+      #     cat <<EOF > ./packages/app/.env.local
+      #     VITE_CLERK_PUBLISHABLE_KEY=${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
+      #     EOF
+s
+      # - name: DEBUG
+      #   run: |
+      #     echo "VITE_CLERK_PUBLISHABLE_KEY=${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}"
+      #     cat ./packages/app/.env.local
 
       - name: Enable Corepack # Ensures the correct version of yarn is used
         run: corepack enable
@@ -53,6 +53,7 @@ jobs:
       - name: Build Project
         run: yarn build
         env:
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
           TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
           TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
