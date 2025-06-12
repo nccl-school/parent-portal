@@ -28,14 +28,6 @@ jobs:
         id: node_version
         run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
 
-      - name: Setup Cache
-        uses: actions/cache@v3
-        with:
-          path: .yarn/cache
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
       - name: Set Up Node.js
         uses: actions/setup-node@v4
         with:
@@ -43,9 +35,14 @@ jobs:
 
       - name: Create .env file
         run: |
-          cat <<EOF > ./packages/app/.env
+          cat <<EOF > ./packages/app/.env.local
           VITE_CLERK_PUBLISHABLE_KEY=${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
           EOF
+
+      - name: DEBUG
+        run: |
+          echo "VITE_CLERK_PUBLISHABLE_KEY=${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}"
+          cat ./packages/app/.env.local
 
       - name: Enable Corepack # Ensures the correct version of yarn is used
         run: corepack enable
