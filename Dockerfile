@@ -26,7 +26,8 @@ COPY --from=builder /repo/packages/app/build            ./packages/app/build
 COPY --from=builder /repo/packages/app/server.js        ./packages/app/server.js
 
 RUN echo "Server build contents:" && \
-    cat packages/app/build/server-build-* | head -n 50
+    cat packages/app/build/server/assets/server-build-* | head -n 50
+
 
 RUN corepack enable
 
