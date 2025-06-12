@@ -59,7 +59,9 @@ jobs:
 
       - name: --- DEBUG BUILD FILE ---
         run: |
-          cat ./packages/app/build/server/index.js
+          FILE=$(ls ./packages/app/build/server/assets/server-build-* | head -n 1)
+          echo "Showing contents of $FILE"
+          cat "$FILE"
 
       - name: GCP - Authenticate
         uses: google-github-actions/auth@v2
