@@ -73,8 +73,9 @@ jobs:
             --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{vars.SERVICE_NAME}} \
             --platform managed \
             --region us-central1 \
-            --set-env-vars "NODE_ENV=production"
-            --set-env-vars "NCCL_APP_URL=${{ secrets.NCCL_APP_URL }}"
-            --set-env-vars "CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }}"
-            --set-env-vars "GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }}"
-            --set-env-vars "GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}"
+            --set-env-vars\
+              NODE_ENV=production,\
+              NCCL_APP_URL=${{ secrets.NCCL_APP_URL }},\
+              CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }},\
+              GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }},\
+              GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}
