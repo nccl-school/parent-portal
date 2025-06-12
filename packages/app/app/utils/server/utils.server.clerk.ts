@@ -25,6 +25,7 @@ export async function getClerkClient<
   // Instantiate the Backend SDK and get the user's full `Backend User` object
   const client = createClerkClient({
     secretKey: args.context.env.CLERK_SECRET_KEY,
+    publishableKey: args.context.env.CLERK_PUBLISHABLE_KEY,
   });
   return client;
 }

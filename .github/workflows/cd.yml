@@ -39,11 +39,6 @@ jobs:
           VITE_CLERK_PUBLISHABLE_KEY=${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
           EOF
 
-      # - name: DEBUG
-      #   run: |
-      #     echo "VITE_CLERK_PUBLISHABLE_KEY=${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}"
-      #     cat ./packages/app/.env.local
-
       - name: Enable Corepack # Ensures the correct version of yarn is used
         run: corepack enable
 
@@ -89,5 +84,6 @@ jobs:
             --set-env-vars NODE_ENV=production,\
           NCCL_APP_URL=${{ secrets.NCCL_APP_URL }},\
           CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }},\
+          CLERK_PUBLISHABLE_KEY	=${{ secrets.CLERK_PUBLISHABLE_KEY }},\
           GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }},\
           GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}
