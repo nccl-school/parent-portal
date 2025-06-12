@@ -90,10 +90,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App({ loaderData }: Route.ComponentProps) {
+  console.log(loaderData.publishableKey);
   return (
     <ClerkProvider
       loaderData={loaderData}
-      publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}
       signUpFallbackRedirectUrl="/"
       signInFallbackRedirectUrl="/"
     >
