@@ -1,8 +1,8 @@
 # Stage 1: Build the app with dev dependencies
 FROM node:24-alpine AS builder
 
-ARG TURBO_TOKEN
-ARG TURBO_TEAM_ID
+ARG _TURBO_TOKEN
+ARG _TURBO_TEAM_ID
 
 WORKDIR /repo
 
@@ -11,7 +11,7 @@ COPY . .
 RUN corepack enable
 
 # Install all dependencies (monorepo-aware)
-RUN TURBO_TOKEN=$TURBO_TOKEN TURBO_TEAM_ID=$TURBO_TEAM_ID yarn install --immutable
+RUN TURBO_TOKEN=${_TURBO_TOKEN} TURBO_TEAM_ID=${_TURBO_TEAM_ID} yarn install --immutable
 
 # Build the app
 RUN yarn build

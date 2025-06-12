@@ -76,7 +76,7 @@ jobs:
           echo "Building $SERVICE_NAME"
           gcloud builds submit . \
             --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${SERVICE_NAME} \
-            --substitutions=TURBO_TOKEN=${{secrets.TURBO_TOKEN}},TURBO_TEAM_ID=${{secrets.TURBO_TEAM_ID}},
+            --substitutions=_TURBO_TOKEN="${{secrets.TURBO_TOKEN}}",_TURBO_TEAM_ID="${{secrets.TURBO_TEAM_ID}}",
 
       - name: GCP - Deploy to Cloud Run
         env:
