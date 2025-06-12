@@ -8,7 +8,6 @@
     "start": "node server.js",
     "typecheck": "react-router typegen && tsc -b"
   },
-  "packageManager": "yarn@4.9.1",
   "dependencies": {
     "@clerk/react-router": "1.5.0",
     "@nccl/components": "workspace:*",
@@ -17,7 +16,6 @@
     "@react-router/node": "^7.6.2",
     "@stratum-ui/core": "0.2.0",
     "compression": "1.8.0",
-    "convex": "1.24.8",
     "express": "^5.1.0",
     "isbot": "5.1.28",
     "morgan": "^1.10.0",

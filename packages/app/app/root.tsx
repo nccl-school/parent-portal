@@ -6,20 +6,14 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
-import { ConvexReactClient } from "convex/react";
 import { rootAuthLoader } from "@clerk/react-router/ssr.server";
-import { ClerkProvider, useAuth } from "@clerk/react-router";
-import { ConvexProviderWithClerk } from "convex/react-clerk";
+import { ClerkProvider } from "@clerk/react-router";
 import { css } from "@linaria/core";
 import "@nccl/theme/reset.css";
 import "@nccl/theme/root.css";
 import "@nccl/components/css";
 
 import type { Route } from "./+types/root";
-
-const convexClient = new ConvexReactClient(
-  import.meta.env.VITE_CONVEX_URL as string
-);
 
 export async function loader(args: Route.LoaderArgs) {
   return rootAuthLoader(args);
@@ -94,9 +88,7 @@ export default function App({ loaderData }: Route.ComponentProps) {
       signUpFallbackRedirectUrl="/"
       signInFallbackRedirectUrl="/"
     >
-      <ConvexProviderWithClerk client={convexClient} useAuth={useAuth}>
-        <Outlet />
-      </ConvexProviderWithClerk>
+      <Outlet />
     </ClerkProvider>
   );
 }
