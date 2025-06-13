@@ -17,6 +17,11 @@ const styles = css`
   }
   ${makeResponsive({ from: "laptop" })} {
     padding: ${makeCustom("page--gutter-desktop")};
+    padding-bottom: ${makeRem(48)};
+    max-width: ${makeCustom("container--max-width")};
+    margin: 0 auto;
+    text-align: left;
+    width: 100%;
   }
 
   & > .subtitle {

@@ -1,20 +1,40 @@
 import { SignIn } from "@clerk/react-router";
 import { css } from "@linaria/core";
-import { makeFontFamily, makeRem, makeResponsive } from "@nccl/theme";
-import { Typography } from "@nccl/components";
+import {
+  makeColor,
+  makeFontFamily,
+  makeRem,
+  makeResponsive,
+} from "@nccl/theme";
+import { classes } from "@stratum-ui/core/utils";
 
+import { backgroundGradient } from "../../utils/isomorphic";
 import { assembleTitle } from "../../utils/util.assemble-title";
 
 const styles = css`
   width: 100vw;
   height: 100vh;
   display: grid;
+  place-content: center;
+
+  ${makeResponsive({ to: "laptop" })} {
+    padding: 1rem;
+  }
+  ${makeResponsive({ from: "laptop" })} {
+    display: grid;
+    place-content: center;
+  }
 
   /* Clerk Overrides */
   .cl-cardBox {
     box-shadow: unset;
     max-width: unset;
     width: auto;
+
+    ${makeResponsive({ from: "laptop" })} {
+      width: ${makeRem(460)} !important;
+      border: 1px solid ${makeColor("neutral-dark-50", { opacity: 0.2 })};
+    }
   }
 
   .cl-header {
@@ -24,90 +44,47 @@ const styles = css`
     font-size: ${makeRem(18)};
   }
 
-  /* Mobile */
-  ${makeResponsive({ to: "laptop" })} {
-    place-content: center;
-    padding: 2rem;
-    overflow: hidden;
-    background: url("/images/NCCLMosaicWall.jpeg");
-    background-size: cover;
-    background-blend-mode: color;
+  article {
     font-family: ${makeFontFamily("body")};
-
-    .pane-display {
-      display: none !important;
-    }
+    max-width: 100%;
+    max-height: 100%;
 
     .cl-card {
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(4px);
-    }
-  }
+      backdrop-filter: blur(25px);
+      background: rgba(255, 255, 255, 0.8);
 
-  ${makeResponsive({ from: "laptop" })} {
-    width: 100vw;
-    height: 100vh;
-    display: grid;
-    grid-template-columns: minmax(50%, 60%) minmax(500px, 1fr);
-    gap: 3rem;
-    padding: 3rem;
-
-    & > * {
-      border-radius: ${makeRem(16)};
-    }
-
-    .pane-display {
-      background: url("/images/NCCLMosaicWall.jpeg");
-      background-size: cover;
-      background-blend-mode: color;
-      display: grid;
-      place-content: center;
-      padding: 4rem;
-
-      .quote {
-        width: 100%;
-        height: 100%;
-        text-align: center;
-        padding: 4rem;
-        background: rgba(255, 255, 255, 0.5);
-        backdrop-filter: blur(4px);
-        border-radius: ${makeRem(16)};
-
-        .heading1 {
-          margin: 1rem 0;
-        }
-
-        div {
-          white-space: nowrap;
-        }
+      ${makeResponsive({ from: "laptop" })} {
+        padding: ${makeRem(32)};
       }
     }
 
-    .pane-auth {
-      height: 100%;
-      width: 100%;
-      background: white;
-      padding-right: 0;
-      display: grid;
-      place-content: center;
-      font-family: ${makeFontFamily("body")};
+    .cl-cardBox {
+      box-shadow: unset;
+      max-width: unset;
+      width: auto;
+    }
 
-      .cl-cardBox {
-        box-shadow: unset;
-        max-width: unset;
-        width: auto;
+    .cl-logoBox {
+      ${makeResponsive({ to: "laptop" })} {
+        height: ${makeRem(60)};
       }
-
-      .cl-logoBox {
-        height: ${makeRem(100)};
+      ${makeResponsive({ from: "laptop" })} {
+        height: ${makeRem(120)};
       }
-      .cl-header {
-        font-family: ${makeFontFamily("heading")};
+    }
+    .cl-header {
+      font-family: ${makeFontFamily("heading")};
+    }
+    .cl-headerTitle {
+      ${makeResponsive({ to: "laptop" })} {
+        font-size: ${makeRem(18)};
       }
-      .cl-headerTitle {
+      ${makeResponsive({ from: "laptop" })} {
         font-size: ${makeRem(24)};
-        white-space: nowrap;
       }
+    }
+    .cl-footer {
+      display: none;
     }
   }
 `;
@@ -121,26 +98,8 @@ export function meta() {
 
 export default function LandingRoute() {
   return (
-    <main className={styles}>
-      <article className="pane-display">
-        <div className="quote">
-          <Typography dxVariant="heading1" dxNode="div">
-            <div>Tell me,</div>
-            <div>I forget.</div>
-          </Typography>
-          <br />
-          <Typography dxVariant="heading1" dxNode="div">
-            <div>Show me,</div>
-            <div>I remember.</div>
-          </Typography>
-          <br />
-          <Typography dxVariant="heading1" dxNode="div">
-            <div>Involve me,</div>
-            <div>I understand.</div>
-          </Typography>
-        </div>
-      </article>
-      <article className="pane-auth">
+    <main className={classes(styles, backgroundGradient)}>
+      <article>
         <SignIn oauthFlow="redirect" />
       </article>
     </main>

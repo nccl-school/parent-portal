@@ -161,6 +161,11 @@
       "type": "rem",
       "description": "The size of the gutters for the modal header footer and body",
       "value": 32
+    },
+    "container--max-width": {
+      "type": "rem",
+      "description": "The max width of any container on the page",
+      "value": 1128
     }
   }
 }

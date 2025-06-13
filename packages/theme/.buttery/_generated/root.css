@@ -511,6 +511,7 @@
   --nccl-custom-table--cell-padding: 1rem;
   --nccl-custom-table--body-cell-padding-v: 1rem;
   --nccl-custom-modal--gutters: 2rem;
+  --nccl-custom-container--max-width: 70.5rem;
   --nccl-font-base: 16;
   --nccl-font-family-heading:
     "Montserrat", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,

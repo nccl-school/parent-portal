@@ -1,5 +1,5 @@
 import { Outlet } from "react-router";
-import { makeColor } from "@nccl/theme";
+import { makeCustom } from "@nccl/theme";
 import { css } from "@linaria/core";
 
 import type { Route } from "./+types/Admin.route";
@@ -22,15 +22,16 @@ const styles = css`
 
   .title {
     grid-area: title;
-    background: white;
   }
   .nav {
     grid-area: nav;
-    background: white;
-    border-bottom: 1px solid ${makeColor("neutral-dark-50", { opacity: 0.2 })};
+    max-width: ${makeCustom("container--max-width")};
+    margin: 0 auto;
+    width: 100%;
   }
   .main {
     grid-area: main;
+    background: white;
   }
 `;
 

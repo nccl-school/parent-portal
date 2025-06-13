@@ -1,11 +1,13 @@
 import { Outlet } from "react-router";
 import { css } from "@linaria/core";
 import { makeColor, makeCustom, makeResponsive } from "@nccl/theme";
+import { classes } from "@stratum-ui/core/utils";
 
 import type { Route } from "./+types/Root.layout";
 import { RootNavbar } from "./RootNavbar";
 import { RootHeader } from "./RootHeader";
 
+import { backgroundGradient } from "../../utils/isomorphic";
 import { ensureUser } from "../../utils/server";
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
@@ -46,8 +48,11 @@ const styles = css`
 
   .layout-main {
     grid-area: main;
-    padding-bottom: ${makeCustom("navbar--height-mobile")};
     min-height: ${`calc(100vh - ${makeCustom("navbar--height-mobile")} - ${makeCustom("header--height-desktop")} - 1px)`};
+
+    ${makeResponsive({ to: "laptop" })} {
+      padding-bottom: ${makeCustom("navbar--height-mobile")};
+    }
   }
 
   .layout-nav {
@@ -73,7 +78,7 @@ const styles = css`
 
 export default function RootLayout() {
   return (
-    <div className={styles}>
+    <div className={classes(styles, backgroundGradient)}>
       <div className="layout-head">
         <RootHeader />
       </div>
