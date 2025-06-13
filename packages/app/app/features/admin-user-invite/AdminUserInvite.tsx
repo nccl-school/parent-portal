@@ -48,8 +48,6 @@ function ModalContent() {
   const fetcher = useFetcher<typeof inviteUserAction>();
   const errors = getValidationErrors<keyof InviteUsersApiRequest>(fetcher.data);
 
-  console.log(errors);
-
   return (
     <fetcher.Form
       action={href("/api/user/invite")}

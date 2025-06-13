@@ -16,7 +16,6 @@ export const Basic = () => {
   const onMount = useCallback<RefCallback<HTMLDivElement>>((node) => {
     if (!node) return;
     const anchors = node.getElementsByTagName("a");
-    console.log(anchors);
     function handleClick(e: Event) {
       (e.currentTarget as HTMLAnchorElement).classList.add("active");
 

@@ -52,7 +52,6 @@ export class AsyncStateQueue<T> implements AsyncIterable<T> {
 
   setState(fn: (draft: Draft<typeof this._state>) => void) {
     this._state = produce(this._state, fn);
-    console.log("asyncQueueState", this._state);
     this.dispatchState();
   }
 

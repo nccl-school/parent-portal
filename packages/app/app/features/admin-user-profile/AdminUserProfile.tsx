@@ -26,7 +26,6 @@ function ModalContent() {
     close,
     state: { user },
   } = useAdminUserProfileModalContext();
-  console.log(user);
 
   return (
     <>

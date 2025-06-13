@@ -28,7 +28,6 @@ app.use(
     // eslint-disable-next-line import/no-unresolved
     build: () => import("virtual:react-router/server-build"),
     getLoadContext() {
-      console.log(process.env);
       return {
         env: {
           NCCL_APP_URL: envVar("NCCL_APP_URL"),
