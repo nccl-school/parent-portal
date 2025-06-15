@@ -3,9 +3,8 @@ name: CD
 on:
   push:
     branches:
-      # - stage
+      - dev
       # - main
-      - gcp
 
 jobs:
   deploy:
