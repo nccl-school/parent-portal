@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     environment:
-      name: ${{ github.ref_name == 'main' && 'production' || 'stage' }}
+      name: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
 
     steps:
       - name: Checkout Repository
@@ -22,7 +22,7 @@ jobs:
       - name: Deploy
         run: |
           echo "Deploying branch: ${{ github.ref_name }}"
-          echo "To environment: ${{ github.ref_name == 'main' && 'production' || 'stage' }}"
+          echo "To environment: ${{ github.ref_name == 'main' && 'production' || 'dev' }}"
 
       - name: Read Node.js Version
         id: node_version
@@ -74,6 +74,7 @@ jobs:
           gcloud run deploy ${{vars.SERVICE_NAME}} \
             --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{vars.SERVICE_NAME}} \
             --platform managed \
+            --allow-unauthenticated \
             --region us-central1 \
             --set-env-vars NODE_ENV=production,\
           NCCL_APP_URL=${{ vars.NCCL_APP_URL }},\
