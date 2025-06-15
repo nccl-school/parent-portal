@@ -1,7 +1,7 @@
 import type { Route } from "./+types/AdminUsers.route";
 import { AdminUsersTable } from "./AdminUsersTable";
 
-import { InnerPageHeader, PageSection } from "../../components/page";
+import { PageSection } from "../../components/page";
 import { getClerkClient } from "../../utils/server";
 import { assembleTitle } from "../../utils/util.assemble-title";
 
@@ -17,14 +17,8 @@ export async function loader(args: Route.LoaderArgs) {
 
 export default function AdminUsersRoute(args: Route.ComponentProps) {
   return (
-    <>
-      <InnerPageHeader
-        dxTitle="Users"
-        dxSubtitle="Manage the parents, staff, admins & their account permissions here."
-      />
-      <PageSection>
-        <AdminUsersTable data={args.loaderData.users} />
-      </PageSection>
-    </>
+    <PageSection>
+      <AdminUsersTable data={args.loaderData.users} />
+    </PageSection>
   );
 }
