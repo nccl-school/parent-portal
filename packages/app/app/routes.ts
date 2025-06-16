@@ -20,7 +20,10 @@ export default [
     ]),
     // - /calendar
     layout("./features/calendar/Calendar.layout.tsx", [
-      route("calendar", "./features/calendar/Calendar.route.tsx"),
+      ...prefix("calendar", [
+        index("./features/calendar-by-week/CalendarByWeek.route.tsx"),
+        route("/by-day", "./features/calendar-by-day/CalendarByDay.route.tsx"),
+      ]),
     ]),
     // - /more
     layout("./features/more/More.layout.tsx", [
