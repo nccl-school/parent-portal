@@ -1,0 +1,35 @@
+{
+  "name": "@nccl/api",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.4",
+    "@hono/zod-validator": "^0.7.0",
+    "hono": "^4.7.11",
+    "hono-openapi": "^0.4.8",
+    "zod": "^3.25.67",
+    "zod-openapi": "^4.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "tsx": "^4.7.1",
+    "typescript": "^5.8.3"
+  },
+  "version": "0.0.1",
+  "description": "The API for the NCCL Parent Portal applications",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/nccl-school/parent-portal.git"
+  },
+  "author": "Drew DeCarme (drew@greenflash.digital)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/nccl-school/parent-portal/issues"
+  },
+  "homepage": "https://github.com/nccl-school/parent-portal#readme"
+}
