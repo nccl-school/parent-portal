@@ -24,7 +24,7 @@ const styles = css`
   backdrop-filter: blur(5px);
 
   &.active {
-    background: ${makeColor("primary-50", { opacity: 0.5 })};
+    background: ${makeColor("primary", { opacity: 0.2 })};
     color: ${makeColor("primary-1200")};
   }
 
