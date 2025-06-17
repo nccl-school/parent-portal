@@ -14,9 +14,6 @@ import type { CalendarSearchParams } from "../calendar";
 export function getByWeekMetaData(params: CalendarSearchParams) {
   const todaysDate = startOfDay(new Date());
   const customDate = params.date ? parseISO(params.date) : undefined;
-  if (!customDate) {
-    console.error("Invalid custom date. Falling back to today.");
-  }
   const date = customDate ?? todaysDate;
 
   const startOfThisWeek = startOfWeek(date);

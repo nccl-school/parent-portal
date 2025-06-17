@@ -3,6 +3,7 @@ import { css } from "@linaria/core";
 import { Typography } from "@nccl/components";
 import { makeColor, makeRem } from "@nccl/theme";
 import { classes } from "@stratum-ui/core/utils";
+import { useMemo } from "react";
 
 import { CalendarByWeekTools } from "./CalendarByWeekTools";
 import type { Route } from "./+types/CalendarByWeek.route";
@@ -84,40 +85,47 @@ export default function CalendarByWeekRoute({
         {/* Header */}
         <CalendarHeader>
           <CalendarHeaderCell>EST</CalendarHeaderCell>
-          {meta.days.map((day) => (
-            <CalendarHeaderCell
-              key={day.iso}
-              className={classes({ active: day.num === meta.today.dayNum })}
-            >
-              {format(day.iso, "EEE")}
-              &nbsp;
-              <b>{format(day.iso, "dd")}</b>
-            </CalendarHeaderCell>
-          ))}
+          {useMemo(
+            () =>
+              meta.days.map((day) => (
+                <CalendarHeaderCell
+                  key={day.iso}
+                  className={classes({ active: day.iso === meta.today.iso })}
+                >
+                  {format(day.iso, "EEE")}
+                  &nbsp;
+                  <b>{format(day.iso, "dd")}</b>
+                </CalendarHeaderCell>
+              )),
+            [meta.days, meta.today.iso]
+          )}
         </CalendarHeader>
 
         {/* Rows */}
         <CalendarBody>
-          {amPmHours.map((hour) => (
-            <CalendarBodyRow key={hour} className="calendar-row">
-              <div className="calendar-hour-label">
-                <Typography dxVariant="label" dxNode="div">
-                  {hour}
-                </Typography>
-              </div>
-              {meta.days.map((day) => {
-                console.log(day.iso, meta.today.iso);
-                return (
-                  <div
-                    key={day.iso}
-                    className={classes("calendar-cell", {
-                      active: day.iso === meta.today.iso,
-                    })}
-                  />
-                );
-              })}
-            </CalendarBodyRow>
-          ))}
+          {useMemo(
+            () =>
+              amPmHours.map((hour) => (
+                <CalendarBodyRow key={hour} className="calendar-row">
+                  <div className="calendar-hour-label">
+                    <Typography dxVariant="label" dxNode="div">
+                      {hour}
+                    </Typography>
+                  </div>
+                  {meta.days.map((day) => {
+                    return (
+                      <div
+                        key={day.iso}
+                        className={classes("calendar-cell", {
+                          active: day.iso === meta.today.iso,
+                        })}
+                      />
+                    );
+                  })}
+                </CalendarBodyRow>
+              )),
+            [meta.days, meta.today.iso]
+          )}
 
           {/* Events */}
           {(events.items ?? []).map((event) => (
