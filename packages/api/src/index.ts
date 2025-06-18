@@ -10,6 +10,7 @@ import { suggestion } from "./features/suggestion/suggestion.route.js";
 import { createOpenAPISpecs } from "./features/openapi/openapi.route.js";
 import { user } from "./features/user/user.route.js";
 import { handleError } from "./utils/index.js";
+import { prismaMiddleware } from "./middleware/middleware.prisma.js";
 
 // Environment Vars
 dotenv.config({ path: path.resolve(import.meta.dirname, "../../../.env") });
@@ -19,6 +20,7 @@ const app = new Hono().basePath("/api");
 // Middleware
 app.use(logger());
 app.use("*", clerkMiddleware());
+app.use("*", prismaMiddleware);
 
 // Routes
 app.route("/suggestion", suggestion);

@@ -21,7 +21,9 @@ getMany.get(
       },
     },
   }),
-  (c) => {
-    return c.json({ message: "hello suggestion!" });
+  async (c) => {
+    const db = c.get("db");
+    const suggestions = await db.suggestion.findMany();
+    return c.json(suggestions);
   }
 );
