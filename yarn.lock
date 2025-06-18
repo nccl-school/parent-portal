@@ -2266,6 +2266,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hono/clerk-auth@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "@hono/clerk-auth@npm:2.0.1"
+  peerDependencies:
+    "@clerk/backend": ^1.0.0
+    hono: ">=3.*"
+  checksum: 10c0/9c94ca18f403df2820f0884689af6ae18dc1550d89a208f715f793a3ddb20bed1b0971ff9b1c30c17499eb859c987da4761cdfb80fb4d05d2748074b0d1fb05b
+  languageName: node
+  linkType: hard
+
 "@hono/node-server@npm:^1.14.4":
   version: 1.14.4
   resolution: "@hono/node-server@npm:1.14.4"
@@ -2760,9 +2770,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@nccl/api@workspace:packages/api"
   dependencies:
+    "@clerk/backend": "npm:^2.1.0"
+    "@hono/clerk-auth": "npm:^2.0.1"
     "@hono/node-server": "npm:^1.14.4"
     "@hono/zod-validator": "npm:^0.7.0"
     "@types/node": "npm:^20.11.17"
+    dotenv: "npm:16.5.0"
     hono: "npm:^4.7.11"
     hono-openapi: "npm:^0.4.8"
     tsx: "npm:^4.7.1"
@@ -6537,6 +6550,13 @@ __metadata:
     esbuild: "npm:^0.25.4"
     ts-jolt: "npm:0.2.3"
   checksum: 10c0/190259eca8dcf55c1517370530ca49c94a3b82bffd7a11d7ae86e8bbbefd2417f2cedbba8e74ac3fbe6229232303ca840f1947e77bb9cec7673c56e547859569
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:16.5.0":
+  version: 16.5.0
+  resolution: "dotenv@npm:16.5.0"
+  checksum: 10c0/5bc94c919fbd955bf0ba44d33922a1e93d1078e64a1db5c30faeded1d996e7a83c55332cb8ea4fae5a9ca4d0be44cbceb95c5811e70f9f095298df09d1997dd9
   languageName: node
   linkType: hard
 
