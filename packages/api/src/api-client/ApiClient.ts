@@ -69,11 +69,18 @@ export class ApiClient {
     const pathname = this.basePath.concat(url);
     if (!params) return pathname;
     const [schema, raw] = params;
-    const _data = this.#validateSchema<T>(schema, raw, {
+    const data = this.#validateSchema<T>(schema, raw, {
       message:
         "Error when attempting to validate the query parameters of the request",
     });
-    return pathname;
+    // Replace :params in the path with values from the parsed data
+    return pathname.replace(/:([a-zA-Z0-9_]+)/g, (_, key) => {
+      const val = (data as Record<string, unknown>)[key];
+      if (val === undefined) {
+        throw new ServerError.internal(`Missing param for path key :${key}`);
+      }
+      return encodeURIComponent(String(val));
+    });
   }
 
   protected async _get<
