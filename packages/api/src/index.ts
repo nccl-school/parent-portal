@@ -9,9 +9,9 @@ import { clerkMiddleware } from "@hono/clerk-auth";
 import { suggestion } from "./features/suggestion/suggestion.route.js";
 import { createOpenAPISpecs } from "./features/openapi/openapi.route.js";
 import { user } from "./features/user/user.route.js";
-import { handleError } from "./utils/index.js";
 import { prismaMiddleware } from "./middleware/middleware.prisma.js";
 import { currentUserMiddleware } from "./middleware/middleware.current-user.js";
+import { handleError } from "./utils/index.js";
 
 // Environment Vars
 dotenv.config({ path: path.resolve(import.meta.dirname, "../../../.env") });

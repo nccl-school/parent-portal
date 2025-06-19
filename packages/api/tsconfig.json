@@ -8,7 +8,12 @@
     "types": ["node"],
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": {
+      "#prisma": ["./prisma/_generated/edge.js"],
+      "#utils": ["./src/utils/index.ts"]
+    }
   },
   "exclude": ["node_modules"]
 }

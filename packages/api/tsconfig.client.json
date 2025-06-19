@@ -1,0 +1,11 @@
+{
+  "extends": "@gfdigital/tsconfig/library",
+  "compilerOptions": {
+    "outDir": "dist.client",
+    "declaration": true,
+    "declarationDir": "dist.client",
+    "declarationMap": true,
+    "noEmit": false
+  },
+  "include": ["./src/index.client.ts"]
+}

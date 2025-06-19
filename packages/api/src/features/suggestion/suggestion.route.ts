@@ -1,10 +1,9 @@
 import { Hono } from "hono";
 
-import { getMany } from "./suggestion.route.getMany.js";
-import { getOne } from "./suggestion.route.getOne.js";
+import { getSuggestionList } from "./suggestion.route.getSuggestionList.js";
+import { getSuggestion } from "./suggestion.route.getSuggestion.js";
 
 export const suggestion = new Hono();
 
-// Get all suggestions
-suggestion.route("/", getMany);
-suggestion.route("/:id", getOne);
+suggestion.route("/", getSuggestionList);
+suggestion.route("/:id", getSuggestion);

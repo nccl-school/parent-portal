@@ -16,6 +16,7 @@ export type ErrorResponseUnauthenticated = ErrorResponse<"unauthenticated">;
 export type ErrorResponseUnauthorized = ErrorResponse<"unauthorized">;
 export type ErrorResponseNotFound = ErrorResponse<"not_found">;
 export type ErrorResponseMethodNotAllowed = ErrorResponse<"method_not_allowed">;
+export type ErrorResponseInternalServer = ErrorResponse<"server_error">;
 export type ErrorResponseValidation<K extends string = string> =
   ErrorResponse<"validation"> & {
     errors: Partial<Record<K, string[]>>;
@@ -27,6 +28,7 @@ export type ApiErrorResponse<K extends string = string> =
   | ErrorResponseUnauthorized
   | ErrorResponseNotFound
   | ErrorResponseMethodNotAllowed
+  | ErrorResponseInternalServer
   | ErrorResponseValidation<K>;
 
 /**
@@ -102,6 +104,15 @@ class MethodNotAllowedError extends ApiError<ErrorResponseMethodNotAllowed> {
   }
 }
 
+class InternalError extends ApiError<ErrorResponseMethodNotAllowed> {
+  status: ServerErrorStatusCode = 500;
+  error_type = "method_not_allowed" as const;
+
+  constructor(reason: string) {
+    super(`There was an internal server error`.concat(reason));
+  }
+}
+
 class ValidationError<K extends string> extends ApiError<
   ErrorResponseValidation<K>
 > {
@@ -124,9 +135,12 @@ export const ServerError = {
   notFound: NotFoundError,
   methodNotAllowed: MethodNotAllowedError,
   validation: ValidationError,
+  internal: InternalError,
 };
 
-export function handleError(error: unknown) {
+export function handleError<T extends string = string>(
+  error: unknown
+): ApiErrorResponse<T> {
   let err = error;
   if (err instanceof ZodError) {
     const flatErr = z.flattenError(err);

@@ -1,14 +1,13 @@
 import { Hono } from "hono";
 import { describeRoute } from "hono-openapi";
 import { resolver } from "hono-openapi/zod";
-import z from "zod";
 
-const messageSchema = z.object({ message: z.string() });
+import { GetSuggestionApiResponseSchema } from "./suggestion.utils.js";
 
-export const getMany = new Hono();
+export const getSuggestionList = new Hono();
 
 // Get all suggestions
-getMany.get(
+getSuggestionList.get(
   "/",
   describeRoute({
     description: "Get a list of the suggestions",
@@ -16,7 +15,9 @@ getMany.get(
       200: {
         description: "Successful response",
         content: {
-          "application/json": { schema: resolver(messageSchema) },
+          "application/json": {
+            schema: resolver(GetSuggestionApiResponseSchema),
+          },
         },
       },
     },
