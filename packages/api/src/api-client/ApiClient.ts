@@ -11,7 +11,7 @@ export class ApiClient {
     this.basePath = basePath;
   }
 
-  #serialize<S extends ZodSchema>(schema: S, res: unknown) {
+  #serialize<S>(schema: ZodSchema<S>, res: unknown) {
     try {
       return schema.parse(res);
     } catch (error) {
@@ -104,7 +104,6 @@ export class ApiClient {
     // Fetch the data
     const res = await fetch(url, { headers });
     const json = await res.json();
-    return serializer.parse(json);
 
     // Serialize the data
     const data = this.#serialize(serializer, json);
