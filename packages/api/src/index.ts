@@ -8,12 +8,12 @@ import { clerkMiddleware } from "@hono/clerk-auth";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
 
 import { suggestion } from "#features/suggestion/suggestion.route.js";
+import { createOpenAPISpecs } from "#features/openapi/openapi.route.js";
+import { user } from "#features/user/user.route.js";
+import { serializeError } from "#errors";
 
-import { createOpenAPISpecs } from "./features/openapi/openapi.route.js";
-import { user } from "./features/user/user.route.js";
 import { prismaMiddleware } from "./middleware/middleware.prisma.js";
 import { currentUserMiddleware } from "./middleware/middleware.current-user.js";
-import { serializeError } from "./utils/index.js";
 
 // Environment Vars
 dotenv.config({ path: path.resolve(import.meta.dirname, "../../../.env") });
@@ -30,9 +30,8 @@ app.use("*", currentUserMiddleware);
 app.use("*", prismaMiddleware);
 
 // Routes
-app.basePath("/api");
-app.route("/suggestion", suggestion);
-app.route("/user", user);
+app.route("/api/suggestion", suggestion);
+app.route("/api/user", user);
 
 // Errors
 app.onError((error, c) => {
