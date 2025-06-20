@@ -1,8 +1,8 @@
 import {
-  GetSuggestionListApiQuerySchema,
-  GetSuggestionApiParamsSchema,
-  GetSuggestionApiResponseSchema,
-  type GetSuggestionListApiQueryParams,
+  GetSuggestionListQuerySchema as GetSuggestionListQuerySchema,
+  GetSuggestionParamsSchema,
+  GetSuggestionResponseSchema,
+  type GetSuggestionListQuery,
 } from "./suggestion.utils.js";
 
 import { ApiClient } from "../../api-client/ApiClient.js";
@@ -15,11 +15,11 @@ export class SuggestionClient extends ApiClient {
   /**
    * Get a list of suggestions
    */
-  async getSuggestionList(query?: GetSuggestionListApiQueryParams) {
+  async getSuggestionList(query?: GetSuggestionListQuery) {
     return this._get({
       path: `/`,
-      query: [GetSuggestionListApiQuerySchema, query],
-      serializer: GetSuggestionApiResponseSchema,
+      query: [GetSuggestionListQuerySchema, query],
+      serializer: GetSuggestionResponseSchema,
     });
   }
 
@@ -29,8 +29,8 @@ export class SuggestionClient extends ApiClient {
   async getSuggestion(id: number) {
     return this._get({
       path: "/:id",
-      params: [GetSuggestionApiParamsSchema, { id }],
-      serializer: GetSuggestionApiResponseSchema,
+      params: [GetSuggestionParamsSchema, { id }],
+      serializer: GetSuggestionResponseSchema,
     });
   }
 }

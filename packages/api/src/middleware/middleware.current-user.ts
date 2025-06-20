@@ -1,8 +1,8 @@
 import { createMiddleware } from "hono/factory";
 import { getAuth } from "@hono/clerk-auth";
 
-import { ServerError } from "../utils/util.handleError.js";
-import type { UserRole } from "../features/user/user.utils.js";
+import type { UserRole } from "#features/user/user.utils.js";
+import { ErrorSet } from "#errors";
 
 declare global {
   interface CustomJwtSessionClaims {
@@ -27,7 +27,7 @@ declare module "hono" {
 export const currentUserMiddleware = createMiddleware(async (c, next) => {
   const auth = getAuth(c);
   if (!auth?.userId) {
-    throw new ServerError.unauthenticated();
+    throw new ErrorSet.unauthenticated();
   }
 
   c.set("user", {

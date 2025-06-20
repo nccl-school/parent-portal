@@ -9,28 +9,32 @@
     "client:dev": "yarn client:build --watch",
     "client:build": "yarn tsc --project tsconfig.client.json",
     "db:dev": "prisma dev",
-    "db:client": "prisma generate --no-engine",
+    "db:generate": "prisma generate --no-engine",
     "db:migrate-dev": "dotenv -e=../../.env -- prisma migrate dev"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./client": "./dist.client/index.client.js"
   },
   "dependencies": {
     "@clerk/backend": "^2.1.0",
-    "@hono/clerk-auth": "^2.0.1",
+    "@hono/clerk-auth": "^3.0.0",
     "@hono/node-server": "^1.14.4",
     "@hono/zod-validator": "^0.7.0",
-    "@prisma/client": "6.10.0",
+    "@prisma/client": "6.10.1",
     "@prisma/extension-accelerate": "2.0.1",
     "dotenv": "16.5.0",
-    "hono": "^4.7.11",
+    "hono": "^4.8.1",
     "hono-openapi": "^0.4.8",
-    "prisma": "6.10.0",
+    "prisma": "6.10.1",
     "zod": "^3.25.67",
     "zod-openapi": "^4.2.4"
   },
   "devDependencies": {
     "@gfdigital/tsconfig": "0.3.1",
-    "@types/node": "^20.11.17",
+    "@types/node": "^24.0.3",
     "dotenv-cli": "8.0.0",
-    "tsx": "^4.7.1",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   },
   "version": "0.0.1",

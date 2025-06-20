@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { describeRoute } from "hono-openapi";
 import { resolver } from "hono-openapi/zod";
 
-import { GetSuggestionApiResponseSchema } from "./suggestion.utils.js";
+import { GetSuggestionResponseSchema } from "./suggestion.utils.js";
 
 export const getSuggestionList = new Hono();
 
@@ -16,7 +16,7 @@ getSuggestionList.get(
         description: "Successful response",
         content: {
           "application/json": {
-            schema: resolver(GetSuggestionApiResponseSchema),
+            schema: resolver(GetSuggestionResponseSchema),
           },
         },
       },

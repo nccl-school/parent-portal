@@ -8,24 +8,24 @@ export const SuggestionSchema = z.object({
   createdAt: z.string(),
   updateAt: z.string(),
 });
+export type Suggestion = z.infer<typeof SuggestionSchema>;
 
 // getSuggestionList
-export const GetSuggestionListApiResponseSchema = SuggestionSchema.array();
-export type GetSuggestionListApiResponse = z.infer<
-  typeof GetSuggestionListApiResponseSchema
->;
-export const GetSuggestionListApiQuerySchema = z.object({
+export const GetSuggestionListQuerySchema = z.object({
   search: z.string().optional(),
 });
-export type GetSuggestionListApiQueryParams = z.infer<
-  typeof GetSuggestionListApiQuerySchema
+export type GetSuggestionListQuery = z.infer<
+  typeof GetSuggestionListQuerySchema
+>;
+export const GetSuggestionListResponseSchema = SuggestionSchema.array();
+export type GetSuggestionListResponse = z.infer<
+  typeof GetSuggestionListResponseSchema
 >;
 
 // getSuggestion
-export const GetSuggestionApiParamsSchema = z.object({
+export const GetSuggestionParamsSchema = z.object({
   id: z.string().pipe(z.coerce.number()),
 });
-export const GetSuggestionApiResponseSchema = SuggestionSchema.array();
-export type GetSuggestionApiResponse = z.infer<
-  typeof GetSuggestionApiResponseSchema
->;
+export type GetSuggestionParams = z.infer<typeof GetSuggestionParamsSchema>;
+export const GetSuggestionResponseSchema = SuggestionSchema;
+export type GetSuggestionResponse = z.infer<typeof GetSuggestionResponseSchema>;

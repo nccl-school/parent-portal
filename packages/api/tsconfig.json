@@ -11,8 +11,11 @@
     "outDir": "./dist",
     "baseUrl": ".",
     "paths": {
-      "#prisma": ["./prisma/_generated/edge.js"],
-      "#utils": ["./src/utils/index.ts"]
+      "#prisma/*": ["./src/_generated/prisma/*"],
+      "#utils": ["./src/utils/index.ts"],
+      "#middleware": ["./src/middleware/*"],
+      "#features/*": ["./src/features/*"],
+      "#errors": ["./src/utils/util.errors.ts"]
     }
   },
   "exclude": ["node_modules"]

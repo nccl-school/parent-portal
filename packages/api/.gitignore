@@ -28,5 +28,5 @@ lerna-debug.log*
 .DS_Store
 
 /src/generated/prisma
-prisma/_generated
+/src/_generated
 dist.client

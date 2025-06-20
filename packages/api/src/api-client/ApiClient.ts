@@ -2,7 +2,7 @@ import type { ZodSchema } from "zod";
 import type z from "zod";
 import { ZodError, flattenError } from "zod/v4";
 
-import { ServerError } from "../utils/util.handleError.js";
+import { deserializeError, ErrorSet } from "../utils/util.errors.js";
 
 export class ApiClient {
   basePath: string;
@@ -17,12 +17,9 @@ export class ApiClient {
     } catch (error) {
       if (error instanceof ZodError) {
         const err = flattenError(error as ZodError);
-        throw new ServerError.validation(
-          err.fieldErrors,
-          "Serialization error"
-        );
+        throw new ErrorSet.validation(err.fieldErrors, "Serialization error");
       }
-      throw new ServerError.internal("Failed to serialize for unknown reason.");
+      throw new ErrorSet.serverError("Failed to serialize for unknown reason.");
     }
   }
 
@@ -37,7 +34,7 @@ export class ApiClient {
       return schema.parse(data);
     } catch (error) {
       const flatErr = flattenError(error as ZodError);
-      throw new ServerError.validation(flatErr.fieldErrors, options.message);
+      throw new ErrorSet.validation(flatErr.fieldErrors, options.message);
     }
   }
 
@@ -77,7 +74,7 @@ export class ApiClient {
     return pathname.replace(/:([a-zA-Z0-9_]+)/g, (_, key) => {
       const val = (data as Record<string, unknown>)[key];
       if (val === undefined) {
-        throw new ServerError.internal(`Missing param for path key :${key}`);
+        throw new ErrorSet.serverError(`Missing param for path key :${key}`);
       }
       return encodeURIComponent(String(val));
     });
@@ -109,8 +106,13 @@ export class ApiClient {
     const url = `${pathname}${queryString}`;
 
     // Fetch the data
-    const res = await fetch(url, { headers });
+    const req = new Request(url, { headers });
+    const res = await fetch(req);
     const json = await res.json();
+
+    if (!res.ok) {
+      throw deserializeError(json, req);
+    }
 
     // Serialize the data
     const data = this.#serialize(serializer, json);

@@ -3,7 +3,7 @@ import { validator as zValidator } from "hono-openapi/zod";
 import { type ZodSchema } from "zod";
 import { z, type ZodError } from "zod/v4";
 
-import { ServerError } from "../utils/util.handleError.js";
+import { ErrorSet } from "#errors";
 
 /**
  * Custom validator middleware that will throw
@@ -28,6 +28,6 @@ export const validate = <
         default:
           message = undefined;
       }
-      throw new ServerError.validation(flatErr.fieldErrors, message);
+      throw new ErrorSet.validation(flatErr.fieldErrors, message);
     }
   });
