@@ -13,7 +13,7 @@
     "paths": {
       "#prisma/*": ["./src/_generated/prisma/*"],
       "#utils": ["./src/utils/index.ts"],
-      "#middleware": ["./src/middleware/*"],
+      "#middleware/*": ["./src/middleware/*"],
       "#features/*": ["./src/features/*"],
       "#errors": ["./src/utils/util.errors.ts"]
     }

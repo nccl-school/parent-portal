@@ -159,6 +159,7 @@ export const ErrorSet = {
  * @returns A strongly typed `ErrorResponse` object for JSON serialization
  */
 export function serializeError(error: unknown): ErrorResponse {
+  console.log(error);
   if (error instanceof ZodError) {
     const err = new ErrorSet.validation(z.flattenError(error).fieldErrors);
     return err.toResponse();

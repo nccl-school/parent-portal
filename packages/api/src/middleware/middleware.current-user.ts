@@ -32,7 +32,7 @@ export const currentUserMiddleware = createMiddleware(async (c, next) => {
 
   c.set("user", {
     id: auth.userId,
-    role: auth.sessionClaims.metadata.role ?? "parent",
+    role: auth.sessionClaims.metadata?.role ?? "parent",
   });
   await next();
 });

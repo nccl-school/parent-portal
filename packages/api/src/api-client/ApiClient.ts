@@ -1,6 +1,6 @@
 import type { ZodSchema } from "zod";
 import type z from "zod";
-import { ZodError, flattenError } from "zod/v4";
+import z4, { ZodError, flattenError } from "zod/v4";
 
 import { deserializeError, ErrorSet } from "../utils/util.errors.js";
 
@@ -78,6 +78,53 @@ export class ApiClient {
       }
       return encodeURIComponent(String(val));
     });
+  }
+
+  protected async _postJSON<
+    S extends ZodSchema,
+    P extends ZodSchema = ZodSchema,
+    B extends ZodSchema = ZodSchema,
+  >({
+    path,
+    params,
+    body,
+    serializer,
+  }: {
+    path: string;
+    params?: [schema: P, data: unknown];
+    body: [schema: B, data: unknown];
+    serializer: S;
+  }) {
+    // Assemble the request
+    const headers = new Headers({
+      "content-type": "application/json",
+    });
+    const url = this.#makePathname(path, params);
+
+    const [bodySchema, bodyRaw] = body;
+    const parsedBody = bodySchema.safeParse(bodyRaw);
+    if (!parsedBody.success) {
+      throw new ErrorSet.validation(
+        z4.flattenError(parsedBody.error as unknown as ZodError).fieldErrors
+      );
+    }
+
+    // Fetch the data
+    const req = new Request(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(parsedBody.data),
+    });
+    const res = await fetch(req);
+    const json = await res.json();
+
+    if (!res.ok) {
+      throw deserializeError(json, req);
+    }
+
+    // Serialize the data
+    const data = this.#serialize(serializer, json);
+    return data;
   }
 
   protected async _get<

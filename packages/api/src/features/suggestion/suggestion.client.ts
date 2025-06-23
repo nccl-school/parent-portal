@@ -1,7 +1,10 @@
 import {
+  CreateSuggestionRequestSchema,
+  CreateSuggestionResponseSchema,
   GetSuggestionListQuerySchema as GetSuggestionListQuerySchema,
   GetSuggestionParamsSchema,
   GetSuggestionResponseSchema,
+  type CreateSuggestionRequest,
   type GetSuggestionListQuery,
 } from "./suggestion.utils.js";
 
@@ -31,6 +34,14 @@ export class SuggestionClient extends ApiClient {
       path: "/:id",
       params: [GetSuggestionParamsSchema, { id }],
       serializer: GetSuggestionResponseSchema,
+    });
+  }
+
+  async createSuggestion(suggestion: CreateSuggestionRequest) {
+    return this._postJSON({
+      path: "/",
+      body: [CreateSuggestionRequestSchema, suggestion],
+      serializer: CreateSuggestionResponseSchema,
     });
   }
 }

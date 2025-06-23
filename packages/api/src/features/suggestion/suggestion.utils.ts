@@ -6,7 +6,7 @@ export const SuggestionSchema = z.object({
   title: z.string(),
   description: z.string(),
   createdAt: z.string(),
-  updateAt: z.string(),
+  updatedAt: z.string(),
 });
 export type Suggestion = z.infer<typeof SuggestionSchema>;
 
@@ -29,3 +29,16 @@ export const GetSuggestionParamsSchema = z.object({
 export type GetSuggestionParams = z.infer<typeof GetSuggestionParamsSchema>;
 export const GetSuggestionResponseSchema = SuggestionSchema;
 export type GetSuggestionResponse = z.infer<typeof GetSuggestionResponseSchema>;
+
+// createSuggestion
+export const CreateSuggestionRequestSchema = SuggestionSchema.pick({
+  title: true,
+  description: true,
+});
+export type CreateSuggestionRequest = z.infer<
+  typeof CreateSuggestionRequestSchema
+>;
+export const CreateSuggestionResponseSchema = SuggestionSchema;
+export type CreateSuggestionResponse = z.infer<
+  typeof CreateSuggestionResponseSchema
+>;
