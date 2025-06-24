@@ -4,8 +4,12 @@ import {
   GetSuggestionListQuerySchema as GetSuggestionListQuerySchema,
   GetSuggestionParamsSchema,
   GetSuggestionResponseSchema,
+  UpdateSuggestionParamsSchema,
+  UpdateSuggestionRequestSchema,
+  UpdateSuggestionResponseSchema,
   type CreateSuggestionRequest,
   type GetSuggestionListQuery,
+  type UpdateSuggestionRequest,
 } from "./suggestion.utils.js";
 
 import { ApiClient } from "../../api-client/ApiClient.js";
@@ -37,11 +41,28 @@ export class SuggestionClient extends ApiClient {
     });
   }
 
+  /**
+   * Create a new suggestion
+   */
   async createSuggestion(suggestion: CreateSuggestionRequest) {
-    return this._postJSON({
+    return this._mutateJSON({
+      method: "POST",
       path: "/",
       body: [CreateSuggestionRequestSchema, suggestion],
       serializer: CreateSuggestionResponseSchema,
+    });
+  }
+
+  /**
+   * Updates an existing suggestion
+   */
+  async updateSuggestion(id: number, suggestion: UpdateSuggestionRequest) {
+    return this._mutateJSON({
+      method: "PUT",
+      path: "/:id",
+      params: [UpdateSuggestionParamsSchema, { id }],
+      body: [UpdateSuggestionRequestSchema, suggestion],
+      serializer: UpdateSuggestionResponseSchema,
     });
   }
 }

@@ -80,7 +80,7 @@ export class ApiClient {
     });
   }
 
-  protected async _postJSON<
+  protected async _mutateJSON<
     S extends ZodSchema,
     P extends ZodSchema = ZodSchema,
     B extends ZodSchema = ZodSchema,
@@ -89,11 +89,13 @@ export class ApiClient {
     params,
     body,
     serializer,
+    method,
   }: {
     path: string;
     params?: [schema: P, data: unknown];
     body: [schema: B, data: unknown];
     serializer: S;
+    method: "POST" | "PUT";
   }) {
     // Assemble the request
     const headers = new Headers({
@@ -111,7 +113,7 @@ export class ApiClient {
 
     // Fetch the data
     const req = new Request(url, {
-      method: "POST",
+      method,
       headers,
       body: JSON.stringify(parsedBody.data),
     });

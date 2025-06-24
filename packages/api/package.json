@@ -3,7 +3,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "yarn api:build && yarn client:build",
+    "api:build": "tsc",
     "start": "node dist/index.js",
     "schema:generate": "yarn ts-to-zod prisma/schemas/index.ts prisma/_generated/schemas.ts",
     "client:dev": "yarn client:build --watch",

@@ -2768,7 +2768,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nccl/api@workspace:packages/api":
+"@nccl/api@workspace:^, @nccl/api@workspace:packages/api":
   version: 0.0.0-use.local
   resolution: "@nccl/api@workspace:packages/api"
   dependencies:
@@ -2844,6 +2844,7 @@ __metadata:
     "@clerk/react-router": "npm:1.6.0"
     "@gfdigital/tsconfig": "npm:0.3.1"
     "@linaria/core": "npm:6.3.0"
+    "@nccl/api": "workspace:^"
     "@nccl/components": "workspace:*"
     "@nccl/theme": "workspace:"
     "@react-router/dev": "npm:7.6.2"

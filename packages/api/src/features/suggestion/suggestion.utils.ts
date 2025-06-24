@@ -4,9 +4,15 @@ import z from "zod";
 export const SuggestionSchema = z.object({
   id: z.number(),
   title: z.string(),
+  status: z.union([
+    z.literal("IDEA"),
+    z.literal("PLANNED"),
+    z.literal("IN_PROGRESS"),
+    z.literal("COMPLETE"),
+  ]),
   description: z.string(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });
 export type Suggestion = z.infer<typeof SuggestionSchema>;
 
@@ -41,4 +47,21 @@ export type CreateSuggestionRequest = z.infer<
 export const CreateSuggestionResponseSchema = SuggestionSchema;
 export type CreateSuggestionResponse = z.infer<
   typeof CreateSuggestionResponseSchema
+>;
+
+// updateSuggestion
+export const UpdateSuggestionParamsSchema = z.object({
+  id: z.string().pipe(z.coerce.number()),
+});
+export const UpdateSuggestionRequestSchema = SuggestionSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+export type UpdateSuggestionRequest = z.infer<
+  typeof UpdateSuggestionRequestSchema
+>;
+export const UpdateSuggestionResponseSchema = SuggestionSchema;
+export type UpdateSuggestionResponse = z.infer<
+  typeof UpdateSuggestionResponseSchema
 >;

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@clerk/react-router": "1.6.0",
+    "@nccl/api": "workspace:^",
     "@nccl/components": "workspace:*",
     "@nccl/theme": "workspace:",
     "@react-router/express": "^7.6.2",
