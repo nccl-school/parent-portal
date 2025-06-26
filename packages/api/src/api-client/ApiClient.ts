@@ -1,26 +1,29 @@
-import type { ZodSchema } from "zod";
+import { type ZodSchema, ZodError } from "zod";
 import type z from "zod";
-import z4, { ZodError, flattenError } from "zod/v4";
+import { flattenError, type ZodError as Zod4Error } from "zod/v4";
 
 import { deserializeError, ErrorSet } from "../utils/util.errors.js";
 
+export type ApiClientOptions = {
+  rootUrl: string;
+  rootUrlSegments: string[];
+};
+
 export class ApiClient {
-  basePath: string;
+  protected _basePath: string;
+  #rootUrl: string;
+  #rootUrlSegments: string[];
 
-  constructor({ basePath }: { basePath: string }) {
-    this.basePath = basePath;
-  }
-
-  #serialize<S>(schema: ZodSchema<S>, res: unknown) {
-    try {
-      return schema.parse(res);
-    } catch (error) {
-      if (error instanceof ZodError) {
-        const err = flattenError(error as ZodError);
-        throw new ErrorSet.validation(err.fieldErrors, "Serialization error");
-      }
-      throw new ErrorSet.serverError("Failed to serialize for unknown reason.");
-    }
+  constructor({
+    basePath,
+    rootUrl,
+    rootUrlSegments,
+  }: {
+    basePath: string;
+  } & ApiClientOptions) {
+    this._basePath = basePath;
+    this.#rootUrl = rootUrl;
+    this.#rootUrlSegments = rootUrlSegments;
   }
 
   #validateSchema<T extends ZodSchema>(
@@ -33,9 +36,22 @@ export class ApiClient {
     try {
       return schema.parse(data);
     } catch (error) {
-      const flatErr = flattenError(error as ZodError);
-      throw new ErrorSet.validation(flatErr.fieldErrors, options.message);
+      if (error instanceof ZodError) {
+        const err = flattenError(error as unknown as Zod4Error);
+        const errors =
+          Object.keys(err.fieldErrors).length === 0
+            ? { __untyped__: err.formErrors }
+            : err.fieldErrors;
+        throw new ErrorSet.validation(errors, options.message);
+      }
+      throw new ErrorSet.serverError("Failed to serialize for unknown reason.");
     }
+  }
+
+  #serialize<S>(schema: ZodSchema<S>, res: unknown) {
+    return this.#validateSchema(schema, res, {
+      message: "Client re-serialization error",
+    });
   }
 
   #makeQueryString<T extends ZodSchema = ZodSchema>(
@@ -44,6 +60,8 @@ export class ApiClient {
     if (!query) return "";
 
     const [schema, raw] = query;
+    if (!raw) return "";
+
     const data = this.#validateSchema<T>(schema, raw, {
       message:
         "Error when attempting to validate the query parameters of the request",
@@ -63,12 +81,16 @@ export class ApiClient {
     url: string,
     params?: [schema: T, data: unknown]
   ): string {
-    const pathname = this.basePath.concat(url);
+    const normalizedUrl = url === "/" ? "" : url;
+
+    const pathname = this._basePath.concat(normalizedUrl);
     if (!params) return pathname;
     const [schema, raw] = params;
+    if (!raw) return pathname;
+
     const data = this.#validateSchema<T>(schema, raw, {
       message:
-        "Error when attempting to validate the query parameters of the request",
+        "Error when attempting to validate the path parameters of the request",
     });
     // Replace :params in the path with values from the parsed data
     return pathname.replace(/:([a-zA-Z0-9_]+)/g, (_, key) => {
@@ -78,6 +100,16 @@ export class ApiClient {
       }
       return encodeURIComponent(String(val));
     });
+  }
+
+  #makeURL({
+    pathname,
+    queryString = "",
+  }: {
+    pathname: string;
+    queryString?: string;
+  }): string {
+    return `${this.#rootUrl}/${this.#rootUrlSegments.join("/")}${pathname}${queryString}`;
   }
 
   protected async _mutateJSON<
@@ -101,15 +133,13 @@ export class ApiClient {
     const headers = new Headers({
       "content-type": "application/json",
     });
-    const url = this.#makePathname(path, params);
+    const pathname = this.#makePathname(path, params);
+    const url = this.#makeURL({ pathname });
 
     const [bodySchema, bodyRaw] = body;
-    const parsedBody = bodySchema.safeParse(bodyRaw);
-    if (!parsedBody.success) {
-      throw new ErrorSet.validation(
-        z4.flattenError(parsedBody.error as unknown as ZodError).fieldErrors
-      );
-    }
+    const parsedBody = this.#validateSchema(bodySchema, bodyRaw, {
+      message: "Invalid request body",
+    });
 
     // Fetch the data
     const req = new Request(url, {
@@ -125,6 +155,7 @@ export class ApiClient {
     }
 
     // Serialize the data
+
     const data = this.#serialize(serializer, json);
     return data;
   }
@@ -137,7 +168,6 @@ export class ApiClient {
     path,
     query,
     params,
-    serializer,
   }: {
     path: string;
     params?: [schema: P, data: unknown];
@@ -152,7 +182,7 @@ export class ApiClient {
     // Assemble the URL
     const queryString = this.#makeQueryString(query);
     const pathname = this.#makePathname(path, params);
-    const url = `${pathname}${queryString}`;
+    const url = this.#makeURL({ pathname, queryString });
 
     // Fetch the data
     const req = new Request(url, { headers });
@@ -163,8 +193,6 @@ export class ApiClient {
       throw deserializeError(json, req);
     }
 
-    // Serialize the data
-    const data = this.#serialize(serializer, json);
-    return data;
+    return json as z.output<S>;
   }
 }

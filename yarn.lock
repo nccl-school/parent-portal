@@ -2774,14 +2774,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@nccl/client@workspace:^, @nccl/client@workspace:packages/client":
-  version: 0.0.0-use.local
-  resolution: "@nccl/client@workspace:packages/client"
-  dependencies:
-    typescript: "npm:5.8.3"
-  languageName: unknown
-  linkType: soft
-
 "@nccl/components@workspace:*, @nccl/components@workspace:packages/components":
   version: 0.0.0-use.local
   resolution: "@nccl/components@workspace:packages/components"
@@ -2830,7 +2822,6 @@ __metadata:
     "@gfdigital/tsconfig": "npm:0.3.1"
     "@linaria/core": "npm:6.3.0"
     "@nccl/api": "workspace:^"
-    "@nccl/client": "workspace:^"
     "@nccl/components": "workspace:*"
     "@nccl/theme": "workspace:"
     "@react-router/dev": "npm:7.6.2"

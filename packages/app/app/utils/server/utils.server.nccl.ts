@@ -1,9 +1,11 @@
-import {
-  NCCLClient,
-  beans,
-} from "../../../../api/dist.client/api-client/index.client";
+import { NCCLClient } from "@nccl/api/client";
+import type { LoaderFunctionArgs, AppLoadContext } from "react-router";
 
-// const client = new NCCLClient();
-console.log(NCCLClient, beans);
-
-// export const ncclClient = new NCCLClient();
+export function getNcclClient<A extends LoaderFunctionArgs<AppLoadContext>>(
+  args: A
+) {
+  return new NCCLClient({
+    rootUrl: args.context.env.NCCL_API_URL,
+    rootUrlSegments: ["api"],
+  });
+}

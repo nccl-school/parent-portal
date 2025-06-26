@@ -1,8 +1,8 @@
 import { createMiddleware } from "hono/factory";
 import { getAuth } from "@hono/clerk-auth";
 
-import type { UserRole } from "#features/user/user.utils.js";
-import { ErrorSet } from "#errors";
+import { ErrorSet } from "../utils/index.js";
+import type { UserRole } from "../features/user/user.utils.js";
 
 declare global {
   interface CustomJwtSessionClaims {

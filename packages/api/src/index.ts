@@ -7,13 +7,12 @@ import dotenv from "dotenv";
 import { clerkMiddleware } from "@hono/clerk-auth";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
 
-import { suggestion } from "#features/suggestion/suggestion.route.js";
-import { createOpenAPISpecs } from "#features/openapi/openapi.route.js";
-import { user } from "#features/user/user.route.js";
-import { serializeError } from "#errors";
-
 import { prismaMiddleware } from "./middleware/middleware.prisma.js";
 import { currentUserMiddleware } from "./middleware/middleware.current-user.js";
+import { createOpenAPISpecs } from "./features/openapi/openapi.route.js";
+import { suggestion } from "./features/suggestion/suggestion.route.js";
+import { user } from "./features/user/user.route.js";
+import { serializeError } from "./utils/util.errors.js";
 
 // Environment Vars
 dotenv.config({ path: path.resolve(import.meta.dirname, "../../../.env") });
@@ -25,8 +24,8 @@ app.get("/openapi", createOpenAPISpecs(app));
 
 // Middleware
 app.use(logger());
-app.use("*", clerkMiddleware());
-app.use("*", currentUserMiddleware);
+// app.use("*", clerkMiddleware());
+// app.use("*", currentUserMiddleware);
 app.use("*", prismaMiddleware);
 
 // Routes

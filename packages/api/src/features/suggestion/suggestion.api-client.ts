@@ -2,6 +2,7 @@ import {
   CreateSuggestionRequestSchema,
   CreateSuggestionResponseSchema,
   GetSuggestionListQuerySchema as GetSuggestionListQuerySchema,
+  GetSuggestionListResponseSchema,
   GetSuggestionParamsSchema,
   GetSuggestionResponseSchema,
   UpdateSuggestionParamsSchema,
@@ -12,21 +13,24 @@ import {
   type UpdateSuggestionRequest,
 } from "./suggestion.utils.js";
 
-import { ApiClient } from "../../api-client/ApiClient.js";
+import {
+  ApiClient,
+  type ApiClientOptions,
+} from "../../api-client/ApiClient.js";
 
 export class SuggestionClient extends ApiClient {
-  constructor() {
-    super({ basePath: "/suggestion" });
+  constructor(options: ApiClientOptions) {
+    super({ basePath: "/suggestion", ...options });
   }
 
   /**
    * Get a list of suggestions
    */
-  async getSuggestionList(query?: GetSuggestionListQuery) {
+  public async getSuggestionList(query?: GetSuggestionListQuery) {
     return this._get({
       path: `/`,
       query: [GetSuggestionListQuerySchema, query],
-      serializer: GetSuggestionResponseSchema,
+      serializer: GetSuggestionListResponseSchema,
     });
   }
 

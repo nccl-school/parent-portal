@@ -1,16 +1,23 @@
 import type { ZodSchema } from "zod";
-import type { ZodError } from "zod/v4";
-import z4 from "zod/v4";
+import type { ZodError as Zod4Error } from "zod/v4";
+import { flattenError } from "zod/v4";
 
-import { ErrorSet } from "#errors";
+import { ErrorSet } from "../../dist-client/utils/util.errors.js";
 
-export function serialize<S extends ZodSchema, D>(schema: S, data: D) {
-  const json = schema.safeParse(data);
-  if (!json.success) {
-    throw new ErrorSet.validation(
-      z4.flattenError(json.error as unknown as ZodError).fieldErrors,
-      "Serialization error"
-    );
+export async function serialize<S extends ZodSchema, D>(
+  schema: S,
+  data: D,
+  message?: string
+) {
+  try {
+    const json = schema.parseAsync(data);
+    return json;
+  } catch (error) {
+    const err = flattenError(error as unknown as Zod4Error);
+    const errObj =
+      Object.keys(err.fieldErrors).length === 0
+        ? { __untyped__: err.formErrors }
+        : err.fieldErrors;
+    throw new ErrorSet.validation(errObj, message);
   }
-  return json.data as D;
 }

@@ -2,7 +2,7 @@ import { createMiddleware } from "hono/factory";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import type { Context } from "hono";
 
-import { PrismaClient } from "#prisma/edge.js";
+import { PrismaClient } from "../_generated/prisma/edge.js";
 
 declare module "hono" {
   interface ContextVariableMap {

@@ -1,10 +1,10 @@
-import { NCCLClient } from "@nccl/api/client";
+import { serializeError } from "@nccl/api/client";
 
 import type { Route } from "./+types/Home.index";
 
 import { PageHeader, PageSection } from "../../components/page";
 import { assembleTitle } from "../../utils/util.assemble-title";
-import { getCurrentUser } from "../../utils/server";
+import { getCurrentUser, getNcclClient } from "../../utils/server";
 import {
   Suggestion,
   SuggestionAdd,
@@ -20,13 +20,14 @@ export function meta() {
 }
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
-  console.log({ NCCLClient });
+  const ncclClient = getNcclClient(loaderArgs);
+  const suggestions = await ncclClient.suggestion.getSuggestionList();
   const user = await getCurrentUser(loaderArgs);
-  return { firstName: user.firstName };
+  return { firstName: user.firstName, suggestions };
 }
 
 export default function HomeIndexRoute({
-  loaderData: { firstName },
+  loaderData: { firstName, suggestions },
 }: Route.ComponentProps) {
   return (
     <>
@@ -35,35 +36,15 @@ export default function HomeIndexRoute({
         <Suggestion>
           <SuggestionSearch />
           <ul>
-            <li>
-              <SuggestionItem
-                title="Cursus Nullam Commodo Tortor Cras"
-                description="Etiam porta sem malesuada magna mollis euismod. Maecenas sed diam eget risus varius blandit sit amet non magna. Cras mattis consectetur purus sit amet fermentum. Cras mattis consectetur purus sit amet fermentum."
-                voteCount={10}
-              />
-            </li>
-            <li>
-              <SuggestionItem
-                title="Cursus Nullam Commodo Tortor Cras"
-                description="Etiam porta sem malesuada magna mollis euismod. Maecenas sed diam eget risus varius blandit sit amet non magna. Cras mattis consectetur purus sit amet fermentum. Cras mattis consectetur purus sit amet fermentum."
-                voteCount={10}
-              />
-            </li>
-            <li>
-              <SuggestionItem
-                title="Cursus Nullam Commodo Tortor Cras"
-                description="Etiam porta sem malesuada magna mollis euismod. Maecenas sed diam eget risus varius blandit sit amet non magna. Cras mattis consectetur purus sit amet fermentum. Cras mattis consectetur purus sit amet fermentum."
-                voteCount={10}
-              />
-            </li>
-
-            <li>
-              <SuggestionItem
-                title="Cursus Nullam Commodo Tortor Cras"
-                description="Etiam porta sem malesuada magna mollis euismod. Maecenas sed diam eget risus varius blandit sit amet non magna. Cras mattis consectetur purus sit amet fermentum. Cras mattis consectetur purus sit amet fermentum."
-                voteCount={10}
-              />
-            </li>
+            {suggestions.map((suggestion) => (
+              <li>
+                <SuggestionItem
+                  title={suggestion.title}
+                  description={suggestion.description}
+                  voteCount={10}
+                />
+              </li>
+            ))}
           </ul>
           <SuggestionAdd handleAddSuggestion={() => void 0} />
         </Suggestion>

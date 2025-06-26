@@ -1,10 +1,6 @@
 import { Hono } from "hono";
 import { describeRoute } from "hono-openapi";
 
-import { ErrorSet } from "#errors";
-import { serialize } from "#utils";
-import { validate } from "#middleware/middleware.validate.js";
-
 import {
   CreateSuggestionRequestSchema,
   GetSuggestionListResponseSchema,
@@ -13,6 +9,9 @@ import {
   UpdateSuggestionParamsSchema,
   UpdateSuggestionRequestSchema,
 } from "./suggestion.utils.js";
+
+import { ErrorSet, serialize } from "../../utils/index.js";
+import { validate } from "../../middleware/middleware.validate.js";
 
 export const suggestion = new Hono();
 
@@ -26,7 +25,7 @@ suggestion.get(
   async (c) => {
     const db = c.get("db");
     const suggestions = await db.suggestion.findMany();
-    const data = serialize(GetSuggestionListResponseSchema, suggestions);
+    const data = await serialize(GetSuggestionListResponseSchema, suggestions);
     return c.json(data);
   }
 );
@@ -45,7 +44,7 @@ suggestion.post(
     const newSuggestion = await c.var.db.suggestion.create({
       data: body,
     });
-    const data = serialize(GetSuggestionResponseSchema, newSuggestion);
+    const data = await serialize(GetSuggestionResponseSchema, newSuggestion);
     return c.json(data);
   }
 );
@@ -67,7 +66,7 @@ suggestion.get(
     if (!suggestion) {
       throw new ErrorSet.notFound();
     }
-    const data = serialize(GetSuggestionResponseSchema, suggestion);
+    const data = await serialize(GetSuggestionResponseSchema, suggestion);
     return c.json(data);
   }
 );

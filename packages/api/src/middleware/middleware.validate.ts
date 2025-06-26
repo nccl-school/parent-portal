@@ -3,7 +3,7 @@ import { validator as zValidator } from "hono-openapi/zod";
 import { type ZodSchema } from "zod";
 import { z, type ZodError } from "zod/v4";
 
-import { ErrorSet } from "#errors";
+import { ErrorSet } from "../utils/index.js";
 
 /**
  * Custom validator middleware that will throw

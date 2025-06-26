@@ -1,5 +1,7 @@
 import z from "zod";
 
+import { zDateStringSchema } from "../../utils/index.js";
+
 // Base Type
 export const SuggestionSchema = z.object({
   id: z.number(),
@@ -11,8 +13,8 @@ export const SuggestionSchema = z.object({
     z.literal("COMPLETE"),
   ]),
   description: z.string(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: zDateStringSchema,
+  updatedAt: zDateStringSchema,
 });
 export type Suggestion = z.infer<typeof SuggestionSchema>;
 
