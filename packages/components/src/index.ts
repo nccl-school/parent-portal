@@ -15,6 +15,7 @@ export * from "./label/index.js";
 export * from "./button/index.js";
 export * from "./tabs/index.js";
 export * from "./popover/index.js";
+export * from "./widget/index.js";
 
 export * from "./input-checkbox/index.js";
 export * from "./input-radio/index.js";

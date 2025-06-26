@@ -17,7 +17,7 @@ export type InputSearchPropsCustom = Omit<
 export type InputSearchProps = InputSearchPropsNative & InputSearchPropsCustom;
 
 function AdornmentStart() {
-  return <Icon dxIcon="search-01-stroke-standard" />;
+  return <Icon dxIcon="search-01-stroke-standard" dxSize={18} />;
 }
 
 export const InputSearch = forwardRef<HTMLInputElement, InputSearchProps>(
