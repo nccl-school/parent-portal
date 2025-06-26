@@ -1,4 +1,4 @@
-import { Typography, Widget, WidgetHeader, WidgetBody } from "@nccl/components";
+import { NCCLClient } from "@nccl/api/client";
 
 import type { Route } from "./+types/Home.index";
 
@@ -20,6 +20,7 @@ export function meta() {
 }
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
+  console.log({ NCCLClient });
   const user = await getCurrentUser(loaderArgs);
   return { firstName: user.firstName };
 }

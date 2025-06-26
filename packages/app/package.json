@@ -9,7 +9,7 @@
     "typecheck": "react-router typegen && tsc -b"
   },
   "dependencies": {
-    "@clerk/react-router": "1.6.0",
+    "@clerk/react-router": "1.6.1",
     "@nccl/api": "workspace:^",
     "@nccl/components": "workspace:*",
     "@nccl/theme": "workspace:",
@@ -42,7 +42,7 @@
     "@types/gapi.auth2": "0.0.61",
     "@types/gapi.client": "1.0.8",
     "@types/morgan": "^1.9.10",
-    "@types/node": "24.0.3",
+    "@types/node": "24.0.4",
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
     "@wyw-in-js/vite": "0.7.0",

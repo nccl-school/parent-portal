@@ -15,7 +15,7 @@
   },
   "exports": {
     ".": "./dist/index.js",
-    "./client": "./dist.client/index.client.js"
+    "./client": "./dist-client/client.js"
   },
   "dependencies": {
     "@clerk/backend": "^2.1.0",
