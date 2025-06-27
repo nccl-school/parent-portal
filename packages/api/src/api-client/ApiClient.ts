@@ -7,23 +7,27 @@ import { deserializeError, ErrorSet } from "../utils/util.errors.js";
 export type ApiClientOptions = {
   rootUrl: string;
   rootUrlSegments: string[];
+  headers: Headers;
 };
 
 export class ApiClient {
   protected _basePath: string;
   #rootUrl: string;
   #rootUrlSegments: string[];
+  #requestHeaders: Headers;
 
   constructor({
     basePath,
     rootUrl,
     rootUrlSegments,
+    headers,
   }: {
     basePath: string;
   } & ApiClientOptions) {
     this._basePath = basePath;
     this.#rootUrl = rootUrl;
     this.#rootUrlSegments = rootUrlSegments;
+    this.#requestHeaders = headers;
   }
 
   #validateSchema<T extends ZodSchema>(
@@ -130,12 +134,14 @@ export class ApiClient {
     method: "POST" | "PUT";
   }) {
     // Assemble the request
-    const headers = new Headers({
-      "content-type": "application/json",
-    });
+    const headers = this.#requestHeaders;
+    headers.set("content-type", "application/json");
+
+    // Assemble the URL
     const pathname = this.#makePathname(path, params);
     const url = this.#makeURL({ pathname });
 
+    // Assemble the request body
     const [bodySchema, bodyRaw] = body;
     const parsedBody = this.#validateSchema(bodySchema, bodyRaw, {
       message: "Invalid request body",
@@ -175,9 +181,8 @@ export class ApiClient {
     serializer: S;
   }): Promise<z.output<S>> {
     // Assemble the request
-    const headers = new Headers({
-      "content-type": "application/json",
-    });
+    const headers = this.#requestHeaders;
+    headers.set("content-type", "application/json");
 
     // Assemble the URL
     const queryString = this.#makeQueryString(query);

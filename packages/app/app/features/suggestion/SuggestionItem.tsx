@@ -12,24 +12,18 @@ export type SuggestionItemProps = {
 
 const styles = css`
   display: grid;
-  grid-template-columns: auto 1fr repeat(3, auto);
+  grid-template-columns: 1fr auto auto;
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(4px);
   border-radius: ${makeRem(8)};
   margin-bottom: ${makeRem(4)};
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-  padding: ${makeRem(24)} ${makeRem(8)};
+  padding: ${makeRem(16)} ${makeRem(8)};
 
   & .sg-copy {
     overflow: hidden;
-    padding-right: ${makeRem(24)};
-  }
-
-  & .sg-count {
-    height: 100%;
-    aspect-ratio: 1.5 / 1;
-    display: grid;
-    place-content: center;
+    padding-left: ${makeRem(8)};
+    padding-right: ${makeRem(16)};
   }
 
   & .sg-title {
@@ -45,21 +39,36 @@ const styles = css`
     text-overflow: ellipsis;
   }
 
-  & .sg-item {
+  button {
     ${makeReset("button")};
+  }
+
+  & .sg-item {
     height: 100%;
-    aspect-ratio: 1 / 1;
     border-left: 1px solid ${makeColor("neutral-light-100")};
-    display: grid;
-    place-content: center;
 
     &.cm {
-      aspect-ratio: 2 / 1;
       display: flex;
       align-items: center;
       gap: ${makeRem(8)};
       color: ${makeColor("neutral-dark-200")} !important;
+      padding: 0 ${makeRem(16)};
     }
+  }
+`;
+
+const voterStyles = css`
+  display: grid;
+  grid-template-columns: auto auto auto;
+  align-items: center;
+  padding: 0 ${makeRem(16)};
+  gap: ${makeRem(8)};
+
+  button {
+    ${makeReset("button")};
+    height: 100%;
+    display: grid;
+    place-content: center;
   }
 `;
 
@@ -70,11 +79,6 @@ export function SuggestionItem({
 }: SuggestionItemProps) {
   return (
     <div className={styles}>
-      <div className="sg-count">
-        <Typography dxVariant="heading3" dxNode="div">
-          {voteCount}
-        </Typography>
-      </div>
       <div className="sg-copy">
         <Typography dxNode="div" dxVariant="body1" className="sg-title">
           {title}
@@ -83,20 +87,25 @@ export function SuggestionItem({
           {description}
         </Typography>
       </div>
-      <button className="sg-item">
-        <Icon
-          dxIcon="arrow-up-01-solid-standard"
-          dxSize={24}
-          dxColor="neutral-light-500"
-        />
-      </button>
-      <button className="sg-item">
-        <Icon
-          dxIcon="arrow-down-01-solid-standard"
-          dxSize={24}
-          dxColor="neutral-light-500"
-        />
-      </button>
+      <div className={classes(voterStyles, "sg-item")}>
+        <button>
+          <Icon
+            dxIcon="arrow-up-01-solid-standard"
+            dxSize={24}
+            dxColor="neutral-light-500"
+          />
+        </button>
+        <Typography dxVariant="body2" dxNode="div">
+          {voteCount}
+        </Typography>
+        <button>
+          <Icon
+            dxIcon="arrow-down-01-solid-standard"
+            dxSize={24}
+            dxColor="neutral-light-500"
+          />
+        </button>
+      </div>
       <button className={classes("sg-item", "cm")}>
         <Icon dxIcon="comment-01-stroke-standard" dxSize={18} />
         <Typography dxNode="div" dxVariant="label">

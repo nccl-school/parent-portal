@@ -24,8 +24,8 @@ app.get("/openapi", createOpenAPISpecs(app));
 
 // Middleware
 app.use(logger());
-// app.use("*", clerkMiddleware());
-// app.use("*", currentUserMiddleware);
+app.use("*", clerkMiddleware());
+app.use("*", currentUserMiddleware);
 app.use("*", prismaMiddleware);
 
 // Routes

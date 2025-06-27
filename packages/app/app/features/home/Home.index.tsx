@@ -1,10 +1,8 @@
-import { serializeError } from "@nccl/api/client";
-
 import type { Route } from "./+types/Home.index";
 
 import { PageHeader, PageSection } from "../../components/page";
 import { assembleTitle } from "../../utils/util.assemble-title";
-import { getCurrentUser, getNcclClient } from "../../utils/server";
+import { getCurrentUser, getNCCLClient } from "../../utils/server";
 import {
   Suggestion,
   SuggestionAdd,
@@ -20,7 +18,7 @@ export function meta() {
 }
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
-  const ncclClient = getNcclClient(loaderArgs);
+  const ncclClient = getNCCLClient(loaderArgs);
   const suggestions = await ncclClient.suggestion.getSuggestionList();
   const user = await getCurrentUser(loaderArgs);
   return { firstName: user.firstName, suggestions };
@@ -37,7 +35,7 @@ export default function HomeIndexRoute({
           <SuggestionSearch />
           <ul>
             {suggestions.map((suggestion) => (
-              <li>
+              <li key={suggestion.id}>
                 <SuggestionItem
                   title={suggestion.title}
                   description={suggestion.description}
