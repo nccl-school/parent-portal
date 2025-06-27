@@ -6,11 +6,14 @@ import { forwardRef, useId, useMemo } from "react";
 
 import {
   InputContainer,
-  type InputContainerProps,
+  type InputContainerPropsCustom,
 } from "../InputContainer/InputContainer.js";
 
 export type InputTextPropsNative = JSX.IntrinsicElements["input"];
-export type InputTextPropsCustom = Omit<InputContainerProps, "dxInputId"> & {
+export type InputTextPropsCustom = Omit<
+  InputContainerPropsCustom,
+  "dxInputId"
+> & {
   /**
    * The pre-defined style of the input
    * @default "transparent"
@@ -43,7 +46,9 @@ export function getInputStyles({
   className,
   dxError,
   dxVariant = "transparent",
-}: Pick<InputTextPropsCustom, "dxVariant" | "dxError" | "className">): string {
+}: Pick<InputTextPropsCustom, "dxVariant" | "dxError"> & {
+  className?: string;
+}): string {
   return classes(className, "field", styles, dxVariant, {
     invalid: !!dxError,
   });
