@@ -27,12 +27,14 @@
     "dotenv": "16.5.0",
     "hono": "^4.8.1",
     "hono-openapi": "^0.4.8",
+    "leo-profanity": "^1.7.0",
     "prisma": "6.10.1",
     "zod": "^3.25.67",
     "zod-openapi": "^4.2.4"
   },
   "devDependencies": {
     "@gfdigital/tsconfig": "0.3.1",
+    "@types/leo-profanity": "^1",
     "@types/node": "^24.0.3",
     "dotenv-cli": "8.0.0",
     "openapi-types": "12.1.3",

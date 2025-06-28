@@ -1,18 +1,18 @@
 import z from "zod";
 
-import { zDateStringSchema } from "../../utils/index.js";
+import { zCleanStringSchema, zDateStringSchema } from "../../utils/index.js";
 
 // Base Type
 export const SuggestionSchema = z.object({
   id: z.number(),
-  title: z.string(),
+  title: zCleanStringSchema,
   status: z.union([
     z.literal("IDEA"),
     z.literal("PLANNED"),
     z.literal("IN_PROGRESS"),
     z.literal("COMPLETE"),
   ]),
-  description: z.string(),
+  description: zCleanStringSchema,
   createdAt: zDateStringSchema,
   updatedAt: zDateStringSchema,
 });

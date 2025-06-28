@@ -65,7 +65,7 @@ const styles = css`
   &.heading4 {
     ${makeFontSize(1, 110)};
     font-family: ${makeFontFamily("heading")};
-    font-weight: ${makeFontWeight("heading-regular")};
+    font-weight: ${makeFontWeight("heading-bold")};
   }
 
   &.body1 {

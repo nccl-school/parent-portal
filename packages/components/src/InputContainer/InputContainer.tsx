@@ -49,9 +49,9 @@ export type InputContainerProps = InputContainerPropsNative &
 
 const containerStyles = css`
   font-family: ${makeFontFamily("body")};
-  --input-color: ${makeColor("neutral-light-900")};
+  --input-color: ${makeColor("neutral-light-1100")};
   --input-color--focus: ${makeColor("neutral-light-1200")};
-  --input-border-color: ${makeColor("neutral-light-900")};
+  --input-border-color: ${makeColor("neutral-light-1100")};
   --input-border-color--focus: ${makeColor("neutral-light-1200")};
 
   .error {
@@ -67,14 +67,16 @@ const containerStyles = css`
 
   &:has(input:focus),
   &:has(select:focus),
-  &:has(button:focus) {
+  &:has(button:focus),
+  &:has(textarea:focus) {
     label {
       color: var(--input-color--focus) !important;
     }
 
     input,
     select,
-    button {
+    button,
+    textarea {
       border-color: var(--input-border-color--focus);
       color: var(--input-color--focus);
     }
@@ -95,7 +97,9 @@ const containerStyles = css`
   &:has(input.invalid),
   &:has(input:invalid),
   &:has(select.invalid),
-  &:has(select:invalid) {
+  &:has(select:invalid),
+  &:has(textarea:invalid),
+  &:has(textarea.invalid) {
     color: ${makeColor("danger-600")} !important;
 
     div {
@@ -104,7 +108,8 @@ const containerStyles = css`
 
     input,
     select,
-    button {
+    button,
+    textarea {
       color: ${makeColor("danger-600")};
       border-color: ${makeColor("danger-600")};
       background-color: ${makeColor("danger", { opacity: 0.1 })} !important;

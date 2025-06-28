@@ -44,7 +44,7 @@ export default function HomeIndexRoute({
               </li>
             ))}
           </ul>
-          <SuggestionAdd handleAddSuggestion={() => void 0} />
+          <SuggestionAdd />
         </Suggestion>
       </PageSection>
       ;

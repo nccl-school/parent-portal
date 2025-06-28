@@ -1,7 +1,8 @@
 import { css } from "@linaria/core";
 import { Button, Typography } from "@nccl/components";
 import { makeRem } from "@nccl/theme";
-import type { MouseEventHandler } from "react";
+
+import { SuggestionCreateDrawer } from "../suggestion-create";
 
 const styles = css`
   margin: 0 auto;
@@ -14,13 +15,10 @@ const styles = css`
   }
 `;
 
-export function SuggestionAdd({
-  handleAddSuggestion,
-}: {
-  handleAddSuggestion: MouseEventHandler<HTMLButtonElement>;
-}) {
+export function SuggestionAdd() {
   return (
     <div className={styles}>
+      <SuggestionCreateDrawer.Component />
       <Typography dxNode="div" dxVariant="caption">
         Can't find your idea? Feel free to create a new one!
       </Typography>
@@ -28,7 +26,7 @@ export function SuggestionAdd({
         dxVariant="contained"
         dxSize="md"
         dxColor="secondary"
-        onClick={handleAddSuggestion}
+        onClick={SuggestionCreateDrawer.launch}
       >
         Create a new suggestion
       </Button>

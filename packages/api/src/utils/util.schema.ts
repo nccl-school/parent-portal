@@ -1,4 +1,5 @@
 import { z } from "zod";
+import leoProfanity from "leo-profanity";
 
 export const zDateStringSchema = z.preprocess(
   (val) => {
@@ -12,3 +13,9 @@ export const zDateStringSchema = z.preprocess(
     message: "Invalid date string",
   })
 );
+
+export const zCleanStringSchema = z
+  .string()
+  .refine((val) => !leoProfanity.check(val), {
+    message: "Please remove inappropriate language.",
+  });

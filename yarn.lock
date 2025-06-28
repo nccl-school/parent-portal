@@ -2760,11 +2760,13 @@ __metadata:
     "@hono/zod-validator": "npm:^0.7.0"
     "@prisma/client": "npm:6.10.1"
     "@prisma/extension-accelerate": "npm:2.0.1"
+    "@types/leo-profanity": "npm:^1"
     "@types/node": "npm:^24.0.3"
     dotenv: "npm:16.5.0"
     dotenv-cli: "npm:8.0.0"
     hono: "npm:^4.8.1"
     hono-openapi: "npm:^0.4.8"
+    leo-profanity: "npm:^1.7.0"
     openapi-types: "npm:12.1.3"
     prisma: "npm:6.10.1"
     tsx: "npm:^4.20.3"
@@ -4282,6 +4284,13 @@ __metadata:
   version: 0.0.29
   resolution: "@types/json5@npm:0.0.29"
   checksum: 10c0/6bf5337bc447b706bb5b4431d37686aa2ea6d07cfd6f79cc31de80170d6ff9b1c7384a9c0ccbc45b3f512bae9e9f75c2e12109806a15331dc94e8a8db6dbb4ac
+  languageName: node
+  linkType: hard
+
+"@types/leo-profanity@npm:^1":
+  version: 1.5.4
+  resolution: "@types/leo-profanity@npm:1.5.4"
+  checksum: 10c0/525a748975ddd6bcf3e64201e6b88b34e9e8e6ca51564d0f2b7ecc8de311db0a21e964bf0b4212c84a9fe45e5c971e2a5e3e67dfcc7f209a675ee3f656d38813
   languageName: node
   linkType: hard
 
@@ -7688,6 +7697,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"french-badwords-list@npm:^1.0.6":
+  version: 1.0.7
+  resolution: "french-badwords-list@npm:1.0.7"
+  checksum: 10c0/8c8b62ca516a2d2941e39a4e8a8923b4d00675a3fdae4d26834d4d942f77916121a9d719075bec9ebea2880d6873311ec6573330b27d47dd8e46943e82474dd9
+  languageName: node
+  linkType: hard
+
 "fresh@npm:0.5.2":
   version: 0.5.2
   resolution: "fresh@npm:0.5.2"
@@ -9028,6 +9044,21 @@ __metadata:
   dependencies:
     json-buffer: "npm:3.0.1"
   checksum: 10c0/aa52f3c5e18e16bb6324876bb8b59dd02acf782a4b789c7b2ae21107fab95fab3890ed448d4f8dba80ce05391eeac4bfabb4f02a20221342982f806fa2cf271e
+  languageName: node
+  linkType: hard
+
+"leo-profanity@npm:^1.7.0":
+  version: 1.7.0
+  resolution: "leo-profanity@npm:1.7.0"
+  dependencies:
+    french-badwords-list: "npm:^1.0.6"
+    russian-bad-words: "npm:^0.5.0"
+  dependenciesMeta:
+    french-badwords-list:
+      optional: true
+    russian-bad-words:
+      optional: true
+  checksum: 10c0/0ca0c8dbf7e1fe013da75230f08a872860031c40e45998393c77f31ec85c5aa5cdf2747163a3caa043b12613181409a5643acd38e137c2a4ca96e2fdb2f39d17
   languageName: node
   linkType: hard
 
@@ -10979,6 +11010,13 @@ __metadata:
   dependencies:
     queue-microtask: "npm:^1.2.2"
   checksum: 10c0/200b5ab25b5b8b7113f9901bfe3afc347e19bb7475b267d55ad0eb86a62a46d77510cb0f232507c9e5d497ebda569a08a9867d0d14f57a82ad5564d991588b39
+  languageName: node
+  linkType: hard
+
+"russian-bad-words@npm:^0.5.0":
+  version: 0.5.0
+  resolution: "russian-bad-words@npm:0.5.0"
+  checksum: 10c0/7b1bcac73a589bf17f6d7fdabf26bb0411131964885d1ead2541d7a4968cdb490959728ebc3e3db1f4b0d1c59c3306cbd761e06742d1d7e2a393f0efd0499521
   languageName: node
   linkType: hard
 
