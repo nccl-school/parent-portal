@@ -11,6 +11,7 @@ import {
   ModalHeaderSubtitle,
   ModalHeaderTitle,
   Typography,
+  Callout,
   useModalContext,
 } from "@nccl/components";
 import { makeRem } from "@nccl/theme";
@@ -66,6 +67,10 @@ function ModalContent() {
           <InputTextarea
             dxLabel="Description"
             dxHint="Explain your suggestion in more detail"
+          />
+          <Callout
+            variant="note"
+            description="After you submit a suggestion, we’ll take a quick look and then add it to the board so others can see and vote on it"
           />
         </InputGroup>
       </ModalBody>
