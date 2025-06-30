@@ -15,6 +15,7 @@ datasource db {
 }
 
 enum SuggestionStatus {
+  DRAFT
   IDEA
   PLANNED
   IN_PROGRESS
@@ -25,9 +26,95 @@ model Suggestion {
   id          Int              @id @default(autoincrement())
   title       String
   description String
-  status      SuggestionStatus @default(IDEA)
+  status      SuggestionStatus @default(DRAFT)
   upVotes     Int              @default(0)
   downVotes   Int              @default(0)
   createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  createdBy   User             @relation(fields: [userId], references: [id])
+  userId      String
+}
+
+model User {
+  id        String   @id // Clerk user ID
+  email     String
+  name      String?
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships OrganizationMembership[]
+  suggestion  Suggestion[]
+  students    UserStudent[]
+  groups      UserGroup[]
+}
+
+model UserGroup {
+  id      String  @id @default(cuid())
+  User    User?   @relation(fields: [userId], references: [id])
+  userId  String?
+  Group   Group?  @relation(fields: [groupId], references: [id])
+  groupId String?
+}
+
+model UserStudent {
+  id        String @id @default(cuid())
+  userId    String
+  studentId String
+  groupId   String
+  relation  String // e.g. 'mother', 'father', 'guardian'
+
+  user    User    @relation(fields: [userId], references: [id])
+  student Student @relation(fields: [studentId], references: [id])
+  group   Group   @relation(fields: [groupId], references: [id])
+
+  @@unique([userId, studentId])
+}
+
+model Student {
+  id        String    @id @default(cuid())
+  firstName String
+  lastName  String
+  group     String?
+  birthDate DateTime?
+
+  parents   UserStudent[] // ← many-to-many link
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  Group     Group?        @relation(fields: [groupId], references: [id])
+  groupId   String?
+}
+
+model Group {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+
+  teachers UserGroup[]
+  students Student[]
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  UserStudent UserStudent[]
+}
+
+model Organization {
+  id        String   @id // Clerk organization ID
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships OrganizationMembership[]
+}
+
+model OrganizationMembership {
+  id             String @id // Clerk membership ID
+  userId         String
+  organizationId String
+  role           String
+
+  user         User         @relation(fields: [userId], references: [id])
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@unique([userId, organizationId]) // Enforcing relational integrity at the DB level
 }
