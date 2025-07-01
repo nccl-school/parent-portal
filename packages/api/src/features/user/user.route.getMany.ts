@@ -8,11 +8,6 @@ getMany.get(
   "/",
   describeRoute({
     description: "Get a list of users",
-    responses: {
-      200: {
-        description: "Successful response",
-      },
-    },
   }),
   async (c) => {
     const clerkClient = c.get("clerk");

@@ -31,90 +31,95 @@ model Suggestion {
   downVotes   Int              @default(0)
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
+  isAnonymous Boolean          @default(false)
   createdBy   User             @relation(fields: [userId], references: [id])
   userId      String
+}
+
+model Role {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique // 'admin', 'teacher', etc.
+  label       String // For UI: 'Admin'
+  description String?
+  User        User[]
 }
 
 model User {
   id        String   @id // Clerk user ID
   email     String
-  name      String?
-  imageUrl  String?
+  firstName String?
+  lastName  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  role      Role     @relation(fields: [roleId], references: [id])
+  roleId    Int
 
   memberships OrganizationMembership[]
-  suggestion  Suggestion[]
+  suggestions Suggestion[]
   students    UserStudent[]
   groups      UserGroup[]
 }
 
 model UserGroup {
-  id      String  @id @default(cuid())
+  id      Int     @id @default(autoincrement())
   User    User?   @relation(fields: [userId], references: [id])
   userId  String?
   Group   Group?  @relation(fields: [groupId], references: [id])
-  groupId String?
+  groupId Int?
 }
 
 model UserStudent {
-  id        String @id @default(cuid())
+  id        Int     @id @default(autoincrement())
   userId    String
-  studentId String
-  groupId   String
+  studentId Int
+  groupId   Int
   relation  String // e.g. 'mother', 'father', 'guardian'
-
-  user    User    @relation(fields: [userId], references: [id])
-  student Student @relation(fields: [studentId], references: [id])
-  group   Group   @relation(fields: [groupId], references: [id])
+  user      User    @relation(fields: [userId], references: [id])
+  student   Student @relation(fields: [studentId], references: [id])
+  group     Group   @relation(fields: [groupId], references: [id])
 
   @@unique([userId, studentId])
 }
 
 model Student {
-  id        String    @id @default(cuid())
+  id        Int           @id @default(autoincrement())
   firstName String
   lastName  String
   group     String?
   birthDate DateTime?
-
-  parents   UserStudent[] // ← many-to-many link
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
+  parents   UserStudent[] // ← many-to-many link
   Group     Group?        @relation(fields: [groupId], references: [id])
-  groupId   String?
+  groupId   Int?
 }
 
 model Group {
-  id          String  @id @default(cuid())
+  id          Int           @id @default(autoincrement())
   name        String
   description String?
-
-  teachers UserGroup[]
-  students Student[]
-
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
+  teachers    UserGroup[]
+  students    Student[]
   UserStudent UserStudent[]
 }
 
 model Organization {
-  id        String   @id // Clerk organization ID
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id          String                   @id // Clerk organization ID
+  name        String
+  createdAt   DateTime                 @default(now())
+  updatedAt   DateTime                 @updatedAt
   memberships OrganizationMembership[]
 }
 
 model OrganizationMembership {
-  id             String @id // Clerk membership ID
+  id             String       @id // Clerk membership ID
   userId         String
   organizationId String
   role           String
-
-  user         User         @relation(fields: [userId], references: [id])
-  organization Organization @relation(fields: [organizationId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
 
   @@unique([userId, organizationId]) // Enforcing relational integrity at the DB level
 }

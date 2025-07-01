@@ -13,6 +13,7 @@ import { createOpenAPISpecs } from "./features/openapi/openapi.route.js";
 import { suggestion } from "./features/suggestion/suggestion.route.js";
 import { user } from "./features/user/user.route.js";
 import { serializeError } from "./utils/util.errors.js";
+import { webhooks } from "./features/webhooks/webhooks.route.js";
 
 // Environment Vars
 dotenv.config({ path: path.resolve(import.meta.dirname, "../../../.env") });
@@ -24,9 +25,14 @@ app.get("/openapi", createOpenAPISpecs(app));
 
 // Middleware
 app.use(logger());
-app.use("*", clerkMiddleware());
-app.use("*", currentUserMiddleware);
-app.use("*", prismaMiddleware);
+app.use("/api/*", prismaMiddleware);
+
+// Webhooks
+app.route("/api/webhooks", webhooks);
+
+// Middleware
+app.use("/api/*", clerkMiddleware());
+app.use("/api/*", currentUserMiddleware);
 
 // Routes
 app.route("/api/suggestion", suggestion);
