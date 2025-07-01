@@ -37,22 +37,28 @@ model Suggestion {
 }
 
 model Role {
-  id          Int     @id @default(autoincrement())
-  name        String  @unique // 'admin', 'teacher', etc.
+  id          String @id @unique
   label       String // For UI: 'Admin'
-  description String?
+  description String
   User        User[]
 }
 
+enum UserStatus {
+  INVITED
+  ACTIVE
+  DISABLED
+}
+
 model User {
-  id        String   @id // Clerk user ID
+  id        String     @id // Clerk user ID
   email     String
   firstName String?
   lastName  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  role      Role     @relation(fields: [roleId], references: [id])
-  roleId    Int
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  role      Role       @relation(fields: [roleId], references: [id])
+  roleId    String
+  status    UserStatus @default(INVITED)
 
   memberships OrganizationMembership[]
   suggestions Suggestion[]
