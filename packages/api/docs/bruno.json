@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "NCCL Parent Portal",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

@@ -1,10 +1,9 @@
-import type { ZodSchema } from "zod";
-import type { ZodError as Zod4Error } from "zod/v4";
+import type { ZodError as Zod4Error, ZodType } from "zod/v4";
 import { flattenError } from "zod/v4";
 
-import { ErrorSet } from "../../dist-client/utils/util.errors.js";
+import { ErrorSet } from "./util.errors.js";
 
-export async function serialize<S extends ZodSchema, D>(
+export async function serialize<S extends ZodType, D>(
   schema: S,
   data: D,
   message?: string

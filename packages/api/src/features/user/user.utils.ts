@@ -5,7 +5,7 @@ import { RolesSchema } from "../role/role.utils.js";
 
 export const UserSchema = z.object({
   id: z.string(),
-  email: z.string().email(),
+  email: z.email(),
   firstName: z.string(),
   lastName: z.string().nullable(),
   createdAt: zDateStringSchema,
@@ -30,3 +30,8 @@ export const InviteUsersRequestSchema = z.object({
   role: RolesSchema,
 });
 export type InviteUsersRequest = z.infer<typeof InviteUsersRequestSchema>;
+export const InviteUsersResponseSchema = z.object({
+  message: z.string(),
+  userCount: z.number(),
+});
+export type InviteUsersResponse = z.infer<typeof InviteUsersResponseSchema>;

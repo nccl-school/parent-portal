@@ -48,7 +48,7 @@ export async function action(args: Route.ActionArgs) {
 
     // Send the invitations
     const responses = await Promise.allSettled(
-      data.email_addresses.map((emailAddress) =>
+      data.email_addresses.map(async (emailAddress) =>
         clerkClient.invitations.createInvitation({
           emailAddress,
           ignoreExisting: true,

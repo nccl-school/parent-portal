@@ -36,9 +36,15 @@ model Suggestion {
   userId      String
 }
 
+enum RoleName {
+  ADMIN
+  STAFF
+  USER
+}
+
 model Role {
-  id          String @id @unique
-  label       String // For UI: 'Admin'
+  id          RoleName @id @unique
+  label       String
   description String
   User        User[]
 }
@@ -51,13 +57,13 @@ enum UserStatus {
 
 model User {
   id        String     @id // Clerk user ID
-  email     String
+  email     String     @unique
   firstName String?
   lastName  String?
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   role      Role       @relation(fields: [roleId], references: [id])
-  roleId    String
+  roleId    RoleName
   status    UserStatus @default(INVITED)
 
   memberships OrganizationMembership[]

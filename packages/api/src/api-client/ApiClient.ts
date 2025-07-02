@@ -1,6 +1,5 @@
-import { type ZodSchema, ZodError } from "zod";
-import type z from "zod";
-import { flattenError, type ZodError as Zod4Error } from "zod/v4";
+import type z from "zod/v4";
+import { flattenError, ZodError, type ZodType } from "zod/v4";
 
 import { deserializeError, ErrorSet } from "../utils/util.errors.js";
 
@@ -30,7 +29,7 @@ export class ApiClient {
     this.#requestHeaders = headers;
   }
 
-  #validateSchema<T extends ZodSchema>(
+  #validateSchema<T extends ZodType>(
     schema: T,
     data: unknown,
     options: {
@@ -41,7 +40,7 @@ export class ApiClient {
       return schema.parse(data);
     } catch (error) {
       if (error instanceof ZodError) {
-        const err = flattenError(error as unknown as Zod4Error);
+        const err = flattenError(error);
         const errors =
           Object.keys(err.fieldErrors).length === 0
             ? { __untyped__: err.formErrors }
@@ -52,13 +51,13 @@ export class ApiClient {
     }
   }
 
-  #serialize<S>(schema: ZodSchema<S>, res: unknown) {
+  #serialize<S>(schema: ZodType<S>, res: unknown) {
     return this.#validateSchema(schema, res, {
       message: "Client re-serialization error",
     });
   }
 
-  #makeQueryString<T extends ZodSchema = ZodSchema>(
+  #makeQueryString<T extends ZodType = ZodType>(
     query?: [schema: T, data: unknown]
   ): string {
     if (!query) return "";
@@ -81,7 +80,7 @@ export class ApiClient {
     return "";
   }
 
-  #makePathname<T extends ZodSchema = ZodSchema>(
+  #makePathname<T extends ZodType = ZodType>(
     url: string,
     params?: [schema: T, data: unknown]
   ): string {
@@ -117,9 +116,9 @@ export class ApiClient {
   }
 
   protected async _mutateJSON<
-    S extends ZodSchema,
-    P extends ZodSchema = ZodSchema,
-    B extends ZodSchema = ZodSchema,
+    S extends ZodType,
+    P extends ZodType = ZodType,
+    B extends ZodType = ZodType,
   >({
     path,
     params,
@@ -151,7 +150,7 @@ export class ApiClient {
     const req = new Request(url, {
       method,
       headers,
-      body: JSON.stringify(parsedBody.data),
+      body: JSON.stringify(parsedBody),
     });
     const res = await fetch(req);
     const json = await res.json();
@@ -167,9 +166,9 @@ export class ApiClient {
   }
 
   protected async _get<
-    S extends ZodSchema,
-    Q extends ZodSchema = ZodSchema,
-    P extends ZodSchema = ZodSchema,
+    S extends ZodType,
+    Q extends ZodType = ZodType,
+    P extends ZodType = ZodType,
   >({
     path,
     query,
