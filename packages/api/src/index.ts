@@ -16,7 +16,8 @@ import { webhooks } from "./features/webhooks/webhooks.route.js";
 import { role } from "./features/role/role.route.js";
 
 // Environment Vars
-dotenv.config({ path: path.resolve(import.meta.dirname, "../../../.env") });
+const envPath = path.resolve(import.meta.dirname, "../../../.env");
+dotenv.config({ path: envPath });
 
 const app = new Hono();
 

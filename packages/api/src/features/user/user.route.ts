@@ -2,6 +2,8 @@ import { Hono } from "hono";
 
 import {
   GetUserListResponseSchema,
+  GetUserParamsSchema,
+  GetUserResponseSchema,
   InviteUsersRequestSchema,
   UpdateUserRoleParamsSchema,
   UpdateUserRoleRequestSchema,
@@ -26,6 +28,22 @@ user.get("/", authorize("ADMIN"), async (c) => {
     },
   });
   const data = await serialize(GetUserListResponseSchema, users);
+  return c.json(data);
+});
+
+// GET /api/user/:id | Get a user
+user.get("/:id", validate("param", GetUserParamsSchema), async (c) => {
+  const params = c.req.valid("param");
+  const db = c.get("db");
+  const user = await db.user.findUnique({
+    where: {
+      id: params.id,
+    },
+    include: {
+      role: {},
+    },
+  });
+  const data = await serialize(GetUserResponseSchema, user);
   return c.json(data);
 });
 

@@ -1,24 +1,21 @@
+import type { Roles } from "@nccl/api/client";
+
 import type { Route } from "./+types/api.user.updateUserRole";
 
-import { getClerkClient, ServerResponse } from "../utils/server";
-import { isAuthorized } from "../utils/server/utils.server.auth";
-import type { UserRole } from "../models/user.model";
+import { getNCCLClient, ServerResponse } from "../utils/server";
 
 export async function action(args: Route.ActionArgs) {
+  const ncclClient = getNCCLClient(args);
   try {
-    await isAuthorized(args, "admin");
     const formData = await args.request.formData();
-    const clerkClient = await getClerkClient(args);
-    await clerkClient.users.updateUser(args.params.id, {
-      publicMetadata: {
-        role: formData.get("role") as UserRole,
-      },
+    await ncclClient.user.updateUserRole(args.params.id, {
+      role: formData.get("role") as Roles,
     });
     return ServerResponse.success({
       status: "success",
       message: "Successfully changed the users role",
     });
   } catch (error) {
-    return ServerResponse.error(error);
+    return ncclClient.serializeError(error);
   }
 }

@@ -1,12 +1,13 @@
 import {
   GetUserListResponseSchema,
+  GetUserParamsSchema,
+  GetUserResponseSchema,
   InviteUsersRequestSchema,
   InviteUsersResponseSchema,
   UpdateUserRoleParamsSchema,
   UpdateUserRoleRequestSchema,
   UpdateUserRoleResponseSchema,
   type InviteUsersRequest,
-  type UpdateUserRoleParams,
   type UpdateUserRoleRequest,
 } from "./user.utils.js";
 
@@ -32,12 +33,20 @@ export class UserClient extends ApiClient {
   }
 
   /**
+   * Get a user by ID
+   */
+  public async getUser(userId: string) {
+    return this._get({
+      path: "/:id",
+      params: [GetUserParamsSchema, { id: userId }],
+      serializer: GetUserResponseSchema,
+    });
+  }
+
+  /**
    * Update a users role
    */
-  public async updateUserRole(
-    userId: UpdateUserRoleParams,
-    body: UpdateUserRoleRequest
-  ) {
+  public async updateUserRole(userId: string, body: UpdateUserRoleRequest) {
     return this._mutateJSON({
       method: "PUT",
       path: "/:id/role",

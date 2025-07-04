@@ -18,6 +18,12 @@ export type User = z.infer<typeof UserSchema>;
 export const GetUserListResponseSchema = UserSchema.array();
 export type GetUserListResponse = z.infer<typeof GetUserListResponseSchema>;
 
+// Get a user
+export const GetUserParamsSchema = UserSchema.pick({ id: true });
+export type GetUserParams = z.infer<typeof GetUserParamsSchema>;
+export const GetUserResponseSchema = UserSchema;
+export type GetUserResponse = z.infer<typeof GetUserResponseSchema>;
+
 // Create a user
 export const CreateUserRequestSchema = UserSchema.pick({
   email: true,

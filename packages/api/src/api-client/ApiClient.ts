@@ -58,7 +58,7 @@ export class ApiClient {
   }
 
   #makeQueryString<T extends ZodType = ZodType>(
-    query?: [schema: T, data: unknown]
+    query?: [schema: T, data: z.infer<T> | undefined]
   ): string {
     if (!query) return "";
 
@@ -82,7 +82,7 @@ export class ApiClient {
 
   #makePathname<T extends ZodType = ZodType>(
     url: string,
-    params?: [schema: T, data: unknown]
+    params?: [schema: T, data: z.infer<T>]
   ): string {
     const normalizedUrl = url === "/" ? "" : url;
 
@@ -127,11 +127,11 @@ export class ApiClient {
     method,
   }: {
     path: string;
-    params?: [schema: P, data: unknown];
-    body: [schema: B, data: unknown];
+    params?: [schema: P, data: z.infer<P>];
+    body: [schema: B, data: z.infer<B>];
     serializer: S;
     method: "POST" | "PUT";
-  }) {
+  }): Promise<z.output<S>> {
     // Assemble the request
     const headers = this.#requestHeaders;
     headers.set("content-type", "application/json");
@@ -162,7 +162,7 @@ export class ApiClient {
     // Serialize the data
 
     const data = this.#serialize(serializer, json);
-    return data;
+    return data as z.output<S>;
   }
 
   protected async _get<
@@ -175,8 +175,8 @@ export class ApiClient {
     params,
   }: {
     path: string;
-    params?: [schema: P, data: unknown];
-    query?: [schema: Q, data: unknown];
+    params?: [schema: P, data: z.infer<P>];
+    query?: [schema: Q, data: z.infer<Q> | undefined];
     serializer: S;
   }): Promise<z.output<S>> {
     // Assemble the request

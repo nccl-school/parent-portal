@@ -37,7 +37,7 @@ export class SuggestionClient extends ApiClient {
   /**
    *  Get a single suggestion by ID
    */
-  async getSuggestion(id: number) {
+  async getSuggestion(id: string) {
     return this._get({
       path: "/:id",
       params: [GetSuggestionParamsSchema, { id }],
@@ -60,7 +60,7 @@ export class SuggestionClient extends ApiClient {
   /**
    * Updates an existing suggestion
    */
-  async updateSuggestion(id: number, suggestion: UpdateSuggestionRequest) {
+  async updateSuggestion(id: string, suggestion: UpdateSuggestionRequest) {
     return this._mutateJSON({
       method: "PUT",
       path: "/:id",
