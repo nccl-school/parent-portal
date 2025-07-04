@@ -76,12 +76,12 @@ class ServerError<
 }
 
 class ServerErrorUnauthenticated extends ServerError<"unauthenticated"> {
-  constructor(message = "You are not authorized to access this resource.") {
+  constructor(message = "You need to sign in to access this resource.") {
     super({ error_type: "unauthenticated", message, status: 401 });
   }
 }
 class ServerErrorUnauthorized extends ServerError<"unauthorized"> {
-  constructor(message = "Not authenticated") {
+  constructor(message = "Not authorized") {
     super({ error_type: "unauthorized", message, status: 403 });
   }
 }

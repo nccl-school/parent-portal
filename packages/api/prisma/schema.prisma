@@ -5,8 +5,9 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/_generated/prisma"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+  output          = "../src/_generated/prisma"
 }
 
 datasource db {
@@ -23,7 +24,7 @@ enum SuggestionStatus {
 }
 
 model Suggestion {
-  id          Int              @id @default(autoincrement())
+  id          String           @id @default(cuid())
   title       String
   description String
   status      SuggestionStatus @default(DRAFT)
@@ -73,18 +74,18 @@ model User {
 }
 
 model UserGroup {
-  id      Int     @id @default(autoincrement())
+  id      String  @id @default(cuid())
   User    User?   @relation(fields: [userId], references: [id])
   userId  String?
   Group   Group?  @relation(fields: [groupId], references: [id])
-  groupId Int?
+  groupId String?
 }
 
 model UserStudent {
-  id        Int     @id @default(autoincrement())
+  id        String  @id @default(cuid())
   userId    String
-  studentId Int
-  groupId   Int
+  studentId String
+  groupId   String
   relation  String // e.g. 'mother', 'father', 'guardian'
   user      User    @relation(fields: [userId], references: [id])
   student   Student @relation(fields: [studentId], references: [id])
@@ -94,7 +95,7 @@ model UserStudent {
 }
 
 model Student {
-  id        Int           @id @default(autoincrement())
+  id        String        @id @default(cuid())
   firstName String
   lastName  String
   group     String?
@@ -103,11 +104,11 @@ model Student {
   updatedAt DateTime      @updatedAt
   parents   UserStudent[] // ← many-to-many link
   Group     Group?        @relation(fields: [groupId], references: [id])
-  groupId   Int?
+  groupId   String?
 }
 
 model Group {
-  id          Int           @id @default(autoincrement())
+  id          String        @id @default(cuid())
   name        String
   description String?
   createdAt   DateTime      @default(now())

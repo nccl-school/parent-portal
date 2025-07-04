@@ -1,5 +1,4 @@
 import { Hono } from "hono";
-import { describeRoute } from "hono-openapi";
 
 import {
   CreateSuggestionRequestSchema,
@@ -10,39 +9,39 @@ import {
   UpdateSuggestionRequestSchema,
 } from "./suggestion.utils.js";
 
-import { ErrorSet, serialize } from "../../utils/index.js";
 import { validate } from "../../middleware/middleware.validate.js";
+import { ErrorSet } from "../../utils/util.errors.js";
+import { serialize } from "../../utils/util.serialize.js";
 
 export const suggestion = new Hono();
 
 // Get all suggestions
-suggestion.get(
-  "/",
-  describeRoute({
-    summary: "Get list of suggestions", // short title used in Postman
-    description: "Get a list of the suggestions",
-  }),
-  async (c) => {
-    const db = c.get("db");
-    const suggestions = await db.suggestion.findMany();
-    const data = await serialize(GetSuggestionListResponseSchema, suggestions);
-    return c.json(data);
-  }
-);
+suggestion.get("/", async (c) => {
+  const db = c.get("db");
+  const suggestions = await db.suggestion.findMany();
+  const data = await serialize(GetSuggestionListResponseSchema, suggestions);
+  return c.json(data);
+});
 
 // Create a suggestion
 suggestion.post(
   "/",
-  describeRoute({
-    summary: "Create a suggestion",
-    description: "Create a suggestion",
-    validateResponse: true,
-  }),
   validate("json", CreateSuggestionRequestSchema),
   async (c) => {
     const body = c.req.valid("json");
-    const newSuggestion = await c.var.db.suggestion.create({
-      data: body,
+    const currentUser = c.get("currentUser");
+    const db = c.get("db");
+
+    const newSuggestion = await db.suggestion.create({
+      data: {
+        ...body,
+        status: "DRAFT",
+        createdBy: {
+          connect: {
+            id: currentUser.id,
+          },
+        },
+      },
     });
     const data = await serialize(GetSuggestionResponseSchema, newSuggestion);
     return c.json(data);
@@ -52,15 +51,11 @@ suggestion.post(
 // Get a suggestion by ID
 suggestion.get(
   "/:id",
-  describeRoute({
-    summary: "Get a suggestion by ID",
-    description: "Get one suggestion by ID",
-    validateResponse: true,
-  }),
   validate("param", GetSuggestionParamsSchema),
   async (c) => {
     const { id } = c.req.valid("param");
-    const suggestion = await c.var.db.suggestion.findFirst({
+    const db = c.get("db");
+    const suggestion = await db.suggestion.findFirst({
       where: { id },
     });
     if (!suggestion) {
@@ -74,17 +69,13 @@ suggestion.get(
 // Update a suggestion
 suggestion.put(
   "/:id",
-  describeRoute({
-    summary: "Update a suggestion",
-    description: "Update a suggestion",
-    validateResponse: true,
-  }),
   validate("param", UpdateSuggestionParamsSchema),
   validate("json", UpdateSuggestionRequestSchema),
   async (c) => {
     const { id } = c.req.valid("param");
+    const db = c.get("db");
     const body = c.req.valid("json");
-    const suggestion = await c.var.db.suggestion.update({
+    const suggestion = await db.suggestion.update({
       where: { id },
       data: body,
     });

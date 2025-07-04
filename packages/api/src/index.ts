@@ -9,33 +9,31 @@ import type { ContentfulStatusCode } from "hono/utils/http-status";
 
 import { prismaMiddleware } from "./middleware/middleware.prisma.js";
 import { currentUserMiddleware } from "./middleware/middleware.current-user.js";
-import { createOpenAPISpecs } from "./features/openapi/openapi.route.js";
 import { suggestion } from "./features/suggestion/suggestion.route.js";
 import { user } from "./features/user/user.route.js";
 import { serializeError } from "./utils/util.errors.js";
 import { webhooks } from "./features/webhooks/webhooks.route.js";
+import { role } from "./features/role/role.route.js";
 
 // Environment Vars
 dotenv.config({ path: path.resolve(import.meta.dirname, "../../../.env") });
 
 const app = new Hono();
 
-// OpenAPI Docs
-app.get("/openapi", createOpenAPISpecs(app));
-
-// Middleware
+// Middleware - Log and add the db to the context
 app.use(logger());
 app.use("/api/*", prismaMiddleware);
 
 // Webhooks
 app.route("/api/webhooks", webhooks);
 
-// Middleware
+// Middleware - Authenticate and add the current user to the context
 app.use("/api/*", clerkMiddleware());
 app.use("/api/*", currentUserMiddleware);
 
-// Routes
+// Authenticated routes
 app.route("/api/suggestion", suggestion);
+app.route("/api/role", role);
 app.route("/api/user", user);
 
 // Errors

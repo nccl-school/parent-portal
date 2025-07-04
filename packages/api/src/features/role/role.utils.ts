@@ -12,3 +12,6 @@ export const RoleSchema = z.object({
 });
 
 export type Role = z.infer<typeof RoleSchema>;
+
+export const GetRoleListResponseSchema = RoleSchema.array();
+export type GetRoleListResponse = z.infer<typeof GetRoleListResponseSchema>;

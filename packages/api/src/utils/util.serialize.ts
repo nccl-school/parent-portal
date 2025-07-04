@@ -3,11 +3,7 @@ import { flattenError } from "zod/v4";
 
 import { ErrorSet } from "./util.errors.js";
 
-export async function serialize<S extends ZodType, D>(
-  schema: S,
-  data: D,
-  message?: string
-) {
+export async function serialize<S extends ZodType, D>(schema: S, data: D) {
   try {
     const json = schema.parseAsync(data);
     return json;
@@ -17,6 +13,6 @@ export async function serialize<S extends ZodType, D>(
       Object.keys(err.fieldErrors).length === 0
         ? { __untyped__: err.formErrors }
         : err.fieldErrors;
-    throw new ErrorSet.validation(errObj, message);
+    throw new ErrorSet.validation(errObj, "Serialization failed");
   }
 }

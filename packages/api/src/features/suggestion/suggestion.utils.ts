@@ -1,17 +1,15 @@
 import z from "zod/v4";
 
-import { zCleanStringSchema, zDateStringSchema } from "../../utils/index.js";
+import {
+  zCleanStringSchema,
+  zDateStringSchema,
+} from "../../utils/util.schema.js";
 
 // Base Type
 export const SuggestionSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   title: zCleanStringSchema,
-  status: z.union([
-    z.literal("IDEA"),
-    z.literal("PLANNED"),
-    z.literal("IN_PROGRESS"),
-    z.literal("COMPLETE"),
-  ]),
+  status: z.literal(["DRAFT", "IDEA", "PLANNED", "IN_PROGRESS", "COMPLETE"]),
   description: zCleanStringSchema,
   createdAt: zDateStringSchema,
   updatedAt: zDateStringSchema,
@@ -32,7 +30,7 @@ export type GetSuggestionListResponse = z.infer<
 
 // getSuggestion
 export const GetSuggestionParamsSchema = z.object({
-  id: z.string().pipe(z.coerce.number()),
+  id: z.string(),
 });
 export type GetSuggestionParams = z.infer<typeof GetSuggestionParamsSchema>;
 export const GetSuggestionResponseSchema = SuggestionSchema;
@@ -53,7 +51,7 @@ export type CreateSuggestionResponse = z.infer<
 
 // updateSuggestion
 export const UpdateSuggestionParamsSchema = z.object({
-  id: z.string().pipe(z.coerce.number()),
+  id: z.string(),
 });
 export const UpdateSuggestionRequestSchema = SuggestionSchema.omit({
   id: true,

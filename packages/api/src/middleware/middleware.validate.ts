@@ -3,7 +3,7 @@ import type { ZodType } from "zod/v4";
 import { z } from "zod/v4";
 import { zValidator } from "@hono/zod-validator";
 
-import { ErrorSet } from "../utils/index.js";
+import { ErrorSet } from "../utils/util.errors.js";
 
 /**
  * Custom validator middleware that will throw
@@ -16,6 +16,7 @@ export function validate<
   return zValidator(target, schema, (res) => {
     if (!res.success) {
       const flatErr = z.flattenError(res.error);
+      console.error(flatErr);
       let message: string | undefined;
       switch (target) {
         case "param":

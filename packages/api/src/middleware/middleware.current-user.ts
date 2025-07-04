@@ -1,8 +1,8 @@
 import { createMiddleware } from "hono/factory";
 import { getAuth } from "@hono/clerk-auth";
 
-import { ErrorSet } from "../utils/index.js";
 import type { Roles } from "../features/role/role.utils.js";
+import { ErrorSet } from "../utils/util.errors.js";
 
 export const cacheTagsMiddleware = {
   CURRENT_USER: "get_current_user",
@@ -42,11 +42,6 @@ export const currentUserMiddleware = createMiddleware(async (c, next) => {
   let user = await db.user.findUnique({
     where: {
       id: auth.userId,
-    },
-    cacheStrategy: {
-      swr: 120,
-      ttl: 120,
-      tags: [cacheTagsMiddleware.CURRENT_USER],
     },
   });
   console.log("Getting the user record from the db", user);

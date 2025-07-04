@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import leoProfanity from "leo-profanity";
 
 export const zDateStringSchema = z.preprocess(

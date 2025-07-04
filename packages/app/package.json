@@ -26,10 +26,10 @@
     "react-dom": "19.1.0",
     "react-router": "7.6.3",
     "ts-pattern": "^5.7.1",
-    "zod": "^3.25.67"
+    "zod": "^3.25.71"
   },
   "devDependencies": {
-    "@babel/core": "7.27.7",
+    "@babel/core": "7.28.0",
     "@babel/preset-react": "7.27.1",
     "@babel/preset-typescript": "7.27.1",
     "@gfdigital/tsconfig": "0.3.1",
@@ -42,13 +42,13 @@
     "@types/gapi.auth2": "0.0.61",
     "@types/gapi.client": "1.0.8",
     "@types/morgan": "^1.9.10",
-    "@types/node": "24.0.7",
+    "@types/node": "24.0.10",
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
     "@wyw-in-js/vite": "0.7.0",
     "cross-env": "7.0.3",
     "typescript": "5.8.3",
-    "vite": "6.3.5",
+    "vite": "7.0.1",
     "vite-plugin-devtools-json": "^0.2.1",
     "vite-tsconfig-paths": "5.1.4"
   }
