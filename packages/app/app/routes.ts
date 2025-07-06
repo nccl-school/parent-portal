@@ -43,6 +43,7 @@ export default [
   route("sign-up/*", "features/sign-up/SignUp.route.tsx"),
   // APIs
   ...prefix("api", [
+    ...prefix("role", [route("/", "./api/api.role.getRoles.ts")]),
     ...prefix("user", [
       route("/invite", "./api/api.user.inviteUsers.ts"),
       route(":id", "./api/api.user.getUserById.ts", [

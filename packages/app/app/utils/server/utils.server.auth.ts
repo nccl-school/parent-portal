@@ -1,36 +1,27 @@
 import { getAuth } from "@clerk/react-router/ssr.server";
 import type { LoaderFunctionArgs } from "react-router";
+import type { Roles } from "@nccl/api/client";
 
 import { ServerError } from "./utils.server.response";
 
-import type { UserRole } from "../../models";
+export async function getRole<T extends LoaderFunctionArgs>(loaderArgs: T) {
+  const { sessionClaims } = await getAuth(loaderArgs);
+  return sessionClaims?.metadata.role as Roles;
+}
 
-export class RBAC {
-  #loaderArgs: LoaderFunctionArgs;
+export async function isAdmin<T extends LoaderFunctionArgs>(loaderArgs: T) {
+  const role = await getRole(loaderArgs);
+  return role === "ADMIN";
+}
 
-  constructor(loaderArgs: LoaderFunctionArgs) {
-    this.#loaderArgs = loaderArgs;
-  }
+export async function isTeacher<T extends LoaderFunctionArgs>(loaderArgs: T) {
+  const role = await getRole(loaderArgs);
+  return role === "STAFF";
+}
 
-  public async getRole() {
-    const { sessionClaims } = await getAuth(this.#loaderArgs);
-    return sessionClaims?.metadata.role;
-  }
-
-  public async isAdmin() {
-    const role = await this.getRole();
-    return role === "admin";
-  }
-
-  public async isTeacher() {
-    const role = await this.getRole();
-    return role === "staff";
-  }
-
-  public async isParent() {
-    const role = await this.getRole();
-    return role === "parent";
-  }
+export async function isUser<T extends LoaderFunctionArgs>(loaderArgs: T) {
+  const role = await getRole(loaderArgs);
+  return role === "USER";
 }
 
 /**
@@ -40,10 +31,9 @@ export class RBAC {
  */
 export async function isAuthorized(
   args: LoaderFunctionArgs,
-  roleOrRoles: UserRole | UserRole[]
+  roleOrRoles: Roles | Roles[]
 ) {
-  const rbac = new RBAC(args);
-  const role = await rbac.getRole();
+  const role = await getRole(args);
   if (!role) {
     throw new ServerError.unauthorized();
   }

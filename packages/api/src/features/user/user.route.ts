@@ -57,6 +57,7 @@ user.put(
     const body = c.req.valid("json");
     const param = c.req.valid("param");
     const db = c.get("db");
+    console.log("Updating user in db");
     const user = await db.user.update({
       data: {
         roleId: body.role,
@@ -66,6 +67,14 @@ user.put(
       },
       include: {
         role: {},
+      },
+    });
+
+    console.log("Updating clerk cached mirror");
+    const clerk = c.get("clerk");
+    await clerk.users.updateUser(param.id, {
+      publicMetadata: {
+        role: body.role,
       },
     });
 

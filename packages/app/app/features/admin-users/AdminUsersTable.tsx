@@ -1,4 +1,3 @@
-import type { User } from "@clerk/react-router/ssr.server";
 import {
   Table,
   TableHead,
@@ -10,8 +9,8 @@ import {
   Typography,
   InputSearch,
   Button,
-  Icon,
 } from "@nccl/components";
+import type { GetUserListResponse } from "@nccl/api/client";
 import { makeFontWeight, makeRem } from "@nccl/theme";
 import { useMemo } from "react";
 import { css } from "@linaria/core";
@@ -48,7 +47,7 @@ const styles = css`
   }
 `;
 
-export function AdminUsersTable({ data }: { data: Omit<User, "_raw">[] }) {
+export function AdminUsersTable({ data }: { data: GetUserListResponse }) {
   return (
     <>
       {useMemo(
@@ -118,21 +117,20 @@ export function AdminUsersTable({ data }: { data: Omit<User, "_raw">[] }) {
               <TableBodyCol>
                 <AdminUsersTableCellRole {...user} />
               </TableBodyCol>
-              <TableBodyCol>
-                {user.primaryPhoneNumber?.phoneNumber ?? placeholder}
-              </TableBodyCol>
+              <TableBodyCol>{placeholder}</TableBodyCol>
               <TableBodyCol>
                 {dates.format(user.createdAt, "MM/DD/YYYY")}
               </TableBodyCol>
               <TableBodyCol>
-                {dates.format(user.lastActiveAt, "Relative")}
+                {/* {dates.format(user.lastActiveAt, "Relative")} */}
               </TableBodyCol>
               <TableBodyCol>
-                {user.locked ? (
+                {placeholder}
+                {/* {user.locked ? (
                   <Icon dxIcon="security-lock-stroke-standard" dxSize={16} />
                 ) : (
                   placeholder
-                )}
+                )} */}
               </TableBodyCol>
               <TableBodyCol style={{ width: makeRem(24) }}>
                 <AdminUsersTableCellMenu {...user} />

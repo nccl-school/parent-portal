@@ -70,7 +70,7 @@ export function RootNavbar() {
           />
           <NavbarItemText>More</NavbarItemText>
         </RootNavbarItem>
-        <Restrict role="admin">
+        <Restrict role="ADMIN">
           <RootNavbarItem to="/admin">
             <NavbarItemIcon
               dxBaseIcon="tools-stroke-standard"

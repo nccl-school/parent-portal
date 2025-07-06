@@ -6,7 +6,7 @@ import type { Route } from "./+types/Admin.route";
 import { AdminNavbar } from "./AdminNavbar";
 
 import { PageHeader } from "../../components/page";
-import { RBAC } from "../../utils/server/utils.server.auth";
+import { isAdmin } from "../../utils/server/utils.server.auth";
 import { Unauthorized } from "../auth/Unauthorized";
 
 const styles = css`
@@ -36,13 +36,8 @@ const styles = css`
 `;
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
-  const rbac = new RBAC(loaderArgs);
-  const isAdmin = await rbac.isAdmin();
-  if (!isAdmin) {
-    return { hasAccess: false };
-  }
-
-  return { hasAccess: true };
+  const hasAccess = await isAdmin(loaderArgs);
+  return { hasAccess };
 }
 
 export default function AdminRoute({ loaderData }: Route.ComponentProps) {

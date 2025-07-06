@@ -7,7 +7,7 @@ import {
   type PopoverEngine,
 } from "@nccl/components";
 import { useCallback, type MouseEventHandler } from "react";
-import type { User } from "@clerk/react-router/ssr.server";
+import type { User } from "@nccl/api/client";
 
 import { AdminUserPermissions } from "../admin-user-permissions";
 import { AdminUserProfile } from "../admin-user-profile";
@@ -16,7 +16,7 @@ export function AdminUsersMenu({
   popover,
   user,
 }: {
-  user: Omit<User, "_raw">;
+  user: User;
   popover: PopoverEngine;
 }) {
   const handleLaunchUserPermissions = useCallback<
@@ -44,11 +44,11 @@ export function AdminUsersMenu({
       <PopoverMenu>
         <PopoverMenuItem onClick={handleLaunchUserProfile}>
           <PopoverMenuItemIcon dxIcon="user-02-stroke-standard" />
-          <PopoverMenuItemText>View Profile</PopoverMenuItemText>
+          <PopoverMenuItemText>View profile</PopoverMenuItemText>
         </PopoverMenuItem>
         <PopoverMenuItem onClick={handleLaunchUserPermissions}>
           <PopoverMenuItemIcon dxIcon="key-02-stroke-standard" />
-          <PopoverMenuItemText>Change Permission</PopoverMenuItemText>
+          <PopoverMenuItemText>Change role</PopoverMenuItemText>
         </PopoverMenuItem>
       </PopoverMenu>
     </Popover>

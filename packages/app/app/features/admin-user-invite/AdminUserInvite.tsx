@@ -14,14 +14,12 @@ import {
 import { makeRem } from "@nccl/theme";
 import { useMemo } from "react";
 import { href, useFetcher } from "react-router";
+import type { InviteUsersRequest } from "@nccl/api/client";
 
 import { useAdminUserInviteModalContext } from "./admin-user-invite.useModalContext";
 
-import { UserPermissionRadioGroup } from "../user";
-import type {
-  action as inviteUserAction,
-  InviteUsersApiRequest,
-} from "../../api/api.user.inviteUsers";
+import { RoleRadioGroup } from "../user";
+import type { action as inviteUserAction } from "../../api/api.user.inviteUsers";
 import { getValidationErrors } from "../../utils/client";
 
 const className = css`
@@ -46,7 +44,7 @@ export const AdminUserInvite = new ModalController({
 function ModalContent() {
   const { close: closeModal } = useAdminUserInviteModalContext();
   const fetcher = useFetcher<typeof inviteUserAction>();
-  const errors = getValidationErrors<keyof InviteUsersApiRequest>(fetcher.data);
+  const errors = getValidationErrors<keyof InviteUsersRequest>(fetcher.data);
 
   return (
     <fetcher.Form
@@ -66,25 +64,17 @@ function ModalContent() {
         []
       )}
       <ModalBody className={styles}>
-        <FormGroup
-          dxTitle="Contacts"
-          dxSubtitle="Enter a list of users to invite to the platform. If the user hasn't already been invited, they will receive an invite at this email and then use this to sign in"
-        >
+        <FormGroup dxSubtitle="Enter in a 1 or many comma delimited email addresses. If the user hasn't already been invited, they will receive an invite at this email and then use this to sign in">
           <InputGroup dxLayout="stacked">
             <InputTags
               dxError={errors.email_addresses?.[0]}
-              dxLabel="Email Addresses"
-              dxHint="Press Enter, tab, or comma to enter a value or copy + paste from a CSV"
               name="email_addresses"
               dxVariant="contrasted"
             />
           </InputGroup>
         </FormGroup>
-        <FormGroup
-          dxTitle="Permissions"
-          dxSubtitle="Indicate the role that the above users will have. It will determine what they can view and do inside of the platform"
-        >
-          <UserPermissionRadioGroup />
+        <FormGroup dxSubtitle="Select the role that the above users will have. It will determine what they can view and do inside of the platform">
+          <RoleRadioGroup />
         </FormGroup>
       </ModalBody>
       <ModalFooter>
