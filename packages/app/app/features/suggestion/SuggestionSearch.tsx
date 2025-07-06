@@ -38,8 +38,6 @@ export const SuggestionSearch = forwardRef<
       >
         {children}
       </InputSearch>
-
-      {/* <SuggestionLearnMore /> */}
     </div>
   );
 });
