@@ -40,6 +40,7 @@ export type GetSuggestionListQuery = z.infer<
 export const GetSuggestionListResponseSchema = z
   .object({
     ...SuggestionSchema.pick({
+      id: true,
       title: true,
       description: true,
       likes: true,
@@ -57,7 +58,9 @@ export const GetSuggestionParamsSchema = z.object({
   id: z.string(),
 });
 export type GetSuggestionParams = z.infer<typeof GetSuggestionParamsSchema>;
-export const GetSuggestionResponseSchema = SuggestionSchema;
+export const GetSuggestionResponseSchema = SuggestionSchema.omit({
+  comments: true,
+});
 export type GetSuggestionResponse = z.infer<typeof GetSuggestionResponseSchema>;
 
 // createSuggestion

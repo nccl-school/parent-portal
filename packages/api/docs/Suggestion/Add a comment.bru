@@ -1,0 +1,15 @@
+meta {
+  name: Add a comment
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{API_DOMAIN}}/api/suggestion/:id/comment
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 
+}

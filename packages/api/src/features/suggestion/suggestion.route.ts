@@ -26,7 +26,6 @@ suggestion.get("/", async (c) => {
       },
     },
   });
-  console.log(suggestions);
   const data = await serialize(GetSuggestionListResponseSchema, suggestions);
   return c.json(data);
 });
@@ -71,34 +70,22 @@ suggestion.get(
   async (c) => {
     const { id } = c.req.valid("param");
     const db = c.get("db");
-    const suggestion = await db.suggestion.findFirst({
+    const suggestion = await db.suggestion.findUnique({
       where: { id },
       include: {
-        createdBy: {},
+        createdBy: {
+          include: {
+            role: {},
+          },
+        },
       },
     });
     if (!suggestion) {
       throw new ErrorSet.notFound();
     }
+    console.log(suggestion);
     const data = await serialize(GetSuggestionResponseSchema, suggestion);
     return c.json(data);
-  }
-);
-
-// GET /api/suggestion/:id/comments | Get a suggestion's comments
-suggestion.get(
-  "/:id/comments",
-  validate("param", GetSuggestionParamsSchema),
-  async (c) => {
-    const params = c.req.valid("param");
-    const db = c.get("db");
-
-    const comments = await db.suggestionComments.findMany({
-      where: {
-        suggestionId: params.id,
-      },
-    });
-    return c.json(comments);
   }
 );
 
@@ -117,6 +104,43 @@ suggestion.put(
     });
     const data = serialize(GetSuggestionResponseSchema, suggestion);
     return c.json(data);
+  }
+);
+
+// GET /api/suggestion/:id/comment | Get a suggestion's comments
+// TODO: Add serializer
+suggestion.get(
+  "/:id/comment",
+  validate("param", GetSuggestionParamsSchema),
+  async (c) => {
+    const params = c.req.valid("param");
+    const db = c.get("db");
+
+    const comments = await db.suggestionComments.findMany({
+      where: {
+        suggestionId: params.id,
+      },
+    });
+    return c.json(comments);
+  }
+);
+
+// POST /api/suggestion/:id/comment | Add a comment to a suggestion
+// TODO: Add serializer
+// TODO: Validate body
+suggestion.post(
+  "/:id/comment",
+  validate("param", GetSuggestionParamsSchema),
+  async (c) => {
+    const params = c.req.valid("param");
+    const db = c.get("db");
+
+    const comments = await db.suggestionComments.findMany({
+      where: {
+        suggestionId: params.id,
+      },
+    });
+    return c.json(comments);
   }
 );
 
