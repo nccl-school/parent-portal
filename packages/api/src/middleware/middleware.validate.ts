@@ -17,16 +17,10 @@ export function validate<
     if (!res.success) {
       const flatErr = z.flattenError(res.error);
       console.error(flatErr);
-      let message: string | undefined;
-      switch (target) {
-        case "param":
-          message = `There was an error when validating the params of the request.`;
-          break;
-
-        default:
-          message = undefined;
-      }
-      throw new ErrorSet.validation(flatErr.fieldErrors, message);
+      throw new ErrorSet.validation(
+        flatErr.fieldErrors,
+        `"${target}" validation failed.`
+      );
     }
   });
 }

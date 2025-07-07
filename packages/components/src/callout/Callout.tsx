@@ -44,7 +44,7 @@ const styles = css`
   display: grid;
   grid-template-columns: auto 1fr auto;
   gap: ${makeRem(16)};
-  align-items: center;
+  align-items: start;
 
   .co-desc {
     color: ${makeColor("neutral-dark-400")} !important;
@@ -92,7 +92,7 @@ export function Callout({
         {!omitIcon && (
           <Icon
             dxIcon={variantIcons[variant]}
-            dxSize={24}
+            dxSize={20}
             dxColor="neutral-dark"
           />
         )}

@@ -4,15 +4,29 @@ import {
   zCleanStringSchema,
   zDateStringSchema,
 } from "../../utils/util.schema.js";
+import { UserSchema } from "../user/user.utils.js";
+
+export const SuggestionCommentSchema = z.object({
+  id: z.string(),
+  comment: z.string(),
+  createdBy: UserSchema,
+  createdAt: zDateStringSchema,
+  updatedAt: zDateStringSchema,
+});
 
 // Base Type
 export const SuggestionSchema = z.object({
   id: z.string(),
   title: zCleanStringSchema,
-  status: z.literal(["DRAFT", "IDEA", "PLANNED", "IN_PROGRESS", "COMPLETE"]),
   description: zCleanStringSchema,
+  status: z.literal(["DISCUSSION", "PLANNED", "IN_PROGRESS", "COMPLETE"]),
+  likes: z.number(),
+  dislikes: z.number(),
+  isAnonymous: z.boolean(),
   createdAt: zDateStringSchema,
   updatedAt: zDateStringSchema,
+  comments: SuggestionCommentSchema.array(),
+  createdBy: UserSchema,
 });
 export type Suggestion = z.infer<typeof SuggestionSchema>;
 
@@ -23,7 +37,17 @@ export const GetSuggestionListQuerySchema = z.object({
 export type GetSuggestionListQuery = z.infer<
   typeof GetSuggestionListQuerySchema
 >;
-export const GetSuggestionListResponseSchema = SuggestionSchema.array();
+export const GetSuggestionListResponseSchema = z
+  .object({
+    ...SuggestionSchema.pick({
+      title: true,
+      description: true,
+      likes: true,
+      dislikes: true,
+    }).shape,
+    _count: z.object({ comments: z.number() }),
+  })
+  .array();
 export type GetSuggestionListResponse = z.infer<
   typeof GetSuggestionListResponseSchema
 >;
@@ -44,7 +68,9 @@ export const CreateSuggestionRequestSchema = SuggestionSchema.pick({
 export type CreateSuggestionRequest = z.infer<
   typeof CreateSuggestionRequestSchema
 >;
-export const CreateSuggestionResponseSchema = SuggestionSchema;
+export const CreateSuggestionResponseSchema = SuggestionSchema.omit({
+  comments: true,
+});
 export type CreateSuggestionResponse = z.infer<
   typeof CreateSuggestionResponseSchema
 >;
@@ -55,6 +81,8 @@ export const UpdateSuggestionParamsSchema = z.object({
 });
 export const UpdateSuggestionRequestSchema = SuggestionSchema.omit({
   id: true,
+  createdBy: true,
+  comments: true,
   createdAt: true,
   updatedAt: true,
 });
