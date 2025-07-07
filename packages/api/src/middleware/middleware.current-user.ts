@@ -30,18 +30,18 @@ declare module "hono" {
 
 export const currentUserMiddleware = createMiddleware(async (c, next) => {
   const auth = getAuth(c);
-  console.log("Getting the users id");
   if (!auth?.userId) {
-    console.log("User is not authenticated with Clerk");
+    console.log("User does not have a clerk session");
     throw new ErrorSet.unauthenticated();
   }
-  console.log("Getting the users id", auth.userId);
+  const extId = auth.userId;
+  console.log("Getting extId from session", extId);
 
   const db = c.get("db");
   console.log("Getting the user record from the db");
   let user = await db.user.findUnique({
     where: {
-      id: auth.userId,
+      extId: auth.userId,
     },
   });
   console.log("Getting the user record from the db", user);
@@ -55,9 +55,9 @@ export const currentUserMiddleware = createMiddleware(async (c, next) => {
     console.log("Creating the user in the db");
     user = await db.user.create({
       data: {
-        id: auth.userId,
+        extId: auth.userId,
         email: clerkUser.emailAddresses[0].emailAddress,
-        roleId: "USER",
+        roleId: clerkUser.publicMetadata.role ?? "USER",
       },
     });
     console.log("Creating the user in the db", user);

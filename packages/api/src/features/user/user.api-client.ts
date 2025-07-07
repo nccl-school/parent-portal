@@ -4,6 +4,8 @@ import {
   GetUserResponseSchema,
   InviteUsersRequestSchema,
   InviteUsersResponseSchema,
+  ResendInviteUserParamsSchema,
+  ResendInviteUserResponseSchema,
   UpdateUserRoleParamsSchema,
   UpdateUserRoleRequestSchema,
   UpdateUserRoleResponseSchema,
@@ -66,6 +68,17 @@ export class UserClient extends ApiClient {
       path: "/invite",
       body: [InviteUsersRequestSchema, body],
       serializer: InviteUsersResponseSchema,
+    });
+  }
+
+  /**
+   * Resend an invitation to a user
+   */
+  public async resendInvitation(userId: string) {
+    return this._get({
+      path: "/resend-invite/:id",
+      params: [ResendInviteUserParamsSchema, { id: userId }],
+      serializer: ResendInviteUserResponseSchema,
     });
   }
 }

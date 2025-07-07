@@ -10,8 +10,7 @@
     "schema:generate": "yarn ts-to-zod prisma/schemas/index.ts prisma/_generated/schemas.ts",
     "client:dev": "yarn client:build --watch",
     "client:build": "yarn tsc --project tsconfig.client.json",
-    "db:dev": "prisma dev",
-    "db:generate": "prisma generate --no-engine",
+    "db:generate": "prisma generate",
     "db:migrate-dev": "dotenv -e=../../.env -- prisma migrate dev"
   },
   "prisma": {
@@ -22,22 +21,22 @@
     "./client": "./dist-client/client.js"
   },
   "dependencies": {
-    "@clerk/backend": "^2.3.1",
+    "@clerk/backend": "^2.4.0",
     "@hono/clerk-auth": "^3.0.1",
     "@hono/node-server": "^1.15.0",
     "@hono/zod-validator": "^0.7.0",
-    "@prisma/adapter-pg": "^6.11.0",
-    "@prisma/client": "6.11.0",
+    "@prisma/adapter-pg": "^6.11.1",
+    "@prisma/client": "6.11.1",
     "@prisma/extension-accelerate": "2.0.1",
     "dotenv": "17.0.1",
-    "hono": "^4.8.3",
-    "leo-profanity": "^1.7.0",
-    "prisma": "6.11.0",
+    "hono": "^4.8.4",
+    "leo-profanity": "^1.8.0",
+    "prisma": "6.11.1",
     "svix": "^1.68.0",
-    "zod": "^3.25.71"
+    "zod": "^3.25.75"
   },
   "devDependencies": {
-    "@clerk/express": "1.7.3",
+    "@clerk/express": "1.7.4",
     "@gfdigital/tsconfig": "0.3.1",
     "@types/leo-profanity": "^1.5.4",
     "@types/node": "^24.0.10",

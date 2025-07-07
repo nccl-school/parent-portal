@@ -2,7 +2,9 @@ import { z } from "zod/v4";
 
 // id source of truth
 // seed data is built off of this union
-export const RolesSchema = z.literal(["ADMIN", "STAFF", "USER"]);
+export const RolesSchema = z.literal(["ADMIN", "STAFF", "USER"], {
+  error: "A role is required",
+});
 export type Roles = z.infer<typeof RolesSchema>;
 
 export const RoleSchema = z.object({

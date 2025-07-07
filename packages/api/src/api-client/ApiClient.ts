@@ -128,7 +128,7 @@ export class ApiClient {
   }: {
     path: string;
     params?: [schema: P, data: z.infer<P>];
-    body: [schema: B, data: z.infer<B>];
+    body?: [schema: B, data: z.infer<B>];
     serializer: S;
     method: "POST" | "PUT";
   }): Promise<z.output<S>> {
@@ -141,17 +141,20 @@ export class ApiClient {
     const url = this.#makeURL({ pathname });
 
     // Assemble the request body
-    const [bodySchema, bodyRaw] = body;
-    const parsedBody = this.#validateSchema(bodySchema, bodyRaw, {
-      message: "Invalid request body",
-    });
-
-    // Fetch the data
-    const req = new Request(url, {
+    const reqInit: RequestInit = {
       method,
       headers,
-      body: JSON.stringify(parsedBody),
-    });
+    };
+    if (body) {
+      const [bodySchema, bodyRaw] = body;
+      const parsedBody = this.#validateSchema(bodySchema, bodyRaw, {
+        message: "Invalid request body",
+      });
+      reqInit.body = JSON.stringify(parsedBody);
+    }
+
+    // Fetch the data
+    const req = new Request(url, reqInit);
     const res = await fetch(req);
     const json = await res.json();
 

@@ -1,6 +1,7 @@
 import { css } from "@linaria/core";
 import {
   Button,
+  Callout,
   FormGroup,
   InputGroup,
   InputTags,
@@ -74,6 +75,13 @@ function ModalContent() {
           </InputGroup>
         </FormGroup>
         <FormGroup dxSubtitle="Select the role that the above users will have. It will determine what they can view and do inside of the platform">
+          {errors.role?.[0] && (
+            <Callout
+              variant="danger"
+              description={errors.role?.[0]}
+              style={{ marginBottom: makeRem(12) }}
+            />
+          )}
           <RoleRadioGroup />
         </FormGroup>
       </ModalBody>

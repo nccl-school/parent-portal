@@ -19,3 +19,5 @@ export const zCleanStringSchema = z
   .refine((val) => !leoProfanity.check(val), {
     message: "Please remove inappropriate language.",
   });
+
+export const zMessageSchema = z.object({ message: z.string() });

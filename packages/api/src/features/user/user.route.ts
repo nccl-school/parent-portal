@@ -5,10 +5,12 @@ import {
   GetUserParamsSchema,
   GetUserResponseSchema,
   InviteUsersRequestSchema,
+  ResendInviteUserParamsSchema,
   UpdateUserRoleParamsSchema,
   UpdateUserRoleRequestSchema,
   UpdateUserRoleResponseSchema,
   type InviteUsersResponse,
+  type ResendInviteUserResponse,
 } from "./user.utils.js";
 
 import { validate } from "../../middleware/middleware.validate.js";
@@ -86,6 +88,11 @@ user.put(
 );
 
 // POST /api/user/invite | Invite 1 or many users
+// - Fetches the invitation list
+// - Checks to see if any of the emails have been invited
+// - Throws a validation error if they have already been invited
+// - Invites the user in clerk
+// - Creates the user in the DB with an invited status
 user.post(
   "/invite",
   authorize("ADMIN"),
@@ -109,11 +116,10 @@ user.post(
       });
     }
 
-    await Promise.all(
+    const invitedUsers = await Promise.all(
       body.email_addresses.map((emailAddress) => {
-        clerk.invitations.createInvitation({
+        return clerk.invitations.createInvitation({
           emailAddress,
-          ignoreExisting: true,
           redirectUrl: env.NCCL_APP_URL.concat("/sign-up"),
           publicMetadata: {
             role: body.role,
@@ -122,9 +128,75 @@ user.post(
       })
     );
 
+    const db = c.get("db");
+    await db.user.createMany({
+      data: invitedUsers.map((invitedUser) => ({
+        email: invitedUser.emailAddress,
+        roleId: body.role,
+        invitationId: invitedUser.id,
+        invitedAt: new Date(),
+      })),
+    });
+
     const res: InviteUsersResponse = {
       message: `Successfully invited ${body.email_addresses.length} users.`,
       userCount: body.email_addresses.length,
+    };
+
+    return c.json(res);
+  }
+);
+
+// GET /api/user/resend-invite/:id | Reinvite a user to the app
+// - Get's the user
+// - Revokes the current invitation
+// - Re-invites the user
+// - Updates the user with the new invitationId
+user.get(
+  "/resend-invite/:id",
+  authorize("ADMIN"),
+  validate("param", ResendInviteUserParamsSchema),
+  async (c) => {
+    const params = c.req.valid("param");
+    const clerk = c.get("clerk");
+    const db = c.get("db");
+    const env = getEnvVar(c);
+
+    console.log("Resending invite to", params.id);
+
+    const user = await db.user.findUnique({
+      where: {
+        id: params.id,
+      },
+    });
+    if (!user) {
+      throw new ErrorSet.notFound("Unable to locate user to resend invite");
+    }
+    if (!user.invitationId) {
+      throw new ErrorSet.notFound(
+        "Unable to locate users invitation record to resend"
+      );
+    }
+
+    await clerk.invitations.revokeInvitation(user.invitationId);
+
+    const invite = await clerk.invitations.createInvitation({
+      emailAddress: user.email,
+      redirectUrl: env.NCCL_APP_URL.concat("/sign-up"),
+    });
+
+    await db.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        invitationId: invite.id,
+        invitedAt: new Date(),
+      },
+    });
+
+    const res: ResendInviteUserResponse = {
+      message: `Successfully re-invited ${user.email}`,
     };
 
     return c.json(res);

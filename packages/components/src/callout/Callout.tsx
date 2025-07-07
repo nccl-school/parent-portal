@@ -15,7 +15,7 @@ export type CalloutVariants =
   | "note";
 type CalloutPropsNative = PickNativeProps<
   "div",
-  "ref" | "className" | "children"
+  "ref" | "className" | "children" | "style"
 >;
 type CalloutPropsCustom = {
   variant: CalloutVariants;
@@ -80,9 +80,14 @@ export function Callout({
   description,
   omitIcon,
   children,
+  style,
 }: CalloutProps) {
   return (
-    <div ref={ref} className={classes(styles, variant, className)}>
+    <div
+      ref={ref}
+      className={classes(styles, variant, className)}
+      style={style}
+    >
       <div className="co-icon">
         {!omitIcon && (
           <Icon

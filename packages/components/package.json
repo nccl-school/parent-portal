@@ -61,6 +61,6 @@
     "mockingjson": "0.0.4",
     "storybook": "9.0.15",
     "typescript": "5.8.3",
-    "vite": "7.0.1"
+    "vite": "7.0.2"
   }
 }

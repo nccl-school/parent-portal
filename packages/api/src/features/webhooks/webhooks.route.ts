@@ -30,6 +30,7 @@ webhooks.post(
             firstName: event.data.first_name,
             lastName: event.data.last_name,
             email: event.data.email_addresses[0].email_address,
+            status: "ACTIVE",
             roleId: event.data.public_metadata.role ?? "USER",
           },
         });

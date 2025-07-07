@@ -24,6 +24,7 @@ import { AdminUserProfile } from "../admin-user-profile";
 import { dates } from "../../utils/client";
 import { placeholder } from "../../utils/isomorphic";
 import { AdminUserInvite } from "../admin-user-invite";
+import { UserStatusBadge } from "../user/UserStatusBadge";
 
 const styles = css`
   display: grid;
@@ -98,7 +99,7 @@ export function AdminUsersTable({ data }: { data: GetUserListResponse }) {
                 <TableHeadCol>Phone</TableHeadCol>
                 <TableHeadCol>Created On</TableHeadCol>
                 <TableHeadCol>Last Active</TableHeadCol>
-                <TableHeadCol>Locked</TableHeadCol>
+                <TableHeadCol>Status</TableHeadCol>
                 <TableHeadCol></TableHeadCol>
               </TableRow>
             </TableHead>
@@ -125,12 +126,7 @@ export function AdminUsersTable({ data }: { data: GetUserListResponse }) {
                 {/* {dates.format(user.lastActiveAt, "Relative")} */}
               </TableBodyCol>
               <TableBodyCol>
-                {placeholder}
-                {/* {user.locked ? (
-                  <Icon dxIcon="security-lock-stroke-standard" dxSize={16} />
-                ) : (
-                  placeholder
-                )} */}
+                <UserStatusBadge status={user.status} />
               </TableBodyCol>
               <TableBodyCol style={{ width: makeRem(24) }}>
                 <AdminUsersTableCellMenu {...user} />

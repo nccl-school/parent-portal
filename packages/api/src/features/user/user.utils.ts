@@ -1,15 +1,20 @@
 import { z } from "zod/v4";
 
-import { zDateStringSchema } from "../../utils/util.schema.js";
+import { zDateStringSchema, zMessageSchema } from "../../utils/util.schema.js";
 import { RoleSchema, RolesSchema } from "../role/role.utils.js";
+
+export const UserStatusSchema = z.literal(["INVITED", "ACTIVE", "DISABLED"]);
+export type UserStatus = z.infer<typeof UserStatusSchema>;
 
 export const UserSchema = z.object({
   id: z.string(),
   email: z.email(),
-  firstName: z.string(),
+  firstName: z.string().nullable(),
   lastName: z.string().nullable(),
   createdAt: zDateStringSchema,
   updatedAt: zDateStringSchema,
+  status: UserStatusSchema,
+  invitationId: z.string().nullable(),
   role: RoleSchema,
 });
 export type User = z.infer<typeof UserSchema>;
@@ -51,7 +56,8 @@ export const InviteUsersRequestSchema = z.object({
   email_addresses: z
     .string()
     .transform((val) => val.split(",").map((s) => s.trim()))
-    .pipe(z.array(z.email({ pattern: z.regexes.html5Email }))),
+    .pipe(z.array(z.email({ pattern: z.regexes.html5Email })))
+    .or(z.array(z.email({ pattern: z.regexes.html5Email }))),
   role: RolesSchema,
 });
 export type InviteUsersRequest = z.infer<typeof InviteUsersRequestSchema>;
@@ -60,3 +66,11 @@ export const InviteUsersResponseSchema = z.object({
   userCount: z.number(),
 });
 export type InviteUsersResponse = z.infer<typeof InviteUsersResponseSchema>;
+
+// ReInvite User
+export const ResendInviteUserParamsSchema = z.object({ id: z.string() });
+export type ResendInviteUserParams = z.infer<
+  typeof ResendInviteUserParamsSchema
+>;
+export const ResendInviteUserResponseSchema = zMessageSchema;
+export type ResendInviteUserResponse = z.infer<typeof zMessageSchema>;

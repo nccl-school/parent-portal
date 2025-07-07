@@ -46,6 +46,7 @@ export default [
     ...prefix("role", [route("/", "./api/api.role.getRoles.ts")]),
     ...prefix("user", [
       route("/invite", "./api/api.user.inviteUsers.ts"),
+      route("/resend-invite/:id", "./api/api.user.resendInvite.ts"),
       route(":id", "./api/api.user.getUserById.ts", [
         route("role", "./api/api.user.updateUserRole.ts"),
       ]),

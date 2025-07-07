@@ -9,7 +9,7 @@
     "typecheck": "react-router typegen && tsc -b"
   },
   "dependencies": {
-    "@clerk/react-router": "1.6.3",
+    "@clerk/react-router": "1.6.4",
     "@nccl/api": "workspace:^",
     "@nccl/components": "workspace:*",
     "@nccl/theme": "workspace:",
@@ -26,7 +26,7 @@
     "react-dom": "19.1.0",
     "react-router": "7.6.3",
     "ts-pattern": "^5.7.1",
-    "zod": "^3.25.71"
+    "zod": "^3.25.75"
   },
   "devDependencies": {
     "@babel/core": "7.28.0",
@@ -48,7 +48,7 @@
     "@wyw-in-js/vite": "0.7.0",
     "cross-env": "7.0.3",
     "typescript": "5.8.3",
-    "vite": "7.0.1",
+    "vite": "7.0.2",
     "vite-plugin-devtools-json": "^0.2.1",
     "vite-tsconfig-paths": "5.1.4"
   }
