@@ -1,4 +1,5 @@
 import { css } from "@linaria/core";
+import type { CreateSuggestionRequest } from "@nccl/api/client";
 import {
   Button,
   InputGroup,
@@ -15,7 +16,11 @@ import {
   useModalContext,
 } from "@nccl/components";
 import { makeRem } from "@nccl/theme";
-import { useFetcher } from "react-router";
+import { useEffect } from "react";
+import { href, useFetcher } from "react-router";
+
+import { getValidationErrors } from "../../utils/client";
+import type { action as createUserAction } from "../../api/api.suggestion.createSuggestion";
 
 export const SuggestionCreateDrawer = new ModalController({
   props: {
@@ -39,9 +44,23 @@ const styles = css`
 function ModalContent() {
   const { close: closeModal } = useModalContext();
 
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<typeof createUserAction>();
+  const errors = getValidationErrors<keyof CreateSuggestionRequest>(
+    fetcher.data
+  );
+
+  useEffect(() => {
+    if (!fetcher.data) return;
+    closeModal();
+    console.log(fetcher.data);
+  }, [closeModal, fetcher.data]);
+
   return (
-    <fetcher.Form className={className}>
+    <fetcher.Form
+      action={href("/api/suggestion")}
+      method="POST"
+      className={className}
+    >
       <ModalHeader>
         <ModalHeaderTitle>Create a suggestion</ModalHeaderTitle>
         <ModalHeaderSubtitle>
@@ -62,10 +81,14 @@ function ModalContent() {
         >
           <InputText
             dxLabel="Summary"
+            name="title"
+            dxError={errors.title?.[0]}
             dxHint={`e.g. "I'd love receive calendar reminders for upcoming school events."`}
           />
           <InputTextarea
             dxLabel="Description"
+            name="description"
+            dxError={errors?.description?.[0]}
             dxHint="Explain your suggestion in more detail"
           />
           <Callout
@@ -89,8 +112,9 @@ function ModalContent() {
           dxColor="secondary"
           dxSize="md"
           type="submit"
+          disabled={fetcher.state !== "idle"}
         >
-          submit
+          {fetcher.state !== "idle" ? "loading..." : "submit"}
         </Button>
       </ModalFooter>
     </fetcher.Form>
