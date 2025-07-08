@@ -184,6 +184,10 @@ user.get(
     const invite = await clerk.invitations.createInvitation({
       emailAddress: user.email,
       redirectUrl: env.NCCL_APP_URL.concat("/sign-up"),
+      publicMetadata: {
+        role: user.roleId,
+        email_address: user.email,
+      },
     });
 
     await db.user.update({
