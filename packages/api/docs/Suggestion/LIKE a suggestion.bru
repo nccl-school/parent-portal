@@ -1,11 +1,11 @@
 meta {
-  name: React to a suggestion | toggle LIKE
+  name: LIKE a suggestion
   type: http
   seq: 5
 }
 
 post {
-  url: {{API_DOMAIN}}/api/suggestion/:id/react
+  url: {{API_DOMAIN}}/api/suggestion/:id/vote
   body: json
   auth: inherit
 }

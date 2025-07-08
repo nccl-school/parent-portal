@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import type { z } from "zod/v4";
 
 import {
   CreateSuggestionReactionParams,
@@ -7,42 +8,57 @@ import {
   CreateSuggestionResponseSchema,
   GetSuggestionListResponseSchema,
   GetSuggestionParamsSchema,
-  GetSuggestionReactionsPerUserSchema,
   GetSuggestionResponseSchema,
   UpdateSuggestionParamsSchema,
   UpdateSuggestionRequestSchema,
-  type GetSuggestionListResponse,
 } from "./suggestion.utils.js";
 
 import { validate } from "../../middleware/middleware.validate.js";
 import { ErrorSet } from "../../utils/util.errors.js";
 import { serialize } from "../../utils/util.serialize.js";
-import { exhaustiveMatchGuard } from "../../utils/util.exhaustiveMatchGuard.js";
 
 export const suggestion = new Hono();
 
-// GET / api/suggestion | Get a list of suggestions
+// GET / api/suggestion | Get a list of suggestions, their votes and comment counts
 suggestion.get("/", async (c) => {
   const db = c.get("db");
+  const currentUser = c.get("currentUser");
   const suggestions = await db.suggestion.findMany({
     include: {
-      reactions: true,
+      votes: {
+        select: {
+          type: true,
+        },
+      },
     },
   });
 
-  const json: GetSuggestionListResponse = suggestions.map((suggestion) => {
-    const counts = { likes: 0, dislikes: 0, comments: 0 };
-    for (const r of suggestion.reactions) {
-      if (r.type === "LIKE") counts.likes++;
-      else if (r.type === "DISLIKE") counts.dislikes++;
-      else if (r.type === "COMMENT") counts.comments++;
-    }
-
-    return {
-      counts,
-      ...suggestion,
-    };
+  const currentUserSuggestionVotes = await db.suggestionVote.findMany({
+    where: {
+      createdById: currentUser.id,
+    },
   });
+  const CurrentUserVotesBySuggestion = new Map();
+  for (const vote of currentUserSuggestionVotes) {
+    CurrentUserVotesBySuggestion.set(vote.suggestionId, vote.type);
+  }
+
+  const json: z.infer<typeof GetSuggestionListResponseSchema> = suggestions.map(
+    (suggestion) => {
+      const counts = { likes: 0, dislikes: 0, comments: 0 };
+      for (const r of suggestion.votes) {
+        if (r.type === "LIKE") counts.likes++;
+        else if (r.type === "DISLIKE") counts.dislikes++;
+      }
+
+      return {
+        counts,
+        current_user_vote:
+          CurrentUserVotesBySuggestion.get(suggestion.id) ?? null,
+        ...suggestion,
+      };
+    }
+  );
 
   const data = await serialize(GetSuggestionListResponseSchema, json);
   return c.json(data);
@@ -125,60 +141,9 @@ suggestion.put(
   }
 );
 
-// GET /api/suggestion/:id/reactions | Get the reactions for a specific suggestion
-// TODO: Add serializer
-suggestion.get(
-  "/:id/reactions",
-  validate("param", GetSuggestionParamsSchema),
-  async (c) => {
-    const params = c.req.valid("param");
-    const db = c.get("db");
-
-    const comments = await db.suggestionReactions.findMany({
-      where: {
-        suggestionId: params.id,
-      },
-    });
-    return c.json(comments);
-  }
-);
-
-// GET /api/suggestion/:id/reactions/:user_id | Get a suggestion's reactions by user
-// TODO: Add serializer
-suggestion.get(
-  "/:id/reactions/:user_id",
-  validate("param", GetSuggestionReactionsPerUserSchema),
-  async (c) => {
-    const params = c.req.valid("param");
-    const db = c.get("db");
-
-    const comments = await db.suggestionReactions.findMany({
-      where: {
-        suggestionId: params.id,
-        createdById: params.user_id,
-      },
-      include: {
-        suggestion: {
-          select: {
-            id: true,
-          },
-        },
-        createdBy: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    });
-    return c.json(comments);
-  }
-);
-
-// POST /api/suggestion/:id/like | Like a suggestion
-// TODO: Add serializer
-// TODO: Validate body
+// POST /api/suggestion/:id/like |  a suggestion
 suggestion.post(
-  "/:id/react",
+  "/:id/vote",
   validate("param", CreateSuggestionReactionParams),
   validate("json", CreateSuggestionReactionRequest),
   async (c) => {
@@ -187,39 +152,29 @@ suggestion.post(
     const db = c.get("db");
     const currentUser = c.get("currentUser");
 
-    switch (body.type) {
-      case "LIKE":
-      case "DISLIKE": {
-        const record = await db.suggestionReactions.findUnique({
-          where: {
-            createdById_suggestionId_type: {
-              createdById: currentUser.id,
-              suggestionId: params.id,
-              type: body.type,
-            },
-          },
-        });
-        if (record) {
-          await db.suggestionReactions.delete({ where: { id: record.id } });
-        } else {
-          await db.suggestionReactions.create({
-            data: {
-              type: body.type,
-              suggestionId: params.id,
-              createdById: currentUser.id,
-            },
-          });
-        }
-        break;
-      }
-
-      case "COMMENT":
-        break;
-      default:
-        exhaustiveMatchGuard(body);
+    const record = await db.suggestionVote.findUnique({
+      where: {
+        createdById_suggestionId: {
+          createdById: currentUser.id,
+          suggestionId: params.id,
+        },
+      },
+    });
+    if (record) {
+      await db.suggestionVote.update({
+        where: { id: record.id },
+        data: { type: body.type },
+      });
+    } else {
+      await db.suggestionVote.create({
+        data: {
+          type: body.type,
+          suggestionId: params.id,
+          createdById: currentUser.id,
+        },
+      });
     }
-
-    return c.json(null, 203);
+    return c.body(null, 204);
   }
 );
 

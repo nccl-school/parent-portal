@@ -23,36 +23,34 @@ enum SuggestionStatus {
 }
 
 model Suggestion {
-  id          String                @id @default(cuid())
+  id          String           @id @default(cuid())
   title       String
   description String
-  status      SuggestionStatus      @default(DISCUSSION)
-  createdAt   DateTime              @default(now())
-  updatedAt   DateTime              @updatedAt
-  isAnonymous Boolean               @default(false)
-  createdBy   User                  @relation(fields: [createdById], references: [id])
+  status      SuggestionStatus @default(DISCUSSION)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  isAnonymous Boolean          @default(false)
+  createdBy   User             @relation(fields: [createdById], references: [id])
   createdById String
-  reactions   SuggestionReactions[]
+  votes       SuggestionVote[]
 }
 
-enum ReactionType {
+enum SuggestionVoteType {
   LIKE
   DISLIKE
-  COMMENT
 }
 
-model SuggestionReactions {
-  id           String       @id @default(cuid())
-  type         ReactionType
-  comment      String?
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  createdBy    User         @relation(fields: [createdById], references: [id])
+model SuggestionVote {
+  id           String             @id @default(cuid())
+  type         SuggestionVoteType
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  createdBy    User               @relation(fields: [createdById], references: [id])
   createdById  String
-  suggestion   Suggestion   @relation(fields: [suggestionId], references: [id])
+  suggestion   Suggestion         @relation(fields: [suggestionId], references: [id])
   suggestionId String
 
-  @@unique([createdById, suggestionId, type])
+  @@unique([createdById, suggestionId])
 }
 
 enum RoleName {
@@ -88,11 +86,11 @@ model User {
   invitationId String?    @unique
   invitedAt    DateTime?
 
-  memberships         OrganizationMembership[]
-  suggestions         Suggestion[]
-  students            UserStudent[]
-  groups              UserGroup[]
-  suggestionReactions SuggestionReactions[]
+  memberships     OrganizationMembership[]
+  suggestions     Suggestion[]
+  students        UserStudent[]
+  groups          UserGroup[]
+  suggestionVotes SuggestionVote[]
 }
 
 model UserGroup {

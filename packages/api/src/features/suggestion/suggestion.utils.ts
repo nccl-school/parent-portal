@@ -41,7 +41,10 @@ export const GetSuggestionListResponseSchema = z
       id: true,
       title: true,
       description: true,
+      isAnonymous: true,
     }).shape,
+    createdById: z.string(),
+    current_user_vote: z.literal(["LIKE", "DISLIKE", null]),
     counts: z.object({
       comments: z.number(),
       likes: z.number(),
@@ -49,9 +52,6 @@ export const GetSuggestionListResponseSchema = z
     }),
   })
   .array();
-export type GetSuggestionListResponse = z.infer<
-  typeof GetSuggestionListResponseSchema
->;
 
 // getSuggestion
 export const GetSuggestionParamsSchema = z.object({
@@ -97,17 +97,21 @@ export type UpdateSuggestionResponse = z.infer<
   typeof UpdateSuggestionResponseSchema
 >;
 
-export const GetSuggestionReactionsSchema = z.object({ id: z.string() });
+export const GetSuggestionVotesParamsSchema = z.object({ id: z.string() });
 
-export const GetSuggestionReactionsPerUserSchema = z.object({
-  ...GetSuggestionReactionsSchema.shape,
+// Get a suggestions reactions
+export const GetSuggestionVotesPerUserRequestSchema = z.object({
+  ...GetSuggestionVotesParamsSchema.shape,
   user_id: z.string(),
 });
+export const GetSuggestionVotesPerUserResponseSchema = z.record(
+  z.string(),
+  z.literal(["LIKE", "DISLIKE"])
+);
 
 // Create a suggestion reaction
 export const CreateSuggestionReactionParams = z.object({ id: z.string() });
 export const CreateSuggestionReactionRequest = z.discriminatedUnion("type", [
   z.object({ type: z.literal("LIKE") }),
   z.object({ type: z.literal("DISLIKE") }),
-  z.object({ type: z.literal("COMMENT"), comment: z.string() }),
 ]);
