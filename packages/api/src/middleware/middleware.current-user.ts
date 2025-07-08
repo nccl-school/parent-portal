@@ -36,14 +36,21 @@ export const currentUserMiddleware = createMiddleware(async (c, next) => {
     console.log("User does not have a clerk session");
     throw new ErrorSet.unauthenticated();
   }
+  const clerk_id = auth.userId;
   const email_address = auth.sessionClaims.metadata.email_address;
   console.log("Getting email_address from session", email_address);
-  console.log(auth);
 
   const db = c.get("db");
-  let user = await db.user.findUnique({
+  let user = await db.user.findFirst({
     where: {
-      email: email_address,
+      OR: [
+        {
+          email: email_address,
+        },
+        {
+          extId: clerk_id,
+        },
+      ],
     },
   });
   console.log("Checking if user exists in DB", user?.id);

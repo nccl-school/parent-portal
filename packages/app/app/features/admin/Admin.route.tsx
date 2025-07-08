@@ -28,6 +28,9 @@ const styles = css`
     max-width: ${makeCustom("container--max-width")};
     margin: 0 auto;
     width: 100%;
+    position: sticky;
+    top: ${makeCustom("header--height-desktop")};
+    height: ${makeCustom("admin--tab-height-desktop")};
   }
   .main {
     grid-area: main;

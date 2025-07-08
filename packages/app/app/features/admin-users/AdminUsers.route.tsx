@@ -1,7 +1,6 @@
 import type { Route } from "./+types/AdminUsers.route";
 import { AdminUsersTable } from "./AdminUsersTable";
 
-import { PageSection } from "../../components/page";
 import { getNCCLClient } from "../../utils/server";
 import { assembleTitle } from "../../utils/util.assemble-title";
 
@@ -16,9 +15,5 @@ export async function loader(args: Route.LoaderArgs) {
 }
 
 export default function AdminUsersRoute(args: Route.ComponentProps) {
-  return (
-    <PageSection>
-      <AdminUsersTable data={args.loaderData} />
-    </PageSection>
-  );
+  return <AdminUsersTable data={args.loaderData} />;
 }

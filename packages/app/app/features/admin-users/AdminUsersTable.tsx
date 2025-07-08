@@ -11,7 +11,7 @@ import {
   Button,
 } from "@nccl/components";
 import type { GetUserListResponse } from "@nccl/api/client";
-import { makeFontWeight, makeRem } from "@nccl/theme";
+import { makeCustom, makeFontWeight, makeRem } from "@nccl/theme";
 import { useMemo } from "react";
 import { css } from "@linaria/core";
 
@@ -32,6 +32,7 @@ const styles = css`
   align-items: center;
   width: 100%;
   height: ${makeRem(72)};
+  padding: 0 ${makeCustom("page--gutter-desktop")};
 
   & > div {
     &.left {
@@ -48,9 +49,14 @@ const styles = css`
   }
 `;
 
+const tableStyles = css`
+  height: 100%;
+  overflow: hidden;
+`;
+
 export function AdminUsersTable({ data }: { data: GetUserListResponse }) {
   return (
-    <>
+    <div className={tableStyles}>
       {useMemo(
         () => (
           <>
@@ -135,6 +141,6 @@ export function AdminUsersTable({ data }: { data: GetUserListResponse }) {
           ))}
         </TableBody>
       </Table>
-    </>
+    </div>
   );
 }

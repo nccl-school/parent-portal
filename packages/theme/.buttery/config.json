@@ -166,6 +166,11 @@
       "type": "rem",
       "description": "The max width of any container on the page",
       "value": 1128
+    },
+    "admin--tab-height-desktop": {
+      "type": "rem",
+      "description": "The height of the tabs on the admin screen in desktop",
+      "value": 40
     }
   }
 }

@@ -13,7 +13,8 @@ export type CustomTokens =
   | "table--cell-padding"
   | "table--body-cell-padding-v"
   | "modal--gutters"
-  | "container--max-width";
+  | "container--max-width"
+  | "admin--tab-height-desktop";
 export type MakeCustom = (tokenName: CustomTokens) => string | number;
 
 /**

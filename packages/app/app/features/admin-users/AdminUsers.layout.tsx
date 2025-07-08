@@ -11,7 +11,6 @@ export function meta() {
 }
 
 export default function AdminUsersLayout() {
-  console.log("🔁 AdminUsers.layout.tsx");
   return (
     <>
       <InnerPageHeader dxTitle="Users" />

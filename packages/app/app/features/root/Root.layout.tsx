@@ -32,6 +32,7 @@ const styles = css`
     grid-template-areas:
       "nav head"
       "nav main";
+    height: 100vh;
   }
 
   .layout-head {
