@@ -86,7 +86,5 @@ function isValidationError<T extends string>(
 export function getValidationErrors<K extends string>(
   data: unknown
 ): ErrorPayloadValidation<K>["errors"] {
-  console.log(data);
-
   return isValidationError<K>(data) ? data.errors : {};
 }
