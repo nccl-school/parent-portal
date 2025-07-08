@@ -24,34 +24,26 @@ webhooks.post(
 
     switch (event.type) {
       case "user.created":
-        await db.user.create({
-          data: {
-            id: event.data.id,
+      case "user.updated":
+        console.log("User created / updated in clerk. Upserting to DB");
+        console.log(event);
+        await db.user.upsert({
+          where: {
+            email: event.data.email_addresses[0].email_address,
+          },
+          create: {
+            extId: event.data.id,
             firstName: event.data.first_name,
             lastName: event.data.last_name,
             email: event.data.email_addresses[0].email_address,
             status: "ACTIVE",
             roleId: event.data.public_metadata.role ?? "USER",
           },
-        });
-        break;
-
-      case "user.updated":
-        await db.user.upsert({
-          where: {
-            id: event.data.id,
-          },
-          create: {
-            id: event.data.id,
-            firstName: event.data.first_name,
-            lastName: event.data.last_name,
-            email: event.data.email_addresses[0].email_address,
-            roleId: event.data.public_metadata.role ?? "USER",
-          },
           update: {
+            extId: event.data.id,
             firstName: event.data.first_name,
             lastName: event.data.last_name,
-            email: event.data.email_addresses[0].email_address,
+            status: "ACTIVE",
           },
         });
         break;

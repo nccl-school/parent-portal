@@ -77,12 +77,12 @@ user.put(
     await clerk.users.updateUser(param.id, {
       publicMetadata: {
         role: body.role,
+        email_address: user.email,
       },
     });
 
     // Invalidate the current user cache
     const data = await serialize(UpdateUserRoleResponseSchema, user);
-    console.log(user, data);
     return c.json(data);
   }
 );
@@ -123,6 +123,7 @@ user.post(
           redirectUrl: env.NCCL_APP_URL.concat("/sign-up"),
           publicMetadata: {
             role: body.role,
+            email_address: emailAddress,
           },
         });
       })

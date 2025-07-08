@@ -12,10 +12,12 @@ declare global {
   interface CustomJwtSessionClaims {
     metadata: {
       role?: Roles;
+      email_address: string;
     };
   }
   interface UserPublicMetadata {
     role?: Roles;
+    email_address: string;
   }
 }
 
@@ -34,25 +36,24 @@ export const currentUserMiddleware = createMiddleware(async (c, next) => {
     console.log("User does not have a clerk session");
     throw new ErrorSet.unauthenticated();
   }
-  const extId = auth.userId;
-  console.log("Getting extId from session", extId);
+  const email_address = auth.sessionClaims.metadata.email_address;
+  console.log("Getting email_address from session", email_address);
+  console.log(auth);
 
   const db = c.get("db");
-  console.log("Getting the user record from the db");
   let user = await db.user.findUnique({
     where: {
-      extId: auth.userId,
+      email: email_address,
     },
   });
-  console.log("Getting the user record from the db", user);
+  console.log("Checking if user exists in DB", user?.id);
 
   if (!user) {
     console.log("User does not exist in the DB");
     const clerk = c.get("clerk");
-    console.log("Getting the user records from clerk");
+    console.log("Fetching clerk user", auth.userId);
     const clerkUser = await clerk.users.getUser(auth.userId);
-    console.log("Getting the user record from clerk", clerkUser);
-    console.log("Creating the user in the db");
+    console.log("Creating db user");
     user = await db.user.create({
       data: {
         extId: auth.userId,
