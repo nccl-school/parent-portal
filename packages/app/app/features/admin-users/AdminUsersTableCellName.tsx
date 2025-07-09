@@ -21,7 +21,6 @@ const styles = css`
   .name {
     grid-area: name;
     font-weight: ${makeFontWeight("body-bold")};
-    font-size: ${makeRem(18)};
   }
 
   .email {
@@ -35,14 +34,14 @@ export function AdminUsersTableCellName(user: User) {
       <Avatar
         className="avatar"
         dxFirstName={user.firstName ?? ""}
-        dxSize={"xl"}
+        dxSize={"lg"}
         dxLastName={user.lastName ?? ""}
         // dxSrc={user.imageUrl ?? undefined}
       />
       <Typography dxVariant="body1" dxNode="div" className="name">
         {getUserName(user)}
       </Typography>
-      <Typography dxVariant="body2" dxNode="div" className="email">
+      <Typography dxVariant="body3" dxNode="div" className="email">
         {user.email ?? "No email address"}
       </Typography>
     </div>

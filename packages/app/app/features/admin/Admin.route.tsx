@@ -35,6 +35,7 @@ const styles = css`
   .main {
     grid-area: main;
     background: white;
+    overflow: hidden;
   }
 `;
 

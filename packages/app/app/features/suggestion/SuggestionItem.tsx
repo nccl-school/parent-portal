@@ -39,6 +39,10 @@ const styles = css`
     overflow: hidden;
     text-overflow: ellipsis;
     line-clamp: 3;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
   }
 
   button {

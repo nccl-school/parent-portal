@@ -155,7 +155,7 @@
     "table--body-cell-padding-v": {
       "type": "rem",
       "description": "The vertical padding on each body cell",
-      "value": 16
+      "value": 12
     },
     "modal--gutters": {
       "type": "rem",
