@@ -19,7 +19,7 @@ import { makeRem } from "@nccl/theme";
 import { useEffect } from "react";
 import { href, useFetcher } from "react-router";
 
-import { getValidationErrors } from "../../utils/client";
+import { getValidationErrors, isError } from "../../utils/client";
 import type { action as createUserAction } from "../../api/api.suggestion.createSuggestion";
 
 export const SuggestionCreateDrawer = new ModalController({
@@ -51,6 +51,7 @@ function ModalContent() {
 
   useEffect(() => {
     if (!fetcher.data) return;
+    if (isError(fetcher.data)) return;
     closeModal();
     console.log(fetcher.data);
   }, [closeModal, fetcher.data]);

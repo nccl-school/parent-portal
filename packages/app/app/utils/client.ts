@@ -83,6 +83,12 @@ function isValidationError<T extends string>(
   );
 }
 
+export function isError<T extends string>(
+  data: unknown
+): data is ErrorPayloads<T> {
+  return typeof data === "object" && data !== null && "error_type" in data;
+}
+
 export function getValidationErrors<K extends string>(
   data: unknown
 ): ErrorPayloadValidation<K>["errors"] {
