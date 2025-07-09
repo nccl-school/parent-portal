@@ -19,7 +19,7 @@ export function SuggestionAdd() {
   return (
     <div className={styles}>
       <SuggestionCreateDrawer.Component />
-      <Typography dxNode="div" dxVariant="caption">
+      <Typography dxNode="div" dxVariant="body3">
         Can't find your idea? Feel free to create a new one!
       </Typography>
       <Button

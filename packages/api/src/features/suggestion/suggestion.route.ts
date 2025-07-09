@@ -36,12 +36,12 @@ suggestion.get(
               OR: [
                 {
                   title: {
-                    search: query.search ?? "",
+                    search: `'${query.search}'`,
                   },
                 },
                 {
                   description: {
-                    search: query.search ?? "",
+                    search: `'${query.search}'`,
                   },
                 },
               ],

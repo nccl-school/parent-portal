@@ -7,6 +7,7 @@ import { serializeError } from "./utils/util.errors.js";
 export * from "./features/role/role.utils.js";
 export * from "./features/suggestion/suggestion.utils.js";
 export * from "./features/user/user.utils.js";
+export { type ErrorResponse } from "./utils/util.errors.js";
 
 export class NCCLClient {
   suggestion: SuggestionClient;

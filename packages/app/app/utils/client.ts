@@ -1,4 +1,6 @@
-import type { ErrorPayloads, ErrorPayloadValidation } from "./server";
+import type { ErrorResponse } from "@nccl/api/client";
+
+import type { ErrorPayloadValidation } from "./server";
 
 export class DateFactory {
   private static instance: DateFactory;
@@ -79,13 +81,11 @@ function isValidationError<T extends string>(
     typeof data === "object" &&
     data !== null &&
     "error_type" in data &&
-    (data as ErrorPayloads).error_type === "validation"
+    (data as ErrorResponse).error_type === "validation"
   );
 }
 
-export function isError<T extends string>(
-  data: unknown
-): data is ErrorPayloads<T> {
+export function isError(data: unknown): data is ErrorResponse {
   return typeof data === "object" && data !== null && "error_type" in data;
 }
 
@@ -93,4 +93,20 @@ export function getValidationErrors<K extends string>(
   data: unknown
 ): ErrorPayloadValidation<K>["errors"] {
   return isValidationError<K>(data) ? data.errors : {};
+}
+
+type ParseFetcherResult<D> =
+  | { status: "loading" }
+  | { status: "error"; error: Extract<D, ErrorResponse> }
+  | { status: "ok"; data: Exclude<D, ErrorResponse> };
+
+export function parseFetcherData<D>(data: D): ParseFetcherResult<D> {
+  if (typeof data === "undefined") {
+    return { status: "loading" };
+  }
+  if (isError(data)) {
+    return { status: "error", error: data as Extract<D, ErrorResponse> };
+  }
+
+  return { status: "ok", data: data as Exclude<D, ErrorResponse> };
 }

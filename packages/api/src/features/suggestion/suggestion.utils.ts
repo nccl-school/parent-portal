@@ -1,6 +1,7 @@
 import z from "zod/v4";
 
 import {
+  createQuerySchema,
   zCleanStringSchema,
   zDateStringSchema,
   zQueryParam,
@@ -30,7 +31,7 @@ export const SuggestionSchema = z.object({
 export type Suggestion = z.infer<typeof SuggestionSchema>;
 
 // getSuggestionList
-export const GetSuggestionListQuerySchema = z.object({
+export const GetSuggestionListQuerySchema = createQuerySchema({
   search: zQueryParam,
 });
 export type GetSuggestionListQuery = z.infer<

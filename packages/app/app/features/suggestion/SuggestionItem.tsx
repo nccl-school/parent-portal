@@ -3,7 +3,7 @@ import type { GetSuggestionListResponse } from "@nccl/api/client";
 import { Icon, Typography } from "@nccl/components";
 import { makeColor, makeRem, makeReset } from "@nccl/theme";
 import { classes } from "@stratum-ui/core/utils";
-import { useFetcher } from "react-router";
+import { href, useFetcher } from "react-router";
 
 export type SuggestionItemProps = {
   title: string;
@@ -80,7 +80,7 @@ export function SuggestionItem({
   return (
     <fetcher.Form
       className={styles}
-      action="/api/suggestion/vote"
+      action={href("/api/suggestion/:id/vote", { id })}
       method="POST"
     >
       <input name="suggestion_id" value={id} type="hidden" />

@@ -45,13 +45,15 @@ export default [
   ...prefix("api", [
     ...prefix("role", [route("/", "./api/api.role.getRoles.ts")]),
     ...prefix("suggestion", [
-      route("/", "./api/api.suggestion.createSuggestion.ts"),
-      route("/vote", "./api/api.suggestion.vote.ts"),
+      route("/", "./api/api.suggestion.getManyOrCreateUnique.ts"),
+      route("/:id", "./api/api.suggestion.getOrUpdateUnique.ts", [
+        route("vote", "./api/api.suggestion.voteOnUnique.ts"),
+      ]),
     ]),
     ...prefix("user", [
       route("/invite", "./api/api.user.inviteUsers.ts"),
       route("/resend-invite/:id", "./api/api.user.resendInvite.ts"),
-      route(":id", "./api/api.user.getUserById.ts", [
+      route("/:id", "./api/api.user.getUserById.ts", [
         route("role", "./api/api.user.updateUserRole.ts"),
       ]),
     ]),

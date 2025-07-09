@@ -1,14 +1,9 @@
 import type { Route } from "./+types/Home.index";
+import { HomeSuggestions } from "./HomeSuggestions";
 
 import { PageHeader, PageSection } from "../../components/page";
 import { assembleTitle } from "../../utils/util.assemble-title";
-import { getCurrentUser, getNCCLClient } from "../../utils/server";
-import {
-  Suggestion,
-  SuggestionAdd,
-  SuggestionItem,
-  SuggestionSearch,
-} from "../suggestion";
+import { getCurrentUser } from "../../utils/server";
 
 export function meta() {
   return [
@@ -18,30 +13,18 @@ export function meta() {
 }
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
-  const ncclClient = getNCCLClient(loaderArgs);
-  const suggestions = await ncclClient.suggestion.getSuggestionList();
   const user = await getCurrentUser(loaderArgs);
-  return { firstName: user.firstName, suggestions };
+  return { firstName: user.firstName };
 }
 
 export default function HomeIndexRoute({
-  loaderData: { firstName, suggestions },
+  loaderData: { firstName },
 }: Route.ComponentProps) {
   return (
     <>
       <PageHeader dxTitle={`Welcome, ${firstName}!`} />
       <PageSection>
-        <Suggestion>
-          <SuggestionSearch />
-          <ul>
-            {suggestions.map((suggestion) => (
-              <li key={suggestion.id}>
-                <SuggestionItem {...suggestion} />
-              </li>
-            ))}
-          </ul>
-          <SuggestionAdd />
-        </Suggestion>
+        <HomeSuggestions />
       </PageSection>
       ;
     </>
