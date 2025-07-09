@@ -4,6 +4,7 @@ import {
   createQuerySchema,
   zCleanStringSchema,
   zDateStringSchema,
+  zMessageSchema,
   zQueryParam,
 } from "../../utils/util.schema.js";
 import { UserSchema } from "../user/user.utils.js";
@@ -67,16 +68,12 @@ export type GetSuggestionParams = z.infer<typeof GetSuggestionParamsSchema>;
 export const GetSuggestionResponseSchema = SuggestionSchema.omit({
   comments: true,
 });
-export type GetSuggestionResponse = z.infer<typeof GetSuggestionResponseSchema>;
 
 // createSuggestion
 export const CreateSuggestionRequestSchema = SuggestionSchema.pick({
   title: true,
   description: true,
 });
-export type CreateSuggestionRequest = z.infer<
-  typeof CreateSuggestionRequestSchema
->;
 export const CreateSuggestionResponseSchema = SuggestionSchema.omit({
   comments: true,
 });
@@ -95,13 +92,7 @@ export const UpdateSuggestionRequestSchema = SuggestionSchema.omit({
   createdAt: true,
   updatedAt: true,
 });
-export type UpdateSuggestionRequest = z.infer<
-  typeof UpdateSuggestionRequestSchema
->;
 export const UpdateSuggestionResponseSchema = SuggestionSchema;
-export type UpdateSuggestionResponse = z.infer<
-  typeof UpdateSuggestionResponseSchema
->;
 
 export const GetSuggestionVotesParamsSchema = z.object({ id: z.string() });
 
@@ -114,3 +105,4 @@ export const CreateSuggestionVoteParams = z.object({ id: z.string() });
 export const CreateSuggestionVoteRequest = z.object({
   type: SuggestionVoteTypeSchema,
 });
+export const CreateSuggestionVoteResponse = zMessageSchema;

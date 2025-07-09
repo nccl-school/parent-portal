@@ -1,9 +1,12 @@
-import type { ZodError as Zod4Error, ZodType } from "zod/v4";
+import type { z, ZodError as Zod4Error, ZodType } from "zod/v4";
 import { flattenError } from "zod/v4";
 
 import { ErrorSet } from "./util.errors.js";
 
-export async function serialize<S extends ZodType, D>(schema: S, data: D) {
+export async function serialize<S extends ZodType>(
+  schema: S,
+  data: z.infer<S>
+) {
   try {
     const json = schema.parseAsync(data);
     return json;

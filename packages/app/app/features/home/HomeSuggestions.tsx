@@ -1,7 +1,7 @@
 import { href, useFetcher } from "react-router";
 import { useCallback, useEffect, useRef, type ChangeEventHandler } from "react";
-import { match } from "ts-pattern";
-import { Callout } from "@nccl/components";
+import { match, P } from "ts-pattern";
+import { Callout, Typography } from "@nccl/components";
 
 import { parseFetcherData } from "../../utils/client";
 import type { loader } from "../../api/api.suggestion.getManyOrCreateUnique";
@@ -53,15 +53,23 @@ export function HomeSuggestions() {
               />
             );
           })
-          .with({ status: "ok" }, (state) => {
-            return (state.data ?? []).map((suggestion) => (
+          .with({ status: "ok" }, ({ data = [] }) => {
+            if (data.length === 0) {
+              return (
+                <div>
+                  <Typography dxVariant="body1" dxNode="div">
+                    No suggestions found
+                  </Typography>
+                </div>
+              );
+            }
+            return (data ?? []).map((suggestion) => (
               <li key={suggestion.id}>
                 <SuggestionItem {...suggestion} />
               </li>
             ));
           })
           .exhaustive()}
-        {}
       </ul>
       <SuggestionAdd />
     </Suggestion>

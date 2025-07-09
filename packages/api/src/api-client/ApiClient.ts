@@ -53,7 +53,12 @@ export class ApiClient {
 
   #serialize<S>(schema: ZodType<S>, res: unknown) {
     return this.#validateSchema(schema, res, {
-      message: "Client re-serialization error",
+      message: `🚨 Client re-serialization error 🚨
+  
+There was an error when trying to serialize what was returned from the server:
+  - Ensure that the endpoint serializer is being awaited
+  - Ensure that the correct data is being returned
+`,
     });
   }
 

@@ -2,19 +2,17 @@ import type z from "zod/v4";
 
 import {
   CreateSuggestionRequestSchema,
-  GetSuggestionListQuerySchema as GetSuggestionListQuerySchema,
+  GetSuggestionListQuerySchema,
   GetSuggestionListResponseSchema,
   GetSuggestionParamsSchema,
   GetSuggestionResponseSchema,
   UpdateSuggestionParamsSchema,
   UpdateSuggestionRequestSchema,
   UpdateSuggestionResponseSchema,
-  type CreateSuggestionRequest,
-  type GetSuggestionListQuery,
-  type UpdateSuggestionRequest,
   CreateSuggestionVoteParams,
   CreateSuggestionVoteRequest,
   CreateSuggestionResponseSchema,
+  CreateSuggestionVoteResponse,
 } from "./suggestion.utils.js";
 
 import {
@@ -30,7 +28,9 @@ export class SuggestionClient extends ApiClient {
   /**
    * Get a list of suggestions
    */
-  public async getSuggestionList(query?: GetSuggestionListQuery) {
+  public async getSuggestionList(
+    query?: z.infer<typeof GetSuggestionListQuerySchema>
+  ) {
     return this._get({
       path: `/`,
       query: [GetSuggestionListQuerySchema, query],
@@ -52,7 +52,9 @@ export class SuggestionClient extends ApiClient {
   /**
    * Create a new suggestion
    */
-  async createSuggestion(suggestion: CreateSuggestionRequest) {
+  async createSuggestion(
+    suggestion: z.infer<typeof CreateSuggestionRequestSchema>
+  ) {
     return this._mutateJSON({
       method: "POST",
       path: "/",
@@ -64,7 +66,10 @@ export class SuggestionClient extends ApiClient {
   /**
    * Updates an existing suggestion
    */
-  async updateSuggestion(id: string, suggestion: UpdateSuggestionRequest) {
+  async updateSuggestion(
+    id: string,
+    suggestion: z.infer<typeof UpdateSuggestionRequestSchema>
+  ) {
     return this._mutateJSON({
       method: "PUT",
       path: "/:id",
@@ -86,7 +91,7 @@ export class SuggestionClient extends ApiClient {
       path: "/:id/vote",
       params: [CreateSuggestionVoteParams, { id: suggestionId }],
       body: [CreateSuggestionVoteRequest, body],
-      serializer: CreateSuggestionResponseSchema,
+      serializer: CreateSuggestionVoteResponse,
     });
   }
 }

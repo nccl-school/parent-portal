@@ -12,6 +12,7 @@ import {
   UpdateSuggestionParamsSchema,
   UpdateSuggestionRequestSchema,
   GetSuggestionListQuerySchema,
+  CreateSuggestionVoteResponse,
 } from "./suggestion.utils.js";
 
 import { validate } from "../../middleware/middleware.validate.js";
@@ -163,8 +164,15 @@ suggestion.put(
     const suggestion = await db.suggestion.update({
       where: { id },
       data: body,
+      include: {
+        createdBy: {
+          include: {
+            role: true,
+          },
+        },
+      },
     });
-    const data = serialize(GetSuggestionResponseSchema, suggestion);
+    const data = await serialize(GetSuggestionResponseSchema, suggestion);
     return c.json(data);
   }
 );
@@ -191,7 +199,10 @@ suggestion.post(
     // record exists, but the submission was the same so we toggle
     if (record && record.type === body.type) {
       await db.suggestionVote.delete({ where: { id: record.id } });
-      return c.body(null, 204);
+      const data = await serialize(CreateSuggestionVoteResponse, {
+        message: `Successfully removed vote for suggestion ${params.id}`,
+      });
+      return c.json(data);
     }
     // record exists, but the submission is different so we update
     if (record) {
@@ -199,7 +210,10 @@ suggestion.post(
         where: { id: record.id },
         data: { type: body.type },
       });
-      return c.body(null, 204);
+      const data = await serialize(CreateSuggestionVoteResponse, {
+        message: `Successfully changed vote from ${record.type} to ${body.type} for suggestion ${params.id}`,
+      });
+      return c.json(data);
     }
     // no record so we create one
     await db.suggestionVote.create({
@@ -209,7 +223,10 @@ suggestion.post(
         createdById: currentUser.id,
       },
     });
-    return c.body(null, 204);
+    const data = await serialize(CreateSuggestionVoteResponse, {
+      message: `Successfully voted ${body.type} for suggestion ${params.id}`,
+    });
+    return c.json(data);
   }
 );
 

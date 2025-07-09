@@ -4,15 +4,13 @@ import type { ZodRawShape } from "zod/v4";
 
 export const zDateStringSchema = z.preprocess(
   (val) => {
-    // If it's a Date instance, convert to ISO string
-    if (val instanceof Date) {
-      return val.toISOString();
+    if (typeof val === "string" || val instanceof Date) {
+      const date = new Date(val);
+      return isNaN(date.getTime()) ? undefined : val;
     }
-    return val;
+    return undefined;
   },
-  z.string().refine((val) => !isNaN(Date.parse(val)), {
-    message: "Invalid date string",
-  })
+  z.union([z.string(), z.date()])
 );
 
 export const zQueryParam = z

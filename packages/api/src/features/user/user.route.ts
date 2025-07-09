@@ -5,12 +5,12 @@ import {
   GetUserParamsSchema,
   GetUserResponseSchema,
   InviteUsersRequestSchema,
+  InviteUsersResponseSchema,
   ResendInviteUserParamsSchema,
+  ResendInviteUserResponseSchema,
   UpdateUserRoleParamsSchema,
   UpdateUserRoleRequestSchema,
   UpdateUserRoleResponseSchema,
-  type InviteUsersResponse,
-  type ResendInviteUserResponse,
 } from "./user.utils.js";
 
 import { validate } from "../../middleware/middleware.validate.js";
@@ -41,10 +41,11 @@ user.get("/:id", validate("param", GetUserParamsSchema), async (c) => {
     where: {
       id: params.id,
     },
-    include: {
-      role: {},
-    },
   });
+  if (!user) {
+    throw new ErrorSet.notFound("");
+  }
+
   const data = await serialize(GetUserResponseSchema, user);
   return c.json(data);
 });
@@ -139,12 +140,12 @@ user.post(
       })),
     });
 
-    const res: InviteUsersResponse = {
+    const data = await serialize(InviteUsersResponseSchema, {
       message: `Successfully invited ${body.email_addresses.length} users.`,
       userCount: body.email_addresses.length,
-    };
+    });
 
-    return c.json(res);
+    return c.json(data);
   }
 );
 
@@ -200,11 +201,11 @@ user.get(
       },
     });
 
-    const res: ResendInviteUserResponse = {
+    const data = await serialize(ResendInviteUserResponseSchema, {
       message: `Successfully re-invited ${user.email}`,
-    };
+    });
 
-    return c.json(res);
+    return c.json(data);
   }
 );
 

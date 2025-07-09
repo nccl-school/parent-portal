@@ -1,5 +1,4 @@
 import { css } from "@linaria/core";
-import type { CreateSuggestionRequest } from "@nccl/api/client";
 import {
   Button,
   InputGroup,
@@ -18,9 +17,10 @@ import {
 import { makeRem } from "@nccl/theme";
 import { useEffect } from "react";
 import { href, useFetcher } from "react-router";
+import type { CreateSuggestionResponse } from "@nccl/api/client";
 
 import { getValidationErrors, isError } from "../../utils/client";
-import type { action as createUserAction } from "../../api/api.suggestion.createSuggestion";
+import type { action as createUserAction } from "../../api/api.suggestion.getManyOrCreateUnique";
 
 export const SuggestionCreateDrawer = new ModalController({
   props: {
@@ -45,7 +45,7 @@ function ModalContent() {
   const { close: closeModal } = useModalContext();
 
   const fetcher = useFetcher<typeof createUserAction>();
-  const errors = getValidationErrors<keyof CreateSuggestionRequest>(
+  const errors = getValidationErrors<keyof CreateSuggestionResponse>(
     fetcher.data
   );
 

@@ -1,3 +1,5 @@
+import type z from "zod/v4";
+
 import {
   GetUserListResponseSchema,
   GetUserParamsSchema,
@@ -9,8 +11,6 @@ import {
   UpdateUserRoleParamsSchema,
   UpdateUserRoleRequestSchema,
   UpdateUserRoleResponseSchema,
-  type InviteUsersRequest,
-  type UpdateUserRoleRequest,
 } from "./user.utils.js";
 
 import {
@@ -48,7 +48,10 @@ export class UserClient extends ApiClient {
   /**
    * Update a users role
    */
-  public async updateUserRole(userId: string, body: UpdateUserRoleRequest) {
+  public async updateUserRole(
+    userId: string,
+    body: z.infer<typeof UpdateUserRoleRequestSchema>
+  ) {
     return this._mutateJSON({
       method: "PUT",
       path: "/:id/role",
@@ -62,7 +65,7 @@ export class UserClient extends ApiClient {
    * Invite a group of users by email that share
    * the same role
    */
-  public async inviteUsers(body: InviteUsersRequest) {
+  public async inviteUsers(body: z.infer<typeof InviteUsersRequestSchema>) {
     return this._mutateJSON({
       method: "POST",
       path: "/invite",
