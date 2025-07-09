@@ -36,11 +36,7 @@ export default function HomeIndexRoute({
           <ul>
             {suggestions.map((suggestion) => (
               <li key={suggestion.id}>
-                <SuggestionItem
-                  title={suggestion.title}
-                  description={suggestion.description}
-                  voteCount={10}
-                />
+                <SuggestionItem {...suggestion} />
               </li>
             ))}
           </ul>

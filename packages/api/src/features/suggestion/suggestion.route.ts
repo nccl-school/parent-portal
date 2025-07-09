@@ -2,8 +2,8 @@ import { Hono } from "hono";
 import type { z } from "zod/v4";
 
 import {
-  CreateSuggestionReactionParams,
-  CreateSuggestionReactionRequest,
+  CreateSuggestionVoteParams,
+  CreateSuggestionVoteRequest,
   CreateSuggestionRequestSchema,
   CreateSuggestionResponseSchema,
   GetSuggestionListResponseSchema,
@@ -141,11 +141,11 @@ suggestion.put(
   }
 );
 
-// POST /api/suggestion/:id/like |  a suggestion
+// POST /api/suggestion/:id/vote | Vote on a suggestion
 suggestion.post(
   "/:id/vote",
-  validate("param", CreateSuggestionReactionParams),
-  validate("json", CreateSuggestionReactionRequest),
+  validate("param", CreateSuggestionVoteParams),
+  validate("json", CreateSuggestionVoteRequest),
   async (c) => {
     const params = c.req.valid("param");
     const body = c.req.valid("json");
@@ -160,20 +160,27 @@ suggestion.post(
         },
       },
     });
+    // record exists, but the submission was the same so we toggle
+    if (record && record.type === body.type) {
+      await db.suggestionVote.delete({ where: { id: record.id } });
+      return c.body(null, 204);
+    }
+    // record exists, but the submission is different so we update
     if (record) {
       await db.suggestionVote.update({
         where: { id: record.id },
         data: { type: body.type },
       });
-    } else {
-      await db.suggestionVote.create({
-        data: {
-          type: body.type,
-          suggestionId: params.id,
-          createdById: currentUser.id,
-        },
-      });
+      return c.body(null, 204);
     }
+    // no record so we create one
+    await db.suggestionVote.create({
+      data: {
+        type: body.type,
+        suggestionId: params.id,
+        createdById: currentUser.id,
+      },
+    });
     return c.body(null, 204);
   }
 );

@@ -1,6 +1,7 @@
+import type z from "zod/v4";
+
 import {
   CreateSuggestionRequestSchema,
-  CreateSuggestionResponseSchema,
   GetSuggestionListQuerySchema as GetSuggestionListQuerySchema,
   GetSuggestionListResponseSchema,
   GetSuggestionParamsSchema,
@@ -11,6 +12,9 @@ import {
   type CreateSuggestionRequest,
   type GetSuggestionListQuery,
   type UpdateSuggestionRequest,
+  CreateSuggestionVoteParams,
+  CreateSuggestionVoteRequest,
+  CreateSuggestionResponseSchema,
 } from "./suggestion.utils.js";
 
 import {
@@ -67,6 +71,22 @@ export class SuggestionClient extends ApiClient {
       params: [UpdateSuggestionParamsSchema, { id }],
       body: [UpdateSuggestionRequestSchema, suggestion],
       serializer: UpdateSuggestionResponseSchema,
+    });
+  }
+
+  /**
+   * Vote on a suggestion
+   */
+  async likeOrDislike(
+    suggestionId: string,
+    body: z.infer<typeof CreateSuggestionVoteRequest>
+  ) {
+    return this._mutateJSON({
+      method: "POST",
+      path: "/:id/vote",
+      params: [CreateSuggestionVoteParams, { id: suggestionId }],
+      body: [CreateSuggestionVoteRequest, body],
+      serializer: CreateSuggestionResponseSchema,
     });
   }
 }

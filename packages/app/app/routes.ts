@@ -46,6 +46,7 @@ export default [
     ...prefix("role", [route("/", "./api/api.role.getRoles.ts")]),
     ...prefix("suggestion", [
       route("/", "./api/api.suggestion.createSuggestion.ts"),
+      route("/vote", "./api/api.suggestion.vote.ts"),
     ]),
     ...prefix("user", [
       route("/invite", "./api/api.user.inviteUsers.ts"),
