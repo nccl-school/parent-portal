@@ -14,6 +14,11 @@ export const zDateStringSchema = z.preprocess(
   })
 );
 
+export const zQueryParam = z
+  .string()
+  .optional()
+  .transform((val) => (val ? val.replace(/['&|!:*\\]/g, " ") : undefined));
+
 export const zCleanStringSchema = z
   .string()
   .refine((val) => !leoProfanity.check(val), {

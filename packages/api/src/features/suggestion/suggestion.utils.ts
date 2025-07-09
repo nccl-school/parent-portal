@@ -3,6 +3,7 @@ import z from "zod/v4";
 import {
   zCleanStringSchema,
   zDateStringSchema,
+  zQueryParam,
 } from "../../utils/util.schema.js";
 import { UserSchema } from "../user/user.utils.js";
 
@@ -30,7 +31,7 @@ export type Suggestion = z.infer<typeof SuggestionSchema>;
 
 // getSuggestionList
 export const GetSuggestionListQuerySchema = z.object({
-  search: z.string().optional(),
+  search: zQueryParam,
 });
 export type GetSuggestionListQuery = z.infer<
   typeof GetSuggestionListQuerySchema

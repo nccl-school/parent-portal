@@ -11,6 +11,7 @@ import {
   GetSuggestionResponseSchema,
   UpdateSuggestionParamsSchema,
   UpdateSuggestionRequestSchema,
+  GetSuggestionListQuerySchema,
 } from "./suggestion.utils.js";
 
 import { validate } from "../../middleware/middleware.validate.js";
@@ -20,52 +21,76 @@ import { serialize } from "../../utils/util.serialize.js";
 export const suggestion = new Hono();
 
 // GET / api/suggestion | Get a list of suggestions, their votes and comment counts
-suggestion.get("/", async (c) => {
-  const db = c.get("db");
-  const currentUser = c.get("currentUser");
-  const suggestions = await db.suggestion.findMany({
-    include: {
-      votes: {
-        select: {
-          type: true,
+suggestion.get(
+  "/",
+  validate("query", GetSuggestionListQuerySchema),
+  async (c) => {
+    const db = c.get("db");
+    const query = c.req.valid("query");
+    const currentUser = c.get("currentUser");
+
+    const suggestions = await db.suggestion.findMany({
+      ...(query.search
+        ? {
+            where: {
+              OR: [
+                {
+                  title: {
+                    search: query.search ?? "",
+                  },
+                },
+                {
+                  description: {
+                    search: query.search ?? "",
+                  },
+                },
+              ],
+            },
+          }
+        : {}),
+      include: {
+        votes: {
+          select: {
+            type: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  const currentUserSuggestionVotes = await db.suggestionVote.findMany({
-    where: {
-      createdById: currentUser.id,
-    },
-  });
-  const CurrentUserVotesBySuggestion = new Map();
-  for (const vote of currentUserSuggestionVotes) {
-    CurrentUserVotesBySuggestion.set(vote.suggestionId, vote.type);
+    const currentUserSuggestionVotes = await db.suggestionVote.findMany({
+      where: {
+        createdById: currentUser.id,
+      },
+    });
+    const CurrentUserVotesBySuggestion = new Map();
+    for (const vote of currentUserSuggestionVotes) {
+      CurrentUserVotesBySuggestion.set(vote.suggestionId, vote.type);
+    }
+
+    const json: z.infer<typeof GetSuggestionListResponseSchema> = suggestions
+      .map((suggestion) => {
+        const counts = { likes: 0, dislikes: 0, comments: 0 };
+        for (const r of suggestion.votes) {
+          if (r.type === "LIKE") counts.likes++;
+          else if (r.type === "DISLIKE") counts.dislikes++;
+        }
+
+        return {
+          counts: {
+            ...counts,
+            total: counts.likes - counts.dislikes,
+          },
+          current_user_vote:
+            CurrentUserVotesBySuggestion.get(suggestion.id) ?? null,
+          ...suggestion,
+        };
+      })
+      .sort((a, b) => b.counts.total - a.counts.total);
+
+    const data = await serialize(GetSuggestionListResponseSchema, json);
+    return c.json(data);
   }
-
-  const json: z.infer<typeof GetSuggestionListResponseSchema> = suggestions
-    .map((suggestion) => {
-      const counts = { likes: 0, dislikes: 0, comments: 0 };
-      for (const r of suggestion.votes) {
-        if (r.type === "LIKE") counts.likes++;
-        else if (r.type === "DISLIKE") counts.dislikes++;
-      }
-
-      return {
-        counts: {
-          ...counts,
-          total: counts.likes - counts.dislikes,
-        },
-        current_user_vote:
-          CurrentUserVotesBySuggestion.get(suggestion.id) ?? null,
-        ...suggestion,
-      };
-    })
-    .sort((a, b) => b.counts.total - a.counts.total);
-
-  const data = await serialize(GetSuggestionListResponseSchema, json);
-  return c.json(data);
-});
+);
 
 // POST /api/suggestion | Create a suggestion
 suggestion.post(
