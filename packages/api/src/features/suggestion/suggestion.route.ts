@@ -43,8 +43,8 @@ suggestion.get("/", async (c) => {
     CurrentUserVotesBySuggestion.set(vote.suggestionId, vote.type);
   }
 
-  const json: z.infer<typeof GetSuggestionListResponseSchema> = suggestions.map(
-    (suggestion) => {
+  const json: z.infer<typeof GetSuggestionListResponseSchema> = suggestions
+    .map((suggestion) => {
       const counts = { likes: 0, dislikes: 0, comments: 0 };
       for (const r of suggestion.votes) {
         if (r.type === "LIKE") counts.likes++;
@@ -52,13 +52,16 @@ suggestion.get("/", async (c) => {
       }
 
       return {
-        counts,
+        counts: {
+          ...counts,
+          total: counts.likes - counts.dislikes,
+        },
         current_user_vote:
           CurrentUserVotesBySuggestion.get(suggestion.id) ?? null,
         ...suggestion,
       };
-    }
-  );
+    })
+    .sort((a, b) => b.counts.total - a.counts.total);
 
   const data = await serialize(GetSuggestionListResponseSchema, json);
   return c.json(data);

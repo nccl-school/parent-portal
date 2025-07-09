@@ -49,6 +49,7 @@ export const GetSuggestionListResponseSchema = z
       comments: z.number(),
       likes: z.number(),
       dislikes: z.number(),
+      total: z.number(),
     }),
   })
   .array();

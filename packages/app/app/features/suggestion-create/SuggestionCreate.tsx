@@ -91,10 +91,11 @@ function ModalContent() {
             name="description"
             dxError={errors?.description?.[0]}
             dxHint="Explain your suggestion in more detail"
+            rows={4}
           />
           <Callout
             variant="note"
-            description="After you submit a suggestion, we’ll take a quick look and then add it to the board so others can see and vote on it"
+            description="Please be respectful and follow our Community Guidelines. Keep your language constructive, inclusive, and kind. Suggestions that violate these principles may be removed."
           />
         </InputGroup>
       </ModalBody>

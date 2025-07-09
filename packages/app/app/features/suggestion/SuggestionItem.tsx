@@ -16,13 +16,20 @@ export type SuggestionItemProps = {
 
 const styles = css`
   display: grid;
-  grid-template-columns: 1fr auto auto auto;
+  grid-template-columns: auto 1fr auto auto auto;
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(4px);
   border-radius: ${makeRem(8)};
   margin-bottom: ${makeRem(4)};
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   padding: ${makeRem(24)} ${makeRem(8)};
+
+  & .sg-count {
+    width: ${makeRem(60)};
+    text-align: center;
+    display: grid;
+    place-content: center;
+  }
 
   & .sg-copy {
     overflow: hidden;
@@ -77,6 +84,20 @@ export function SuggestionItem({
       method="POST"
     >
       <input name="suggestion_id" value={id} type="hidden" />
+      <div className="sg-count">
+        <div>
+          <Typography dxVariant="heading3" dxNode="div">
+            {counts.total}
+          </Typography>
+          <Typography
+            dxVariant="caption"
+            dxNode="div"
+            style={{ textTransform: "uppercase" }}
+          >
+            {counts.total > 1 ? "votes" : "vote"}
+          </Typography>
+        </div>
+      </div>
       <div className="sg-copy">
         <Typography dxNode="div" dxVariant="heading5" className="sg-title">
           {title}
