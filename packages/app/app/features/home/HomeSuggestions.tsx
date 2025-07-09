@@ -1,8 +1,11 @@
 import { href, useFetcher } from "react-router";
-import { useCallback, useEffect, useRef, type ChangeEventHandler } from "react";
-import { match, P } from "ts-pattern";
-import { Callout, Typography } from "@nccl/components";
+import { useCallback, useEffect, type ChangeEventHandler } from "react";
+import { match } from "ts-pattern";
+import { Callout } from "@nccl/components";
 
+import { useDebounce } from "../../hooks/hook.useDebounce";
+import { EmptyState } from "../../components/states/EmptyState";
+import { LoadingState } from "../../components/states/LoadingState";
 import { parseFetcherData } from "../../utils/client";
 import type { loader } from "../../api/api.suggestion.getManyOrCreateUnique";
 import {
@@ -14,9 +17,7 @@ import {
 
 export function HomeSuggestions() {
   const { load, data, submit } = useFetcher<typeof loader>();
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
-    undefined
-  );
+  const { debounce } = useDebounce();
 
   useEffect(() => {
     load(href("/api/suggestion"));
@@ -27,12 +28,11 @@ export function HomeSuggestions() {
   const handleSearch = useCallback<ChangeEventHandler<HTMLInputElement>>(
     (e) => {
       const form = e.currentTarget.form;
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      timeoutRef.current = setTimeout(() => {
+      debounce(() => {
         submit(form);
       }, 300);
     },
-    [submit]
+    [debounce, submit]
   );
 
   return (
@@ -43,7 +43,7 @@ export function HomeSuggestions() {
       <ul>
         {match(res)
           .with({ status: "loading" }, () => {
-            return <div>Loading...</div>;
+            return <LoadingState>Loading suggestions...</LoadingState>;
           })
           .with({ status: "error" }, () => {
             return (
@@ -56,11 +56,14 @@ export function HomeSuggestions() {
           .with({ status: "ok" }, ({ data = [] }) => {
             if (data.length === 0) {
               return (
-                <div>
-                  <Typography dxVariant="body1" dxNode="div">
-                    No suggestions found
-                  </Typography>
-                </div>
+                <EmptyState
+                  imgSrc="/images/image-icon-wizard.png"
+                  imgAlt="wizard"
+                  title="No suggestions found"
+                >
+                  We can't find any suggestions matching your search criteria.
+                  Refine your search or create a new suggestion.
+                </EmptyState>
               );
             }
             return (data ?? []).map((suggestion) => (
