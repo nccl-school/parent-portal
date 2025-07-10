@@ -12,8 +12,8 @@ import { UserSchema } from "../user/user.utils.js";
 
 export const SuggestionCommentSchema = z.object({
   id: z.string(),
-  comment: zCleanStringSchema,
-  isAnonymous: z.boolean(),
+  comment: zString({ required: "A comment is required", profanity: false }),
+  isAnonymous: z.boolean().optional().default(false),
   createdBy: UserSchema,
   createdAt: zDateStringSchema,
   updatedAt: zDateStringSchema,
@@ -130,6 +130,19 @@ export const GetSuggestionCommentsResponseSchema = z
       role: true,
     }),
   })
+  .transform((comment) => {
+    if (comment.isAnonymous) {
+      return {
+        ...comment,
+        createdBy: {
+          ...comment.createdBy,
+          firstName: "Anonymous",
+          lastName: "",
+        },
+      };
+    }
+    return comment;
+  })
   .array();
 export type GetSuggestionCommentsResponse = z.infer<
   typeof GetSuggestionCommentsResponseSchema
@@ -139,10 +152,8 @@ export type GetSuggestionCommentsResponse = z.infer<
 export const CreateSuggestionCommentsParamsSchema = z.object({
   id: z.string(),
 });
-export const CreateSuggestionCommentsRequestSchema = z.object({
-  comment: zString({ required: "A comment is required", profanity: false }),
-  isAnonymous: z.boolean().default(false),
-});
+export const CreateSuggestionCommentsRequestSchema =
+  SuggestionCommentSchema.pick({ isAnonymous: true, comment: true });
 export const CreateSuggestionCommentsResponseSchema =
   SuggestionCommentSchema.omit({
     createdBy: true,

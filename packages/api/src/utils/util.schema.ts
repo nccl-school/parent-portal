@@ -42,7 +42,6 @@ export function zString({
 }) {
   const baseSchema = z.string().refine(
     (value) => {
-      console.log(required, !value, required && !value);
       return required && value;
     },
     { error: required }

@@ -11,5 +11,9 @@ export function UserStatusBadge({ status }: { status: UserStatus }) {
     .with("DISABLED", () => "info")
     .exhaustive();
 
-  return <Label dxVariant={dxVariant}>{capitalizeFirstLetter(status)}</Label>;
+  return (
+    <Label dxVariant={dxVariant}>
+      {capitalizeFirstLetter(status.toLocaleLowerCase())}
+    </Label>
+  );
 }

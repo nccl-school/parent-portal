@@ -7,14 +7,14 @@ import {
 } from "@nccl/components";
 import { css } from "@linaria/core";
 import { makeColor, makeRem } from "@nccl/theme";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { href, useFetcher } from "react-router";
 import type { CreateSuggestionCommentsResponse } from "@nccl/api/client";
 
 import { useSuggestionViewModalContext } from "./suggestion-view.useSuggestionViewModalContext";
 
 import type { action } from "../../api/api.suggestion.comments.getManyOrCreateUnique";
-import { getValidationErrors } from "../../utils/client";
+import { getValidationErrors, isError } from "../../utils/client";
 
 const styles = css`
   min-height: ${makeRem(200)};
@@ -52,13 +52,20 @@ const styles = css`
 
 function CommentBox({ onCancel }: { onCancel: () => void }) {
   const { state } = useSuggestionViewModalContext();
+  const formRef = useRef<HTMLFormElement | null>(null);
 
   const { Form, data } = useFetcher<typeof action>();
   const errors =
     getValidationErrors<keyof CreateSuggestionCommentsResponse>(data);
 
+  useEffect(() => {
+    if (!data || isError(data)) return;
+    formRef.current?.reset();
+  }, [data]);
+
   return (
     <Form
+      ref={formRef}
       className={styles}
       method="POST"
       action={href("/api/suggestion/:id/comment", { id: state.suggestion_id })}

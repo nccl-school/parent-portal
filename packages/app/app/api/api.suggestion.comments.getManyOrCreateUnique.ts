@@ -1,4 +1,5 @@
 import { CreateSuggestionCommentsRequestSchema } from "@nccl/api/client";
+import { z } from "zod/v4";
 
 import type { Route } from "./+types/api.suggestion.comments.getManyOrCreateUnique";
 
@@ -29,7 +30,9 @@ export async function action(args: Route.ActionArgs) {
     const formData = await args.request.formData();
 
     const body = await validateFormData(
-      CreateSuggestionCommentsRequestSchema,
+      CreateSuggestionCommentsRequestSchema.extend({
+        isAnonymous: z.coerce.boolean().default(false),
+      }),
       formData
     );
     const res = await ncclClient.suggestion.addCommentToSuggestion(
