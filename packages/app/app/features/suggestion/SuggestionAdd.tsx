@@ -8,7 +8,7 @@ const styles = css`
   margin: 0 auto;
   width: auto;
   text-align: center;
-  margin-top: ${makeRem(80)};
+  margin: ${makeRem(80)} 0;
   button {
     margin: 0 auto;
     margin-top: ${makeRem(16)};

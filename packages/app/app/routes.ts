@@ -50,6 +50,10 @@ export default [
       route("/", "./api/api.suggestion.getManyOrCreateUnique.ts"),
       route("/:id", "./api/api.suggestion.getOrUpdateUnique.ts", [
         route("vote", "./api/api.suggestion.voteOnUnique.ts"),
+        route(
+          "comment",
+          "./api/api.suggestion.comments.getManyOrCreateUnique.ts"
+        ),
       ]),
     ]),
     ...prefix("user", [

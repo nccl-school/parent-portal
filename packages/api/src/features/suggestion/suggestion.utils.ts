@@ -125,6 +125,9 @@ export const GetSuggestionCommentsResponseSchema = z
     }),
   })
   .array();
+export type GetSuggestionCommentsResponse = z.infer<
+  typeof GetSuggestionCommentsResponseSchema
+>;
 
 // Create a comment on a suggestion
 export const CreateSuggestionCommentsParamsSchema = z.object({

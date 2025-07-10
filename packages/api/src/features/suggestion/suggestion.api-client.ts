@@ -106,7 +106,7 @@ export class SuggestionClient extends ApiClient {
    */
   async getCommentsList(suggestionId: string) {
     return this._get({
-      path: "/:id/comments",
+      path: "/:id/comment",
       params: [GetSuggestionCommentsParamsSchema, { id: suggestionId }],
       serializer: GetSuggestionCommentsResponseSchema,
     });
@@ -121,7 +121,7 @@ export class SuggestionClient extends ApiClient {
   ) {
     return this._mutateJSON({
       method: "POST",
-      path: "/:id/vote",
+      path: "/:id/comment",
       params: [CreateSuggestionCommentsParamsSchema, { id: suggestionId }],
       body: [CreateSuggestionCommentsRequestSchema, comment],
       serializer: CreateSuggestionCommentsResponseSchema,

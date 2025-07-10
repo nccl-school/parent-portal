@@ -13,11 +13,10 @@ import {
 import { useEffect } from "react";
 import { href, useFetcher } from "react-router";
 import { css } from "@linaria/core";
-import { makeColor, makeCustom, makeRem } from "@nccl/theme";
+import { makeColor, makeRem } from "@nccl/theme";
 
 import { SuggestionViewComments } from "./SuggestionViewComments";
 
-import { LoadingState } from "../../components/states/LoadingState";
 import { dates, renderData } from "../../utils/client";
 import type { loader } from "../../api/api.suggestion.getOrUpdateUnique";
 import { getUserName } from "../user";
@@ -29,26 +28,20 @@ const styles = css`
 `;
 
 const titleStyles = css`
-  margin: ${makeRem(24)} 0 ${makeRem(32)} 0;
+  padding: ${makeRem(24)} 0 ${makeRem(32)} 0;
+  position: sticky;
+  top: 0;
+  background: white;
+  border-bottom: 1px solid ${makeColor("neutral-light-100")};
+  margin-bottom: ${makeRem(16)};
+  z-index: 10;
 `;
 
 const descStyles = css`
-  border: 1px solid ${makeColor("neutral-light-400")};
+  border: 1px solid ${makeColor("neutral-light-100")};
   border-radius: ${makeRem(8)};
   padding: ${makeRem(16)};
   margin-bottom: ${makeRem(32)};
-`;
-
-const commentsStyles = css`
-  display: grid;
-  grid-template-rows: auto 1fr;
-  height: 100%;
-  background: ${makeColor("neutral-light-100", { opacity: 0.3 })};
-  padding: 0 ${makeCustom("modal--gutters")};
-
-  & > *:first-child {
-    padding: ${makeRem(24)} 0;
-  }
 `;
 
 export const SuggestionViewDialog = new ModalController<{
@@ -120,22 +113,16 @@ function ModalContent() {
         >
           Description
         </Typography>
-
         <Typography dxVariant="body3" dxNode="div" className={descStyles}>
           {renderData(data, {
             ok: (d) => d.description,
           })}
         </Typography>
       </ModalBody>
-      <div className={commentsStyles}>
-        <Typography dxVariant="heading5" dxNode="div">
-          Comments (23)
-        </Typography>
-        {renderData(data, {
-          loading: <LoadingState>Loading suggestion comments...</LoadingState>,
-          ok: () => <SuggestionViewComments />,
-        })}
-      </div>
+      <SuggestionViewComments
+        suggestionId={suggestion_id}
+        commentCount={renderData(data, { loading: 0, ok: () => 23 }) as number}
+      />
       <ModalFooter>
         <Button
           dxVariant="outlined"

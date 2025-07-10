@@ -38,7 +38,7 @@ const styles = css`
 
   &.contrasted {
     border: 1px solid transparent;
-    background: ${makeColor("neutral-light-100", { opacity: 0.2 })};
+    background: ${makeColor("neutral-light-100", { opacity: 0.4 })};
   }
 `;
 
