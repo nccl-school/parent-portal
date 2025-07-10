@@ -10,7 +10,7 @@ export type ModalFooterProps = ModalFooterPropsNative;
 const styles = css`
   padding: ${makeRem(16)} ${makeCustom("modal--gutters")};
   border-top: 1px solid ${makeColor("neutral-light-100")};
-  background: ${makeColor("neutral-light-100", { opacity: 0.2 })};
+  background: ${makeColor("light-100")};
   display: flex;
   justify-content: flex-end;
   gap: ${makeRem(16)};

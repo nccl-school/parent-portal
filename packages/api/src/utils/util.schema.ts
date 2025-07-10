@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 import leoProfanity from "leo-profanity";
-import type { ZodRawShape } from "zod/v4";
+import type { ZodRawShape, ZodString } from "zod/v4";
 
 export const zDateStringSchema = z.preprocess(
   (val) => {
@@ -26,6 +26,30 @@ export const zCleanStringSchema = z
   .refine((val) => !leoProfanity.check(val), {
     message: "Please remove inappropriate language.",
   });
+
+export function checkProfanity<T extends ZodString>(s: T) {
+  return s.refine((val) => !leoProfanity.check(val), {
+    message: "Please remove inappropriate language.",
+  });
+}
+
+export function zString({
+  required,
+  profanity,
+}: {
+  required?: string;
+  profanity: boolean;
+}) {
+  const baseSchema = z.string().refine(
+    (value) => {
+      console.log(required, !value, required && !value);
+      return required && value;
+    },
+    { error: required }
+  );
+  if (!profanity) return checkProfanity(baseSchema);
+  return baseSchema;
+}
 
 export const zMessageSchema = z.object({ message: z.string() });
 

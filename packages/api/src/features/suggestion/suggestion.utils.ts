@@ -6,6 +6,7 @@ import {
   zDateStringSchema,
   zMessageSchema,
   zQueryParam,
+  zString,
 } from "../../utils/util.schema.js";
 import { UserSchema } from "../user/user.utils.js";
 
@@ -138,12 +139,14 @@ export type GetSuggestionCommentsResponse = z.infer<
 export const CreateSuggestionCommentsParamsSchema = z.object({
   id: z.string(),
 });
-export const CreateSuggestionCommentsRequestSchema =
-  SuggestionCommentSchema.pick({
-    comment: true,
-    isAnonymous: true,
-  });
+export const CreateSuggestionCommentsRequestSchema = z.object({
+  comment: zString({ required: "A comment is required", profanity: false }),
+  isAnonymous: z.boolean().default(false),
+});
 export const CreateSuggestionCommentsResponseSchema =
   SuggestionCommentSchema.omit({
     createdBy: true,
   });
+export type CreateSuggestionCommentsResponse = z.infer<
+  typeof CreateSuggestionCommentsResponseSchema
+>;

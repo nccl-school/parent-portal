@@ -118,6 +118,14 @@
       "neutral-light": {
         "hex": "#91969c",
         "variants": 14
+      },
+      "white": {
+        "hex": "#ffffff",
+        "variants": 1
+      },
+      "light": {
+        "hex": "#f0f0f0",
+        "variants": 10
       }
     }
   },
@@ -149,28 +157,28 @@
     },
     "table--cell-padding": {
       "type": "rem",
-      "description": "The horizontal padding for each cell",
-      "value": 16
+      "value": 16,
+      "description": "The horizontal padding for each cell"
     },
     "table--body-cell-padding-v": {
       "type": "rem",
-      "description": "The vertical padding on each body cell",
-      "value": 12
+      "value": 12,
+      "description": "The vertical padding on each body cell"
     },
     "modal--gutters": {
       "type": "rem",
-      "description": "The size of the gutters for the modal header footer and body",
-      "value": 32
+      "value": 32,
+      "description": "The size of the gutters for the modal header footer and body"
     },
     "container--max-width": {
       "type": "rem",
-      "description": "The max width of any container on the page",
-      "value": 1128
+      "value": 1128,
+      "description": "The max width of any container on the page"
     },
     "admin--tab-height-desktop": {
       "type": "rem",
-      "description": "The height of the tabs on the admin screen in desktop",
-      "value": 40
+      "value": 40,
+      "description": "The height of the tabs on the admin screen in desktop"
     }
   }
 }

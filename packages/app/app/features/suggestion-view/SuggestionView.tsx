@@ -7,8 +7,9 @@ import {
   ModalBody,
   ModalController,
   ModalFooter,
+  ModalHeader,
+  ModalHeaderTitle,
   Typography,
-  useModalContext,
 } from "@nccl/components";
 import { useEffect } from "react";
 import { href, useFetcher } from "react-router";
@@ -16,6 +17,10 @@ import { css } from "@linaria/core";
 import { makeColor, makeRem } from "@nccl/theme";
 
 import { SuggestionViewComments } from "./SuggestionViewComments";
+import { useSuggestionViewModalContext } from "./suggestion-view.useSuggestionViewModalContext";
+import { SuggestionViewCommentInput } from "./SuggestionViewCommentInput";
+import { SuggestionViewCommentList } from "./SuggestionViewCommentList";
+import { SuggestionViewCommentsTitle } from "./SuggestionViewCommentsTitle";
 
 import { dates, renderData } from "../../utils/client";
 import type { loader } from "../../api/api.suggestion.getOrUpdateUnique";
@@ -24,17 +29,19 @@ import { getUserName } from "../user";
 const styles = css`
   width: ${makeRem(520)};
   display: grid;
-  grid-template-rows: auto 1fr auto;
-`;
+  grid-template-rows: auto auto 1fr auto;
+  height: 100%;
+  overflow: auto;
 
-const titleStyles = css`
-  padding: ${makeRem(24)} 0 ${makeRem(32)} 0;
-  position: sticky;
-  top: 0;
-  background: white;
-  border-bottom: 1px solid ${makeColor("neutral-light-100")};
-  margin-bottom: ${makeRem(16)};
-  z-index: 10;
+  header {
+    position: sticky;
+    top: 0;
+  }
+
+  footer {
+    position: sticky;
+    bottom: 0;
+  }
 `;
 
 const descStyles = css`
@@ -58,7 +65,7 @@ function ModalContent() {
   const {
     close: closeModal,
     state: { suggestion_id },
-  } = useModalContext<{ suggestion_id: string }>();
+  } = useSuggestionViewModalContext();
   const { load, data } = useFetcher<typeof loader>();
 
   useEffect(() => {
@@ -67,10 +74,15 @@ function ModalContent() {
 
   return (
     <>
-      <ModalBody>
-        <Typography dxVariant="heading4" dxNode="h5" className={titleStyles}>
+      <ModalHeader>
+        <ModalHeaderTitle>
           {renderData(data, { ok: (d) => d.title })}
-        </Typography>
+        </ModalHeaderTitle>
+      </ModalHeader>
+      <ModalBody>
+        {/* <Typography dxVariant="heading4" dxNode="h5" className={titleStyles}>
+          {renderData(data, { ok: (d) => d.title })}
+        </Typography> */}
         <DescriptionList>
           <DescriptionListTag>Created on</DescriptionListTag>
           <DescriptionListData>
@@ -119,12 +131,20 @@ function ModalContent() {
           })}
         </Typography>
       </ModalBody>
-      <SuggestionViewComments
-        suggestionId={suggestion_id}
-        commentCount={
-          renderData(data, { loading: 0, ok: (d) => d.numOfComments }) as number
-        }
-      />
+
+      <SuggestionViewComments>
+        <SuggestionViewCommentsTitle
+          numOfComments={
+            renderData(data, {
+              loading: 0,
+              ok: (d) => d.numOfComments,
+            }) as number
+          }
+        />
+        <SuggestionViewCommentInput />
+        <SuggestionViewCommentList />
+      </SuggestionViewComments>
+
       <ModalFooter>
         <Button
           dxVariant="outlined"

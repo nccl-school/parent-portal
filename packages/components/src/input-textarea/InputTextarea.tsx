@@ -12,7 +12,7 @@ export type InputTextareaPropsNative = JSX.IntrinsicElements["textarea"];
 export type InputTextareaPropsCustom = Pick<
   InputTextPropsCustom,
   "dxLabel" | "dxHint" | "dxError" | "dxSize" | "dxVariant"
->;
+> & { dxContainerClassName?: string };
 export type InputTextareaProps = InputTextareaPropsNative &
   InputTextareaPropsCustom;
 
@@ -24,7 +24,17 @@ export const InputTextarea = forwardRef<
   HTMLTextAreaElement,
   InputTextareaProps
 >(function InputTextarea(
-  { children, id, dxError, dxHint, dxLabel, dxSize, dxVariant, ...restProps },
+  {
+    children,
+    id,
+    dxError,
+    dxHint,
+    dxLabel,
+    dxSize,
+    dxVariant,
+    dxContainerClassName,
+    ...restProps
+  },
   ref
 ) {
   const autoId = useId();
@@ -36,6 +46,7 @@ export const InputTextarea = forwardRef<
       dxHint={dxHint}
       dxLabel={dxLabel}
       dxSize={dxSize}
+      className={dxContainerClassName}
     >
       <textarea
         {...restProps}

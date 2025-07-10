@@ -30,6 +30,7 @@ const styles = css`
   color: var(--input-color);
   width: 100%;
   transition: all 0.15s ease-in-out;
+  height: 100%;
 
   &.transparent {
     border: 1px solid ${makeColor("neutral-light-300")};

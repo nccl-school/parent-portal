@@ -119,6 +119,7 @@ const containerStyles = css`
 
 const wrapperStyles = css`
   position: relative;
+  height: 100%;
 
   &:has(.adornment.start) {
     button,
@@ -173,7 +174,7 @@ export const InputContainer = forwardRef<HTMLDivElement, InputContainerProps>(
     return (
       <div
         ref={ref}
-        className={classes(containerStyles, dxSize, fontSizeStyles)}
+        className={classes(containerStyles, dxSize, fontSizeStyles, className)}
         {...restProps}
       >
         {useMemo(() => {
