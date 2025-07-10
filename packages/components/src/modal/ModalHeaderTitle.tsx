@@ -1,11 +1,11 @@
-import type { JSX } from "react";
+import type { JSX, ReactNode } from "react";
 import { forwardRef } from "react";
 
 import { Typography } from "../typography/Typography.js";
 
 export type ModalHeaderTitlePropsNative = JSX.IntrinsicElements["div"];
 export type ModalHeaderTitlePropsCustom = {
-  children: string;
+  children: ReactNode;
 };
 export type ModalHeaderTitleProps = ModalHeaderTitlePropsNative &
   ModalHeaderTitlePropsCustom;

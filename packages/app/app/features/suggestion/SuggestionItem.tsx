@@ -5,6 +5,8 @@ import { makeColor, makeRem, makeReset } from "@nccl/theme";
 import { classes } from "@stratum-ui/core/utils";
 import { href, useFetcher } from "react-router";
 
+import { SuggestionViewDialog } from "../suggestion-view/SuggestionView";
+
 export type SuggestionItemProps = {
   title: string;
   description: string;
@@ -138,7 +140,11 @@ export function SuggestionItem({
           {counts.dislikes}
         </Typography>
       </button>
-      <button className={classes("sg-item", "cm")} type="button">
+      <button
+        className={classes("sg-item", "cm")}
+        type="button"
+        onClick={(e) => SuggestionViewDialog.launch(e, { suggestion_id: id })}
+      >
         <Icon dxIcon="comment-01-stroke-standard" dxSize={18} />
         <Typography dxNode="div" dxVariant="label">
           {counts.comments}

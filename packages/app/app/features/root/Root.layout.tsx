@@ -49,7 +49,8 @@ const styles = css`
 
   .layout-main {
     grid-area: main;
-    min-height: ${`calc(100vh - ${makeCustom("navbar--height-mobile")} - ${makeCustom("header--height-desktop")} - 1px)`};
+    height: 100%;
+    overflow: hidden;
 
     ${makeResponsive({ to: "laptop" })} {
       padding-bottom: ${makeCustom("navbar--height-mobile")};

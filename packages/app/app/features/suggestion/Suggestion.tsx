@@ -29,7 +29,7 @@ export function Suggestion({ children }: { children: ReactNode }) {
   return (
     <article className={styles}>
       <header>
-        <Typography dxNode="h3" dxVariant="heading3">
+        <Typography dxNode="h3" dxVariant="heading4">
           Help Shape the Future of the Parent Portal!
         </Typography>
         <Typography dxNode="div" dxVariant="body1">

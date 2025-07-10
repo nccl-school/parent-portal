@@ -14,6 +14,7 @@ import {
   SuggestionItem,
   SuggestionAdd,
 } from "../suggestion";
+import { SuggestionViewDialog } from "../suggestion-view/SuggestionView";
 
 export function HomeSuggestions() {
   const { load, data, submit } = useFetcher<typeof loader>();
@@ -37,6 +38,7 @@ export function HomeSuggestions() {
 
   return (
     <Suggestion>
+      <SuggestionViewDialog.Component />
       <form method="get" action="/api/suggestion">
         <SuggestionSearch name="search" onChange={handleSearch} />
       </form>

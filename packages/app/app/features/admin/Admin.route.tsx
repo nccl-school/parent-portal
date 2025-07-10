@@ -5,6 +5,7 @@ import { css } from "@linaria/core";
 import type { Route } from "./+types/Admin.route";
 import { AdminNavbar } from "./AdminNavbar";
 
+import { PageContainer } from "../..//components/page/PageContainer";
 import { PageHeader } from "../../components/page";
 import { isAdmin } from "../../utils/server/utils.server.auth";
 import { Unauthorized } from "../auth/Unauthorized";
@@ -49,7 +50,7 @@ export default function AdminRoute({ loaderData }: Route.ComponentProps) {
     return <Unauthorized />;
   }
   return (
-    <div className={styles}>
+    <PageContainer dxVariant="static" className={styles}>
       <PageHeader
         dxTitle="Administration"
         dxSubtitle="Invite parents, manage groups, add content, send notifications, etc..."
@@ -61,6 +62,6 @@ export default function AdminRoute({ loaderData }: Route.ComponentProps) {
       <div className="main">
         <Outlet />
       </div>
-    </div>
+    </PageContainer>
   );
 }

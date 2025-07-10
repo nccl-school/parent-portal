@@ -1,6 +1,9 @@
 import type { ErrorResponse } from "@nccl/api/client";
+import type { ReactNode } from "react";
+import { match } from "ts-pattern";
 
 import type { ErrorPayloadValidation } from "./server";
+import { placeholder } from "./isomorphic";
 
 export class DateFactory {
   private static instance: DateFactory;
@@ -109,4 +112,24 @@ export function parseFetcherData<D>(data: D): ParseFetcherResult<D> {
   }
 
   return { status: "ok", data: data as Exclude<D, ErrorResponse> };
+}
+
+export function renderData<D>(
+  data: D,
+  callbacks: {
+    loading?: ReactNode;
+    ok: (d: NonNullable<Exclude<D, ErrorResponse>>) => ReactNode;
+  }
+) {
+  const res = parseFetcherData<D>(data);
+  return match(res)
+    .with({ status: "loading" }, () =>
+      callbacks.loading ? callbacks.loading : placeholder
+    )
+    .with({ status: "error" }, () => placeholder)
+    .with({ status: "ok" }, (state) => {
+      if (!state.data) return;
+      return callbacks.ok(state.data as NonNullable<Exclude<D, ErrorResponse>>);
+    })
+    .exhaustive();
 }

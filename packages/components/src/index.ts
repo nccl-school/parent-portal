@@ -18,6 +18,7 @@ export * from "./popover/index.js";
 export * from "./widget/index.js";
 export * from "./action-card/index.js";
 export * from "./callout/index.js";
+export * from "./lists-description/index.js";
 
 export * from "./input-checkbox/index.js";
 export * from "./input-radio/index.js";

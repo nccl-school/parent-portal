@@ -1,9 +1,6 @@
-import type { Route } from "./+types/Home.index";
 import { HomeSuggestions } from "./HomeSuggestions";
 
-import { PageHeader, PageSection } from "../../components/page";
 import { assembleTitle } from "../../utils/util.assemble-title";
-import { getCurrentUser } from "../../utils/server";
 
 export function meta() {
   return [
@@ -12,21 +9,10 @@ export function meta() {
   ];
 }
 
-export async function loader(loaderArgs: Route.LoaderArgs) {
-  const user = await getCurrentUser(loaderArgs);
-  return { firstName: user.firstName };
-}
-
-export default function HomeIndexRoute({
-  loaderData: { firstName },
-}: Route.ComponentProps) {
+export default function HomeIndexRoute() {
   return (
     <>
-      <PageHeader dxTitle={`Welcome, ${firstName}!`} />
-      <PageSection>
-        <HomeSuggestions />
-      </PageSection>
-      ;
+      <HomeSuggestions />;
     </>
   );
 }

@@ -68,6 +68,7 @@ export type GetSuggestionParams = z.infer<typeof GetSuggestionParamsSchema>;
 export const GetSuggestionResponseSchema = SuggestionSchema.omit({
   comments: true,
 });
+export type GetSuggestionResponse = z.infer<typeof GetSuggestionResponseSchema>;
 
 // createSuggestion
 export const CreateSuggestionRequestSchema = SuggestionSchema.pick({

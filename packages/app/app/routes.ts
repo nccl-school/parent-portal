@@ -9,7 +9,9 @@ import {
 export default [
   layout("./features/root/Root.layout.tsx", [
     // - /
-    index("./features/home/Home.index.tsx"),
+    layout("./features/home/Home.layout.tsx", [
+      index("./features/home/Home.index.tsx"),
+    ]),
     // - /resources
     layout("./features/resources/Resources.layout.tsx", [
       route("resources", "./features/resources/Resources.route.tsx"),
