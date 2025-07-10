@@ -121,7 +121,9 @@ function ModalContent() {
       </ModalBody>
       <SuggestionViewComments
         suggestionId={suggestion_id}
-        commentCount={renderData(data, { loading: 0, ok: () => 23 }) as number}
+        commentCount={
+          renderData(data, { loading: 0, ok: (d) => d.numOfComments }) as number
+        }
       />
       <ModalFooter>
         <Button

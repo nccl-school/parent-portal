@@ -66,8 +66,11 @@ export const GetSuggestionParamsSchema = z.object({
   id: z.string(),
 });
 export type GetSuggestionParams = z.infer<typeof GetSuggestionParamsSchema>;
-export const GetSuggestionResponseSchema = SuggestionSchema.omit({
-  comments: true,
+export const GetSuggestionResponseSchema = z.object({
+  ...SuggestionSchema.omit({
+    comments: true,
+  }).shape,
+  numOfComments: z.number(),
 });
 export type GetSuggestionResponse = z.infer<typeof GetSuggestionResponseSchema>;
 
@@ -94,7 +97,9 @@ export const UpdateSuggestionRequestSchema = SuggestionSchema.omit({
   createdAt: true,
   updatedAt: true,
 });
-export const UpdateSuggestionResponseSchema = SuggestionSchema;
+export const UpdateSuggestionResponseSchema = SuggestionSchema.omit({
+  comments: true,
+});
 
 export const GetSuggestionVotesParamsSchema = z.object({ id: z.string() });
 

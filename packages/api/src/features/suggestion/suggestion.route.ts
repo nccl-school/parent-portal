@@ -18,6 +18,7 @@ import {
   CreateSuggestionCommentsParamsSchema,
   CreateSuggestionCommentsRequestSchema,
   CreateSuggestionCommentsResponseSchema,
+  UpdateSuggestionResponseSchema,
 } from "./suggestion.utils.js";
 
 import { validate } from "../../middleware/middleware.validate.js";
@@ -55,6 +56,11 @@ suggestion.get(
           }
         : {}),
       include: {
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
         votes: {
           select: {
             type: true,
@@ -74,9 +80,9 @@ suggestion.get(
     }
 
     const json: z.infer<typeof GetSuggestionListResponseSchema> = suggestions
-      .map((suggestion) => {
-        const counts = { likes: 0, dislikes: 0, comments: 0 };
-        for (const r of suggestion.votes) {
+      .map(({ _count: { comments }, ...restSuggestion }) => {
+        const counts = { likes: 0, dislikes: 0, comments };
+        for (const r of restSuggestion.votes) {
           if (r.type === "LIKE") counts.likes++;
           else if (r.type === "DISLIKE") counts.dislikes++;
         }
@@ -87,8 +93,8 @@ suggestion.get(
             total: counts.likes - counts.dislikes,
           },
           current_user_vote:
-            CurrentUserVotesBySuggestion.get(suggestion.id) ?? null,
-          ...suggestion,
+            CurrentUserVotesBySuggestion.get(restSuggestion.id) ?? null,
+          ...restSuggestion,
         };
       })
       .sort((a, b) => b.counts.total - a.counts.total);
@@ -141,9 +147,14 @@ suggestion.get(
     const suggestion = await db.suggestion.findUnique({
       where: { id },
       include: {
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
         createdBy: {
           include: {
-            role: {},
+            role: true,
           },
         },
       },
@@ -151,8 +162,11 @@ suggestion.get(
     if (!suggestion) {
       throw new ErrorSet.notFound();
     }
-    console.log(suggestion);
-    const data = await serialize(GetSuggestionResponseSchema, suggestion);
+    const { _count, ...restSuggestion } = suggestion;
+    const data = await serialize(GetSuggestionResponseSchema, {
+      ...restSuggestion,
+      numOfComments: _count.comments,
+    });
     return c.json(data);
   }
 );
@@ -177,7 +191,7 @@ suggestion.put(
         },
       },
     });
-    const data = await serialize(GetSuggestionResponseSchema, suggestion);
+    const data = await serialize(UpdateSuggestionResponseSchema, suggestion);
     return c.json(data);
   }
 );
