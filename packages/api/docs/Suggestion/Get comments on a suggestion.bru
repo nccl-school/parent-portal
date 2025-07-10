@@ -1,0 +1,15 @@
+meta {
+  name: Get comments on a suggestion
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{API_DOMAIN}}/api/suggestion/:id/comment
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 
+}

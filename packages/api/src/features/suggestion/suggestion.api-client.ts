@@ -13,6 +13,11 @@ import {
   CreateSuggestionVoteRequest,
   CreateSuggestionResponseSchema,
   CreateSuggestionVoteResponse,
+  GetSuggestionCommentsParamsSchema,
+  GetSuggestionCommentsResponseSchema,
+  CreateSuggestionCommentsRequestSchema,
+  CreateSuggestionCommentsParamsSchema,
+  CreateSuggestionCommentsResponseSchema,
 } from "./suggestion.utils.js";
 
 import {
@@ -92,6 +97,34 @@ export class SuggestionClient extends ApiClient {
       params: [CreateSuggestionVoteParams, { id: suggestionId }],
       body: [CreateSuggestionVoteRequest, body],
       serializer: CreateSuggestionVoteResponse,
+    });
+  }
+
+  /**
+   * Get a list of the comments that have been added to a suggestion
+   * in descending order ()
+   */
+  async getCommentsList(suggestionId: string) {
+    return this._get({
+      path: "/:id/comments",
+      params: [GetSuggestionCommentsParamsSchema, { id: suggestionId }],
+      serializer: GetSuggestionCommentsResponseSchema,
+    });
+  }
+
+  /**
+   * Adds a comment to a specific suggestion
+   */
+  async addCommentToSuggestion(
+    suggestionId: string,
+    comment: z.infer<typeof CreateSuggestionCommentsRequestSchema>
+  ) {
+    return this._mutateJSON({
+      method: "POST",
+      path: "/:id/vote",
+      params: [CreateSuggestionCommentsParamsSchema, { id: suggestionId }],
+      body: [CreateSuggestionCommentsRequestSchema, comment],
+      serializer: CreateSuggestionCommentsResponseSchema,
     });
   }
 }

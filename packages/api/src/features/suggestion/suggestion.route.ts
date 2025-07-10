@@ -13,6 +13,11 @@ import {
   UpdateSuggestionRequestSchema,
   GetSuggestionListQuerySchema,
   CreateSuggestionVoteResponse,
+  GetSuggestionCommentsParamsSchema,
+  GetSuggestionCommentsResponseSchema,
+  CreateSuggestionCommentsParamsSchema,
+  CreateSuggestionCommentsRequestSchema,
+  CreateSuggestionCommentsResponseSchema,
 } from "./suggestion.utils.js";
 
 import { validate } from "../../middleware/middleware.validate.js";
@@ -226,6 +231,63 @@ suggestion.post(
     const data = await serialize(CreateSuggestionVoteResponse, {
       message: `Successfully voted ${body.type} for suggestion ${params.id}`,
     });
+    return c.json(data);
+  }
+);
+
+// GET /api/suggestion/:id/comment | Get's all of the comments on a suggestion
+suggestion.get(
+  "/:id/comment",
+  validate("param", GetSuggestionCommentsParamsSchema),
+  async (c) => {
+    const params = c.req.valid("param");
+    const db = c.get("db");
+    const records = await db.suggestionComment.findMany({
+      where: {
+        suggestionId: params.id,
+      },
+      include: {
+        createdBy: {
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
+            lastName: true,
+            role: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    const data = await serialize(GetSuggestionCommentsResponseSchema, records);
+    return c.json(data);
+  }
+);
+
+// POST /api/suggestion/:id/comment | Creates a comment on a suggestion
+suggestion.post(
+  "/:id/comment",
+  validate("param", CreateSuggestionCommentsParamsSchema),
+  validate("json", CreateSuggestionCommentsRequestSchema),
+  async (c) => {
+    const params = c.req.valid("param");
+    const body = c.req.valid("json");
+    const user = c.get("currentUser");
+    const db = c.get("db");
+    const record = await db.suggestionComment.create({
+      data: {
+        comment: body.comment,
+        isAnonymous: body.isAnonymous,
+        createdById: user.id,
+        suggestionId: params.id,
+      },
+    });
+    const data = await serialize(
+      CreateSuggestionCommentsResponseSchema,
+      record
+    );
     return c.json(data);
   }
 );

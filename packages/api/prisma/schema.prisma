@@ -23,21 +23,34 @@ enum SuggestionStatus {
 }
 
 model Suggestion {
-  id          String           @id @default(cuid())
+  id          String              @id @default(cuid())
   title       String
   description String
-  status      SuggestionStatus @default(DISCUSSION)
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-  isAnonymous Boolean          @default(false)
-  createdBy   User             @relation(fields: [createdById], references: [id])
+  status      SuggestionStatus    @default(DISCUSSION)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  isAnonymous Boolean             @default(false)
+  createdBy   User                @relation(fields: [createdById], references: [id])
   createdById String
   votes       SuggestionVote[]
+  comments    SuggestionComment[]
 }
 
 enum SuggestionVoteType {
   LIKE
   DISLIKE
+}
+
+model SuggestionComment {
+  id           String     @id @default(cuid())
+  comment      String
+  isAnonymous  Boolean    @default(false)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  createdBy    User       @relation(fields: [createdById], references: [id])
+  createdById  String
+  suggestion   Suggestion @relation(fields: [suggestionId], references: [id])
+  suggestionId String
 }
 
 model SuggestionVote {
@@ -86,11 +99,12 @@ model User {
   invitationId String?    @unique
   invitedAt    DateTime?
 
-  memberships     OrganizationMembership[]
-  suggestions     Suggestion[]
-  students        UserStudent[]
-  groups          UserGroup[]
-  suggestionVotes SuggestionVote[]
+  memberships       OrganizationMembership[]
+  suggestions       Suggestion[]
+  students          UserStudent[]
+  groups            UserGroup[]
+  suggestionVotes   SuggestionVote[]
+  SuggestionComment SuggestionComment[]
 }
 
 model UserGroup {

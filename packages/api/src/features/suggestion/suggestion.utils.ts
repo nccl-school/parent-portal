@@ -11,7 +11,8 @@ import { UserSchema } from "../user/user.utils.js";
 
 export const SuggestionCommentSchema = z.object({
   id: z.string(),
-  comment: z.string(),
+  comment: zCleanStringSchema,
+  isAnonymous: z.boolean(),
   createdBy: UserSchema,
   createdAt: zDateStringSchema,
   updatedAt: zDateStringSchema,
@@ -107,3 +108,34 @@ export const CreateSuggestionVoteRequest = z.object({
   type: SuggestionVoteTypeSchema,
 });
 export const CreateSuggestionVoteResponse = zMessageSchema;
+
+// Get a suggestions comments
+export const GetSuggestionCommentsParamsSchema = z.object({
+  id: z.string(),
+});
+export const GetSuggestionCommentsResponseSchema = z
+  .object({
+    ...SuggestionCommentSchema.omit({ createdBy: true }).shape,
+    createdBy: UserSchema.pick({
+      id: true,
+      email: true,
+      firstName: true,
+      lastName: true,
+      role: true,
+    }),
+  })
+  .array();
+
+// Create a comment on a suggestion
+export const CreateSuggestionCommentsParamsSchema = z.object({
+  id: z.string(),
+});
+export const CreateSuggestionCommentsRequestSchema =
+  SuggestionCommentSchema.pick({
+    comment: true,
+    isAnonymous: true,
+  });
+export const CreateSuggestionCommentsResponseSchema =
+  SuggestionCommentSchema.omit({
+    createdBy: true,
+  });
