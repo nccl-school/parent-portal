@@ -2,13 +2,13 @@ import type { JSX } from "react";
 import { forwardRef } from "react";
 import { classes } from "@stratum-ui/core/utils";
 import { css } from "@linaria/core";
-import { makeCustom, makeRem } from "@nccl/theme";
+import { makeCustom } from "@nccl/theme";
 
 export type ModalBodyPropsNative = JSX.IntrinsicElements["div"];
 export type ModalBodyProps = ModalBodyPropsNative;
 
 const styles = css`
-  padding: ${makeRem(16)} ${makeCustom("modal--gutters")};
+  padding: 0 ${makeCustom("modal--gutters")};
 `;
 
 export const ModalBody = forwardRef<HTMLDivElement, ModalBodyProps>(

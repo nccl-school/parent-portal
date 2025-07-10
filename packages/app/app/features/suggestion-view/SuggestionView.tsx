@@ -11,7 +11,7 @@ import {
   ModalHeaderTitle,
   Typography,
 } from "@nccl/components";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { href, useFetcher } from "react-router";
 import { css } from "@linaria/core";
 import { makeColor, makeRem } from "@nccl/theme";
@@ -20,7 +20,10 @@ import { SuggestionViewComments } from "./SuggestionViewComments";
 import { useSuggestionViewModalContext } from "./suggestion-view.useSuggestionViewModalContext";
 import { SuggestionViewCommentInput } from "./SuggestionViewCommentInput";
 import { SuggestionViewCommentList } from "./SuggestionViewCommentList";
-import { SuggestionViewCommentsTitle } from "./SuggestionViewCommentsTitle";
+import {
+  CUSTOM_PROPERTY_TOP_POINT,
+  SuggestionViewCommentsTitle,
+} from "./SuggestionViewCommentsTitle";
 
 import { dates, renderData } from "../../utils/client";
 import type { loader } from "../../api/api.suggestion.getOrUpdateUnique";
@@ -67,6 +70,16 @@ function ModalContent() {
     state: { suggestion_id },
   } = useSuggestionViewModalContext();
   const { load, data } = useFetcher<typeof loader>();
+  const modalHeaderRef = useRef<HTMLElement | null>(null);
+  const commentTitleRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!modalHeaderRef.current || !commentTitleRef.current) return;
+    commentTitleRef.current.style.setProperty(
+      CUSTOM_PROPERTY_TOP_POINT,
+      makeRem(modalHeaderRef.current.clientHeight)
+    );
+  });
 
   useEffect(() => {
     load(href("/api/suggestion/:id", { id: suggestion_id }));
@@ -74,15 +87,12 @@ function ModalContent() {
 
   return (
     <>
-      <ModalHeader>
+      <ModalHeader ref={modalHeaderRef}>
         <ModalHeaderTitle>
           {renderData(data, { ok: (d) => d.title })}
         </ModalHeaderTitle>
       </ModalHeader>
       <ModalBody>
-        {/* <Typography dxVariant="heading4" dxNode="h5" className={titleStyles}>
-          {renderData(data, { ok: (d) => d.title })}
-        </Typography> */}
         <DescriptionList>
           <DescriptionListTag>Created on</DescriptionListTag>
           <DescriptionListData>
@@ -134,6 +144,7 @@ function ModalContent() {
 
       <SuggestionViewComments>
         <SuggestionViewCommentsTitle
+          ref={commentTitleRef}
           numOfComments={
             renderData(data, {
               loading: 0,
