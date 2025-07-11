@@ -14,6 +14,7 @@ import { user } from "./features/user/user.route.js";
 import { serializeError } from "./utils/util.errors.js";
 import { webhooks } from "./features/webhooks/webhooks.route.js";
 import { role } from "./features/role/role.route.js";
+import { task } from "./features/task/task.route.js";
 
 // Environment Vars
 const envPath = path.resolve(import.meta.dirname, "../../../.env");
@@ -34,6 +35,7 @@ app.use("/api/*", currentUserMiddleware);
 
 // Authenticated routes
 app.route("/api/suggestion", suggestion);
+app.route("/api/task", task);
 app.route("/api/role", role);
 app.route("/api/user", user);
 

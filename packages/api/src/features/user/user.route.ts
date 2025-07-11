@@ -73,9 +73,15 @@ user.put(
       },
     });
 
+    if (!dbUser.authId) {
+      throw new ErrorSet.serverError(
+        "The db user is out of sync with the authentication system. Cannot update the authentication cached mirror."
+      );
+    }
+
     console.log("Updating clerk cached mirror");
     const clerk = c.get("clerk");
-    await clerk.users.updateUser(param.id, {
+    await clerk.users.updateUser(dbUser.authId, {
       publicMetadata: {
         role: body.role,
         db_id: dbUser.id,

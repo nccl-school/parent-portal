@@ -1,0 +1,17 @@
+meta {
+  name: Sync clerk users with db
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{API_DOMAIN}}/api/task
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "type": "sync_db_with_clerk"
+  }
+}

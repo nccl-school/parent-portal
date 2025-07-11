@@ -1,13 +1,16 @@
+import type { Roles } from "@nccl/api/client";
+
 export {};
-import type { UserRole } from "./features/user";
 
 declare global {
   interface CustomJwtSessionClaims {
     metadata: {
-      role?: UserRole;
+      role?: Roles;
+      db_id?: string;
     };
   }
   interface UserPublicMetadata {
-    role?: UserRole;
+    role?: Roles;
+    db_id?: string;
   }
 }

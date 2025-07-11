@@ -16,6 +16,7 @@ export async function action(args: Route.ActionArgs) {
       message: "Successfully changed the users role",
     });
   } catch (error) {
+    console.log(error);
     return ncclClient.serializeError(error);
   }
 }

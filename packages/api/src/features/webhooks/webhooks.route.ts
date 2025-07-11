@@ -22,7 +22,6 @@ webhooks.post(
     const event = wh.verify(payload, headers) as WebhookEvent;
     const db = c.get("db");
 
-    console.log(event);
     switch (event.type) {
       case "user.created":
         console.log("Running action for clerk webhook USER.CREATED");
@@ -41,9 +40,9 @@ webhooks.post(
           },
         });
         break;
+
       case "user.updated":
         console.log("Running action for clerk webhook USER.UPDATED");
-        console.log(event.data.email_addresses);
         await db.user.update({
           where: {
             id: event.data.public_metadata.db_id,
@@ -52,7 +51,6 @@ webhooks.post(
             firstName: event.data.first_name,
             lastName: event.data.last_name,
             imageUrl: event.data.image_url,
-            status: "ACTIVE",
           },
         });
         break;
