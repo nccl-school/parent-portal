@@ -41,7 +41,18 @@ export const currentUserMiddleware = createMiddleware(async (c, next) => {
   const dbId = auth.sessionClaims.metadata.db_id;
 
   const db = c.get("db");
-  let user = await db.user.findUnique({ where: { id: dbId } });
+  let user = await db.user.findFirst({
+    where: {
+      OR: [
+        {
+          id: dbId,
+        },
+        {
+          authId,
+        },
+      ],
+    },
+  });
   console.log("Checking if user exists in DB", user?.id);
 
   // This would only happen if the user is
