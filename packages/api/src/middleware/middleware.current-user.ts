@@ -12,12 +12,12 @@ declare global {
   interface CustomJwtSessionClaims {
     metadata: {
       role?: Roles;
-      email_address: string;
+      db_id: string;
     };
   }
   interface UserPublicMetadata {
     role?: Roles;
-    email_address: string;
+    db_id: string;
   }
 }
 
@@ -37,18 +37,17 @@ export const currentUserMiddleware = createMiddleware(async (c, next) => {
     throw new ErrorSet.unauthenticated();
   }
   const clerk_id = auth.userId;
-  const email_address = auth.sessionClaims.metadata.email_address;
-  console.log("Getting email_address from session", email_address);
+  const db_id = auth.sessionClaims.metadata.db_id;
 
   const db = c.get("db");
   let user = await db.user.findFirst({
     where: {
       OR: [
         {
-          email: email_address,
+          id: db_id,
         },
         {
-          extId: clerk_id,
+          authId: clerk_id,
         },
       ],
     },
@@ -63,7 +62,7 @@ export const currentUserMiddleware = createMiddleware(async (c, next) => {
     console.log("Creating db user");
     user = await db.user.create({
       data: {
-        extId: auth.userId,
+        authId: auth.userId,
         email: clerkUser.emailAddresses[0].emailAddress,
         roleId: clerkUser.publicMetadata.role ?? "USER",
       },

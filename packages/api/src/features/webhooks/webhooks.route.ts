@@ -22,27 +22,36 @@ webhooks.post(
     const event = wh.verify(payload, headers) as WebhookEvent;
     const db = c.get("db");
 
+    console.log(event);
     switch (event.type) {
       case "user.created":
-      case "user.updated":
-        console.log("User created / updated in clerk. Upserting to DB");
-        console.log(event);
-        await db.user.upsert({
+        console.log("Running action for clerk webhook USER.CREATED");
+        await db.user.update({
           where: {
-            email: event.data.email_addresses[0].email_address,
+            id: event.data.public_metadata.db_id,
           },
-          create: {
-            extId: event.data.id,
+          data: {
             firstName: event.data.first_name,
             lastName: event.data.last_name,
             email: event.data.email_addresses[0].email_address,
+            imageUrl: event.data.image_url,
             status: "ACTIVE",
-            roleId: event.data.public_metadata.role ?? "USER",
+            invitationId: null,
+            invitedAt: null,
           },
-          update: {
-            extId: event.data.id,
+        });
+        break;
+      case "user.updated":
+        console.log("Running action for clerk webhook USER.UPDATED");
+        console.log(event.data.email_addresses);
+        await db.user.update({
+          where: {
+            id: event.data.public_metadata.db_id,
+          },
+          data: {
             firstName: event.data.first_name,
             lastName: event.data.last_name,
+            imageUrl: event.data.image_url,
             status: "ACTIVE",
           },
         });

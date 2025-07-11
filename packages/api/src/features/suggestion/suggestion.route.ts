@@ -261,7 +261,7 @@ suggestion.get(
         createdBy: {
           select: {
             id: true,
-            extId: true,
+            authId: true,
             email: true,
             firstName: true,
             lastName: true,
@@ -319,10 +319,13 @@ suggestion.delete(
       },
     });
 
+    // Throw a 404 if the comment isn't there
     if (!record) {
       throw new ErrorSet.notFound("The requested comment cannot be found");
     }
 
+    // Unless the user is an admin, they cannot delete someone
+    // elses comment
     if (
       currentUser.id !== record.createdById &&
       currentUser.roleId !== "ADMIN"

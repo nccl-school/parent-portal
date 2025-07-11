@@ -9,7 +9,8 @@ export type UserStatus = z.infer<typeof UserStatusSchema>;
 export const UserSchema = z.object({
   id: z.string(),
   email: z.email(),
-  extId: z.string().nullable(),
+  authId: z.string().nullable(),
+  imageUrl: z.string().nullable(),
   firstName: z.string().nullable(),
   lastName: z.string().nullable(),
   createdAt: zDateStringSchema,
@@ -22,6 +23,7 @@ export type User = z.infer<typeof UserSchema>;
 
 // Get a list of users
 export const GetUserListResponseSchema = UserSchema.array();
+export type GetUserListResponse = z.infer<typeof GetUserListResponseSchema>;
 
 // Get a user
 export const GetUserParamsSchema = UserSchema.pick({ id: true });
@@ -48,13 +50,10 @@ export const UpdateUserRoleResponseSchema = UserSchema;
 
 // Invite Users
 export const InviteUsersRequestSchema = z.object({
-  email_addresses: z
-    .string()
-    .transform((val) => val.split(",").map((s) => s.trim()))
-    .pipe(z.array(z.email({ pattern: z.regexes.html5Email })))
-    .or(z.array(z.email({ pattern: z.regexes.html5Email }))),
+  email_addresses: z.array(z.email({ pattern: z.regexes.html5Email })),
   role: RolesSchema,
 });
+export type InviteUsersRequest = z.infer<typeof InviteUsersRequestSchema>;
 export const InviteUsersResponseSchema = z.object({
   message: z.string(),
   userCount: z.number(),

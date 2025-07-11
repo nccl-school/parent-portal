@@ -97,7 +97,7 @@ export const SuggestionViewCommentItem = forwardRef<
         </Typography>
       </div>
       <div className="edit">
-        {comment.createdBy.extId === user?.id && (
+        {comment.createdBy.authId === user?.id && (
           <Button
             dxVariant="icon"
             dxIcon="delete-02-stroke-standard"

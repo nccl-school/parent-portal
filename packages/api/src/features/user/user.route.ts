@@ -61,7 +61,7 @@ user.put(
     const param = c.req.valid("param");
     const db = c.get("db");
     console.log("Updating user in db");
-    const user = await db.user.update({
+    const dbUser = await db.user.update({
       data: {
         roleId: body.role,
       },
@@ -78,12 +78,12 @@ user.put(
     await clerk.users.updateUser(param.id, {
       publicMetadata: {
         role: body.role,
-        email_address: user.email,
+        db_id: dbUser.id,
       },
     });
 
     // Invalidate the current user cache
-    const data = await serialize(UpdateUserRoleResponseSchema, user);
+    const data = await serialize(UpdateUserRoleResponseSchema, dbUser);
     return c.json(data);
   }
 );
@@ -117,28 +117,31 @@ user.post(
       });
     }
 
-    const invitedUsers = await Promise.all(
-      body.email_addresses.map((emailAddress) => {
-        return clerk.invitations.createInvitation({
-          emailAddress,
+    const db = c.get("db");
+    const users = await db.user.createManyAndReturn({
+      data: body.email_addresses.map((email) => ({
+        email,
+        roleId: body.role,
+        status: "INVITED",
+      })),
+    });
+
+    await Promise.all(
+      users.map(async (dbUser) => {
+        const invite = await clerk.invitations.createInvitation({
+          emailAddress: dbUser.email,
           redirectUrl: env.NCCL_APP_URL.concat("/sign-up"),
           publicMetadata: {
             role: body.role,
-            email_address: emailAddress,
+            db_id: dbUser.id,
           },
+        });
+        await db.user.update({
+          where: { id: dbUser.id },
+          data: { invitationId: invite.id, invitedAt: new Date() },
         });
       })
     );
-
-    const db = c.get("db");
-    await db.user.createMany({
-      data: invitedUsers.map((invitedUser) => ({
-        email: invitedUser.emailAddress,
-        roleId: body.role,
-        invitationId: invitedUser.id,
-        invitedAt: new Date(),
-      })),
-    });
 
     const data = await serialize(InviteUsersResponseSchema, {
       message: `Successfully invited ${body.email_addresses.length} users.`,
@@ -166,34 +169,34 @@ user.get(
 
     console.log("Resending invite to", params.id);
 
-    const user = await db.user.findUnique({
+    const dbUser = await db.user.findUnique({
       where: {
         id: params.id,
       },
     });
-    if (!user) {
+    if (!dbUser) {
       throw new ErrorSet.notFound("Unable to locate user to resend invite");
     }
-    if (!user.invitationId) {
+    if (!dbUser.invitationId) {
       throw new ErrorSet.notFound(
         "Unable to locate users invitation record to resend"
       );
     }
 
-    await clerk.invitations.revokeInvitation(user.invitationId);
+    await clerk.invitations.revokeInvitation(dbUser.invitationId);
 
     const invite = await clerk.invitations.createInvitation({
-      emailAddress: user.email,
+      emailAddress: dbUser.email,
       redirectUrl: env.NCCL_APP_URL.concat("/sign-up"),
       publicMetadata: {
-        role: user.roleId,
-        email_address: user.email,
+        db_id: dbUser.id,
+        role: dbUser.roleId,
       },
     });
 
     await db.user.update({
       where: {
-        id: user.id,
+        id: dbUser.id,
       },
       data: {
         invitationId: invite.id,
@@ -202,7 +205,7 @@ user.get(
     });
 
     const data = await serialize(ResendInviteUserResponseSchema, {
-      message: `Successfully re-invited ${user.email}`,
+      message: `Successfully re-invited ${dbUser.email}`,
     });
 
     return c.json(data);

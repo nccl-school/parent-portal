@@ -17,3 +17,4 @@ export type Role = z.infer<typeof RoleSchema>;
 
 // ## Get a list of roles
 export const GetRoleListResponseSchema = RoleSchema.array();
+export type GetRoleListResponse = z.infer<typeof GetRoleListResponseSchema>;

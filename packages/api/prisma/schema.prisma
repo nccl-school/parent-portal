@@ -87,10 +87,11 @@ enum UserStatus {
 
 model User {
   id           String     @id @default(cuid())
-  extId        String?    @unique
+  authId       String?    @unique
   email        String     @unique
   firstName    String?
   lastName     String?
+  imageUrl     String?
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
   role         Role       @relation(fields: [roleId], references: [id])

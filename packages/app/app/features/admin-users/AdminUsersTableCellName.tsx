@@ -36,7 +36,7 @@ export function AdminUsersTableCellName(user: User) {
         dxFirstName={user.firstName ?? ""}
         dxSize={"lg"}
         dxLastName={user.lastName ?? ""}
-        // dxSrc={user.imageUrl ?? undefined}
+        dxSrc={user.imageUrl ?? undefined}
       />
       <Typography dxVariant="body1" dxNode="div" className="name">
         {getUserName(user)}
