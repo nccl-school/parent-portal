@@ -1,23 +1,21 @@
 import type z from "zod/v4";
 
 import {
+  SuggestionIDParamsSchema,
   CreateSuggestionRequestSchema,
   GetSuggestionListQuerySchema,
   GetSuggestionListResponseSchema,
-  GetSuggestionParamsSchema,
   GetSuggestionResponseSchema,
-  UpdateSuggestionParamsSchema,
   UpdateSuggestionRequestSchema,
   UpdateSuggestionResponseSchema,
-  CreateSuggestionVoteParams,
   CreateSuggestionVoteRequest,
   CreateSuggestionResponseSchema,
   CreateSuggestionVoteResponse,
-  GetSuggestionCommentsParamsSchema,
   GetSuggestionCommentsResponseSchema,
   CreateSuggestionCommentsRequestSchema,
-  CreateSuggestionCommentsParamsSchema,
   CreateSuggestionCommentsResponseSchema,
+  DeleteSuggestionCommentResponseSchema,
+  CommentIDParamsSchema,
 } from "./suggestion.utils.js";
 
 import {
@@ -49,7 +47,7 @@ export class SuggestionClient extends ApiClient {
   async getSuggestion(id: string) {
     return this._get({
       path: "/:id",
-      params: [GetSuggestionParamsSchema, { id }],
+      params: [SuggestionIDParamsSchema, { id }],
       serializer: GetSuggestionResponseSchema,
     });
   }
@@ -78,7 +76,7 @@ export class SuggestionClient extends ApiClient {
     return this._mutateJSON({
       method: "PUT",
       path: "/:id",
-      params: [UpdateSuggestionParamsSchema, { id }],
+      params: [SuggestionIDParamsSchema, { id }],
       body: [UpdateSuggestionRequestSchema, suggestion],
       serializer: UpdateSuggestionResponseSchema,
     });
@@ -94,7 +92,7 @@ export class SuggestionClient extends ApiClient {
     return this._mutateJSON({
       method: "POST",
       path: "/:id/vote",
-      params: [CreateSuggestionVoteParams, { id: suggestionId }],
+      params: [SuggestionIDParamsSchema, { id: suggestionId }],
       body: [CreateSuggestionVoteRequest, body],
       serializer: CreateSuggestionVoteResponse,
     });
@@ -107,7 +105,7 @@ export class SuggestionClient extends ApiClient {
   async getCommentsList(suggestionId: string) {
     return this._get({
       path: "/:id/comment",
-      params: [GetSuggestionCommentsParamsSchema, { id: suggestionId }],
+      params: [SuggestionIDParamsSchema, { id: suggestionId }],
       serializer: GetSuggestionCommentsResponseSchema,
     });
   }
@@ -122,9 +120,17 @@ export class SuggestionClient extends ApiClient {
     return this._mutateJSON({
       method: "POST",
       path: "/:id/comment",
-      params: [CreateSuggestionCommentsParamsSchema, { id: suggestionId }],
+      params: [SuggestionIDParamsSchema, { id: suggestionId }],
       body: [CreateSuggestionCommentsRequestSchema, comment],
       serializer: CreateSuggestionCommentsResponseSchema,
+    });
+  }
+
+  async deleteComment(suggestionCommentId: string) {
+    return this._delete({
+      path: "/comment/:id",
+      params: [CommentIDParamsSchema, { id: suggestionCommentId }],
+      serializer: DeleteSuggestionCommentResponseSchema,
     });
   }
 }

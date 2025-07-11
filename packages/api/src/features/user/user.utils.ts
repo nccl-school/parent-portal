@@ -9,6 +9,7 @@ export type UserStatus = z.infer<typeof UserStatusSchema>;
 export const UserSchema = z.object({
   id: z.string(),
   email: z.email(),
+  extId: z.string().nullable(),
   firstName: z.string().nullable(),
   lastName: z.string().nullable(),
   createdAt: zDateStringSchema,

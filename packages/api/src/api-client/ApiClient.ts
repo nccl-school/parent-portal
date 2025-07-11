@@ -181,6 +181,7 @@ There was an error when trying to serialize what was returned from the server:
     path,
     query,
     params,
+    serializer,
   }: {
     path: string;
     params?: [schema: P, data: z.infer<P>];
@@ -205,6 +206,47 @@ There was an error when trying to serialize what was returned from the server:
       throw deserializeError(json, req);
     }
 
-    return json as z.output<S>;
+    const data = this.#serialize(serializer, json);
+    return data as z.output<S>;
+  }
+
+  protected async _delete<
+    S extends ZodType,
+    Q extends ZodType = ZodType,
+    P extends ZodType = ZodType,
+  >({
+    path,
+    query,
+    params,
+    serializer,
+  }: {
+    path: string;
+    params?: [schema: P, data: z.infer<P>];
+    query?: [schema: Q, data: z.infer<Q> | undefined];
+    serializer?: S;
+  }): Promise<z.output<S> | true> {
+    // Assemble the request
+    const headers = this.#requestHeaders;
+
+    // Assemble the URL
+    const queryString = this.#makeQueryString(query);
+    const pathname = this.#makePathname(path, params);
+    const url = this.#makeURL({ pathname, queryString });
+
+    // Fetch the data
+    const req = new Request(url, { headers, method: "DELETE" });
+    const res = await fetch(req);
+    const json = await res.json();
+
+    if (!res.ok) {
+      throw deserializeError(json, req);
+    }
+
+    if (!serializer) {
+      return true;
+    }
+
+    const data = this.#serialize(serializer, json);
+    return data as z.output<S>;
   }
 }

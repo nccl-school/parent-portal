@@ -1,0 +1,15 @@
+meta {
+  name: Delete a comment from a suggestion
+  type: http
+  seq: 8
+}
+
+delete {
+  url: {{API_DOMAIN}}/api/suggestion/comment/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 
+}

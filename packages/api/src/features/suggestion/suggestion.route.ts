@@ -2,23 +2,20 @@ import { Hono } from "hono";
 import type { z } from "zod/v4";
 
 import {
-  CreateSuggestionVoteParams,
+  SuggestionIDParamsSchema,
   CreateSuggestionVoteRequest,
   CreateSuggestionRequestSchema,
   CreateSuggestionResponseSchema,
   GetSuggestionListResponseSchema,
-  GetSuggestionParamsSchema,
   GetSuggestionResponseSchema,
-  UpdateSuggestionParamsSchema,
   UpdateSuggestionRequestSchema,
   GetSuggestionListQuerySchema,
   CreateSuggestionVoteResponse,
-  GetSuggestionCommentsParamsSchema,
   GetSuggestionCommentsResponseSchema,
-  CreateSuggestionCommentsParamsSchema,
   CreateSuggestionCommentsRequestSchema,
   CreateSuggestionCommentsResponseSchema,
   UpdateSuggestionResponseSchema,
+  CommentIDParamsSchema,
 } from "./suggestion.utils.js";
 
 import { validate } from "../../middleware/middleware.validate.js";
@@ -140,7 +137,7 @@ suggestion.post(
 // GET /api/suggestion/:id | Get a suggestion
 suggestion.get(
   "/:id",
-  validate("param", GetSuggestionParamsSchema),
+  validate("param", SuggestionIDParamsSchema),
   async (c) => {
     const { id } = c.req.valid("param");
     const db = c.get("db");
@@ -174,7 +171,7 @@ suggestion.get(
 // PUT /api/suggestion/:id | Update a suggestion
 suggestion.put(
   "/:id",
-  validate("param", UpdateSuggestionParamsSchema),
+  validate("param", SuggestionIDParamsSchema),
   validate("json", UpdateSuggestionRequestSchema),
   async (c) => {
     const { id } = c.req.valid("param");
@@ -199,7 +196,7 @@ suggestion.put(
 // POST /api/suggestion/:id/vote | Vote on a suggestion
 suggestion.post(
   "/:id/vote",
-  validate("param", CreateSuggestionVoteParams),
+  validate("param", SuggestionIDParamsSchema),
   validate("json", CreateSuggestionVoteRequest),
   async (c) => {
     const params = c.req.valid("param");
@@ -252,7 +249,7 @@ suggestion.post(
 // GET /api/suggestion/:id/comment | Get's all of the comments on a suggestion
 suggestion.get(
   "/:id/comment",
-  validate("param", GetSuggestionCommentsParamsSchema),
+  validate("param", SuggestionIDParamsSchema),
   async (c) => {
     const params = c.req.valid("param");
     const db = c.get("db");
@@ -264,6 +261,7 @@ suggestion.get(
         createdBy: {
           select: {
             id: true,
+            extId: true,
             email: true,
             firstName: true,
             lastName: true,
@@ -283,7 +281,7 @@ suggestion.get(
 // POST /api/suggestion/:id/comment | Creates a comment on a suggestion
 suggestion.post(
   "/:id/comment",
-  validate("param", CreateSuggestionCommentsParamsSchema),
+  validate("param", SuggestionIDParamsSchema),
   validate("json", CreateSuggestionCommentsRequestSchema),
   async (c) => {
     const params = c.req.valid("param");
@@ -303,6 +301,44 @@ suggestion.post(
       record
     );
     return c.json(data);
+  }
+);
+
+// DELETE /api/suggestion/:id/comment | Deletes a comment
+suggestion.delete(
+  "/comment/:id",
+  validate("param", CommentIDParamsSchema),
+  async (c) => {
+    const params = c.req.valid("param");
+    const currentUser = c.get("currentUser");
+    const db = c.get("db");
+
+    const record = await db.suggestionComment.findUnique({
+      where: {
+        id: params.id,
+      },
+    });
+
+    if (!record) {
+      throw new ErrorSet.notFound("The requested comment cannot be found");
+    }
+
+    if (
+      currentUser.id !== record.createdById &&
+      currentUser.roleId !== "ADMIN"
+    ) {
+      throw new ErrorSet.notFound(
+        "You are not authorized to delete this comment."
+      );
+    }
+
+    await db.suggestionComment.delete({
+      where: {
+        id: params.id,
+      },
+    });
+
+    return c.body(null, 204);
   }
 );
 

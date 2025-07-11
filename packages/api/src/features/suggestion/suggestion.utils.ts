@@ -12,7 +12,10 @@ import { UserSchema } from "../user/user.utils.js";
 
 export const SuggestionCommentSchema = z.object({
   id: z.string(),
-  comment: zString({ required: "A comment is required", profanity: false }),
+  comment: zString({
+    required: "A comment is required",
+    profanity: false,
+  }),
   isAnonymous: z.boolean().optional().default(false),
   createdBy: UserSchema,
   createdAt: zDateStringSchema,
@@ -32,6 +35,19 @@ export const SuggestionSchema = z.object({
   createdBy: UserSchema,
 });
 export type Suggestion = z.infer<typeof SuggestionSchema>;
+
+export const SuggestionIDParamsSchema = z.object({
+  id: zString({
+    required: "A suggestion ID is required",
+  }),
+});
+export type SuggestionIDParams = z.infer<typeof SuggestionIDParamsSchema>;
+export const CommentIDParamsSchema = z.object({
+  id: zString({
+    required: "A comment ID is required",
+  }),
+});
+export type CommentIDParams = z.infer<typeof CommentIDParamsSchema>;
 
 // getSuggestionList
 export const GetSuggestionListQuerySchema = createQuerySchema({
@@ -63,10 +79,6 @@ export type GetSuggestionListResponse = z.infer<
 >;
 
 // getSuggestion
-export const GetSuggestionParamsSchema = z.object({
-  id: z.string(),
-});
-export type GetSuggestionParams = z.infer<typeof GetSuggestionParamsSchema>;
 export const GetSuggestionResponseSchema = z.object({
   ...SuggestionSchema.omit({
     comments: true,
@@ -88,9 +100,6 @@ export type CreateSuggestionResponse = z.infer<
 >;
 
 // updateSuggestion
-export const UpdateSuggestionParamsSchema = z.object({
-  id: z.string(),
-});
 export const UpdateSuggestionRequestSchema = SuggestionSchema.omit({
   id: true,
   createdBy: true,
@@ -109,21 +118,18 @@ export const SuggestionVoteTypeSchema = z.literal(["LIKE", "DISLIKE"]);
 export type SuggestionVoteType = z.infer<typeof SuggestionVoteTypeSchema>;
 
 // Create a suggestion vote
-export const CreateSuggestionVoteParams = z.object({ id: z.string() });
 export const CreateSuggestionVoteRequest = z.object({
   type: SuggestionVoteTypeSchema,
 });
 export const CreateSuggestionVoteResponse = zMessageSchema;
 
 // Get a suggestions comments
-export const GetSuggestionCommentsParamsSchema = z.object({
-  id: z.string(),
-});
 export const GetSuggestionCommentsResponseSchema = z
   .object({
     ...SuggestionCommentSchema.omit({ createdBy: true }).shape,
     createdBy: UserSchema.pick({
       id: true,
+      extId: true,
       email: true,
       firstName: true,
       lastName: true,
@@ -149,9 +155,6 @@ export type GetSuggestionCommentsResponse = z.infer<
 >;
 
 // Create a comment on a suggestion
-export const CreateSuggestionCommentsParamsSchema = z.object({
-  id: z.string(),
-});
 export const CreateSuggestionCommentsRequestSchema =
   SuggestionCommentSchema.pick({ isAnonymous: true, comment: true });
 export const CreateSuggestionCommentsResponseSchema =
@@ -161,3 +164,6 @@ export const CreateSuggestionCommentsResponseSchema =
 export type CreateSuggestionCommentsResponse = z.infer<
   typeof CreateSuggestionCommentsResponseSchema
 >;
+
+// Delete a suggestion comment
+export const DeleteSuggestionCommentResponseSchema = zMessageSchema;

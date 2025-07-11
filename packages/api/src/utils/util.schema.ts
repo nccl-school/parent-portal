@@ -33,20 +33,14 @@ export function checkProfanity<T extends ZodString>(s: T) {
   });
 }
 
-export function zString({
-  required,
-  profanity,
-}: {
-  required?: string;
-  profanity: boolean;
-}) {
+export function zString(options?: { required?: string; profanity?: boolean }) {
   const baseSchema = z.string().refine(
     (value) => {
-      return required && value;
+      return options?.required && value;
     },
-    { error: required }
+    { error: options?.required }
   );
-  if (!profanity) return checkProfanity(baseSchema);
+  if (!options?.profanity) return checkProfanity(baseSchema);
   return baseSchema;
 }
 
