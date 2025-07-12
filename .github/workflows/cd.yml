@@ -49,7 +49,7 @@ jobs:
     environment:
       name: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
     needs: db_changes
-    if: needs.db_changes.outputs.db_has_changed == true
+    if: needs.db_changes.outputs.db_has_changed == 'true'
     outputs:
       ran: "true"
 
