@@ -12,7 +12,7 @@ jobs:
     name: DB - Check for new migrations
     runs-on: ubuntu-latest
     outputs:
-      db_changed: ${{ steps.db.outputs.changed }}
+      db_has_changed: ${{ steps.db_changes.outputs.changed }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -35,10 +35,10 @@ jobs:
 
           if echo "$CHANGED_FILES" | grep '^prisma/migrations/'; then
             echo "✅ Detected changes in 'prisma/migrations/' — running DB migration."
-            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "changed='true'" >> $GITHUB_OUTPUT
           else
             echo "ℹ️ No changes to 'prisma/migrations/' — skipping DB migration."
-            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "changed='false'" >> $GITHUB_OUTPUT
           fi
   db_deploy:
     name: DB - Run migrations
@@ -46,7 +46,7 @@ jobs:
     environment:
       name: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
     needs: db_changes
-    if: needs.changes.outputs.db_changed == 'true'
+    if: needs.db_changes.outputs.db_has_changed == 'true'
     outputs:
       ran: "true"
 
