@@ -10,6 +10,7 @@ import type { loader } from "../../api/api.suggestion.comments.getManyOrCreateUn
 import { LoadingState } from "../../components/states/LoadingState";
 import { MessageState } from "../../components/states/MessageState";
 import { renderData } from "../../utils/client";
+import { SuggestionCommentDelete } from "../suggestion-comment-delete/SuggestionCommentDelete";
 
 const styles = css`
   ${makeReset("ul")};
@@ -26,22 +27,25 @@ export function SuggestionViewCommentList() {
   }, [load, suggestion_id]);
 
   return (
-    <ul className={styles}>
-      {renderData(data, {
-        loading: <LoadingState>Loading comments...</LoadingState>,
-        ok: (data) => {
-          if (data.length === 0) {
-            return (
-              <li>
-                <MessageState>No comments have been created</MessageState>
-              </li>
-            );
-          }
-          return data.map((comment) => (
-            <SuggestionViewCommentItem key={comment.id} comment={comment} />
-          ));
-        },
-      })}
-    </ul>
+    <>
+      <SuggestionCommentDelete.Component />
+      <ul className={styles}>
+        {renderData(data, {
+          loading: <LoadingState>Loading comments...</LoadingState>,
+          ok: (data) => {
+            if (data.length === 0) {
+              return (
+                <li>
+                  <MessageState>No comments have been created</MessageState>
+                </li>
+              );
+            }
+            return data.map((comment) => (
+              <SuggestionViewCommentItem key={comment.id} comment={comment} />
+            ));
+          },
+        })}
+      </ul>
+    </>
   );
 }

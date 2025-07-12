@@ -48,6 +48,7 @@ export default [
     ...prefix("role", [route("/", "./api/api.role.getRoles.ts")]),
     ...prefix("suggestion", [
       route("/", "./api/api.suggestion.getManyOrCreateUnique.ts"),
+      route("/comment/:id", "./api/api.suggestion.comment.ts"),
       route("/:id", "./api/api.suggestion.getOrUpdateUnique.ts", [
         route("vote", "./api/api.suggestion.voteOnUnique.ts"),
         route(

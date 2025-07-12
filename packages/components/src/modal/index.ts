@@ -6,5 +6,7 @@ export * from "./ModalBody.js";
 export * from "./modal.useModal.js";
 export * from "./modal.useModalContext.js";
 export * from "./ModalFooter.js";
+export * from "./ModalFooterCancel.js";
+export * from "./ModalFooterSubmit.js";
 export * from "./modal.utils.js";
 export * from "./Modal.controller.js";

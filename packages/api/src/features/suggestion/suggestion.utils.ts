@@ -130,6 +130,7 @@ export const GetSuggestionCommentsResponseSchema = z
     createdBy: UserSchema.pick({
       id: true,
       authId: true,
+      imageUrl: true,
       email: true,
       firstName: true,
       lastName: true,
@@ -142,6 +143,7 @@ export const GetSuggestionCommentsResponseSchema = z
         ...comment,
         createdBy: {
           ...comment.createdBy,
+          imageUrl: null,
           firstName: "Anonymous",
           lastName: "",
         },

@@ -8,6 +8,7 @@ import { useUser } from "@clerk/react-router";
 
 import { getUserName } from "../user";
 import { dates } from "../../utils/client";
+import { SuggestionCommentDelete } from "../suggestion-comment-delete/SuggestionCommentDelete";
 
 export type SuggestionViewCommentItemPropsNative = JSX.IntrinsicElements["div"];
 export type SuggestionViewCommentItemPropsCustom = {
@@ -79,6 +80,7 @@ export const SuggestionViewCommentItem = forwardRef<
       <div className="avatar">
         <Avatar
           dxSize="lg"
+          dxSrc={comment.createdBy.imageUrl ?? undefined}
           dxFirstName={comment.createdBy.firstName ?? ""}
           dxLastName={comment.createdBy.lastName ?? ""}
         />
@@ -99,6 +101,9 @@ export const SuggestionViewCommentItem = forwardRef<
       <div className="edit">
         {comment.createdBy.authId === user?.id && (
           <Button
+            onClick={(e) =>
+              SuggestionCommentDelete.launch(e, { commentId: comment.id })
+            }
             dxVariant="icon"
             dxIcon="delete-02-stroke-standard"
             dxColor="danger"

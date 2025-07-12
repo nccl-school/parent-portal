@@ -16,6 +16,7 @@ import {
   CreateSuggestionCommentsResponseSchema,
   UpdateSuggestionResponseSchema,
   CommentIDParamsSchema,
+  DeleteSuggestionCommentResponseSchema,
 } from "./suggestion.utils.js";
 
 import { validate } from "../../middleware/middleware.validate.js";
@@ -262,6 +263,7 @@ suggestion.get(
           select: {
             id: true,
             authId: true,
+            imageUrl: true,
             email: true,
             firstName: true,
             lastName: true,
@@ -341,7 +343,10 @@ suggestion.delete(
       },
     });
 
-    return c.body(null, 204);
+    const data = await serialize(DeleteSuggestionCommentResponseSchema, {
+      message: "Successfully deleted comment",
+    });
+    return c.json(data);
   }
 );
 
