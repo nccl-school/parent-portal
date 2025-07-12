@@ -111,6 +111,10 @@ jobs:
       - name: Install Dependencies
         run: yarn install --immutable
 
+      - name: Generate Prisma Client
+        working-directory: packages/api
+        run: yarn prisma generate
+
       - name: Build Monorepo
         run: yarn build
         env:
