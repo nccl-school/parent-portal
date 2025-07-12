@@ -1316,20 +1316,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@clerk/backend@npm:^2.2.0":
-  version: 2.2.0
-  resolution: "@clerk/backend@npm:2.2.0"
-  dependencies:
-    "@clerk/shared": "npm:^3.9.8"
-    "@clerk/types": "npm:^4.61.0"
-    cookie: "npm:1.0.2"
-    snakecase-keys: "npm:8.0.1"
-    tslib: "npm:2.8.1"
-  checksum: 10c0/deaf688e085ec2a28b8e98453b3ce2c293f19adf440acd8b295c71c7d765ad1c98841e8a5e9ee5d254e91d18884533cc11f6880c34ec99f4d3b57b330b47fe70
-  languageName: node
-  linkType: hard
-
-"@clerk/backend@npm:^2.4.0":
+"@clerk/backend@npm:2.4.0, @clerk/backend@npm:^2.4.0":
   version: 2.4.0
   resolution: "@clerk/backend@npm:2.4.0"
   dependencies:
@@ -1340,6 +1327,19 @@ __metadata:
     standardwebhooks: "npm:^1.0.0"
     tslib: "npm:2.8.1"
   checksum: 10c0/5dfbf1ccdb56bc71d81b19b44709ae3212fdb1b7ee78a0947064e16b9e333dc0c9a3b0a10ec819cc8e834e98c94e0587a38ee3177550645ade5c60fafaed85cd
+  languageName: node
+  linkType: hard
+
+"@clerk/backend@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "@clerk/backend@npm:2.2.0"
+  dependencies:
+    "@clerk/shared": "npm:^3.9.8"
+    "@clerk/types": "npm:^4.61.0"
+    cookie: "npm:1.0.2"
+    snakecase-keys: "npm:8.0.1"
+    tslib: "npm:2.8.1"
+  checksum: 10c0/deaf688e085ec2a28b8e98453b3ce2c293f19adf440acd8b295c71c7d765ad1c98841e8a5e9ee5d254e91d18884533cc11f6880c34ec99f4d3b57b330b47fe70
   languageName: node
   linkType: hard
 
@@ -2393,7 +2393,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hono/clerk-auth@npm:^3.0.1":
+"@hono/clerk-auth@npm:3.0.1":
   version: 3.0.1
   resolution: "@hono/clerk-auth@npm:3.0.1"
   dependencies:
@@ -2405,7 +2405,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hono/node-server@npm:^1.15.0":
+"@hono/node-server@npm:1.15.0":
   version: 1.15.0
   resolution: "@hono/node-server@npm:1.15.0"
   peerDependencies:
@@ -2414,7 +2414,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hono/zod-validator@npm:^0.7.0":
+"@hono/zod-validator@npm:0.7.0":
   version: 0.7.0
   resolution: "@hono/zod-validator@npm:0.7.0"
   peerDependencies:
@@ -2900,26 +2900,31 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@nccl/api@workspace:packages/api"
   dependencies:
-    "@clerk/backend": "npm:^2.4.0"
+    "@clerk/backend": "npm:2.4.0"
     "@clerk/express": "npm:1.7.4"
     "@gfdigital/tsconfig": "npm:0.3.1"
-    "@hono/clerk-auth": "npm:^3.0.1"
-    "@hono/node-server": "npm:^1.15.0"
-    "@hono/zod-validator": "npm:^0.7.0"
-    "@prisma/adapter-pg": "npm:^6.11.1"
+    "@hono/clerk-auth": "npm:3.0.1"
+    "@hono/node-server": "npm:1.15.0"
+    "@hono/zod-validator": "npm:0.7.0"
+    "@neondatabase/serverless": "npm:1.0.1"
+    "@prisma/adapter-neon": "npm:6.11.1"
+    "@prisma/adapter-pg": "npm:6.11.1"
     "@prisma/client": "npm:6.11.1"
     "@prisma/extension-accelerate": "npm:2.0.1"
-    "@types/leo-profanity": "npm:^1.5.4"
-    "@types/node": "npm:^24.0.10"
+    "@types/leo-profanity": "npm:1.5.4"
+    "@types/node": "npm:24.0.10"
+    "@types/ws": "npm:8.18.1"
+    bufferutil: "npm:4.0.9"
     dotenv: "npm:17.0.1"
     dotenv-cli: "npm:8.0.0"
-    hono: "npm:^4.8.4"
-    leo-profanity: "npm:^1.8.0"
+    hono: "npm:4.8.4"
+    leo-profanity: "npm:1.8.0"
     prisma: "npm:6.11.1"
-    svix: "npm:^1.68.0"
-    tsx: "npm:^4.20.3"
-    typescript: "npm:^5.8.3"
-    zod: "npm:^3.25.75"
+    svix: "npm:1.68.0"
+    tsx: "npm:4.20.3"
+    typescript: "npm:5.8.3"
+    ws: "npm:8.18.3"
+    zod: "npm:3.25.75"
   languageName: unknown
   linkType: soft
 
@@ -3016,6 +3021,16 @@ __metadata:
     typescript: "npm:5.8.3"
   languageName: unknown
   linkType: soft
+
+"@neondatabase/serverless@npm:1.0.1, @neondatabase/serverless@npm:>0.6.0 <2":
+  version: 1.0.1
+  resolution: "@neondatabase/serverless@npm:1.0.1"
+  dependencies:
+    "@types/node": "npm:^22.15.30"
+    "@types/pg": "npm:^8.8.0"
+  checksum: 10c0/9c7377e5ce3792b8af81c8823ec5e42b8eff3a718df69333ec768b30b6b05ca3ae080deba36d919f2530c2bdaaf8b85de8cc6e738e5670acbea7b18f92ab2ce8
+  languageName: node
+  linkType: hard
 
 "@ngneat/falso@npm:^8.0.1":
   version: 8.0.1
@@ -3274,7 +3289,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/adapter-pg@npm:^6.11.1":
+"@prisma/adapter-neon@npm:6.11.1":
+  version: 6.11.1
+  resolution: "@prisma/adapter-neon@npm:6.11.1"
+  dependencies:
+    "@neondatabase/serverless": "npm:>0.6.0 <2"
+    "@prisma/driver-adapter-utils": "npm:6.11.1"
+    postgres-array: "npm:3.0.4"
+  checksum: 10c0/0b9c802683b6065acd9bb850c5644e8889cd0f81a8d800504017bfc33c73b1ebc727e9e8037cba040362585ea7861603f28b7bbd359ae12e95e494da081378e3
+  languageName: node
+  linkType: hard
+
+"@prisma/adapter-pg@npm:6.11.1":
   version: 6.11.1
   resolution: "@prisma/adapter-pg@npm:6.11.1"
   dependencies:
@@ -4311,7 +4337,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/leo-profanity@npm:^1.5.4":
+"@types/leo-profanity@npm:1.5.4":
   version: 1.5.4
   resolution: "@types/leo-profanity@npm:1.5.4"
   checksum: 10c0/525a748975ddd6bcf3e64201e6b88b34e9e8e6ca51564d0f2b7ecc8de311db0a21e964bf0b4212c84a9fe45e5c971e2a5e3e67dfcc7f209a675ee3f656d38813
@@ -4352,7 +4378,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:24.0.10, @types/node@npm:^24.0.10":
+"@types/node@npm:24.0.10":
   version: 24.0.10
   resolution: "@types/node@npm:24.0.10"
   dependencies:
@@ -4368,12 +4394,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:^22.15.30":
+  version: 22.16.3
+  resolution: "@types/node@npm:22.16.3"
+  dependencies:
+    undici-types: "npm:~6.21.0"
+  checksum: 10c0/ea6829d0691713e216c15a767f87e412fa0f45c7ed4d49419098d967467e20a5dcdf66fee024e314deab2779f7e5282e1839ee918e845be27f14179247ec947a
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:^22.7.5":
   version: 22.15.34
   resolution: "@types/node@npm:22.15.34"
   dependencies:
     undici-types: "npm:~6.21.0"
   checksum: 10c0/fb6a6b36daaa1b484aaba3d33b4d1e7b37ea993e29f20b7a676affa76ed6ff6acd2ded4d5003469bc8dbc815b3d224533b4560896037ef6d5b5d552721ab7d57
+  languageName: node
+  linkType: hard
+
+"@types/pg@npm:^8.8.0":
+  version: 8.15.4
+  resolution: "@types/pg@npm:8.15.4"
+  dependencies:
+    "@types/node": "npm:*"
+    pg-protocol: "npm:*"
+    pg-types: "npm:^2.2.0"
+  checksum: 10c0/7f9295cb2d934681bba84f7caad529c3b100d87e83ad0732c7fe496f4f79e42a795097321db54e010fcff22cb5e410cf683b4c9941907ee4564c822242816e91
   languageName: node
   linkType: hard
 
@@ -4441,6 +4487,15 @@ __metadata:
   version: 3.0.3
   resolution: "@types/unist@npm:3.0.3"
   checksum: 10c0/2b1e4adcab78388e088fcc3c0ae8700f76619dbcb4741d7d201f87e2cb346bfc29a89003cfea2d76c996e1061452e14fcd737e8b25aacf949c1f2d6b2bc3dd60
+  languageName: node
+  linkType: hard
+
+"@types/ws@npm:8.18.1":
+  version: 8.18.1
+  resolution: "@types/ws@npm:8.18.1"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10c0/61aff1129143fcc4312f083bc9e9e168aa3026b7dd6e70796276dcfb2c8211c4292603f9c4864fae702f2ed86e4abd4d38aa421831c2fd7f856c931a481afbab
   languageName: node
   linkType: hard
 
@@ -5424,6 +5479,16 @@ __metadata:
   version: 1.1.2
   resolution: "buffer-from@npm:1.1.2"
   checksum: 10c0/124fff9d66d691a86d3b062eff4663fe437a9d9ee4b47b1b9e97f5a5d14f6d5399345db80f796827be7c95e70a8e765dd404b7c3ff3b3324f98e9b0c8826cc34
+  languageName: node
+  linkType: hard
+
+"bufferutil@npm:4.0.9":
+  version: 4.0.9
+  resolution: "bufferutil@npm:4.0.9"
+  dependencies:
+    node-gyp: "npm:latest"
+    node-gyp-build: "npm:^4.3.0"
+  checksum: 10c0/f8a93279fc9bdcf32b42eba97edc672b39ca0fe5c55a8596099886cffc76ea9dd78e0f6f51ecee3b5ee06d2d564aa587036b5d4ea39b8b5ac797262a363cdf7d
   languageName: node
   linkType: hard
 
@@ -8208,7 +8273,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hono@npm:^4.8.4":
+"hono@npm:4.8.4":
   version: 4.8.4
   resolution: "hono@npm:4.8.4"
   checksum: 10c0/3712bbb4f7d24b5f4f30d75730ae30111cafdb92132728c92e83c257008cfd64e234a6c0657807cb4dd7bc001e3e1daf2e4dd5eb0a73a32ef3a70eff0415d3b7
@@ -8968,7 +9033,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"leo-profanity@npm:^1.8.0":
+"leo-profanity@npm:1.8.0":
   version: 1.8.0
   resolution: "leo-profanity@npm:1.8.0"
   dependencies:
@@ -9602,6 +9667,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-gyp-build@npm:^4.3.0":
+  version: 4.8.4
+  resolution: "node-gyp-build@npm:4.8.4"
+  bin:
+    node-gyp-build: bin.js
+    node-gyp-build-optional: optional.js
+    node-gyp-build-test: build-test.js
+  checksum: 10c0/444e189907ece2081fe60e75368784f7782cfddb554b60123743dfb89509df89f1f29c03bbfa16b3a3e0be3f48799a4783f487da6203245fa5bed239ba7407e1
+  languageName: node
+  linkType: hard
+
 "node-gyp@npm:latest":
   version: 11.2.0
   resolution: "node-gyp@npm:11.2.0"
@@ -10172,14 +10248,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg-protocol@npm:^1.10.3":
+"pg-protocol@npm:*, pg-protocol@npm:^1.10.3":
   version: 1.10.3
   resolution: "pg-protocol@npm:1.10.3"
   checksum: 10c0/f7ef54708c93ee6d271e37678296fc5097e4337fca91a88a3d99359b78633dbdbf6e983f0adb34b7cdd261b7ec7266deb20c3233bf3dfdb498b3e1098e8750b9
   languageName: node
   linkType: hard
 
-"pg-types@npm:2.2.0":
+"pg-types@npm:2.2.0, pg-types@npm:^2.2.0":
   version: 2.2.0
   resolution: "pg-types@npm:2.2.0"
   dependencies:
@@ -11811,7 +11887,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"svix@npm:^1.68.0":
+"svix@npm:1.68.0":
   version: 1.68.0
   resolution: "svix@npm:1.68.0"
   dependencies:
@@ -12082,7 +12158,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsx@npm:^4.20.3":
+"tsx@npm:4.20.3":
   version: 4.20.3
   resolution: "tsx@npm:4.20.3"
   dependencies:
@@ -12287,7 +12363,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:5.8.3, typescript@npm:^5.8.2, typescript@npm:^5.8.3":
+"typescript@npm:5.8.3, typescript@npm:^5.8.2":
   version: 5.8.3
   resolution: "typescript@npm:5.8.3"
   bin:
@@ -12297,7 +12373,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.8.2#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.8.3#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.8.2#optional!builtin<compat/typescript>":
   version: 5.8.3
   resolution: "typescript@patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>::version=5.8.3&hash=5786d5"
   bin:
@@ -13087,6 +13163,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ws@npm:8.18.3":
+  version: 8.18.3
+  resolution: "ws@npm:8.18.3"
+  peerDependencies:
+    bufferutil: ^4.0.1
+    utf-8-validate: ">=5.0.2"
+  peerDependenciesMeta:
+    bufferutil:
+      optional: true
+    utf-8-validate:
+      optional: true
+  checksum: 10c0/eac918213de265ef7cb3d4ca348b891a51a520d839aa51cdb8ca93d4fa7ff9f6ccb339ccee89e4075324097f0a55157c89fa3f7147bde9d8d7e90335dc087b53
+  languageName: node
+  linkType: hard
+
 "ws@npm:^8.18.0, ws@npm:^8.18.2":
   version: 8.18.2
   resolution: "ws@npm:8.18.2"
@@ -13211,17 +13302,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"zod@npm:3.25.75, zod@npm:^3.25.75":
+  version: 3.25.75
+  resolution: "zod@npm:3.25.75"
+  checksum: 10c0/e11c83dcd1437401c1edf4f0448bd13b9133e83196385d0ee5407662bef6c08099cb511b5e65f11f2feba244b6709bcd34077c9450c9f3064f75df51b362b5f2
+  languageName: node
+  linkType: hard
+
 "zod@npm:^3.24.1":
   version: 3.24.3
   resolution: "zod@npm:3.24.3"
   checksum: 10c0/ab0369810968d0329a1a141e9418e01e5c9c2a4905cbb7cb7f5a131d6e9487596e1400e21eeff24c4a8ee28dacfa5bd6103893765c055b7a98c2006a5a4fc68d
-  languageName: node
-  linkType: hard
-
-"zod@npm:^3.25.75":
-  version: 3.25.75
-  resolution: "zod@npm:3.25.75"
-  checksum: 10c0/e11c83dcd1437401c1edf4f0448bd13b9133e83196385d0ee5407662bef6c08099cb511b5e65f11f2feba244b6709bcd34077c9450c9f3064f75df51b362b5f2
   languageName: node
   linkType: hard
 

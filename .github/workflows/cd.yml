@@ -128,53 +128,53 @@ jobs:
           gcloud builds submit . \
             --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{vars.SERVICE_NAME}} \
 
-      - name: GCP - Deploy to Cloud Run
-        run: |
-          echo "Deploying ${{vars.SERVICE_NAME}} to Google Cloud Run"
-          gcloud run deploy ${{vars.SERVICE_NAME}} \
-            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{vars.SERVICE_NAME}} \
-            --platform managed \
-            --allow-unauthenticated \
-            --region us-central1 \
-            --set-env-vars NODE_ENV=production,\
-          NCCL_APP_URL=${{ vars.NCCL_APP_URL }},\
-          CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }},\
-          CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }},\
-          GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }},\
-          GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}
+      # - name: GCP - Deploy to Cloud Run
+      #   run: |
+      #     echo "Deploying ${{vars.SERVICE_NAME}} to Google Cloud Run"
+      #     gcloud run deploy ${{vars.SERVICE_NAME}} \
+      #       --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{vars.SERVICE_NAME}} \
+      #       --platform managed \
+      #       --allow-unauthenticated \
+      #       --region us-central1 \
+      #       --set-env-vars NODE_ENV=production,\
+      #     NCCL_APP_URL=${{ vars.NCCL_APP_URL }},\
+      #     CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }},\
+      #     CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }},\
+      #     GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }},\
+      #     GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}
 
-        # - name: Checkout Repository
-        #   uses: actions/checkout@v4
+      # - name: Checkout Repository
+      #   uses: actions/checkout@v4
 
-        # - name: Deploy
-        #   run: |
-        #     echo "Deploying branch: ${{ github.ref_name }}"
-        #     echo "To environment: ${{ github.ref_name == 'main' && 'production' || 'dev' }}"
+      # - name: Deploy
+      #   run: |
+      #     echo "Deploying branch: ${{ github.ref_name }}"
+      #     echo "To environment: ${{ github.ref_name == 'main' && 'production' || 'dev' }}"
 
-        # - name: Read Node.js Version
-        #   id: node_version
-        #   run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
+      # - name: Read Node.js Version
+      #   id: node_version
+      #   run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
 
-        # - name: Set Up Node.js
-        #   uses: actions/setup-node@v4
-        #   with:
-        #     node-version: ${{ env.NODE_VERSION }}
+      # - name: Set Up Node.js
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: ${{ env.NODE_VERSION }}
 
-        # - name: Enable Corepack # Ensures the correct version of yarn is used
-        #   run: corepack enable
+      # - name: Enable Corepack # Ensures the correct version of yarn is used
+      #   run: corepack enable
 
-        # - name: Install Dependencies
-        #   run: yarn install --immutable
+      # - name: Install Dependencies
+      #   run: yarn install --immutable
 
-        # - name: Build Project
-        #   run: yarn build
-        #   env:
-        #     VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
-        #     TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
-        #     TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
+      # - name: Build Project
+      #   run: yarn build
+      #   env:
+      #     VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
+      #     TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
+      #     TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
-        # - name: --- DEBUG BUILD FILE ---
-        #   run: |
-        #     FILE=$(ls ./packages/app/build/server/assets/server-build-* | head -n 1)
-        #     echo "Showing contents of $FILE"
-        #     cat "$FILE"
+      # - name: --- DEBUG BUILD FILE ---
+      #   run: |
+      #     FILE=$(ls ./packages/app/build/server/assets/server-build-* | head -n 1)
+      #     echo "Showing contents of $FILE"
+      #     cat "$FILE"

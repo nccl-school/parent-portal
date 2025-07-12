@@ -2,9 +2,14 @@ import { createMiddleware } from "hono/factory";
 // import { withAccelerate } from "@prisma/extension-accelerate";
 import { PrismaPg } from "@prisma/adapter-pg";
 import type { Context } from "hono";
+import { PrismaNeon } from "@prisma/adapter-neon";
+import { neonConfig } from "@neondatabase/serverless";
+import ws from "ws";
 
-import { PrismaClient } from "../_generated/prisma/default.js";
 import { getEnvVar } from "../utils/util.envVar.js";
+import { PrismaClient } from "../_generated/prisma/default.js";
+
+neonConfig.webSocketConstructor = ws;
 
 declare module "hono" {
   interface ContextVariableMap {
@@ -14,10 +19,16 @@ declare module "hono" {
 
 function getPrisma<C extends Context>(c: C) {
   const env = getEnvVar(c);
-  const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
-  const prisma = new PrismaClient({ adapter });
+  const connectionString = env.DATABASE_URL;
 
+  const adapter =
+    process.env.NODE_ENV === "development"
+      ? new PrismaPg({ connectionString }) // local env = docker-compose
+      : new PrismaNeon({ connectionString }); // higher env = neon
+
+  const prisma = new PrismaClient({ adapter });
   // .$extends(withAccelerate());
+
   return prisma;
 }
 
