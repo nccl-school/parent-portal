@@ -4,36 +4,82 @@ on:
   push:
     branches:
       - dev
+      - feat/db-and-api
       # - main
 
 jobs:
-  deploy:
-    name: Build and Deploy
+  db_changes:
+    name: DB - Check for new migrations
     runs-on: ubuntu-latest
+    outputs:
+      db_changed: ${{ steps.db.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
 
+      - id: db
+        name: Check if DB has changed
+        run: |
+          if git diff --name-only ${{ github.sha }} ${{ github.event.before }} | grep '^prisma/migrations/'; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+  db_deploy:
+    name: DB - Run migrations
+    runs-on: ubuntu-latest
     environment:
       name: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
+    if: needs.db_changes.outputs.db_changed == 'true'
+    outputs:
+      ran: "true"
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Deploy
-        run: |
-          echo "Deploying branch: ${{ github.ref_name }}"
-          echo "To environment: ${{ github.ref_name == 'main' && 'production' || 'dev' }}"
-
       - name: Read Node.js Version
         id: node_version
         run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
+
+      - name: Enable Corepack # Ensures the correct version of yarn is used
+        run: corepack enable
 
       - name: Set Up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: "yarn"
+
+      - name: Install Dependencies
+        run: yarn install --immutable
+
+      - name: Deploy Prisma Migrations
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: yarn prisma migrate deploy
+
+  build:
+    name: Build App and API
+    runs-on: ubuntu-latest
+    needs: db_deploy
+    outputs:
+      artifact-id: ${{ steps.upload.outputs.artifact-id }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Read Node.js Version
+        id: node_version
+        run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
 
       - name: Enable Corepack # Ensures the correct version of yarn is used
         run: corepack enable
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "yarn"
 
       - name: Install Dependencies
         run: yarn install --immutable
@@ -45,11 +91,26 @@ jobs:
           TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
           TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
-      - name: --- DEBUG BUILD FILE ---
-        run: |
-          FILE=$(ls ./packages/app/build/server/assets/server-build-* | head -n 1)
-          echo "Showing contents of $FILE"
-          cat "$FILE"
+      - name: Upload Build
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: |
+            packages/app/build
+            packages/api
+  deploy-app:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    environment:
+      name: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: .
 
       - name: GCP - Authenticate
         uses: google-github-actions/auth@v2
@@ -81,3 +142,39 @@ jobs:
           CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }},\
           GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }},\
           GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}
+
+        # - name: Checkout Repository
+        #   uses: actions/checkout@v4
+
+        # - name: Deploy
+        #   run: |
+        #     echo "Deploying branch: ${{ github.ref_name }}"
+        #     echo "To environment: ${{ github.ref_name == 'main' && 'production' || 'dev' }}"
+
+        # - name: Read Node.js Version
+        #   id: node_version
+        #   run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
+
+        # - name: Set Up Node.js
+        #   uses: actions/setup-node@v4
+        #   with:
+        #     node-version: ${{ env.NODE_VERSION }}
+
+        # - name: Enable Corepack # Ensures the correct version of yarn is used
+        #   run: corepack enable
+
+        # - name: Install Dependencies
+        #   run: yarn install --immutable
+
+        # - name: Build Project
+        #   run: yarn build
+        #   env:
+        #     VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
+        #     TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
+        #     TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
+
+        # - name: --- DEBUG BUILD FILE ---
+        #   run: |
+        #     FILE=$(ls ./packages/app/build/server/assets/server-build-* | head -n 1)
+        #     echo "Showing contents of $FILE"
+        #     cat "$FILE"
