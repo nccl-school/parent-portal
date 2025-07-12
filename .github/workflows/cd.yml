@@ -80,6 +80,7 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Seed
+        working-directory: packages/api
         run: yarn prisma db seed
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
