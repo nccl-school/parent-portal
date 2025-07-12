@@ -11,7 +11,6 @@ import {
 } from "@nccl/components";
 import { useEffect } from "react";
 import { href, useFetcher } from "react-router";
-import { makeRem } from "@nccl/theme";
 
 import { isError } from "../../utils/client";
 
@@ -27,7 +26,6 @@ function ModalContent() {
   const { Form, data, ...fetcher } = useFetcher();
 
   useEffect(() => {
-    console.log(data);
     if (!data || isError(data)) return;
     closeModal();
   }, [closeModal, data]);
