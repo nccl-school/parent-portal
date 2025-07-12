@@ -12,7 +12,7 @@ jobs:
     name: DB - Check for new migrations
     runs-on: ubuntu-latest
     outputs:
-      db_has_changed: ${{ steps.db_changes.outputs.changed }}
+      db_has_changed: ${{ steps.db.outputs.changed }}
     steps:
       - uses: actions/checkout@v4
         with:
