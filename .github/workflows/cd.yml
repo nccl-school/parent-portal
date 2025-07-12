@@ -25,6 +25,9 @@ jobs:
         name: Check if Prisma Migrations Have Changed
         working-directory: packages/api
         run: |
+          echo "changed=true" >> $GITHUB_OUTPUT
+          exit 0
+
           echo "🔍 Checking for changes to 'prisma/migrations/' between this commit and origin/dev"
           CHANGED_FILES=$(git diff --name-only origin/dev...HEAD)
           echo
