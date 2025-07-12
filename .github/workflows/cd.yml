@@ -78,6 +78,9 @@ jobs:
         run: yarn prisma migrate deploy
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      - name: Generate Prisma Client
+        working-directory: packages/api
+        run: yarn prisma generate
 
       - name: Seed
         working-directory: packages/api
@@ -89,7 +92,9 @@ jobs:
     name: Build & Deploy App and API
     runs-on: ubuntu-latest
     needs: [db_changes, db_deploy]
-    if: always()
+    if: |
+      needs.db_deploy.result == 'success' ||
+      needs.db_deploy.result == 'skipped'
     environment:
       name: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
     steps:
