@@ -40,7 +40,7 @@ function ModalContent() {
       <ModalHeader>
         <ModalHeaderTitle>Delete this comment?</ModalHeaderTitle>
       </ModalHeader>
-      <ModalBody style={{ marginBottom: makeRem(16) }}>
+      <ModalBody>
         <Typography dxVariant="body1" dxNode="p">
           Are you sure that you want to delete this comment? This action cannot
           be undone.

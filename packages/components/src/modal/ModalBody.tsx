@@ -9,6 +9,7 @@ export type ModalBodyProps = ModalBodyPropsNative;
 
 const styles = css`
   padding: 0 ${makeCustom("modal--gutters")};
+  padding-bottom: ${makeCustom("modal--gutters")};
 `;
 
 export const ModalBody = forwardRef<HTMLDivElement, ModalBodyProps>(

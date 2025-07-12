@@ -7,7 +7,7 @@ export function ModalFooterCancel() {
   return (
     <Button
       dxVariant="outlined"
-      dxColor="secondary"
+      dxColor="primary"
       dxSize="md"
       type="button"
       onClick={closeModal}

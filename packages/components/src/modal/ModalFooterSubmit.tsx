@@ -8,7 +8,7 @@ export function ModalFooterSubmit({
   type = "submit",
   children,
   isLoading,
-  dxColor = "secondary",
+  dxColor = "primary",
 }: Pick<ButtonProps, "type"> & {
   isLoading: boolean;
   children: ReactNode;
