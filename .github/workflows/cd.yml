@@ -170,7 +170,7 @@ jobs:
         # packages/app has to be run this way
         run: |
           echo "📂 Working directory:"
-          \tpwd
+          pwd
           echo "📄 Files before Docker build:"
           ls -alh
           echo "📁 Contents of build/ (if exists):"
