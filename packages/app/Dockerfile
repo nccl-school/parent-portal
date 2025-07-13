@@ -6,6 +6,10 @@ WORKDIR /app
 COPY build ./build
 COPY server.js ./server.js
 
+# Debug step: output what's been copied
+RUN echo "✅ Contents of /app after COPY:" && ls -alh /app && \
+    echo "📁 Contents of /app/build:" && ls -alh /app/build || echo "❌ build/ missing"
+
 ENV PORT=8080
 EXPOSE 8080
 
