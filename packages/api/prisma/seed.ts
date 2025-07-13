@@ -32,6 +32,7 @@ async function main() {
   ];
   await prisma.role.createMany({
     data,
+    skipDuplicates: true,
   });
   console.log("Seeding roles... complete.");
 }
