@@ -143,11 +143,11 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: GCP - Build using Cloud Build
-        run: |
-          echo "Building ${{vars.CLOUD_RUN_APP_SERVICE_NAME}}"
-          gcloud builds submit . \
-            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{vars.CLOUD_RUN_APP_SERVICE_NAME}} \
+      # - name: GCP - Build API
+      #   run: |
+      #     echo "Building ${{vars.CLOUD_RUN_API_SERVICE_NAME}}"
+      #     gcloud builds submit . \
+      #       --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{vars.CLOUD_RUN_API_SERVICE_NAME}} \
 
       # - name: GCP - Deploy to Cloud Run
       #   run: |
@@ -159,38 +159,33 @@ jobs:
       #       --region us-central1 \
       #       --set-env-vars NODE_ENV=production,\
       #     NCCL_APP_URL=${{ vars.NCCL_APP_URL }},\
+      #     NCCL_API_URL=${{ vars.NCCL_API_URL }},\
       #     CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }},\
       #     CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }},\
+      #     CLERK_WEBHOOK_SIGNING_SECRET=${{ secrets.CLERK_WEBHOOK_SIGNING_SECRET }},\
       #     GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }},\
       #     GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}
 
-      # - name: Checkout Repository
-      #   uses: actions/checkout@v4
+      - name: GCP - Build App
+        run: |
+          echo "Building ${{vars.CLOUD_RUN_APP_SERVICE_NAME}}"
+          gcloud builds submit . \
+            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{vars.CLOUD_RUN_APP_SERVICE_NAME}} \
+            --dockerfile=packages/app/Dockerfile
 
-      # - name: Read Node.js Version
-      #   id: node_version
-      #   run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
-
-      # - name: Set Up Node.js
-      #   uses: actions/setup-node@v4
-      #   with:
-      #     node-version: ${{ env.NODE_VERSION }}
-
-      # - name: Enable Corepack # Ensures the correct version of yarn is used
-      #   run: corepack enable
-
-      # - name: Install Dependencies
-      #   run: yarn install --immutable
-
-      # - name: Build Project
-      #   run: yarn build
-      #   env:
-      #     VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
-      #     TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
-      #     TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
-
-      # - name: --- DEBUG BUILD FILE ---
+      # - name: GCP - Deploy to Cloud Run
       #   run: |
-      #     FILE=$(ls ./packages/app/build/server/assets/server-build-* | head -n 1)
-      #     echo "Showing contents of $FILE"
-      #     cat "$FILE"
+      #     echo "Deploying ${{vars.CLOUD_RUN_APP_SERVICE_NAME}} to Google Cloud Run"
+      #     gcloud run deploy ${{vars.CLOUD_RUN_APP_SERVICE_NAME}} \
+      #       --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{vars.CLOUD_RUN_APP_SERVICE_NAME}} \
+      #       --platform managed \
+      #       --allow-unauthenticated \
+      #       --region us-central1 \
+      #       --set-env-vars NODE_ENV=production,\
+      #     NCCL_APP_URL=${{ vars.NCCL_APP_URL }},\
+      #     NCCL_API_URL=${{ vars.NCCL_API_URL }},\
+      #     CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }},\
+      #     CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }},\
+      #     CLERK_WEBHOOK_SIGNING_SECRET=${{ secrets.CLERK_WEBHOOK_SIGNING_SECRET }},\
+      #     GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }},\
+      #     GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}
