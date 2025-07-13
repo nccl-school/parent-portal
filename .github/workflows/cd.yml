@@ -170,8 +170,8 @@ jobs:
         run: |
           echo "Building ${{vars.CLOUD_RUN_APP_SERVICE_NAME}}"
           gcloud builds submit . \
+            -f packages/app/Dockerfile
             --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{vars.CLOUD_RUN_APP_SERVICE_NAME}} \
-            --dockerfile=packages/app/Dockerfile
 
       # - name: GCP - Deploy to Cloud Run
       #   run: |
