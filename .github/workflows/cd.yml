@@ -133,28 +133,6 @@ jobs:
           TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
           TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
-      - name: ✅ Verify build artifacts exist (App)
-        working-directory: packages/app
-        run: |
-          echo "🔍 Checking build/ directory and server.js"
-
-          if [ ! -f server.js ]; then
-            echo "❌ Error: server.js is missing"
-            exit 1
-          fi
-
-          if [ ! -d build ]; then
-            echo "❌ Error: build/ directory is missing"
-            exit 1
-          fi
-
-          if [ -z "$(ls -A build)" ]; then
-            echo "❌ Error: build/ directory is empty"
-            exit 1
-          fi
-
-          echo "✅ Build artifacts are present"
-
       - name: GCP - Authenticate
         uses: google-github-actions/auth@v2
         with:
@@ -189,19 +167,19 @@ jobs:
       #     GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}
 
       - name: GCP - Build App
+        working-directory: packages/app
         # packages/app has to be run this way
         run: |
           echo "📂 Working directory:"
           pwd
           echo "📄 Files before Docker build:"
           ls -alh
-          echo "📁 Contents of build/ (if exists):"
-          ls -alh build || echo "❌ build/ directory not found"
-          echo "📄 server.js:"
-          cat server.js || echo "❌ server.js not found"
+          # echo "📁 Contents of build/ (if exists):"
+          # ls -alh build || echo "❌ build/ directory not found"
 
           echo "Building ${{vars.CLOUD_RUN_APP_SERVICE_NAME}}"
-          gcloud builds submit packages/app \
+          cd packages/app \
+          gcloud builds submit . \
             --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{vars.CLOUD_RUN_APP_SERVICE_NAME}} \
 
       # - name: GCP - Deploy to Cloud Run
