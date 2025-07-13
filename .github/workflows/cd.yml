@@ -133,6 +133,28 @@ jobs:
           TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
           TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
+      - name: ✅ Verify build artifacts exist (App)
+        working-directory: packages/app
+        run: |
+          echo "🔍 Checking build/ directory and server.js"
+
+          if [ ! -f server.js ]; then
+            echo "❌ Error: server.js is missing"
+            exit 1
+          fi
+
+          if [ ! -d build ]; then
+            echo "❌ Error: build/ directory is missing"
+            exit 1
+          fi
+
+          if [ -z "$(ls -A build)" ]; then
+            echo "❌ Error: build/ directory is empty"
+            exit 1
+          fi
+
+          echo "✅ Build artifacts are present"
+
       - name: GCP - Authenticate
         uses: google-github-actions/auth@v2
         with:

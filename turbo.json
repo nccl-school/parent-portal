@@ -5,11 +5,7 @@
       "env": ["VITE_CLERK_PUBLISHABLE_KEY"],
       "inputs": ["$TURBO_DEFAULT$", ".env.local", ".env"],
       "dependsOn": ["^build"],
-      "outputs": [
-        "packages/api/dist/**",
-        "packages/api/dist-client/**",
-        "packages/app/build/**"
-      ]
+      "outputs": ["dist/**", "dist-client/**", "build/**"]
     }
   }
 }
