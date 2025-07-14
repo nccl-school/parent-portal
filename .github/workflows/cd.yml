@@ -133,6 +133,13 @@ jobs:
           TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
           TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
+      - name: 📦 Create App .release dir
+        working-directory: packages/app
+        run: |
+          cp -r build .release/app/
+          cp server.js .release/app/
+          cp Dockerfile .release/app/
+
       - name: GCP - Authenticate
         uses: google-github-actions/auth@v2
         with:
@@ -144,7 +151,7 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: GCP - Build App
-        working-directory: packages/app
+        working-directory: packages/app/.release
         run: |
           echo "📂 Working directory:"
           pwd
