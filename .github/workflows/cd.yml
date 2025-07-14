@@ -139,21 +139,18 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      # Authenticate
-      # https://www.googlecloudcommunity.com/gc/Developer-Tools/Permission-quot-artifactregistry-repositories-uploadArtifacts/m-p/541769
-      - name: CGP - Authenticate Docker
-        run: |
-          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin us-east4-docker.pkg.dev
-
       - name: Set image names
         run: |
           echo "DOCKER_IMAGE_API=gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ vars.CLOUD_RUN_API_SERVICE_NAME }}" >> $GITHUB_ENV
           echo "DOCKER_IMAGE_APP=gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ vars.CLOUD_RUN_APP_SERVICE_NAME }}" >> $GITHUB_ENV
 
+      # Authenticate
+      # https://www.googlecloudcommunity.com/gc/Developer-Tools/Permission-quot-artifactregistry-repositories-uploadArtifacts/m-p/541769z
       - name: API - Build & push image to GCR
         working-directory: packages/api
         run: |
           docker build . -t $DOCKER_IMAGE_API
+          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin us-east4-docker.pkg.dev
           docker push $DOCKER_IMAGE_API
 
       - name: API - Deploy image to Cloud Run
