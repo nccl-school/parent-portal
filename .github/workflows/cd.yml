@@ -148,20 +148,7 @@ jobs:
           echo "IMAGE_NAME_API=${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_GAR_REPO_API }}/${{ vars.GCP_CLOUDRUN_SERVICE_API }}" >> $GITHUB_ENV
           echo "IMAGE_NAME_APP=${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_GAR_REPO_APP }}/${{ vars.GCP_CLOUDRUN_SERVICE_APP }}" >> $GITHUB_ENV
 
-      # https://github.com/docker/login-action?tab=readme-ov-file#service-account-based-authentication-1
-      # - name: Login to GAR
-      #   id: docker-auth
-      #   uses: "docker/login-action@v3"
-      #   with:
-      #     registry: "${{ vars.GCP_REGION }}-docker.pkg.dev"
-      #     username: _json_key
-      #     password: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
       - name: API - Build & Push Image
-        # uses: docker/build-push-action@v6
-        # with:
-        #   context: packages/api
-        #   push: true
-        #   tags: "${{ env.IMAGE_NAME_API }}"
         working-directory: packages/api
         run: |
           docker build . -t ${{ env.IMAGE_NAME_API }}
