@@ -7,11 +7,11 @@ on:
       - feat/db-and-api
 
 jobs:
-  db_changes:
-    name: DB - Check for new migrations
+  db_check:
+    name: DB - Evaluate
     runs-on: ubuntu-latest
     outputs:
-      db_has_changed: ${{ steps.db.outputs.changed }}
+      should_migrate: ${{ steps.db.outputs.should_migrate }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,18 +34,18 @@ jobs:
 
           if echo "$CHANGED_FILES" | grep '^prisma/migrations/'; then
             echo "✅ Detected changes in 'prisma/migrations/' — running DB migration."
-            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "should_migrate=true" >> $GITHUB_OUTPUT
           else
             echo "ℹ️ No changes to 'prisma/migrations/' — skipping DB migration."
-            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "should_migrate=false" >> $GITHUB_OUTPUT
           fi
-  db_deploy:
-    name: DB - Run migrations
+  db_migrate:
+    name: DB - Migrate
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
-    needs: db_changes
-    if: needs.db_changes.outputs.db_has_changed == 'true'
+    needs: db_check
+    if: needs.db_check.outputs.should_migrate == 'true'
     outputs:
       ran: "true"
 
@@ -86,20 +86,20 @@ jobs:
 
   debug_outputs:
     runs-on: ubuntu-latest
-    needs: [db_changes, db_deploy]
+    needs: [db_check, db_migrate]
     if: always()
     steps:
       - name: Print values for debug
         run: |
-          echo "db_changes.outputs.db_has_changed: ${{ needs.db_changes.outputs.db_has_changed }}"
-          echo "db_deploy.result: ${{ needs.db_deploy.result }}"
-          echo ${{ needs.db_deploy.result == 'success' || needs.db_changes.outputs.db_has_changed == 'false' }}
+          echo "db_check.outputs.should_migrate: ${{ needs.db_check.outputs.should_migrate }}"
+          echo "db_migrate.result: ${{ needs.db_migrate.result }}"
+          echo ${{ needs.db_migrate.result == 'success' || needs.db_check.outputs.should_migrate == 'false' }}
 
   build:
-    name: Build & Deploy App and API
+    name: App|API - Build and Deploy
     runs-on: ubuntu-latest
-    needs: [db_changes, db_deploy]
-    if: needs.db_changes.outputs.db_has_changed == 'false'
+    needs: [db_check, db_migrate]
+    if: needs.db_check.outputs.should_migrate == 'false' || needs.db_migrate.result == 'success'
     environment:
       name: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
     steps:
