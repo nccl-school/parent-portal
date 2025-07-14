@@ -84,6 +84,16 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
+  debug_outputs:
+    runs-on: ubuntu-latest
+    needs: [db_changes, db_deploy]
+    if: always()
+    steps:
+      - name: Print values for debug
+        run: |
+          echo "db_changes.outputs.db_has_changed: ${{ needs.db_changes.outputs.db_has_changed }}"
+          echo "db_deploy.result: ${{ needs.db_deploy.result }}"
+
   build:
     name: Build & Deploy App and API
     runs-on: ubuntu-latest
