@@ -133,12 +133,6 @@ jobs:
           TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
           TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
-      - name: 📦 Create App .release dir
-        working-directory: packages/app
-        run: |
-          cp -r build .release/app/
-          cp server.js .release/app/
-
       - name: GCP - Authenticate
         uses: google-github-actions/auth@v2
         with:
