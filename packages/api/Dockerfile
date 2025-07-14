@@ -1,13 +1,12 @@
+FROM node:24-alpine AS base
+
 FROM base AS builder
 
-RUN apk add --no-cache gcompat
 WORKDIR /app
 
 COPY . .
 
 FROM base AS runner
-WORKDIR /app
-
 WORKDIR /app
 
 RUN addgroup --system --gid 1001 nodejs
