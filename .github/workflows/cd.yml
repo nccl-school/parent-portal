@@ -217,6 +217,7 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     needs: [setup, build_api, build_app]
+    if: always() && needs.build_api.result == 'success' && needs.build_app.result == 'success'
     environment:
       name: ${{ needs.setup.outputs.environment }}
     steps:
