@@ -16,6 +16,6 @@ COPY --from=builder --chown=api-user:nodejs /app/dist /app/dist
 COPY --from=builder --chown=api-user:nodejs /app/package.json /app/package.json
 
 USER api-user
-EXPOSE 3000
+EXPOSE 8080
 
 CMD ["node", "/app/dist/index.js"]
