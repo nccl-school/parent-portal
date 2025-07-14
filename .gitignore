@@ -14,3 +14,4 @@ bin
 storybook-static
 .env
 .npmrc
+build
