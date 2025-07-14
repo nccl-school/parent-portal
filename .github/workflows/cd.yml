@@ -93,7 +93,7 @@ jobs:
         run: |
           echo "db_changes.outputs.db_has_changed: ${{ needs.db_changes.outputs.db_has_changed }}"
           echo "db_deploy.result: ${{ needs.db_deploy.result }}"
-          echo  "${{needs.db_deploy.result }} == 'success' || ${{ needs.db_changes.outputs.db_has_changed }} == 'false'"
+          echo  "${{needs.db_deploy.result }} == 'success' || ${{ needs.db_changes.outputs.db_has_changed }} == false"
 
   build:
     name: Build & Deploy App and API
@@ -101,7 +101,7 @@ jobs:
     needs: [db_changes, db_deploy]
     if: |
       ${{needs.db_deploy.result }} == 'success'
-      ${{ needs.db_changes.outputs.db_has_changed }} == 'false'
+      ${{ needs.db_changes.outputs.db_has_changed }} == false
     environment:
       name: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
     steps:
