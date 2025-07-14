@@ -133,23 +133,23 @@ jobs:
         id: google_auth
         uses: google-github-actions/auth@v2
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          project_id: ${{ vars.GCP_PROJECT_ID }}
           token_format: access_token
           credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
       - name: Create Image Names
         id: image_names
         run: |
-          echo "IMAGE_NAME_API=gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ vars.CLOUD_RUN_API_SERVICE_NAME }}" >> $GITHUB_ENV
-          echo "IMAGE_NAME_APP=gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ vars.CLOUD_RUN_APP_SERVICE_NAME }}" >> $GITHUB_ENV
+          echo "IMAGE_NAME_API=gcr.io/${{ vars.GCP_PROJECT_ID }}/${{ vars.CLOUD_RUN_API_SERVICE_NAME }}" >> $GITHUB_ENV
+          echo "IMAGE_NAME_APP=gcr.io/${{ vars.GCP_PROJECT_ID }}/${{ vars.CLOUD_RUN_APP_SERVICE_NAME }}" >> $GITHUB_ENV
 
-      - name: Authenticate Docker with GCR
+      - name: Login to Google Artifact Registry
         id: docker-auth
         uses: "docker/login-action@v3"
         with:
-          username: "oauth2accesstoken"
-          password: "${{ steps.google_auth.outputs.access_token }}"
-          registry: "us-east4-docker.pkg.dev"
+          registry: "${{ vars.GCP_REGION }}-docker.pkg.dev"
+          username: _json_key
+          password: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
       - name: API - Build & Push to Google Container Registry
         uses: docker/build-push-action@v6
@@ -161,9 +161,9 @@ jobs:
       - name: API - Deploy to Google Cloud Run
         uses: "google-github-actions/deploy-cloudrun@v2"
         with:
+          project_id: "${{ vars.GCP_PROJECT_ID }}"
           service: "${{ vars.CLOUD_RUN_API_SERVICE_NAME }}"
           image: "${{ env.IMAGE_NAME_API }}"
-          project_id: "${{ secrets.GCP_PROJECT_ID }}"
           env_vars: |-
             NCCL_APP_URL=${{ vars.NCCL_APP_URL }}
             NCCL_API_URL=${{ vars.NCCL_API_URL }}
@@ -180,7 +180,7 @@ jobs:
       #       --image $IMAGE_NAME_API \
       #       --platform managed \
       #       --allow-unauthenticated \
-      #       --region us-east4 \
+      #       --region ${{ vars.GCP_REGION }} \
       #       --set-env-vars NODE_ENV=production,\
       #     NCCL_APP_URL=${{ vars.NCCL_APP_URL }},\
       #     NCCL_API_URL=${{ vars.NCCL_API_URL }},\
@@ -193,13 +193,13 @@ jobs:
 
       # - name: GCP - Build | App
       #   working-directory: packages/app
-      #   run: gcloud builds submit . --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{vars.CLOUD_RUN_APP_SERVICE_NAME}}
+      #   run: gcloud builds submit . --tag gcr.io/${{ vars.GCP_PROJECT_ID }}/${{vars.CLOUD_RUN_APP_SERVICE_NAME}}
 
       # - name: GCP - Deploy to Cloud Run
       #   run: |
       #     echo "Deploying ${{vars.CLOUD_RUN_APP_SERVICE_NAME}} to Google Cloud Run"
       #     gcloud run deploy ${{vars.CLOUD_RUN_APP_SERVICE_NAME}} \
-      #       --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{vars.CLOUD_RUN_APP_SERVICE_NAME}} \
+      #       --image gcr.io/${{ vars.GCP_PROJECT_ID }}/${{vars.CLOUD_RUN_APP_SERVICE_NAME}} \
       #       --platform managed \
       #       --allow-unauthenticated \
       #       --region us-central1 \
