@@ -150,7 +150,7 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: GCP - Build App
-        working-directory: packages/app/.release
+        working-directory: packages/app
         run: |
           echo "📂 Working directory:"
           pwd
