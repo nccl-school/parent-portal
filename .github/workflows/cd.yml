@@ -165,7 +165,7 @@ jobs:
         working-directory: packages/api
         run: |
           docker build . -t ${{ env.IMAGE_NAME_API }}
-          echo "${{ steps.google_auth.outputs.access_token }}" | docker login -u oauth2accesstoken --password-stdin https://gcr.io
+          echo "${{ steps.google_auth.outputs.access_token }}" | docker login -u oauth2accesstoken --password-stdin https://${{ vars.GCP_REGION }}-docker.pkg.dev
           docker push ${{ env.IMAGE_NAME_API }}
 
       - name: API - Deploy to Cloudrun
