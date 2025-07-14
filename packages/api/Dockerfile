@@ -1,13 +1,21 @@
-FROM node:24-alpine
+FROM base AS builder
+
+RUN apk add --no-cache gcompat
+WORKDIR /app
+
+COPY . .
+
+FROM base AS runner
+WORKDIR /app
 
 WORKDIR /app
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 api-user
 
-COPY --chown=api-user:nodejs /app/node_modules /app/node_modules
-COPY --chown=api-user:nodejs /app/dist /app/dist
-COPY --chown=api-user:nodejs /app/package.json /app/package.json
+COPY --from=builder --chown=api-user:nodejs /app/node_modules /app/node_modules
+COPY --from=builder --chown=api-user:nodejs /app/dist /app/dist
+COPY --from=builder --chown=api-user:nodejs /app/package.json /app/package.json
 
 USER api-user
 EXPOSE 3000

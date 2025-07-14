@@ -143,6 +143,13 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
+      # - name: GCP - Build API
+      #   working-directory: packages/api
+      #   run: |
+      #     echo "Building ${{vars.CLOUD_RUN_API_SERVICE_NAME}}"
+      #     gcloud builds submit . \
+      #       --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{vars.CLOUD_RUN_API_SERVICE_NAME}}
+
       - name: GCP - Build App
         working-directory: packages/app
         run: |
@@ -155,7 +162,7 @@ jobs:
 
           echo "Building ${{vars.CLOUD_RUN_APP_SERVICE_NAME}}"
           gcloud builds submit . \
-            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{vars.CLOUD_RUN_APP_SERVICE_NAME}} \
+            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{vars.CLOUD_RUN_APP_SERVICE_NAME}}
 
       # - name: GCP - Deploy to Cloud Run
       #   run: |
