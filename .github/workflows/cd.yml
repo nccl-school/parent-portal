@@ -139,6 +139,7 @@ jobs:
         with:
           name: monorepo-build
           path: |
+            node_modules/
             packages/
 
   build_api:
@@ -155,10 +156,10 @@ jobs:
           name: monorepo-build
           path: .
 
-      # - name: Show Build Output Tree
-      #   run: |
-      #     sudo apt-get install tree
-      #     tree -L 4 .
+      - name: Show Build Output Tree
+        run: |
+          sudo apt-get install tree
+          tree -L 2 .
 
       - name: Authenticate GCP
         id: google_auth
