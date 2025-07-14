@@ -154,6 +154,12 @@ jobs:
         with:
           name: monorepo-build
           path: .
+
+      - name: Show Build Output Tree
+        run: |
+          sudo apt-get install tree
+          tree -L 4 .
+
       - name: Authenticate GCP
         id: google_auth
         uses: google-github-actions/auth@v2
