@@ -93,6 +93,7 @@ jobs:
         run: |
           echo "db_changes.outputs.db_has_changed: ${{ needs.db_changes.outputs.db_has_changed }}"
           echo "db_deploy.result: ${{ needs.db_deploy.result }}"
+          echo  "${{needs.db_deploy.result }} == 'success' || ${{ needs.db_changes.outputs.db_has_changed }} == 'false'"
 
   build:
     name: Build & Deploy App and API
