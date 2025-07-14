@@ -164,16 +164,15 @@ jobs:
         #   tags: "${{ env.IMAGE_NAME_API }}"
         working-directory: packages/api
         run: |
-          docker build . -t ${{ vars.IMAGE_NAME_API }}
+          docker build . -t ${{ env.IMAGE_NAME_API }}
           echo "${{ steps.google_auth.outputs.access_token }}" | docker login -u oauth2accesstoken --password-stdin https://gcr.io
-          docker push ${{ vars.IMAGE_NAME_API }}
+          docker push ${{ env.IMAGE_NAME_API }}
 
       - name: API - Deploy to Cloudrun
         uses: "google-github-actions/deploy-cloudrun@v2"
         with:
           project_id: "${{ vars.GCP_PROJECT_ID }}"
           service: "${{ vars.GCP_CLOUDRUN_SERVICE_API }}"
-
           image: "${{ env.IMAGE_NAME_API }}"
           env_vars: |-
             NCCL_APP_URL=${{ vars.NCCL_APP_URL }}
