@@ -139,9 +139,9 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: CGP - configure docker
+      - name: CGP - Enable Docker Push
         run: |
-          gcloud auth configure-docker us.gcr.io --quiet --project=${{ secrets.GCP_PROJECT_ID }}
+          sudo gcloud auth configure-docker us-east4-docker.pkg.dev --quiet --project=${{ secrets.GCP_PROJECT_ID }}
 
       - name: Set image names
         run: |
