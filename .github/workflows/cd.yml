@@ -133,12 +133,9 @@ jobs:
         id: google_auth
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
-
-      - name: GCP - Setup
-        uses: google-github-actions/setup-gcloud@v2
-        with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
+          token_format: access_token
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
       - name: Set image names
         id: image_names
@@ -154,14 +151,14 @@ jobs:
           password: "${{ steps.google_auth.outputs.access_token }}"
           registry: "us-east4-docker.pkg.dev"
 
-      - name: API - Docker Build & push to GCR
+      - name: API - Build & Push to Google Container Registry
         uses: docker/build-push-action@v6
         with:
           context: packages/api
           push: true
           tags: "${{ env.IMAGE_NAME_API }}"
 
-      - name: API - Deploy to CloudRun
+      - name: API - Deploy to Google Cloud Run
         uses: "google-github-actions/deploy-cloudrun@v2"
         with:
           service: "${{ vars.CLOUD_RUN_API_SERVICE_NAME }}"
