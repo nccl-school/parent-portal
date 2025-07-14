@@ -139,9 +139,11 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: CGP - Enable Docker Push
+      # Authenticate
+      # https://www.googlecloudcommunity.com/gc/Developer-Tools/Permission-quot-artifactregistry-repositories-uploadArtifacts/m-p/541769
+      - name: CGP - Authenticate Docker
         run: |
-          sudo gcloud auth configure-docker us-east4-docker.pkg.dev --quiet --project=${{ secrets.GCP_PROJECT_ID }}
+          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin us-east4-docker.pkg.dev
 
       - name: Set image names
         run: |
