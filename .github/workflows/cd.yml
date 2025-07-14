@@ -143,14 +143,21 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: GCP - Build | API
-        working-directory: packages/api
-        run: gcloud builds submit . --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{vars.CLOUD_RUN_API_SERVICE_NAME}}
+      - name: Define Images
+        run: |
+          echo "DOCKER_IMAGE_API=gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ vars.CLOUD_RUN_API_SERVICE_NAME }}" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE_APP=gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ vars.CLOUD_RUN_APP_SERVICE_NAME }}" >> $GITHUB_ENV
 
-      - name: GCP - Deploy | API
+      - name: API - Build & push image to GCR
+        working-directory: packages/api
+        run: |
+          docker build . -t $DOCKER_IMAGE_API
+          docker push $DOCKER_IMAGE_API
+
+      - name: API - Deploy image to Cloud Run
         run: |
           gcloud run deploy ${{vars.CLOUD_RUN_API_SERVICE_NAME}} \
-            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{vars.CLOUD_RUN_API_SERVICE_NAME}} \
+            --image $DOCKER_IMAGE_API \
             --platform managed \
             --allow-unauthenticated \
             --region us-east4 \
