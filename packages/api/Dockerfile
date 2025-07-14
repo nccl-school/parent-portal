@@ -12,7 +12,6 @@ WORKDIR /app
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 api-user
 
-COPY --from=builder --chown=api-user:nodejs /app/node_modules /app/node_modules
 COPY --from=builder --chown=api-user:nodejs /app/dist /app/dist
 COPY --from=builder --chown=api-user:nodejs /app/package.json /app/package.json
 
