@@ -130,6 +130,7 @@ jobs:
           TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
       - name: GCP - Authenticate
+        id: google_auth
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
@@ -140,35 +141,58 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Set image names
+        id: image_names
         run: |
-          echo "DOCKER_IMAGE_API=gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ vars.CLOUD_RUN_API_SERVICE_NAME }}" >> $GITHUB_ENV
-          echo "DOCKER_IMAGE_APP=gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ vars.CLOUD_RUN_APP_SERVICE_NAME }}" >> $GITHUB_ENV
+          echo "IMAGE_NAME_API=gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ vars.CLOUD_RUN_API_SERVICE_NAME }}" >> $GITHUB_ENV
+          echo "IMAGE_NAME_APP=gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ vars.CLOUD_RUN_APP_SERVICE_NAME }}" >> $GITHUB_ENV
 
-      # Authenticate
-      # https://www.googlecloudcommunity.com/gc/Developer-Tools/Permission-quot-artifactregistry-repositories-uploadArtifacts/m-p/541769z
-      - name: API - Build & push image to GCR
-        working-directory: packages/api
-        run: |
-          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin us-east4-docker.pkg.dev
-          docker build . -t $DOCKER_IMAGE_API
-          docker push $DOCKER_IMAGE_API
+      - name: Docker Auth
+        id: docker-auth
+        uses: "docker/login-action@v1"
+        with:
+          username: "oauth2accesstoken"
+          password: "${{ steps.google_auth.outputs.access_token }}"
+          registry: "us-east4-docker.pkg.dev"
 
-      - name: API - Deploy image to Cloud Run
-        run: |
-          gcloud run deploy ${{vars.CLOUD_RUN_API_SERVICE_NAME}} \
-            --image $DOCKER_IMAGE_API \
-            --platform managed \
-            --allow-unauthenticated \
-            --region us-east4 \
-            --set-env-vars NODE_ENV=production,\
-          NCCL_APP_URL=${{ vars.NCCL_APP_URL }},\
-          NCCL_API_URL=${{ vars.NCCL_API_URL }},\
-          DATABASE_URL=${{ secrets.DATABASE_URL }},\
-          CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }},\
-          CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }},\
-          CLERK_WEBHOOK_SIGNING_SECRET=${{ secrets.CLERK_WEBHOOK_SIGNING_SECRET }},\
-          GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }},\
-          GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}
+      - name: API - Docker Build & push to GCR
+        uses: docker/build-push-action@v6
+        with:
+          context: packages/api
+          push: true
+          tags: "${{ env.IMAGE_NAME_API }}"
+
+      - name: API - Deploy to CloudRun
+        uses: "google-github-actions/deploy-cloudrun@v2"
+        with:
+          service: "${{ vars.CLOUD_RUN_API_SERVICE_NAME }}"
+          image: "${{ env.IMAGE_NAME_API }}"
+          project_id: "${{ secrets.GCP_PROJECT_ID }}"
+          env_vars: |-
+            NCCL_APP_URL=${{ vars.NCCL_APP_URL }}
+            NCCL_API_URL=${{ vars.NCCL_API_URL }}
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }}
+            CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }}
+            CLERK_WEBHOOK_SIGNING_SECRET=${{ secrets.CLERK_WEBHOOK_SIGNING_SECRET }}
+            GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }}
+            GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}
+
+      # - name: API - Deploy image to Cloud Run
+      #   run: |
+      #     gcloud run deploy ${{vars.CLOUD_RUN_API_SERVICE_NAME}} \
+      #       --image $IMAGE_NAME_API \
+      #       --platform managed \
+      #       --allow-unauthenticated \
+      #       --region us-east4 \
+      #       --set-env-vars NODE_ENV=production,\
+      #     NCCL_APP_URL=${{ vars.NCCL_APP_URL }},\
+      #     NCCL_API_URL=${{ vars.NCCL_API_URL }},\
+      #     DATABASE_URL=${{ secrets.DATABASE_URL }},\
+      #     CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }},\
+      #     CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }},\
+      #     CLERK_WEBHOOK_SIGNING_SECRET=${{ secrets.CLERK_WEBHOOK_SIGNING_SECRET }},\
+      #     GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }},\
+      #     GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}
 
       # - name: GCP - Build | App
       #   working-directory: packages/app
