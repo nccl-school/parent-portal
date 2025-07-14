@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["gfdigital", "NCCL"],
+  "cSpell.words": ["Cloudrun", "gfdigital", "NCCL"],
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "files.associations": {
     "wrangler.json": "jsonc"
