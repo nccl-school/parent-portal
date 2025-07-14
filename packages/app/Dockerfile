@@ -1,3 +1,5 @@
+FROM node:24-alpine AS base
+
 FROM base AS builder
 
 RUN apk add --no-cache gcompat
