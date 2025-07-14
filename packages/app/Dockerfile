@@ -7,6 +7,7 @@ RUN echo "✅ Contents of /app after COPY:" && ls -alh /app && \
     echo "📁 Contents of /app/build:" && ls -alh /app/build || echo "❌ build/ missing"
 
 # Copy in prebuilt files
+COPY . .
 COPY build          ./build
 COPY server.js      ./server.js
 
