@@ -7,9 +7,26 @@ on:
       - feat/db-and-api
 
 jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
+    outputs:
+      api_image_name: IMAGE_NAME_API=${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_GAR_REPO_API }}/${{ vars.GCP_CLOUDRUN_SERVICE_API }}
+      app_image_name: IMAGE_NAME_APP=${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_GAR_REPO_APP }}/${{ vars.GCP_CLOUDRUN_SERVICE_APP }}
+      comparison_branch: ${{ github.ref_name == 'main' && 'main' || 'dev' }}
+      environment: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
+      node_version: ${{ steps.db.outputs.node_version }}
+    steps:
+      - name: Read Node.js Version
+        id: node_version
+        run: echo "node_version=$(cat .nvmrc)" >> $GITHUB_ENV
+
   db_check:
     name: Check DB
     runs-on: ubuntu-latest
+    needs: [setup]
     outputs:
       should_migrate: ${{ steps.db.outputs.should_migrate }}
     steps:
@@ -18,14 +35,14 @@ jobs:
           fetch-depth: 0
 
       - name: Fetch comparison branch
-        run: git fetch origin dev
+        run: git fetch origin ${{ needs.setup.outputs.comparison_branch }}
 
       - id: db
         name: Check if Prisma Migrations Have Changed
         working-directory: packages/api
         run: |
-          echo "🔍 Checking for changes to 'prisma/migrations/' between this commit and origin/dev"
-          CHANGED_FILES=$(git diff --name-only origin/dev...HEAD)
+          echo "🔍 Checking for changes to 'prisma/migrations/' between this commit and origin/${{ needs.setup.outputs.comparison_branch }}"
+          CHANGED_FILES=$(git diff --name-only origin/${{ needs.setup.outputs.comparison_branch }}...HEAD)
           echo
 
           echo "📄 Files changed in commit range:"
@@ -44,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
-    needs: db_check
+    needs: [setup, db_check]
     if: needs.db_check.outputs.should_migrate == 'true'
     outputs:
       ran: "true"
@@ -53,58 +70,46 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Read Node.js Version
-        id: node_version
-        run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
-
       - name: Enable Corepack # Ensures the correct version of yarn is used
         run: corepack enable
 
       - name: Set Up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ needs.setup.outputs.node_version }}
           cache: "yarn"
 
       - name: Install Dependencies
         run: yarn install --immutable
 
-      - name: Prisma Migrate Deploy
+      - name: Migrate DB
         working-directory: packages/api
         run: yarn prisma migrate deploy
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
       - name: Generate Prisma Client
         working-directory: packages/api
         run: yarn prisma generate
 
-      - name: Seed
+      - name: Seed DB
         working-directory: packages/api
         run: yarn prisma db seed
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-  build:
+  build_api:
     name: Build and Deploy
     runs-on: ubuntu-latest
-    needs: [db_check, db_migrate]
+    needs: [setup, db_check, db_migrate]
     if: |
       always() &&
       (needs.db_check.outputs.should_migrate == 'false' || needs.db_migrate.result == 'success')
     environment:
-      name: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
+      name: ${{ needs.setup.outputs.environment }}
     steps:
-      - name: Deploy
-        run: |
-          echo "Deploying branch: ${{ github.ref_name }}"
-          echo "To environment: ${{ github.ref_name == 'main' && 'production' || 'dev' }}"
-
       - name: Checkout Repository
         uses: actions/checkout@v4
-
-      - name: Read Node.js Version
-        id: node_version
-        run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
 
       - name: Enable Corepack # Ensures the correct version of yarn is used
         run: corepack enable
@@ -112,7 +117,7 @@ jobs:
       - name: Set Up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ needs.setup.outputs.node_version }}
           cache: "yarn"
 
       - name: Install Dependencies
@@ -142,37 +147,37 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Generate Image Names
-        id: image_names
-        run: |
-          echo "IMAGE_NAME_API=${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_GAR_REPO_API }}/${{ vars.GCP_CLOUDRUN_SERVICE_API }}" >> $GITHUB_ENV
-          echo "IMAGE_NAME_APP=${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_GAR_REPO_APP }}/${{ vars.GCP_CLOUDRUN_SERVICE_APP }}" >> $GITHUB_ENV
+      # - name: Generate Image Names
+      #   id: image_names
+      #   run: |
+      #     echo "IMAGE_NAME_API=${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_GAR_REPO_API }}/${{ vars.GCP_CLOUDRUN_SERVICE_API }}" >> $GITHUB_ENV
+      #     echo "IMAGE_NAME_APP=${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_GAR_REPO_APP }}/${{ vars.GCP_CLOUDRUN_SERVICE_APP }}" >> $GITHUB_ENV
 
       - name: API - Build & Push Image
         working-directory: packages/api
         run: |
-          docker build . -t ${{ env.IMAGE_NAME_API }}
+          docker build . -t ${{ needs.setup.outputs.api_image_name }}
           echo "${{ steps.google_auth.outputs.access_token }}" | docker login -u oauth2accesstoken --password-stdin https://${{ vars.GCP_REGION }}-docker.pkg.dev
-          docker push ${{ env.IMAGE_NAME_API }}
+          docker push ${{ needs.setup.outputs.api_image_name }}
 
-      # - name: API - Deploy to Cloudrun
-      #   uses: "google-github-actions/deploy-cloudrun@v2"
-      #   with:
-      #     project_id: "${{ vars.GCP_PROJECT_ID }}"
-      #     service: "${{ vars.GCP_CLOUDRUN_SERVICE_API }}"
-      #     image: "${{ env.IMAGE_NAME_API }}"
-      #     region: ${{ vars.GCP_REGION }}
-      #     env_vars: |-
-      #       NCCL_APP_URL=${{ vars.NCCL_APP_URL }}
-      #       NCCL_API_URL=${{ vars.NCCL_API_URL }}
-      #       DATABASE_URL=${{ secrets.DATABASE_URL }}
-      #       CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }}
-      #       CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }}
-      #       CLERK_WEBHOOK_SIGNING_SECRET=${{ secrets.CLERK_WEBHOOK_SIGNING_SECRET }}
-      #       GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }}
-      #       GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: [build_api]
+    steps:
+      - name: Authenticate GCP
+        id: google_auth
+        uses: google-github-actions/auth@v2
+        with:
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+          token_format: access_token
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
-      - name: API - Deploy image to Cloud Run
+      - name: GCP - Setup
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+      - name: Deploy API to Cloudrun
         run: |
           gcloud run deploy ${{vars.GCP_CLOUDRUN_SERVICE_API}} \
             --image $IMAGE_NAME_API \
@@ -188,24 +193,3 @@ jobs:
           CLERK_WEBHOOK_SIGNING_SECRET=${{ secrets.CLERK_WEBHOOK_SIGNING_SECRET }},\
           GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }},\
           GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}
-
-      # - name: GCP - Build | App
-      #   working-directory: packages/app
-      #   run: gcloud builds submit . --tag gcr.io/${{ vars.GCP_PROJECT_ID }}/${{vars.GCP_CLOUDRUN_SERVICE_APP}}
-
-      # - name: GCP - Deploy to Cloud Run
-      #   run: |
-      #     echo "Deploying ${{vars.GCP_CLOUDRUN_SERVICE_APP}} to Google Cloud Run"
-      #     gcloud run deploy ${{vars.GCP_CLOUDRUN_SERVICE_APP}} \
-      #       --image gcr.io/${{ vars.GCP_PROJECT_ID }}/${{vars.GCP_CLOUDRUN_SERVICE_APP}} \
-      #       --platform managed \
-      #       --allow-unauthenticated \
-      #       --region us-central1 \
-      #       --set-env-vars NODE_ENV=production,\
-      #     NCCL_APP_URL=${{ vars.NCCL_APP_URL }},\
-      #     NCCL_API_URL=${{ vars.NCCL_API_URL }},\
-      #     CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }},\
-      #     CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }},\
-      #     CLERK_WEBHOOK_SIGNING_SECRET=${{ secrets.CLERK_WEBHOOK_SIGNING_SECRET }},\
-      #     GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }},\
-      #     GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}
