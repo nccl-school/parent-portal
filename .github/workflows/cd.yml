@@ -18,18 +18,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Fetch origin/dev
-        run: git fetch origin dev
+      - name: Fetch comparison branch
+        run: git fetch origin ${{ github.ref_name }}
 
       - id: db
         name: Check if Prisma Migrations Have Changed
         working-directory: packages/api
         run: |
-          echo "changed=true" >> $GITHUB_OUTPUT
-          exit 0
-
-          echo "🔍 Checking for changes to 'prisma/migrations/' between this commit and origin/dev"
-          CHANGED_FILES=$(git diff --name-only origin/dev...HEAD)
+          echo "🔍 Checking for changes to 'prisma/migrations/' between this commit and origin/${{ github.ref_name }}"
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.ref_name }}...HEAD)
           echo
 
           echo "📄 Files changed in commit range:"
