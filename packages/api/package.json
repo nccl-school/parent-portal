@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "yarn api:build && yarn client:build",
-    "api:build": "esbuild --bundle src/index.ts --outdir=dist --minify --target=node23.7 --format=esm --platform=node --bundle=true",
+    "api:build": "tsc --project ./tsconfig.build.json",
     "start": "node dist/index.js",
     "webhook:dev": "ngrok http --url=popular-chipmunk-ace.ngrok-free.app 8080",
     "schema:generate": "yarn ts-to-zod prisma/schemas/index.ts prisma/_generated/schemas.ts",
