@@ -143,7 +143,8 @@ jobs:
           echo "IMAGE_NAME_API=gcr.io/${{ vars.GCP_PROJECT_ID }}/${{ vars.CLOUD_RUN_API_SERVICE_NAME }}" >> $GITHUB_ENV
           echo "IMAGE_NAME_APP=gcr.io/${{ vars.GCP_PROJECT_ID }}/${{ vars.CLOUD_RUN_APP_SERVICE_NAME }}" >> $GITHUB_ENV
 
-      - name: Login to Google Artifact Registry
+      # https://github.com/docker/login-action?tab=readme-ov-file#service-account-based-authentication-1
+      - name: Login to Google Artifact Registry (GAR)
         id: docker-auth
         uses: "docker/login-action@v3"
         with:
@@ -151,7 +152,7 @@ jobs:
           username: _json_key
           password: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
-      - name: API - Build & Push to Google Container Registry
+      - name: API - Build & Push to Google Container Registry (GCR)
         uses: docker/build-push-action@v6
         with:
           context: packages/api
