@@ -239,7 +239,7 @@ jobs:
       - name: Deploy API to Cloudrun
         run: |
           gcloud run deploy ${{vars.GCP_CLOUDRUN_SERVICE_API}} \
-            --image $IMAGE_NAME_API \
+            --image ${{ needs.setup.outputs.api_image_name }} \
             --platform managed \
             --allow-unauthenticated \
             --region ${{ vars.GCP_REGION }} \
