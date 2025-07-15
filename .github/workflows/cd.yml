@@ -166,7 +166,7 @@ jobs:
       - name: Show Build Output Tree
         run: |
           sudo apt-get install tree
-          tree -L 3 packages/api/dist_generated/prisma
+          tree -L 3 packages/api/dist/_generated/prisma
 
       - name: Authenticate GCP
         id: google_auth
