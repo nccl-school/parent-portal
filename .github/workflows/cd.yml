@@ -88,10 +88,6 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-      - name: Generate Prisma Client
-        working-directory: packages/api
-        run: yarn prisma generate
-
       - name: Seed DB
         working-directory: packages/api
         run: yarn prisma db seed
@@ -123,9 +119,9 @@ jobs:
       - name: Install Dependencies
         run: yarn install --immutable
 
-      - name: Generate Prisma Client
-        working-directory: packages/api
-        run: yarn prisma generate
+      # - name: Generate Prisma Client
+      #   working-directory: packages/api
+      #   run: yarn prisma generate
 
       - name: Build Monorepo
         run: yarn build
@@ -137,9 +133,9 @@ jobs:
       - name: Install production dependencies
         run: yarn workspaces focus --production --all
 
-      - name: Generate Prisma Client
-        working-directory: packages/api
-        run: yarn prisma generate
+      # - name: Generate Prisma Client
+      #   working-directory: packages/api
+      #   run: yarn prisma generate
 
       - name: Upload Full Build Output
         uses: actions/upload-artifact@v4
