@@ -166,7 +166,7 @@ jobs:
       - name: Show Build Output Tree
         run: |
           sudo apt-get install tree
-          tree -L 3 packages/api/
+          tree -L 3 packages/api/dist_generated/prisma
 
       - name: Authenticate GCP
         id: google_auth
@@ -257,17 +257,3 @@ jobs:
             CLERK_WEBHOOK_SIGNING_SECRET=${{ secrets.CLERK_WEBHOOK_SIGNING_SECRET }}
             GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }}
             GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}
-      # - name: Deploy API to Cloudrun
-      #   run: |
-      #     gcloud run deploy ${{vars.GCP_CLOUDRUN_SERVICE_API}} \
-      #       --image ${{ needs.setup.outputs.api_image_name }} \
-      #       --platform managed \
-      #       --allow-unauthenticated \
-      #       --region ${{ vars.GCP_REGION }} \
-      #       --set-env-vars ",,,,,,,,"
-
-      # - name: Generate Image Names
-      #   id: image_names
-      #   run: |
-      #     echo "IMAGE_NAME_API=${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_GAR_REPO_API }}/${{ vars.GCP_CLOUDRUN_SERVICE_API }}" >> $GITHUB_ENV
-      #     echo "IMAGE_NAME_APP=${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_GAR_REPO_APP }}/${{ vars.GCP_CLOUDRUN_SERVICE_APP }}" >> $GITHUB_ENV
