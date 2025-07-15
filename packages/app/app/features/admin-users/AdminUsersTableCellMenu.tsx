@@ -1,10 +1,10 @@
-import type { User } from "@clerk/react-router/ssr.server";
 import { Button, usePopover } from "@nccl/components";
 import { useCallback, useRef, type RefCallback } from "react";
+import type { User } from "@nccl/api/client";
 
 import { AdminUsersMenu } from "./AdminUsersMenu";
 
-export function AdminUsersTableCellMenu(user: Omit<User, "_raw">) {
+export function AdminUsersTableCellMenu(user: User) {
   const popover = usePopover({ offset: 12, position: "bottom-span-left" });
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 

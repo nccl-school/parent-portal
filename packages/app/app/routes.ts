@@ -9,7 +9,9 @@ import {
 export default [
   layout("./features/root/Root.layout.tsx", [
     // - /
-    index("./features/home/Home.index.tsx"),
+    layout("./features/home/Home.layout.tsx", [
+      index("./features/home/Home.index.tsx"),
+    ]),
     // - /resources
     layout("./features/resources/Resources.layout.tsx", [
       route("resources", "./features/resources/Resources.route.tsx"),
@@ -43,9 +45,22 @@ export default [
   route("sign-up/*", "features/sign-up/SignUp.route.tsx"),
   // APIs
   ...prefix("api", [
+    ...prefix("role", [route("/", "./api/api.role.getRoles.ts")]),
+    ...prefix("suggestion", [
+      route("/", "./api/api.suggestion.getManyOrCreateUnique.ts"),
+      route("/comment/:id", "./api/api.suggestion.comment.ts"),
+      route("/:id", "./api/api.suggestion.getOrUpdateUnique.ts", [
+        route("vote", "./api/api.suggestion.voteOnUnique.ts"),
+        route(
+          "comment",
+          "./api/api.suggestion.comments.getManyOrCreateUnique.ts"
+        ),
+      ]),
+    ]),
     ...prefix("user", [
       route("/invite", "./api/api.user.inviteUsers.ts"),
-      route(":id", "./api/api.user.getUserById.ts", [
+      route("/resend-invite/:id", "./api/api.user.resendInvite.ts"),
+      route("/:id", "./api/api.user.getUserById.ts", [
         route("role", "./api/api.user.updateUserRole.ts"),
       ]),
     ]),

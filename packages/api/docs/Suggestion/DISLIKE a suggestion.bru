@@ -1,0 +1,21 @@
+meta {
+  name: DISLIKE a suggestion
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{API_DOMAIN}}/api/suggestion/:id/vote
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: cmct6y3zj0000bjo5iw1wo2e9
+}
+
+body:json {
+  {
+    "type": "DISLIKE"
+  }
+}

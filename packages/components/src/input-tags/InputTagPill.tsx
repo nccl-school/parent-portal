@@ -42,7 +42,7 @@ export function InputTagPill({ ref, children, onClick }: InputTagProps) {
       <Typography dxNode="span" dxVariant="label">
         {children}
       </Typography>
-      <button onClick={onClick} id={children}>
+      <button onClick={onClick} id={children} type="button">
         <Icon dxIcon="cancel-01-solid-standard" dxSize={12} />
       </button>
     </span>

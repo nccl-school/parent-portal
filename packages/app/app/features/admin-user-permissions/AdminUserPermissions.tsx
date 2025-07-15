@@ -16,7 +16,7 @@ import { useEffect, useMemo } from "react";
 import { useAdminUserPermissionsModalContext } from "./admin-user-permission.useModalContext";
 import type { AdminUserPermissionsModalState } from "./admin-user-permission.utils";
 
-import { getUserName, UserPermissionRadioGroup } from "../user";
+import { getUserName, RoleRadioGroup } from "../user";
 
 const className = css`
   width: ${makeRem(600)};
@@ -55,7 +55,7 @@ function ModalContent() {
       {useMemo(
         () => (
           <ModalHeader>
-            <ModalHeaderTitle>Update Permissions</ModalHeaderTitle>
+            <ModalHeaderTitle>Update Role</ModalHeaderTitle>
             <ModalHeaderSubtitle>
               Manage the user&apos;s ability to view, edit, and interact with
               content
@@ -66,7 +66,7 @@ function ModalContent() {
       )}
       <fetcher.Form
         action={href("/api/user/:id/role", { id: user.id })}
-        method="POST"
+        method="PUT"
       >
         {useMemo(
           () => (
@@ -75,10 +75,7 @@ function ModalContent() {
                 Use the radio button's below to update{" "}
                 <b>{getUserName(user)}'s</b> access
               </Typography>
-              <UserPermissionRadioGroup
-                defaultCheckedRole={user.publicMetadata.role}
-                name="role"
-              />
+              <RoleRadioGroup defaultCheckedRole={user.role.id} name="role" />
             </ModalBody>
           ),
           [user]

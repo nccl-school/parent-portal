@@ -57,10 +57,6 @@ const styles = css`
       border-color: ${makeColor("neutral-light-1000")};
       background-color: ${makeColor("neutral-light", { opacity: 0.1 })};
     }
-
-    &:has(input:focus) {
-      outline: 2px solid ${makeColor("neutral-light-1000")};
-    }
   }
 
   &.basic {

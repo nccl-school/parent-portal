@@ -5,7 +5,38 @@ import type { JSX } from "react";
 import { forwardRef } from "react";
 
 export type InputCheckboxPropsNative = JSX.IntrinsicElements["input"];
-export type InputCheckboxProps = InputCheckboxPropsNative;
+export type InputCheckboxPropsCustom = {
+  dxLabelOrientation?: "before" | "after";
+};
+export type InputCheckboxProps = InputCheckboxPropsNative &
+  InputCheckboxPropsCustom;
+
+const containerStyles = css`
+  display: grid;
+  grid-template-columns: auto;
+
+  .cb {
+    grid-area: box;
+  }
+  .cb-label {
+    grid-area: label;
+    white-space: nowrap;
+  }
+
+  &.before,
+  &.after {
+    grid-template-columns: repeat(2, min-content);
+    gap: ${makeRem(8)};
+  }
+
+  &.before {
+    grid-template-areas: "label box";
+  }
+
+  &.after {
+    grid-template-areas: "box label";
+  }
+`;
 
 const styles = css`
   --checkbox-size: ${makeRem(20)};
@@ -51,6 +82,7 @@ const styles = css`
   &:has(input:checked) {
     border: 1px solid ${makeColor("primary-1000")};
     background: ${makeColor("primary-700")};
+
     &:before {
       content: "✓";
       position: absolute;
@@ -69,15 +101,21 @@ const styles = css`
 `;
 
 export const InputCheckbox = forwardRef<HTMLInputElement, InputCheckboxProps>(
-  function InputCheckbox({ children, className, ...restProps }, ref) {
+  function InputCheckbox(
+    { children, className, dxLabelOrientation = "before", ...restProps },
+    ref
+  ) {
     return (
-      <label className={styles}>
-        <input
-          type="checkbox"
-          {...restProps}
-          className={classes(className)}
-          ref={ref}
-        />
+      <label className={classes(containerStyles, dxLabelOrientation)}>
+        <div className={classes(styles, className, "cb")}>
+          <input
+            type="checkbox"
+            {...restProps}
+            className={classes(className)}
+            ref={ref}
+          />
+        </div>
+        {children && <div className="cb-label">{children}</div>}
       </label>
     );
   }

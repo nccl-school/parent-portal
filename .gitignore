@@ -14,3 +14,9 @@ bin
 storybook-static
 .env
 .npmrc
+
+# packages/app
+build
+
+# packages/api
+dist-client

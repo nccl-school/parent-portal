@@ -15,7 +15,7 @@ export const backdropStyles = css`
   &[open] {
     &::backdrop {
       background-color: rgb(0 0 0 / 25%);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(2px);
     }
   }
 

@@ -16,7 +16,9 @@ export async function validateFormData<T extends ZodObject>(
   schema: T,
   formData: FormData
 ) {
-  return z.parse(schema, Object.fromEntries(formData.entries()));
+  const formDataObj = Object.fromEntries(formData.entries());
+  console.log(formDataObj);
+  return z.parse(schema, formDataObj);
 }
 
 export function createValidator<T extends ZodObject>(schema: T) {

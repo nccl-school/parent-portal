@@ -24,7 +24,7 @@ export const TableBodyCol = forwardRef<HTMLTableCellElement, TableBodyColProps>(
     return (
       <td {...restProps} className={classes(className, styles)} ref={ref}>
         {typeof children === "string" || typeof children === "number" ? (
-          <Typography dxVariant="body1" dxNode="div">
+          <Typography dxVariant="body3" dxNode="div">
             {children}
           </Typography>
         ) : (

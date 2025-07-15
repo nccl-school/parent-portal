@@ -4,80 +4,266 @@ on:
   push:
     branches:
       - dev
-      # - main
+      - feat/db-and-api
 
 jobs:
-  deploy:
-    name: Build and Deploy
+  setup:
+    name: Setup
     runs-on: ubuntu-latest
-
     environment:
       name: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
+    outputs:
+      api_image_name: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_GAR_REPO_API }}/${{ vars.GCP_CLOUDRUN_SERVICE_API }}
+      app_image_name: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_GAR_REPO_APP }}/${{ vars.GCP_CLOUDRUN_SERVICE_APP }}
+      comparison_branch: ${{ github.ref_name == 'main' && 'main' || 'dev' }}
+      environment: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
+      node_version: ${{ steps.db.outputs.node_version }}
+    steps:
+      - name: Read Node.js Version
+        id: node_version
+        run: echo "node_version=$(cat .nvmrc)" >> $GITHUB_ENV
+
+  db_check:
+    name: Check DB
+    runs-on: ubuntu-latest
+    needs: [setup]
+    outputs:
+      should_migrate: ${{ steps.db.outputs.should_migrate }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch comparison branch
+        run: git fetch origin ${{ needs.setup.outputs.comparison_branch }}
+
+      - id: db
+        name: Check if Prisma Migrations Have Changed
+        working-directory: packages/api
+        run: |
+          echo "🔍 Checking for changes to 'prisma/migrations/' between this commit and origin/${{ needs.setup.outputs.comparison_branch }}"
+          CHANGED_FILES=$(git diff --name-only origin/${{ needs.setup.outputs.comparison_branch }}...HEAD)
+          echo
+
+          echo "📄 Files changed in commit range:"
+          echo "$CHANGED_FILES"
+          echo
+
+          if echo "$CHANGED_FILES" | grep '^prisma/migrations/'; then
+            echo "✅ Detected changes in 'prisma/migrations/' — running DB migration."
+            echo "should_migrate=true" >> $GITHUB_OUTPUT
+          else
+            echo "ℹ️ No changes to 'prisma/migrations/' — skipping DB migration."
+            echo "should_migrate=false" >> $GITHUB_OUTPUT
+          fi
+  db_migrate:
+    name: Migrate DB
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
+    needs: [setup, db_check]
+    if: needs.db_check.outputs.should_migrate == 'true'
+    outputs:
+      ran: "true"
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Deploy
-        run: |
-          echo "Deploying branch: ${{ github.ref_name }}"
-          echo "To environment: ${{ github.ref_name == 'main' && 'production' || 'dev' }}"
-
-      - name: Read Node.js Version
-        id: node_version
-        run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
+      - name: Enable Corepack # Ensures the correct version of yarn is used
+        run: corepack enable
 
       - name: Set Up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Enable Corepack # Ensures the correct version of yarn is used
-        run: corepack enable
+          node-version: ${{ needs.setup.outputs.node_version }}
+          cache: "yarn"
 
       - name: Install Dependencies
         run: yarn install --immutable
 
-      - name: Build Project
+      - name: Migrate DB
+        working-directory: packages/api
+        run: yarn prisma migrate deploy
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Seed DB
+        working-directory: packages/api
+        run: yarn prisma db seed
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+  build_monorepo:
+    name: Build Monorepo
+    runs-on: ubuntu-latest
+    needs: [setup, db_check, db_migrate]
+    if: |
+      always() &&
+      (needs.db_check.outputs.should_migrate == 'false' || needs.db_migrate.result == 'success')
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack # Ensures the correct version of yarn is used
+        run: corepack enable
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ needs.setup.outputs.node_version }}
+          cache: "yarn"
+
+      - name: Install Dependencies
+        run: yarn install --immutable
+
+      - name: Build Monorepo
         run: yarn build
         env:
           VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
           TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
           TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
-      - name: --- DEBUG BUILD FILE ---
-        run: |
-          FILE=$(ls ./packages/app/build/server/assets/server-build-* | head -n 1)
-          echo "Showing contents of $FILE"
-          cat "$FILE"
+      - name: Install production dependencies
+        run: yarn workspaces focus --production --all
 
-      - name: GCP - Authenticate
+      - name: Upload Full Build Output
+        uses: actions/upload-artifact@v4
+        with:
+          name: monorepo-build
+          path: |
+            node_modules/
+            packages/
+
+  build_api:
+    name: Build API
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    needs: [setup, build_monorepo]
+    if: always() && needs.build_monorepo.result == 'success'
+    steps:
+      - name: Download full build output
+        uses: actions/download-artifact@v4
+        with:
+          name: monorepo-build
+          path: .
+
+      - name: Copy Prisma engine
+        run: |
+          cp packages/api/src/_generated/prisma/libquery_engine-linux-musl-openssl-3.0.x.so.node packages/api/dist/_generated/prisma/
+
+      - name: List Prisma resources
+        run: |
+          sudo apt-get install tree
+          tree -L 3 packages/api/dist/_generated/prisma
+
+      - name: Authenticate GCP
+        id: google_auth
         uses: google-github-actions/auth@v2
         with:
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+          token_format: access_token
           credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
-      - name: GCP - Setup
+      - name: Install gcloud CLI
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: GCP - Build using Cloud Build
+      - name: Build image and push to GAR
         run: |
-          echo "Building ${{vars.SERVICE_NAME}}"
-          gcloud builds submit . \
-            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{vars.SERVICE_NAME}} \
+          docker build . -f packages/api/Dockerfile -t ${{ needs.setup.outputs.api_image_name }} 
+          echo "${{ steps.google_auth.outputs.access_token }}" | docker login -u oauth2accesstoken --password-stdin https://${{ vars.GCP_REGION }}-docker.pkg.dev
+          docker push ${{ needs.setup.outputs.api_image_name }}
 
-      - name: GCP - Deploy to Cloud Run
+  build_app:
+    name: Build App
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    needs: [setup, build_monorepo]
+    if: always() && needs.build_monorepo.result == 'success'
+    steps:
+      - name: Download full build output
+        uses: actions/download-artifact@v4
+        with:
+          name: monorepo-build
+          path: .
+      - name: Authenticate GCP
+        id: google_auth
+        uses: google-github-actions/auth@v2
+        with:
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+          token_format: access_token
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+      - name: Install gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Build image and push to GAR
         run: |
-          echo "Deploying ${{vars.SERVICE_NAME}} to Google Cloud Run"
-          gcloud run deploy ${{vars.SERVICE_NAME}} \
-            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{vars.SERVICE_NAME}} \
-            --platform managed \
-            --allow-unauthenticated \
-            --region us-central1 \
-            --set-env-vars NODE_ENV=production,\
-          NCCL_APP_URL=${{ vars.NCCL_APP_URL }},\
-          CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }},\
-          CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }},\
-          GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }},\
-          GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}
+          docker build . -f packages/app/Dockerfile -t ${{ needs.setup.outputs.app_image_name }}
+          echo "${{ steps.google_auth.outputs.access_token }}" | docker login -u oauth2accesstoken --password-stdin https://${{ vars.GCP_REGION }}-docker.pkg.dev
+          docker push ${{ needs.setup.outputs.app_image_name }}
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: [setup, build_api, build_app]
+    if: always() && needs.build_api.result == 'success' && needs.build_app.result == 'success'
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    steps:
+      - name: Authenticate GCP
+        id: google_auth
+        uses: google-github-actions/auth@v2
+        with:
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+          token_format: access_token
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+      - name: Install gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Deploy API to Cloudrun
+        uses: "google-github-actions/deploy-cloudrun@v2"
+        with:
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+          service: ${{ vars.GCP_CLOUDRUN_SERVICE_API }}
+          image: ${{ needs.setup.outputs.api_image_name }}
+          region: ${{ vars.GCP_REGION }}
+          env_vars: |-
+            NODE_ENV=production
+            NCCL_APP_URL=${{ vars.NCCL_APP_URL }}
+            NCCL_API_URL=${{ vars.NCCL_API_URL }}
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }}
+            CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }}
+            CLERK_WEBHOOK_SIGNING_SECRET=${{ secrets.CLERK_WEBHOOK_SIGNING_SECRET }}
+            GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }}
+            GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}
+
+      - name: Deploy App to Cloudrun
+        uses: "google-github-actions/deploy-cloudrun@v2"
+        with:
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+          service: ${{ vars.GCP_CLOUDRUN_SERVICE_APP }}
+          image: ${{ needs.setup.outputs.app_image_name }}
+          region: ${{ vars.GCP_REGION }}
+          env_vars: |-
+            NODE_ENV=production
+            NCCL_APP_URL=${{ vars.NCCL_APP_URL }}
+            NCCL_API_URL=${{ vars.NCCL_API_URL }}
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }}
+            CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }}
+            CLERK_WEBHOOK_SIGNING_SECRET=${{ secrets.CLERK_WEBHOOK_SIGNING_SECRET }}
+            GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }}
+            GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}

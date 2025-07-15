@@ -131,6 +131,19 @@ export const colorAndVariants = {
   "neutral-light-1200": "#464a50",
   "neutral-light-1300": "#393e43",
   "neutral-light": "#91969c",
+  "white-50": "#ffffff",
+  white: "#ffffff",
+  "light-50": "#ffffff",
+  "light-100": "#fcfcfc",
+  "light-200": "#f8f8f8",
+  "light-300": "#f5f5f5",
+  "light-400": "#f2f2f2",
+  "light-500": "#e5e5e5",
+  "light-600": "#cecece",
+  "light-700": "#b8b8b8",
+  "light-800": "#a2a2a2",
+  "light-900": "#8d8d8d",
+  light: "#f0f0f0",
 };
 export type ColorAndVariants = keyof typeof colorAndVariants;
 export type MakeColorOptions = { opacity?: number };

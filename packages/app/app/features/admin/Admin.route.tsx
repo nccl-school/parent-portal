@@ -5,8 +5,9 @@ import { css } from "@linaria/core";
 import type { Route } from "./+types/Admin.route";
 import { AdminNavbar } from "./AdminNavbar";
 
+import { PageContainer } from "../..//components/page/PageContainer";
 import { PageHeader } from "../../components/page";
-import { RBAC } from "../../utils/server/utils.server.auth";
+import { isAdmin } from "../../utils/server/utils.server.auth";
 import { Unauthorized } from "../auth/Unauthorized";
 
 const styles = css`
@@ -28,21 +29,20 @@ const styles = css`
     max-width: ${makeCustom("container--max-width")};
     margin: 0 auto;
     width: 100%;
+    position: sticky;
+    top: ${makeCustom("header--height-desktop")};
+    height: ${makeCustom("admin--tab-height-desktop")};
   }
   .main {
     grid-area: main;
     background: white;
+    overflow: hidden;
   }
 `;
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
-  const rbac = new RBAC(loaderArgs);
-  const isAdmin = await rbac.isAdmin();
-  if (!isAdmin) {
-    return { hasAccess: false };
-  }
-
-  return { hasAccess: true };
+  const hasAccess = await isAdmin(loaderArgs);
+  return { hasAccess };
 }
 
 export default function AdminRoute({ loaderData }: Route.ComponentProps) {
@@ -50,7 +50,7 @@ export default function AdminRoute({ loaderData }: Route.ComponentProps) {
     return <Unauthorized />;
   }
   return (
-    <div className={styles}>
+    <PageContainer dxVariant="static" className={styles}>
       <PageHeader
         dxTitle="Administration"
         dxSubtitle="Invite parents, manage groups, add content, send notifications, etc..."
@@ -62,6 +62,6 @@ export default function AdminRoute({ loaderData }: Route.ComponentProps) {
       <div className="main">
         <Outlet />
       </div>
-    </div>
+    </PageContainer>
   );
 }

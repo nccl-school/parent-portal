@@ -17,7 +17,7 @@ const styles = css`
   && {
     color: ${makeColor("neutral-light-1200")};
     margin-top: ${makeRem(4)};
-    line-height: 1.2;
+    line-height: 1.3;
   }
 `;
 

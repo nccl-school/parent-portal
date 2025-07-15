@@ -1,4 +1,9 @@
-import type { ErrorPayloads, ErrorPayloadValidation } from "./server";
+import type { ErrorResponse } from "@nccl/api/client";
+import type { ReactNode } from "react";
+import { match } from "ts-pattern";
+
+import type { ErrorPayloadValidation } from "./server";
+import { placeholder } from "./isomorphic";
 
 export class DateFactory {
   private static instance: DateFactory;
@@ -27,10 +32,19 @@ export class DateFactory {
     if (pattern === "Relative") {
       const now = new Date();
       const diffMs = now.getTime() - date.getTime();
-      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-      if (diffDays < 0) return "In the future";
-      if (diffDays === 0) return "Today";
+      if (diffMs < 0) return "In the future";
+
+      const diffMinutes = Math.floor(diffMs / (1000 * 60));
+      if (diffMinutes < 1) return "Just now";
+      if (diffMinutes < 60)
+        return `${diffMinutes} minute${diffMinutes !== 1 ? "s" : ""} ago`;
+
+      const diffHours = Math.floor(diffMinutes / 60);
+      if (diffHours < 24)
+        return `${diffHours} hour${diffHours !== 1 ? "s" : ""} ago`;
+
+      const diffDays = Math.floor(diffHours / 24);
       if (diffDays === 1) return "Yesterday";
       if (diffDays <= 6) return `${diffDays} days ago`;
 
@@ -79,12 +93,52 @@ function isValidationError<T extends string>(
     typeof data === "object" &&
     data !== null &&
     "error_type" in data &&
-    (data as ErrorPayloads).error_type === "validation"
+    (data as ErrorResponse).error_type === "validation"
   );
+}
+
+export function isError(data: unknown): data is ErrorResponse {
+  return typeof data === "object" && data !== null && "error_type" in data;
 }
 
 export function getValidationErrors<K extends string>(
   data: unknown
 ): ErrorPayloadValidation<K>["errors"] {
   return isValidationError<K>(data) ? data.errors : {};
+}
+
+type ParseFetcherResult<D> =
+  | { status: "loading" }
+  | { status: "error"; error: Extract<D, ErrorResponse> }
+  | { status: "ok"; data: Exclude<D, ErrorResponse> };
+
+export function parseFetcherData<D>(data: D): ParseFetcherResult<D> {
+  if (typeof data === "undefined") {
+    return { status: "loading" };
+  }
+  if (isError(data)) {
+    return { status: "error", error: data as Extract<D, ErrorResponse> };
+  }
+
+  return { status: "ok", data: data as Exclude<D, ErrorResponse> };
+}
+
+export function renderData<D>(
+  data: D,
+  callbacks: {
+    loading?: ReactNode;
+    ok: (d: NonNullable<Exclude<D, ErrorResponse>>) => ReactNode;
+  }
+) {
+  const res = parseFetcherData<D>(data);
+  return match(res)
+    .with({ status: "loading" }, () =>
+      callbacks.loading ? callbacks.loading : placeholder
+    )
+    .with({ status: "error" }, () => placeholder)
+    .with({ status: "ok" }, (state) => {
+      if (!state.data) return;
+      return callbacks.ok(state.data as NonNullable<Exclude<D, ErrorResponse>>);
+    })
+    .exhaustive();
 }

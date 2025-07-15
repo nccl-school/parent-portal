@@ -10,8 +10,10 @@ export type TypographyProps = {
     | "heading2"
     | "heading3"
     | "heading4"
+    | "heading5"
     | "body1"
     | "body2"
+    | "body3"
     | "caption"
     | "label";
 } & (
@@ -65,7 +67,13 @@ const styles = css`
   &.heading4 {
     ${makeFontSize(1, 110)};
     font-family: ${makeFontFamily("heading")};
-    font-weight: ${makeFontWeight("heading-regular")};
+    font-weight: ${makeFontWeight("heading-bold")};
+  }
+
+  &.heading5 {
+    ${makeFontSize(0, 110)};
+    font-family: ${makeFontFamily("heading")};
+    font-weight: ${makeFontWeight("heading-semiBold")};
   }
 
   &.body1 {
@@ -76,6 +84,12 @@ const styles = css`
 
   &.body2 {
     ${makeFontSize(0, 150)};
+    font-family: ${makeFontFamily("body")};
+    font-weight: ${makeFontWeight("body-regular")};
+  }
+
+  &.body3 {
+    ${makeFontSize(-0.5, 110)};
     font-family: ${makeFontFamily("body")};
     font-weight: ${makeFontWeight("body-regular")};
   }

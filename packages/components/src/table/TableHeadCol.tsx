@@ -39,7 +39,7 @@ const styles = css`
     padding: 0 ${makeCustom("table--cell-padding")};
     font-weight: ${makeFontWeight("body-bold")} !important;
     font-size: ${makeRem(14)} !important;
-    background: ${makeColor("neutral-light-100", { opacity: 0.2 })};
+    background: ${makeColor("neutral-light-50")};
     color: ${makeColor("neutral-light-1100")};
   }
 

@@ -1,0 +1,21 @@
+meta {
+  name: LIKE a suggestion
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{API_DOMAIN}}/api/suggestion/:id/vote
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: cmct67ada0000bjtnnk96fxm3
+}
+
+body:json {
+  {
+    "type": "LIKE"
+  }
+}

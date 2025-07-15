@@ -1,7 +1,7 @@
-import type { User } from "@clerk/react-router/ssr.server";
+import type { User } from "@nccl/api/client";
 
-import { UserRoleBadge } from "../user";
+import { RoleBadge } from "../user";
 
-export function AdminUsersTableCellRole(user: Pick<User, "publicMetadata">) {
-  return <UserRoleBadge publicMetadata={user.publicMetadata} />;
+export function AdminUsersTableCellRole(user: User) {
+  return <RoleBadge {...user} />;
 }

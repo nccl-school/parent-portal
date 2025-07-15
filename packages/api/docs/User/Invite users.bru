@@ -1,0 +1,18 @@
+meta {
+  name: Invite users
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{API_DOMAIN}}/api/user/invite
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email_addresses": "drewdecarme+4@gmail.com",
+    "role": "USER"
+  }
+}

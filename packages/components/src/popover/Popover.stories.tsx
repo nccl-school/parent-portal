@@ -7,6 +7,7 @@ import { PopoverMenu } from "./PopoverMenu.js";
 import { PopoverMenuItem } from "./PopoverMenuItem.js";
 import { PopoverMenuItemIcon } from "./PopoverMenuItemIcon.js";
 import { PopoverMenuItemText } from "./PopoverMenuItemText.js";
+import { PopoverMenuItemAction } from "./PopoverMenuItemAction.js";
 
 import type { PopoverPosition } from "../_core/popover/index.js";
 import { PopoverEngine, popoverPositions } from "../_core/popover/index.js";
@@ -121,12 +122,16 @@ export const WithMenu = () => {
       <Popover ref={popover.setPopover}>
         <PopoverMenu>
           <PopoverMenuItem>
-            <PopoverMenuItemIcon dxIcon="user-02-stroke-standard" />
-            <PopoverMenuItemText>View Profile</PopoverMenuItemText>
+            <PopoverMenuItemAction>
+              <PopoverMenuItemIcon dxIcon="user-02-stroke-standard" />
+              <PopoverMenuItemText>View Profile</PopoverMenuItemText>
+            </PopoverMenuItemAction>
           </PopoverMenuItem>
           <PopoverMenuItem>
-            <PopoverMenuItemIcon dxIcon="key-02-stroke-standard" />
-            <PopoverMenuItemText>Change Permission</PopoverMenuItemText>
+            <PopoverMenuItemAction>
+              <PopoverMenuItemIcon dxIcon="key-02-stroke-standard" />
+              <PopoverMenuItemText>Change Permission</PopoverMenuItemText>
+            </PopoverMenuItemAction>
           </PopoverMenuItem>
         </PopoverMenu>
       </Popover>

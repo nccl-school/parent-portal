@@ -1,0 +1,175 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client"
+  binaryTargets   = ["native", "linux-musl-openssl-3.0.x"]
+  previewFeatures = ["driverAdapters", "fullTextSearchPostgres"]
+  output          = "../src/_generated/prisma"
+  moduleFormat    = "esm"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum SuggestionStatus {
+  DISCUSSION
+  PLANNED
+  IN_PROGRESS
+  COMPLETE
+}
+
+model Suggestion {
+  id          String              @id @default(cuid())
+  title       String
+  description String
+  status      SuggestionStatus    @default(DISCUSSION)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  isAnonymous Boolean             @default(false)
+  createdBy   User                @relation(fields: [createdById], references: [id])
+  createdById String
+  votes       SuggestionVote[]
+  comments    SuggestionComment[]
+}
+
+enum SuggestionVoteType {
+  LIKE
+  DISLIKE
+}
+
+model SuggestionComment {
+  id           String     @id @default(cuid())
+  comment      String
+  isAnonymous  Boolean    @default(false)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  createdBy    User       @relation(fields: [createdById], references: [id])
+  createdById  String
+  suggestion   Suggestion @relation(fields: [suggestionId], references: [id])
+  suggestionId String
+}
+
+model SuggestionVote {
+  id           String             @id @default(cuid())
+  type         SuggestionVoteType
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  createdBy    User               @relation(fields: [createdById], references: [id])
+  createdById  String
+  suggestion   Suggestion         @relation(fields: [suggestionId], references: [id])
+  suggestionId String
+
+  @@unique([createdById, suggestionId])
+}
+
+enum RoleName {
+  ADMIN
+  STAFF
+  USER
+}
+
+model Role {
+  id          RoleName @id @unique
+  label       String
+  description String
+  User        User[]
+}
+
+enum UserStatus {
+  INVITED
+  ACTIVE
+  DISABLED
+}
+
+model User {
+  id           String     @id @default(cuid())
+  authId       String?    @unique
+  email        String     @unique
+  firstName    String?
+  lastName     String?
+  imageUrl     String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  role         Role       @relation(fields: [roleId], references: [id])
+  roleId       RoleName
+  status       UserStatus @default(INVITED)
+  invitationId String?    @unique
+  invitedAt    DateTime?
+
+  memberships       OrganizationMembership[]
+  suggestions       Suggestion[]
+  students          UserStudent[]
+  groups            UserGroup[]
+  suggestionVotes   SuggestionVote[]
+  SuggestionComment SuggestionComment[]
+}
+
+model UserGroup {
+  id      String  @id @default(cuid())
+  User    User?   @relation(fields: [userId], references: [id])
+  userId  String?
+  Group   Group?  @relation(fields: [groupId], references: [id])
+  groupId String?
+}
+
+model UserStudent {
+  id        String  @id @default(cuid())
+  userId    String
+  studentId String
+  groupId   String
+  relation  String // e.g. 'mother', 'father', 'guardian'
+  user      User    @relation(fields: [userId], references: [id])
+  student   Student @relation(fields: [studentId], references: [id])
+  group     Group   @relation(fields: [groupId], references: [id])
+
+  @@unique([userId, studentId])
+}
+
+model Student {
+  id        String        @id @default(cuid())
+  firstName String
+  lastName  String
+  group     String?
+  birthDate DateTime?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  parents   UserStudent[] // ← many-to-many link
+  Group     Group?        @relation(fields: [groupId], references: [id])
+  groupId   String?
+}
+
+model Group {
+  id          String        @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  teachers    UserGroup[]
+  students    Student[]
+  UserStudent UserStudent[]
+}
+
+model Organization {
+  id          String                   @id // Clerk organization ID
+  name        String
+  createdAt   DateTime                 @default(now())
+  updatedAt   DateTime                 @updatedAt
+  memberships OrganizationMembership[]
+}
+
+model OrganizationMembership {
+  id             String       @id // Clerk membership ID
+  userId         String
+  organizationId String
+  role           String
+  user           User         @relation(fields: [userId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  @@unique([userId, organizationId]) // Enforcing relational integrity at the DB level
+}

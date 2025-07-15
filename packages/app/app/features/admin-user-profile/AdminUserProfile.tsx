@@ -37,13 +37,13 @@ function ModalContent() {
           dxFirstName={user.firstName ?? ""}
           dxSize={64}
           dxLastName={user.lastName ?? undefined}
-          dxSrc={user.imageUrl}
+          // dxSrc={user.imageUrl ?? undefined}
         />
         <Typography dxVariant="heading4" dxNode="h4">
           Permissions
         </Typography>
         <Typography dxVariant="body1" dxNode="div">
-          {user.publicMetadata.role ?? "Unassigned"}
+          {user.role.label ?? "Unassigned"}
         </Typography>
       </ModalBody>
       <ModalFooter>

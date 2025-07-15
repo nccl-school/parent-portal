@@ -1,4 +1,3 @@
-import type { User } from "@clerk/react-router/ssr.server";
 import {
   Table,
   TableHead,
@@ -10,9 +9,9 @@ import {
   Typography,
   InputSearch,
   Button,
-  Icon,
 } from "@nccl/components";
-import { makeFontWeight, makeRem } from "@nccl/theme";
+import type { GetUserListResponse } from "@nccl/api/client";
+import { makeCustom, makeFontWeight, makeRem } from "@nccl/theme";
 import { useMemo } from "react";
 import { css } from "@linaria/core";
 
@@ -25,6 +24,7 @@ import { AdminUserProfile } from "../admin-user-profile";
 import { dates } from "../../utils/client";
 import { placeholder } from "../../utils/isomorphic";
 import { AdminUserInvite } from "../admin-user-invite";
+import { UserStatusBadge } from "../user/UserStatusBadge";
 
 const styles = css`
   display: grid;
@@ -32,6 +32,7 @@ const styles = css`
   align-items: center;
   width: 100%;
   height: ${makeRem(72)};
+  padding: 0 ${makeCustom("page--gutter-desktop")};
 
   & > div {
     &.left {
@@ -48,9 +49,14 @@ const styles = css`
   }
 `;
 
-export function AdminUsersTable({ data }: { data: Omit<User, "_raw">[] }) {
+const tableStyles = css`
+  height: 100%;
+  overflow: hidden;
+`;
+
+export function AdminUsersTable({ data }: { data: GetUserListResponse }) {
   return (
-    <>
+    <div className={tableStyles}>
       {useMemo(
         () => (
           <>
@@ -99,7 +105,7 @@ export function AdminUsersTable({ data }: { data: Omit<User, "_raw">[] }) {
                 <TableHeadCol>Phone</TableHeadCol>
                 <TableHeadCol>Created On</TableHeadCol>
                 <TableHeadCol>Last Active</TableHeadCol>
-                <TableHeadCol>Locked</TableHeadCol>
+                <TableHeadCol>Status</TableHeadCol>
                 <TableHeadCol></TableHeadCol>
               </TableRow>
             </TableHead>
@@ -118,21 +124,15 @@ export function AdminUsersTable({ data }: { data: Omit<User, "_raw">[] }) {
               <TableBodyCol>
                 <AdminUsersTableCellRole {...user} />
               </TableBodyCol>
-              <TableBodyCol>
-                {user.primaryPhoneNumber?.phoneNumber ?? placeholder}
-              </TableBodyCol>
+              <TableBodyCol>{placeholder}</TableBodyCol>
               <TableBodyCol>
                 {dates.format(user.createdAt, "MM/DD/YYYY")}
               </TableBodyCol>
               <TableBodyCol>
-                {dates.format(user.lastActiveAt, "Relative")}
+                {/* {dates.format(user.lastActiveAt, "Relative")} */}
               </TableBodyCol>
               <TableBodyCol>
-                {user.locked ? (
-                  <Icon dxIcon="security-lock-stroke-standard" dxSize={16} />
-                ) : (
-                  placeholder
-                )}
+                <UserStatusBadge status={user.status} />
               </TableBodyCol>
               <TableBodyCol style={{ width: makeRem(24) }}>
                 <AdminUsersTableCellMenu {...user} />
@@ -141,6 +141,6 @@ export function AdminUsersTable({ data }: { data: Omit<User, "_raw">[] }) {
           ))}
         </TableBody>
       </Table>
-    </>
+    </div>
   );
 }

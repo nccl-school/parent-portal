@@ -4,12 +4,3 @@
 
 # React Router
 /.react-router/
-/build/
-
-# Cloudflare
-.mf
-.wrangler
-.dev.vars*
-
-
-.env.local

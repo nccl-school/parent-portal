@@ -1,7 +1,9 @@
-import type { User } from "@clerk/react-router/ssr.server";
 import { css } from "@linaria/core";
+import type { User } from "@nccl/api/client";
 import { Avatar, Typography } from "@nccl/components";
 import { makeFontWeight, makeRem } from "@nccl/theme";
+
+import { getUserName } from "../user";
 
 const styles = css`
   display: grid;
@@ -19,7 +21,6 @@ const styles = css`
   .name {
     grid-area: name;
     font-weight: ${makeFontWeight("body-bold")};
-    font-size: ${makeRem(18)};
   }
 
   .email {
@@ -27,25 +28,21 @@ const styles = css`
   }
 `;
 
-export function AdminUsersTableCellName(
-  user: Pick<User, "firstName" | "lastName" | "emailAddresses" | "imageUrl">
-) {
+export function AdminUsersTableCellName(user: User) {
   return (
     <div className={styles}>
       <Avatar
         className="avatar"
         dxFirstName={user.firstName ?? ""}
-        dxSize={"xl"}
+        dxSize={"lg"}
         dxLastName={user.lastName ?? ""}
-        dxSrc={user.imageUrl}
+        dxSrc={user.imageUrl ?? undefined}
       />
-      <Typography
-        dxVariant="body1"
-        dxNode="div"
-        className="name"
-      >{`${user.firstName} ${user.lastName}`}</Typography>
-      <Typography dxVariant="body2" dxNode="div" className="email">
-        {user.emailAddresses[0].emailAddress ?? "No email address"}
+      <Typography dxVariant="body1" dxNode="div" className="name">
+        {getUserName(user)}
+      </Typography>
+      <Typography dxVariant="body3" dxNode="div" className="email">
+        {user.email ?? "No email address"}
       </Typography>
     </div>
   );

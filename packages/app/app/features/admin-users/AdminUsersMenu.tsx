@@ -2,12 +2,14 @@ import {
   Popover,
   PopoverMenu,
   PopoverMenuItem,
+  PopoverMenuItemAction,
   PopoverMenuItemIcon,
   PopoverMenuItemText,
   type PopoverEngine,
 } from "@nccl/components";
-import { useCallback, type MouseEventHandler } from "react";
-import type { User } from "@clerk/react-router/ssr.server";
+import { useCallback, useEffect, type MouseEventHandler } from "react";
+import type { User } from "@nccl/api/client";
+import { href, useFetcher } from "react-router";
 
 import { AdminUserPermissions } from "../admin-user-permissions";
 import { AdminUserProfile } from "../admin-user-profile";
@@ -16,9 +18,11 @@ export function AdminUsersMenu({
   popover,
   user,
 }: {
-  user: Omit<User, "_raw">;
+  user: User;
   popover: PopoverEngine;
 }) {
+  const fetcher = useFetcher();
+
   const handleLaunchUserPermissions = useCallback<
     MouseEventHandler<HTMLButtonElement>
   >(
@@ -39,17 +43,44 @@ export function AdminUsersMenu({
     [popover, user]
   );
 
+  useEffect(() => {
+    if (!fetcher.data) return;
+    console.log(fetcher.data);
+  }, [fetcher.data]);
+
   return (
     <Popover ref={popover.setPopover}>
       <PopoverMenu>
-        <PopoverMenuItem onClick={handleLaunchUserProfile}>
-          <PopoverMenuItemIcon dxIcon="user-02-stroke-standard" />
-          <PopoverMenuItemText>View Profile</PopoverMenuItemText>
+        <PopoverMenuItem>
+          <PopoverMenuItemAction onClick={handleLaunchUserProfile}>
+            <PopoverMenuItemIcon dxIcon="user-02-stroke-standard" />
+            <PopoverMenuItemText>View profile</PopoverMenuItemText>
+          </PopoverMenuItemAction>
         </PopoverMenuItem>
-        <PopoverMenuItem onClick={handleLaunchUserPermissions}>
-          <PopoverMenuItemIcon dxIcon="key-02-stroke-standard" />
-          <PopoverMenuItemText>Change Permission</PopoverMenuItemText>
+
+        <PopoverMenuItem>
+          <PopoverMenuItemAction onClick={handleLaunchUserPermissions}>
+            <PopoverMenuItemIcon dxIcon="key-02-stroke-standard" />
+            <PopoverMenuItemText>Change role</PopoverMenuItemText>
+          </PopoverMenuItemAction>
         </PopoverMenuItem>
+
+        {user.invitationId && user.status === "INVITED" && (
+          <PopoverMenuItem>
+            <fetcher.Form
+              action={href("/api/user/resend-invite/:id", { id: user.id })}
+            >
+              <PopoverMenuItemAction type="submit">
+                <PopoverMenuItemIcon dxIcon="refresh-stroke-standard" />
+                <PopoverMenuItemText>
+                  {fetcher.state !== "idle"
+                    ? "Resending..."
+                    : "Resend invitation"}
+                </PopoverMenuItemText>
+              </PopoverMenuItemAction>
+            </fetcher.Form>
+          </PopoverMenuItem>
+        )}
       </PopoverMenu>
     </Popover>
   );

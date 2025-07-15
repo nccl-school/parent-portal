@@ -19,7 +19,6 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "rootDirs": [".", "./.react-router/types"],
-    "paths": {},
     "esModuleInterop": true,
     "resolveJsonModule": true
   }

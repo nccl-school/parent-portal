@@ -11,10 +11,12 @@ export type ModalHeaderProps = ModalHeaderPropsNative;
 
 const styles = css`
   padding: ${makeRem(32)} ${makeCustom("modal--gutters")};
-  /* border-bottom: 1px solid ${makeColor("neutral-light-100")}; */
+  background: ${makeColor("white")};
   padding-bottom: ${makeRem(16)};
   display: flex;
+  align-items: center;
   justify-content: space-between;
+  z-index: 10;
 `;
 
 export const ModalHeader = forwardRef<HTMLElement, ModalHeaderProps>(

@@ -1,0 +1,11 @@
+meta {
+  name: Get a list of suggestions
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{API_DOMAIN}}/api/suggestion
+  body: none
+  auth: inherit
+}

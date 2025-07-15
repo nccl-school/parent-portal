@@ -5,8 +5,7 @@ import { Button } from "./Button.js";
 
 const meta: Meta = {
   title: "Button",
-  component: Button,
-} satisfies Meta<typeof meta>;
+};
 
 export default meta;
 

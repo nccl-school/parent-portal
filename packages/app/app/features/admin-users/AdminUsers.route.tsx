@@ -1,8 +1,7 @@
 import type { Route } from "./+types/AdminUsers.route";
 import { AdminUsersTable } from "./AdminUsersTable";
 
-import { PageSection } from "../../components/page";
-import { getClerkClient } from "../../utils/server";
+import { getNCCLClient } from "../../utils/server";
 import { assembleTitle } from "../../utils/util.assemble-title";
 
 export function meta() {
@@ -10,15 +9,11 @@ export function meta() {
 }
 
 export async function loader(args: Route.LoaderArgs) {
-  const clerkClient = await getClerkClient(args);
-  const users = await clerkClient.users.getUserList();
-  return { users: users.data };
+  const ncclClient = getNCCLClient(args);
+  const data = await ncclClient.user.getUserList();
+  return data;
 }
 
 export default function AdminUsersRoute(args: Route.ComponentProps) {
-  return (
-    <PageSection>
-      <AdminUsersTable data={args.loaderData.users} />
-    </PageSection>
-  );
+  return <AdminUsersTable data={args.loaderData} />;
 }

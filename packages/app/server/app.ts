@@ -8,6 +8,7 @@ type EnvVars = {
   GOOGLE_CALENDAR_API_KEY: string;
   GOOGLE_CALENDAR_ID_NCCL_PUBLIC: string;
   NCCL_APP_URL: string;
+  NCCL_API_URL: string;
   CLERK_PUBLISHABLE_KEY: string;
 };
 
@@ -31,6 +32,7 @@ app.use(
       return {
         env: {
           NCCL_APP_URL: envVar("NCCL_APP_URL"),
+          NCCL_API_URL: envVar("NCCL_API_URL"),
           CLERK_SECRET_KEY: envVar("CLERK_SECRET_KEY"),
           CLERK_PUBLISHABLE_KEY: envVar("CLERK_PUBLISHABLE_KEY"),
           GOOGLE_CALENDAR_API_KEY: envVar("GOOGLE_CALENDAR_API_KEY"),
