@@ -236,7 +236,7 @@ jobs:
         uses: "google-github-actions/deploy-cloudrun@v2"
         with:
           project_id: ${{ vars.GCP_PROJECT_ID }}
-          service: ${{vars.GCP_CLOUDRUN_SERVICE_API}}
+          service: ${{ vars.GCP_CLOUDRUN_SERVICE_API }}
           image: ${{ needs.setup.outputs.api_image_name }}
           region: ${{ vars.GCP_REGION }}
           env_vars: |-
@@ -254,7 +254,7 @@ jobs:
         uses: "google-github-actions/deploy-cloudrun@v2"
         with:
           project_id: ${{ vars.GCP_PROJECT_ID }}
-          service: ${{ vars.GCP_CLOUDRUN_SERVICE_API }}
+          service: ${{ vars.GCP_CLOUDRUN_SERVICE_APP }}
           image: ${{ needs.setup.outputs.app_image_name }}
           region: ${{ vars.GCP_REGION }}
           env_vars: |-
