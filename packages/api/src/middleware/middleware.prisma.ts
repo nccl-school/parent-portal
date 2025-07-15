@@ -5,7 +5,7 @@ import type { Context } from "hono";
 import { PrismaNeon } from "@prisma/adapter-neon";
 import { neonConfig } from "@neondatabase/serverless";
 import ws from "ws";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client/default.js";
 
 import { getEnvVar } from "../utils/util.envVar.js";
 
