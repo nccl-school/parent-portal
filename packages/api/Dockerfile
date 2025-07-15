@@ -12,10 +12,9 @@ WORKDIR /app
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 api-user
 
-COPY --from=builder --chown=api-user:nodejs /app/dist           /app/dist
-COPY --from=builder --chown=api-user:nodejs /app/package.json   /app/package.json
+COPY --from=builder --chown=api-user:nodejs /app/dist           /app
 
 USER api-user
 EXPOSE 8080
 
-CMD ["node", "/app/dist/index.js"]
+CMD ["node", "/app/index.js"]
