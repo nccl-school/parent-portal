@@ -5,9 +5,9 @@ import type { Context } from "hono";
 import { PrismaNeon } from "@prisma/adapter-neon";
 import { neonConfig } from "@neondatabase/serverless";
 import ws from "ws";
-import { PrismaClient } from "@prisma/client/default.js";
 
 import { getEnvVar } from "../utils/util.envVar.js";
+import { PrismaClient } from "../_generated/prisma/client.js";
 
 neonConfig.webSocketConstructor = ws;
 
