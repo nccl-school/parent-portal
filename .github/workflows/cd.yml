@@ -137,6 +137,10 @@ jobs:
       - name: Install production dependencies
         run: yarn workspaces focus --production --all
 
+      - name: Generate Prisma Client
+        working-directory: packages/api
+        run: yarn prisma generate
+
       - name: Upload Full Build Output
         uses: actions/upload-artifact@v4
         with:
@@ -162,7 +166,7 @@ jobs:
       - name: Show Build Output Tree
         run: |
           sudo apt-get install tree
-          tree -L 3 .
+          tree -L 3 packages/api/
 
       - name: Authenticate GCP
         id: google_auth
