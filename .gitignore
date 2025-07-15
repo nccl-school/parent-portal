@@ -19,5 +19,4 @@ storybook-static
 build
 
 # packages/api
-_generated
 dist-client
