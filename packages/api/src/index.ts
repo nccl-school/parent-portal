@@ -22,6 +22,8 @@ dotenv.config({ path: envPath });
 
 const app = new Hono();
 
+console.log(process.env);
+
 // Middleware - Log and add the db to the context
 app.use(logger());
 app.use("/api/*", prismaMiddleware);

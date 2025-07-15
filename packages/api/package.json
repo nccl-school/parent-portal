@@ -42,11 +42,12 @@
   "devDependencies": {
     "@clerk/express": "1.7.4",
     "@gfdigital/tsconfig": "0.3.1",
+    "@types/express": "^5.0.3",
     "@types/leo-profanity": "1.5.4",
     "@types/node": "24.0.10",
     "@types/ws": "8.18.1",
     "dotenv-cli": "8.0.0",
-    "esbuild": "0.25.6",
+    "express": "^5.1.0",
     "tsx": "4.20.3",
     "typescript": "5.8.3"
   },
