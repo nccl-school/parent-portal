@@ -210,7 +210,6 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Build Image & Push
-        working-directory: app
         run: |
           docker build . -f packages/app/Dockerfile -t ${{ needs.setup.outputs.app_image_name }}
           echo "${{ steps.google_auth.outputs.access_token }}" | docker login -u oauth2accesstoken --password-stdin https://${{ vars.GCP_REGION }}-docker.pkg.dev
