@@ -119,10 +119,6 @@ jobs:
       - name: Install Dependencies
         run: yarn install --immutable
 
-      # - name: Generate Prisma Client
-      #   working-directory: packages/api
-      #   run: yarn prisma generate
-
       - name: Build Monorepo
         run: yarn build
         env:
@@ -132,10 +128,6 @@ jobs:
 
       - name: Install production dependencies
         run: yarn workspaces focus --production --all
-
-      # - name: Generate Prisma Client
-      #   working-directory: packages/api
-      #   run: yarn prisma generate
 
       - name: Upload Full Build Output
         uses: actions/upload-artifact@v4
@@ -153,13 +145,17 @@ jobs:
     needs: [setup, build_monorepo]
     if: always() && needs.build_monorepo.result == 'success'
     steps:
-      - name: Download Full Build Output
+      - name: Download full build output
         uses: actions/download-artifact@v4
         with:
           name: monorepo-build
           path: .
 
-      - name: Show Build Output Tree
+      - name: Copy Prisma engine
+        run: |
+          cp packages/api/src/_generated/prisma/libquery_engine-linux-musl-openssl-3.0.x.so.node packages/api/dist/_generated/prisma/
+
+      - name: List Prisma resources
         run: |
           sudo apt-get install tree
           tree -L 3 packages/api/dist/_generated/prisma
@@ -177,7 +173,7 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Build Image & Push
+      - name: Build image and push to GAR
         run: |
           docker build . -f packages/api/Dockerfile -t ${{ needs.setup.outputs.api_image_name }} 
           echo "${{ steps.google_auth.outputs.access_token }}" | docker login -u oauth2accesstoken --password-stdin https://${{ vars.GCP_REGION }}-docker.pkg.dev
@@ -191,7 +187,7 @@ jobs:
     needs: [setup, build_monorepo]
     if: always() && needs.build_monorepo.result == 'success'
     steps:
-      - name: Download Full Build Output
+      - name: Download full build output
         uses: actions/download-artifact@v4
         with:
           name: monorepo-build
@@ -209,7 +205,7 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Build Image & Push
+      - name: Build image and push to GAR
         run: |
           docker build . -f packages/app/Dockerfile -t ${{ needs.setup.outputs.app_image_name }}
           echo "${{ steps.google_auth.outputs.access_token }}" | docker login -u oauth2accesstoken --password-stdin https://${{ vars.GCP_REGION }}-docker.pkg.dev
@@ -236,7 +232,7 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Deploy API to Cloudrun (GHA)
+      - name: Deploy API to Cloudrun
         uses: "google-github-actions/deploy-cloudrun@v2"
         with:
           project_id: ${{ vars.GCP_PROJECT_ID }}
