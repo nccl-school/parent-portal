@@ -125,16 +125,16 @@ jobs:
           TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
           TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
-      - name: Install production dependencies
-        run: yarn workspaces focus --production --all
+      # - name: Install production dependencies
+      #   run: yarn workspaces focus --production --all
 
-      - name: Upload Full Build Output
-        uses: actions/upload-artifact@v4
-        with:
-          name: monorepo-build
-          path: |
-            node_modules/
-            packages/
+      # - name: Upload Full Build Output
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: monorepo-build
+      #     path: |
+      #       node_modules/
+      #       packages/
 
   build_api:
     name: Build API
@@ -144,20 +144,20 @@ jobs:
     needs: [setup, build_monorepo]
     if: always() && needs.build_monorepo.result == 'success'
     steps:
-      - name: Download full build output
-        uses: actions/download-artifact@v4
-        with:
-          name: monorepo-build
-          path: .
+      # - name: Download full build output
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: monorepo-build
+      #     path: .
 
-      - name: Copy Prisma engine
-        run: |
-          cp packages/api/src/_generated/prisma/libquery_engine-linux-musl-openssl-3.0.x.so.node packages/api/dist/_generated/prisma/
+      # - name: Copy Prisma engine
+      #   run: |
+      #     cp packages/api/src/_generated/prisma/libquery_engine-linux-musl-openssl-3.0.x.so.node packages/api/dist/_generated/prisma/
 
-      - name: List Prisma resources
-        run: |
-          sudo apt-get install tree
-          tree -L 3 packages/api/dist/_generated/prisma
+      # - name: List Prisma resources
+      #   run: |
+      #     sudo apt-get install tree
+      #     tree -L 3 packages/api/dist/_generated/prisma
 
       - name: Authenticate GCP
         id: google_auth
@@ -177,6 +177,10 @@ jobs:
           docker build . -f packages/api/Dockerfile -t ${{ needs.setup.outputs.api_image_name }} 
           echo "${{ steps.google_auth.outputs.access_token }}" | docker login -u oauth2accesstoken --password-stdin https://${{ vars.GCP_REGION }}-docker.pkg.dev
           docker push ${{ needs.setup.outputs.api_image_name }}
+        env:
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
+          TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
+          TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
   build_app:
     name: Build App
@@ -186,11 +190,11 @@ jobs:
     needs: [setup, build_monorepo]
     if: always() && needs.build_monorepo.result == 'success'
     steps:
-      - name: Download full build output
-        uses: actions/download-artifact@v4
-        with:
-          name: monorepo-build
-          path: .
+      # - name: Download full build output
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: monorepo-build
+      #     path: .
       - name: Authenticate GCP
         id: google_auth
         uses: google-github-actions/auth@v2
@@ -209,6 +213,10 @@ jobs:
           docker build . -f packages/app/Dockerfile -t ${{ needs.setup.outputs.app_image_name }}
           echo "${{ steps.google_auth.outputs.access_token }}" | docker login -u oauth2accesstoken --password-stdin https://${{ vars.GCP_REGION }}-docker.pkg.dev
           docker push ${{ needs.setup.outputs.app_image_name }}
+        env:
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
+          TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
+          TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
   deploy:
     name: Deploy
