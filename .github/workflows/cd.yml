@@ -156,15 +156,6 @@ jobs:
           name: monorepo-build
           path: .
 
-      - name: Copy Prisma engine
-        run: |
-          cp packages/api/src/_generated/prisma/libquery_engine-linux-musl-openssl-3.0.x.so.node packages/api/dist/_generated/prisma/
-
-      - name: List Prisma resources
-        run: |
-          sudo apt-get install tree
-          tree -L 3 packages/api/dist/_generated/prisma
-
       - name: Authenticate GCP
         id: google_auth
         uses: google-github-actions/auth@v2
@@ -197,6 +188,7 @@ jobs:
         with:
           name: monorepo-build
           path: .
+
       - name: Authenticate GCP
         id: google_auth
         uses: google-github-actions/auth@v2

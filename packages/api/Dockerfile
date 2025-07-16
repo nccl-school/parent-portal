@@ -3,8 +3,12 @@ FROM base AS builder
 
 WORKDIR /app
 
+ARG NODE_ENV=production
+ENV NODE_ENV=$NODE_ENV
+
 COPY . .
-RUN npx prisma generate
+RUN cd packages/api && npx prisma generate
+
 
 FROM base AS runner
 WORKDIR /app
@@ -12,9 +16,10 @@ WORKDIR /app
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 api-user
 
-COPY --from=builder --chown=api-user:nodejs /app/node_modules                   /app/node_modules
-COPY --from=builder --chown=api-user:nodejs /app/packages/api/dist              /app/dist
-COPY --from=builder --chown=api-user:nodejs /app/packages/api/package.json      /app/package.json
+COPY --from=builder --chown=api-user:nodejs /app/node_modules                                   /app/node_modules
+COPY --from=builder --chown=api-user:nodejs /app/packages/api/dist                              /app/dist
+COPY --from=builder --chown=api-user:nodejs /app/packages/api/src/_generated/prisma/*.node      /app/dist/_generated/prisma/
+COPY --from=builder --chown=api-user:nodejs /app/packages/api/package.json                      /app/package.json
 
 USER api-user
 EXPOSE 3000
