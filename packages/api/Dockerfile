@@ -4,11 +4,7 @@ FROM base AS builder
 WORKDIR /app
 
 COPY . .
-RUN corepack enable
-RUN cd packages/api && npx prisma generate
-RUN yarn build
-RUN yarn workspaces focus --production --all
-
+RUN npx prisma generate
 
 FROM base AS runner
 WORKDIR /app
