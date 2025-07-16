@@ -18,7 +18,7 @@ COPY --from=builder --chown=app-user:nodejs /app/packages/app/build             
 COPY --from=builder --chown=app-user:nodejs /app/packages/app/server.js         /app/server.js
 COPY --from=builder --chown=app-user:nodejs /app/packages/app/package.json      /app/package.json
 
-USER app=app-user
+USER app-user
 ENV PORT=8080
 EXPOSE 8080
 

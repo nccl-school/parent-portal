@@ -1,0 +1,34 @@
+name: parent-portal-e2e
+services:
+  db:
+    image: postgres:17
+    container_name: nccl-postgres-test
+    ports:
+      - "7543:5432"
+    env_file:
+      - .env
+      - .env.spec
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: packages/api/Dockerfile
+    ports:
+      - "11001:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  app:
+    build:
+      context: .
+      dockerfile: packages/app/Dockerfile
+    ports:
+      - "11000:8080"
+    depends_on:
+      - api

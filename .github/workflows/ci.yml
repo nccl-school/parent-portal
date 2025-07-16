@@ -1,34 +1,96 @@
 name: CI - Test & Build
 
 on:
+  push:
+    branches:
+      - feat/add-monitoring
   pull_request:
     branches:
       - dev
 
 jobs:
   test-and-build:
-    name: CI - Test & Build Distribution
+    name: CI - Build & test
     runs-on: ubuntu-latest
+    environment:
+      name: test
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Read Node.js Version
+      - name: Create .env file
+        run: |
+          echo "POSTGRES_DB: ${{ vars.POSTGRES_DB }}" >> .env
+          echo "POSTGRES_USER: ${{ vars.POSTGRES_USER }}" >> .env
+          echo "POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}" >> .env
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
+          echo "NCCL_API_URL=${{ vars.NCCL_API_URL }}" >> .env
+          echo "NCCL_APP_URL=${{ vars.NCCL_APP_URL }}" >> .env
+          echo "CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }}" >> .env
+          echo "CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }}" >> .env
+          echo "CLERK_WEBHOOK_SIGNING_SECRET=${{ secrets.CLERK_WEBHOOK_SIGNING_SECRET }}" >> .env
+          echo "GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }}" >> .env
+          echo "GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}" >> .env
+
+      - name: Set node.js version
         id: node_version
         run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
 
-      - name: Enable Corepack # Ensures the correct version of yarn is used
+      - name: Enable corepack # Ensures the correct version of yarn is used
         run: corepack enable
 
-      - name: Set Up Node.js
+      - name: Set Up node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: "yarn"
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: yarn install --immutable
 
-      - name: Build Project
+      - name: Build project
         run: yarn build
+        env:
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
+          TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
+          TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
+
+      - name: Install production dependencies
+        run: yarn workspaces focus --production --all
+
+      - name: Start DB + API
+        run: docker compose -f docker-compose.spec.yml up -d --build db api
+
+      - name: Wait for containers to be ready
+        run: |
+          docker-compose ps
+          sleep 10
+
+      - name: Reset and seed DB
+        run: |
+          docker exec api npx prisma migrate reset --force --skip-generate &&
+          npx tsx ./prisma/seed.js
+
+      - name: Run API tests
+        run: npx playwright test --project=api
+
+      - name: Start app
+        run: docker compose -f docker-compose.spec.yml up -d --build app
+
+      - name: Wait for app containers to be ready
+        run: |
+          docker-compose ps
+          sleep 10
+
+      - name: Reset and seed DB
+        run: |
+          docker exec api npx prisma migrate reset --force --skip-generate &&
+          npx tsx ./prisma/seed.js
+
+      - name: Run full-stack E2E tests
+        run: npx playwright test --project=e2e
+
+      - name: Tear down containers
+        if: always()
+        run: docker compose -f docker-compose.spec.yml down -v

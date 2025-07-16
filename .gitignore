@@ -13,6 +13,8 @@ bin
 *storybook.log
 storybook-static
 .env
+.env.spec
+.env.test
 .npmrc
 
 # packages/app
