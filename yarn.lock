@@ -3136,7 +3136,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@playwright/test@npm:1.54.1, @playwright/test@npm:^1.54.1":
+"@playwright/test@npm:1.54.1":
   version: 1.54.1
   resolution: "@playwright/test@npm:1.54.1"
   dependencies:
@@ -6180,7 +6180,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:17.2.0, dotenv@npm:^17.2.0":
+"dotenv@npm:17.2.0":
   version: 17.2.0
   resolution: "dotenv@npm:17.2.0"
   checksum: 10c0/d4cb5c2a09c288c921ef47a78f51c765a763266e23e84465cde6a87b28b9f7fc5a9d1fe349ed3c880b4c7297f82dd736dba5b08fe95ce53833ce4a7258d0fc43
@@ -9456,9 +9456,9 @@ __metadata:
   dependencies:
     "@gfdigital/eslint-config": "npm:0.4.3"
     "@gfdigital/tsconfig": "npm:0.3.1"
-    "@playwright/test": "npm:^1.54.1"
+    "@playwright/test": "npm:1.54.1"
     "@types/node": "npm:24.0.14"
-    dotenv: "npm:^17.2.0"
+    dotenv: "npm:17.2.0"
     eslint: "npm:9.31.0"
     prettier: "npm:3.6.2"
     turbo: "npm:2.5.5"

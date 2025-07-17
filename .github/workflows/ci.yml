@@ -74,7 +74,7 @@ jobs:
         run: yarn workspaces focus --production --all
 
       - name: Start containers
-        run: docker compose -f docker-compose.spec.yml --progress plain up -d --build
+        run: docker compose -f docker-compose.spec.yml --progress plain up -d
 
       - name: Pause for containers
         run: |
