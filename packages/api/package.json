@@ -43,6 +43,7 @@
   "devDependencies": {
     "@clerk/express": "1.7.9",
     "@gfdigital/tsconfig": "0.3.1",
+    "@playwright/test": "1.54.1",
     "@types/express": "^5.0.3",
     "@types/leo-profanity": "1.5.4",
     "@types/node": "24.0.14",
