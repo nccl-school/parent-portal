@@ -4,7 +4,11 @@ FROM base AS builder
 
 WORKDIR /app
 
+ARG NODE_ENV=production
+ENV NODE_ENV=$NODE_ENV
+
 COPY . .
+
 
 FROM base AS runner
 WORKDIR /app
