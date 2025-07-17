@@ -78,7 +78,7 @@ jobs:
 
       - name: Pause for containers
         run: |
-          docker-compose ps
+          docker compose ps
           sleep 2
 
       - name: Reset and seed DB
