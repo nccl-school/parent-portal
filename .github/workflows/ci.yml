@@ -91,7 +91,3 @@ jobs:
 
       - name: Run API tests
         run: npx playwright test
-
-      - name: Tear down containers
-        if: always()
-        run: docker compose -f docker-compose.spec.yml down -v
