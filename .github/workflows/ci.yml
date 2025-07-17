@@ -1,9 +1,9 @@
 name: CI - Test & Build
 
 on:
-  # push:
-  #   branches:
-  #     - feat/add-monitoring
+  push:
+    branches:
+      - feat/add-monitoring
   pull_request:
     branches:
       - dev
@@ -21,9 +21,13 @@ jobs:
 
       - name: Create .env file
         run: |
+          echo "NODE_ENV: ${{ vars.NODE_ENV }}" >> .env
           echo "POSTGRES_DB: ${{ vars.POSTGRES_DB }}" >> .env
           echo "POSTGRES_USER: ${{ vars.POSTGRES_USER }}" >> .env
           echo "POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}" >> .env
+          echo "POSTGRES_HOST: ${{ vars.POSTGRES_HOST }}" >> .env
+          echo "POSTGRES_PORT: ${{ vars.POSTGRES_PORT }}" >> .env
+          echo "AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}" >> .env
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
           echo "NCCL_API_URL=${{ vars.NCCL_API_URL }}" >> .env
           echo "NCCL_APP_URL=${{ vars.NCCL_APP_URL }}" >> .env
@@ -49,6 +53,10 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
+      - name: Generate Prisma client
+        working-directory: packages/api
+        run: npx prisma generate
+
       - name: Build project
         run: yarn build
         env:
@@ -59,13 +67,13 @@ jobs:
       - name: Install production dependencies
         run: yarn workspaces focus --production --all
 
-      - name: Start DB + API
-        run: docker compose -f docker-compose.spec.yml up -d --build db api
+      - name: Start containers
+        run: docker compose -f docker-compose.spec.yml --progress plain up -d --build
 
-      - name: Wait for containers to be ready
+      - name: Pause for containers
         run: |
           docker-compose ps
-          sleep 10
+          sleep 2
 
       - name: Reset and seed DB
         run: |
@@ -73,23 +81,7 @@ jobs:
           npx tsx ./prisma/seed.js
 
       - name: Run API tests
-        run: npx playwright test --project=api
-
-      - name: Start app
-        run: docker compose -f docker-compose.spec.yml up -d --build app
-
-      - name: Wait for app containers to be ready
-        run: |
-          docker-compose ps
-          sleep 10
-
-      - name: Reset and seed DB
-        run: |
-          docker exec api npx prisma migrate reset --force --skip-generate &&
-          npx tsx ./prisma/seed.js
-
-      - name: Run full-stack E2E tests
-        run: npx playwright test --project=e2e
+        run: npx playwright test
 
       - name: Tear down containers
         if: always()
