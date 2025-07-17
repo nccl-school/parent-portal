@@ -1,11 +1,8 @@
-import path from "node:path";
-
-import dotenv from "dotenv";
-
-import { PrismaClient } from "../src/_generated/prisma/default.js";
+import { PrismaClient } from "../src/_generated/prisma/client.js";
 import type { Role } from "../src/features/role/role.utils.js";
+import { loadEnv } from "../scripts/load-env.script.js";
 
-dotenv.config({ path: path.resolve(import.meta.dirname, "../../../.env") });
+loadEnv();
 
 const prisma = new PrismaClient();
 async function main() {

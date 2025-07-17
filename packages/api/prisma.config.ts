@@ -1,11 +1,8 @@
-import path from "node:path";
-
 import type { PrismaConfig } from "prisma";
-import dotenv from "dotenv";
 
-dotenv.config({ path: path.resolve(import.meta.dirname, "../../.env") });
+import { loadEnv } from "./scripts/load-env.script.js";
 
-console.log(process.env.DATABASE_URL);
+loadEnv();
 
 export default {
   earlyAccess: true,

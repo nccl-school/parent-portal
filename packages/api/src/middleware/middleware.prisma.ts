@@ -22,11 +22,12 @@ function getPrisma<C extends Context>(c: C) {
   const connectionString = env.DATABASE_URL;
 
   const adapter =
-    process.env.NODE_ENV === "development"
+    process.env.NODE_ENV !== "production"
       ? new PrismaPg({ connectionString }) // local env = docker-compose
       : new PrismaNeon({ connectionString }); // higher env = neon
 
   const prisma = new PrismaClient({ adapter });
+
   // .$extends(withAccelerate());
 
   return prisma;

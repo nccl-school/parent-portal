@@ -1,4 +1,4 @@
-name: CI - Test & Build
+name: CI - Build & Test
 
 on:
   pull_request:
@@ -7,28 +7,84 @@ on:
 
 jobs:
   test-and-build:
-    name: CI - Test & Build Distribution
+    name: CI - Build & test
     runs-on: ubuntu-latest
+    environment:
+      name: test
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Read Node.js Version
+      # The .env and .env.spec needs to be created for docker compose
+      # so that it can load to the proper variables when it creates the
+      # docker services
+      - name: Create .env file
+        run: |
+          touch .env
+          touch .env.spec
+          echo POSTGRES_DB=${{ vars.POSTGRES_DB }} >> .env
+          echo POSTGRES_USER=${{ vars.POSTGRES_USER }} >> .env
+          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+          echo POSTGRES_HOST=${{ vars.POSTGRES_HOST }} >> .env
+          echo POSTGRES_PORT=${{ vars.POSTGRES_PORT }} >> .env
+          echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
+          echo AUTH_TOKEN=${{ secrets.AUTH_TOKEN }} >> .env
+          echo NCCL_API_URL=${{ vars.NCCL_API_URL }} >> .env
+          echo NCCL_APP_URL=${{ vars.NCCL_APP_URL }} >> .env
+          echo CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }} >> .env
+          echo CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }} >> .env
+          echo CLERK_WEBHOOK_SIGNING_SECRET=${{ secrets.CLERK_WEBHOOK_SIGNING_SECRET }} >> .env
+          echo GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }} >> .env
+          echo GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }} >> .env
+
+      - name: Set node.js version
         id: node_version
         run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
 
-      - name: Enable Corepack # Ensures the correct version of yarn is used
+      - name: Enable corepack # Ensures the correct version of yarn is used
         run: corepack enable
 
-      - name: Set Up Node.js
+      - name: Set Up node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: "yarn"
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: yarn install --immutable
 
-      - name: Build Project
+      - name: Generate Prisma client
+        working-directory: packages/api
+        env:
+          NODE_ENV: test
+        run: npx prisma generate
+
+      - name: Build project
         run: yarn build
+        env:
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
+          TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
+          TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
+
+      - name: Install production dependencies
+        run: yarn workspaces focus --production --all
+
+      - name: Start containers
+        run: docker compose -f docker-compose.spec.yml --progress plain up -d
+
+      - name: Pause for containers
+        run: |
+          docker compose ps
+          sleep 2
+
+      - name: Reset and seed DB
+        working-directory: packages/api
+        env:
+          NODE_ENV: test:host
+        run: |
+          npx prisma migrate reset --force --skip-generate
+          npx tsx ./prisma/seed.js
+
+      - name: Run API tests
+        run: npx playwright test

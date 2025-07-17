@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - dev
-      - feat/db-and-api
 
 jobs:
   setup:
@@ -65,6 +64,9 @@ jobs:
     if: needs.db_check.outputs.should_migrate == 'true'
     outputs:
       ran: "true"
+    env:
+      NODE_ENV: production
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
     steps:
       - name: Checkout Repository
@@ -79,20 +81,20 @@ jobs:
           node-version: ${{ needs.setup.outputs.node_version }}
           cache: "yarn"
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: yarn install --immutable
+
+      - name: Generate Prisma client
+        working-directory: packages/api
+        run: npx prisma generate
 
       - name: Migrate DB
         working-directory: packages/api
         run: yarn prisma migrate deploy
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Seed DB
         working-directory: packages/api
         run: yarn prisma db seed
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
   build_monorepo:
     name: Build Monorepo
@@ -103,33 +105,38 @@ jobs:
       (needs.db_check.outputs.should_migrate == 'false' || needs.db_migrate.result == 'success')
     environment:
       name: ${{ needs.setup.outputs.environment }}
+    env:
+      NODE_ENV: production
+      VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
+      TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
+      TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Enable Corepack # Ensures the correct version of yarn is used
+      - name: Enable corepack # Ensures the correct version of yarn is used
         run: corepack enable
 
-      - name: Set Up Node.js
+      - name: Set Up node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ needs.setup.outputs.node_version }}
           cache: "yarn"
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: yarn install --immutable
 
-      - name: Build Monorepo
+      - name: Generate Prisma client
+        working-directory: packages/api
+        run: npx prisma generate
+
+      - name: Build monorepo
         run: yarn build
-        env:
-          VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
-          TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
-          TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
       - name: Install production dependencies
         run: yarn workspaces focus --production --all
 
-      - name: Upload Full Build Output
+      - name: Upload build output
         uses: actions/upload-artifact@v4
         with:
           name: monorepo-build
@@ -145,20 +152,11 @@ jobs:
     needs: [setup, build_monorepo]
     if: always() && needs.build_monorepo.result == 'success'
     steps:
-      - name: Download full build output
+      - name: Download build output
         uses: actions/download-artifact@v4
         with:
           name: monorepo-build
           path: .
-
-      - name: Copy Prisma engine
-        run: |
-          cp packages/api/src/_generated/prisma/libquery_engine-linux-musl-openssl-3.0.x.so.node packages/api/dist/_generated/prisma/
-
-      - name: List Prisma resources
-        run: |
-          sudo apt-get install tree
-          tree -L 3 packages/api/dist/_generated/prisma
 
       - name: Authenticate GCP
         id: google_auth
@@ -187,11 +185,12 @@ jobs:
     needs: [setup, build_monorepo]
     if: always() && needs.build_monorepo.result == 'success'
     steps:
-      - name: Download full build output
+      - name: Download build output
         uses: actions/download-artifact@v4
         with:
           name: monorepo-build
           path: .
+
       - name: Authenticate GCP
         id: google_auth
         uses: google-github-actions/auth@v2

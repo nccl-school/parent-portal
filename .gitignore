@@ -13,6 +13,8 @@ bin
 *storybook.log
 storybook-static
 .env
+.env.spec
+.env.test
 .npmrc
 
 # packages/app
@@ -20,3 +22,10 @@ build
 
 # packages/api
 dist-client
+_generated
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
