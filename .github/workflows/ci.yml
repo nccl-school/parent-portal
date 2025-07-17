@@ -19,9 +19,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # The .env and .env.spec needs to be created for docker compose
+      # so that it can refer to the proper variables when it creates the
+      # docker services
       - name: Create .env file
         run: |
           touch .env
+          touch .env.spec
           echo POSTGRES_DB=${{ vars.POSTGRES_DB }} >> .env
           echo POSTGRES_USER=${{ vars.POSTGRES_USER }} >> .env
           echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
