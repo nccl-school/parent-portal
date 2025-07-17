@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
 
       # The .env and .env.spec needs to be created for docker compose
-      # so that it can refer to the proper variables when it creates the
+      # so that it can load to the proper variables when it creates the
       # docker services
       - name: Create .env file
         run: |
