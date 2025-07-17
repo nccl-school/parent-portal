@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - dev
-      - feat/db-and-api
+      - feat/add-monitoring
 
 jobs:
   setup:
