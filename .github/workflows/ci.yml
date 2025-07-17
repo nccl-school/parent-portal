@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Generate .env from template
-        run: envsubst < .env.template > .env
+        run: envsubst < .env.ci.template > .env
         env:
           NODE_ENV: test
           POSTGRES_DB: ${{ vars.POSTGRES_DB }}
