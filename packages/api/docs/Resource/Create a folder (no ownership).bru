@@ -1,0 +1,22 @@
+meta {
+  name: Create a folder (no ownership)
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{API_DOMAIN}}/api/resource/folder
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "folder 2",
+    "slug": "folder-2",
+    "parentResourceId": "",
+    "ownership": {
+      "level": "school"
+    }
+  }
+}

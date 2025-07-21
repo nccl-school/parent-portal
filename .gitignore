@@ -16,6 +16,8 @@ storybook-static
 .env.spec
 .env.test
 .npmrc
+.secrets
+.secrets/*
 
 # packages/app
 build

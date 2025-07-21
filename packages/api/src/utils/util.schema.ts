@@ -21,6 +21,10 @@ export const zQueryParam = z
   })
   .optional();
 
+export const zFile = z
+  .instanceof(File)
+  .refine((file) => file.size > 0, { message: "A file is required" });
+
 export const zCleanStringSchema = z
   .string()
   .refine((val) => !leoProfanity.check(val), {

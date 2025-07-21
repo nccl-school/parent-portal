@@ -1,0 +1,15 @@
+meta {
+  name: Get a specific resource by ID
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{API_DOMAIN}}/api/resource/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 
+}

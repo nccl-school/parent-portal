@@ -1,0 +1,23 @@
+meta {
+  name: Create a folder (owned by specific user)
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{API_DOMAIN}}/api/resource/folder
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "folder 1",
+    "slug": "folder-1",
+    "parentResourceId": null,
+    "ownership": {
+      "level": "user",
+      "userId": "test"
+    }
+  }
+}

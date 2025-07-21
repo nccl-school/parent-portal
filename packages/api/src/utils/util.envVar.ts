@@ -8,5 +8,6 @@ export function getEnvVar<C extends Context>(c: C) {
     NODE_ENV: string;
     NCCL_APP_URL: string;
     DATABASE_URL: string;
+    GCP_CLOUD_STORAGE_BUCKET: string;
   }>(c);
 }

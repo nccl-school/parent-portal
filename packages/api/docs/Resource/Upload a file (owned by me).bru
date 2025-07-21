@@ -1,0 +1,18 @@
+meta {
+  name: Upload a file (owned by me)
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{API_DOMAIN}}/api/resource/file/current
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  file: @file(test-pdf.pdf)
+  type: file
+  name: cool pdf
+  slug: cool-pdf
+}

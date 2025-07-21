@@ -1,0 +1,11 @@
+meta {
+  name: Get files (owned by me)
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{API_DOMAIN}}/api/resource/file/current
+  body: none
+  auth: inherit
+}
