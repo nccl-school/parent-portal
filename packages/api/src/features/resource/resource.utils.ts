@@ -1,4 +1,5 @@
 import { z } from "zod/v4";
+import type { Context } from "hono";
 
 import {
   checkProfanity,
@@ -7,6 +8,8 @@ import {
   zFile,
 } from "../../utils/util.schema.js";
 import type { Resource as DBResource } from "../../_generated/prisma/client.js";
+import { exhaustiveMatchGuard } from "../../utils/util.exhaustiveMatchGuard.js";
+import { ErrorSet } from "../../utils/util.errors.js";
 
 export type DBResourceTreeNode = DBResource & {
   children: { [key: string]: DBResourceTreeNode };
@@ -20,6 +23,7 @@ export const ResourceTypeSchema = z.literal([
   "EXTERNAL_DOC",
 ]);
 
+// Base Schema
 export const ResourceSchema = z.object({
   id: z.string(),
   slug: z.string(),
@@ -40,53 +44,100 @@ export const ResourceSchema = z.object({
   updatedAt: zDateStringSchema,
 });
 
+// -- Utils
 export const ResourceIDParamsSchema = z.object({ id: z.string() });
-
-// --- Create a file
-export const CreateFileRequestSchema = z.object({
-  file: zFile,
-  name: checkProfanity(z.string("A file name is required")),
-  slug: checkProfanity(z.string("A slug is required")),
-});
-export const CreateFileResponseSchema = ResourceSchema.pick({
-  id: true,
-  slug: true,
-  name: true,
-  parentResourceId: true,
-  createdAt: true,
-  updatedAt: true,
-});
-export type CreateFileResponse = z.infer<typeof CreateFileResponseSchema>;
-
-// --- Create a folder
-export const CreateFolderRequestSchema = z.object({
-  name: checkProfanity(z.string("A folder name is required")),
-  slug: checkProfanity(z.string("A slug is required")),
-  parentResourceId: z.string().nullable(),
-  ownership: z.discriminatedUnion("level", [
+export const CreateResourceOwnershipLevel = z.discriminatedUnion(
+  "owner",
+  [
     z.object({
-      level: z.literal("user"),
-      userId: z.string(),
+      owner: z.literal("currentUser"),
     }),
     z.object({
-      level: z.literal("org"),
-      orgId: z.string(),
+      owner: z.literal("user"),
+      userId: z.string({
+        error: "A user ID is required to enable user level ownership",
+      }),
     }),
-    z.object({ level: z.literal("school") }),
-  ]),
-});
-export const CreateFolderResponseSchema = ResourceSchema.pick({
-  id: true,
-  slug: true,
-  name: true,
-  parentResourceId: true,
-  ownerOrgId: true,
-  ownerUserId: true,
-  createdAt: true,
-  updatedAt: true,
-});
+    z.object({
+      owner: z.literal("org"),
+      orgId: z.string({
+        error: "An org ID is required to enable org level ownership",
+      }),
+    }),
+    z.object({ owner: z.literal("school") }),
+  ],
+  {
+    error:
+      "You must indicate an owner of the resource. Please pick from 'currentUser', 'user', 'org', or 'school'.",
+  }
+);
 
-// --- Get a resource and direct decedents
+/**
+ * Utility function to parse the owner key in any POST
+ * resource object to determine what entity should own
+ * the resource.
+ */
+export function createResourceOwnership<
+  C extends Context,
+  T extends z.infer<typeof CreateResourceOwnershipLevel>,
+>(c: C, data: T): Partial<DBResource> {
+  const currentUser = c.get("currentUser");
+
+  switch (data.owner) {
+    case "currentUser":
+      return { ownerUserId: currentUser.id, ownerOrgId: null };
+
+    case "user":
+      return { ownerUserId: data.userId, ownerOrgId: null };
+
+    case "org":
+      return { ownerOrgId: data.orgId, ownerUserId: null };
+
+    case "school":
+      return { ownerOrgId: null, ownerUserId: null };
+
+    default:
+      return exhaustiveMatchGuard(data);
+  }
+}
+
+/**
+ * Creates a storage URL for the file that is created inside of GCS
+ * based upon the owner level
+ */
+export function createFileStoragePath<
+  C extends Context,
+  T extends z.infer<typeof CreateResourceOwnershipLevel>,
+>(
+  c: C,
+  { file, data, resource }: { resource: DBResource; data: T; file: File }
+): string {
+  if (resource.type !== "FILE") {
+    throw new ErrorSet.badRequest(
+      `Unable to blob artifact for a "${resource.type}" type`
+    );
+  }
+  switch (data.owner) {
+    case "currentUser": {
+      const currentUser = c.get("currentUser");
+      return `user_${currentUser.id}/${resource.id}/${file.name}`;
+    }
+
+    case "user":
+      return `user_${data.userId}/${resource.id}/${file.name}`;
+
+    case "org":
+      return `org_${data.orgId}/${resource.id}/${file.name}`;
+
+    case "school":
+      return `school/${resource.id}/${file.name}`;
+
+    default:
+      return exhaustiveMatchGuard(data);
+  }
+}
+
+// --- Get a Resource
 const GetSchema = ResourceSchema.pick({
   id: true,
   slug: true,
@@ -102,3 +153,46 @@ export const GetResourceResponseSchema = z.object({
   ...GetSchema.shape,
   childResources: GetSchema.array(),
 });
+export const GetResourceListResponseSchema = GetResourceResponseSchema.array();
+export const GetFileListResponseSchema = GetResourceResponseSchema.omit({
+  childResources: true,
+}).array();
+
+// --- Create a file
+export const CreateFileRequestSchema = CreateResourceOwnershipLevel.and(
+  z.object({
+    file: zFile,
+    name: checkProfanity(z.string("A file name is required")),
+    slug: checkProfanity(z.string("A slug is required")),
+    parentResourceId: z.string().nullable().optional(),
+  })
+);
+export const CreateFileResponseSchema = ResourceSchema.pick({
+  id: true,
+  slug: true,
+  name: true,
+  parentResourceId: true,
+  createdAt: true,
+  updatedAt: true,
+});
+export type CreateFileResponse = z.infer<typeof CreateFileResponseSchema>;
+
+// --- Create a folder
+export const CreateFolderRequestSchema = CreateResourceOwnershipLevel.and(
+  z.object({
+    name: checkProfanity(z.string("A folder name is required")),
+    slug: checkProfanity(z.string("A slug is required")),
+    parentResourceId: z.string().nullable(),
+  })
+);
+export const CreateFolderResponseSchema = ResourceSchema.pick({
+  id: true,
+  slug: true,
+  name: true,
+  parentResourceId: true,
+  ownerOrgId: true,
+  ownerUserId: true,
+  createdAt: true,
+  updatedAt: true,
+});
+export type CreateFolderResponse = z.infer<typeof CreateFolderResponseSchema>;

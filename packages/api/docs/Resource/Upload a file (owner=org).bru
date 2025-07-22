@@ -1,11 +1,11 @@
 meta {
-  name: Upload a file (owned by me)
+  name: Upload a file (owner=org)
   type: http
-  seq: 2
+  seq: 4
 }
 
 post {
-  url: {{API_DOMAIN}}/api/resource/file/current
+  url: {{API_DOMAIN}}/api/resource/file
   body: multipartForm
   auth: inherit
 }
@@ -15,4 +15,5 @@ body:multipart-form {
   type: file
   name: cool pdf
   slug: cool-pdf
+  owner: org
 }

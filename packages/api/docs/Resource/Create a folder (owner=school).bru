@@ -1,7 +1,7 @@
 meta {
-  name: Create a folder (no ownership)
+  name: Create a folder (owner=school)
   type: http
-  seq: 4
+  seq: 9
 }
 
 post {
@@ -14,7 +14,6 @@ body:json {
   {
     "name": "folder 2",
     "slug": "folder-2",
-    "parentResourceId": "",
     "ownership": {
       "level": "school"
     }

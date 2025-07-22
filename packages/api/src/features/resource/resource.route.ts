@@ -4,8 +4,11 @@ import { Storage } from "@google-cloud/storage";
 import {
   CreateFileRequestSchema,
   CreateFileResponseSchema,
+  createFileStoragePath,
   CreateFolderRequestSchema,
   CreateFolderResponseSchema,
+  createResourceOwnership,
+  GetFileListResponseSchema,
   GetResourceResponseSchema,
   ResourceIDParamsSchema,
   type DBResourceTree,
@@ -17,6 +20,7 @@ import { serialize } from "../../utils/util.serialize.js";
 import { ErrorSet } from "../../utils/util.errors.js";
 import { authorize } from "../../middleware/middleware.authorize.js";
 import type { Resource } from "../../_generated/prisma/client.js";
+import { tryPrisma } from "../../utils/util.prisma.js";
 
 function getBucket<C extends Context>(c: C) {
   const { GCP_CLOUD_STORAGE_BUCKET } = getEnvVar(c);
@@ -149,81 +153,76 @@ resource.get("/tree/:path{.+}", async (c) => {
 });
 
 // GET /api/resource/file/current | Get a list of files owned by the current user
-// TODO: Add serializer
 resource.get("/file/current", async (c) => {
   const db = c.get("db");
   const currentUser = c.get("currentUser");
-  const resources = await db.resource.findMany({
+  const records = await db.resource.findMany({
     where: {
       type: "FILE",
       ownerUserId: currentUser.id,
     },
+    include: {
+      childResources: true,
+    },
   });
-  return c.json(resources);
 
-  //   const data = await serialize()
-  //   return c.json(data);
+  const data = await serialize(GetFileListResponseSchema, records);
+  return c.json(data);
 });
 
 // POST api/resource | Upload a current user file
-resource.post(
-  "/file/current",
-  validate("form", CreateFileRequestSchema),
-  async (c) => {
-    const db = c.get("db");
-    const { file, ...form } = c.req.valid("form");
-    const currentUser = c.get("currentUser");
+resource.post("/file", validate("form", CreateFileRequestSchema), async (c) => {
+  const db = c.get("db");
+  const { file, ...form } = c.req.valid("form");
 
-    // Wrap the creation and file URL update in a transaction
-    const resource = await db.$transaction(async (tx) => {
-      const node = await tx.resource.create({
-        data: {
-          name: form.name,
-          type: "FILE",
-          slug: form.slug,
-          mimeType: file.type,
-          ownerUserId: currentUser.id, // make the owner of this file a specific owner,
-          parentResourceId: "__ROOT__",
-          accessRules: {
-            create: {
-              permission: "MANAGER",
-              userId: currentUser.id,
-            },
-          },
-        },
-      });
-
-      const storagePath = `user_${currentUser.id}/${node.id}/${file.name}`;
-
-      const updatedNode = await tx.resource.update({
-        where: {
-          id: node.id,
-        },
-        data: {
-          fileUrl: storagePath,
-        },
-      });
-      return updatedNode;
+  // Wrap the creation and file URL update in a transaction
+  const transaction = db.$transaction(async (tx) => {
+    const node = await tx.resource.create({
+      data: {
+        name: form.name,
+        type: "FILE",
+        slug: form.slug,
+        mimeType: file.type,
+        ...createResourceOwnership(c, form),
+        parentResourceId: "__ROOT__",
+      },
     });
 
-    if (!resource.fileUrl) {
-      throw new ErrorSet.serverError(
-        "A fileURL was not created for this file. This should not have happened."
-      );
-    }
-
-    const bucket = getBucket(c);
-    const buffer = await file.arrayBuffer();
-    const blob = bucket.file(resource.fileUrl);
-    await blob.save(Buffer.from(buffer), {
-      contentType: file.type,
+    const fileUrl = createFileStoragePath(c, {
+      resource: node,
+      data: form,
+      file,
     });
 
-    const data = await serialize(CreateFileResponseSchema, resource);
+    const updatedNode = await tx.resource.update({
+      where: { id: node.id },
+      data: { fileUrl },
+    });
+    return updatedNode;
+  });
 
-    return c.json(data);
+  const resource = await tryPrisma(transaction, {
+    unique_constraint_violation: `A file with a slug of "${form.slug}" has already been created for this this parent resource. Please change the slug to a unique value.`,
+    fallback: "An error occurred when trying to create the file",
+  });
+
+  if (!resource.fileUrl) {
+    throw new ErrorSet.serverError(
+      "A fileURL was not created for this file. This should not have happened."
+    );
   }
-);
+
+  const bucket = getBucket(c);
+  const buffer = await file.arrayBuffer();
+  const blob = bucket.file(resource.fileUrl);
+  await blob.save(Buffer.from(buffer), {
+    contentType: file.type,
+  });
+
+  const data = await serialize(CreateFileResponseSchema, resource);
+
+  return c.json(data);
+});
 
 // POST /api/resource/folder | Create a new folder
 resource.post(
@@ -240,10 +239,7 @@ resource.post(
         parentResourceId: body.parentResourceId ?? "__ROOT__",
         slug: body.slug,
         type: "FOLDER",
-        ownerOrgId:
-          body.ownership.level === "org" ? body.ownership.orgId : null,
-        ownerUserId:
-          body.ownership.level === "user" ? body.ownership.userId : null,
+        ...createResourceOwnership(c, body),
       },
     });
     const json = await serialize(CreateFolderResponseSchema, record);

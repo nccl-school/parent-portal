@@ -1,7 +1,7 @@
 meta {
-  name: Create a folder (owned by specific user)
+  name: Create a folder (owner=org)
   type: http
-  seq: 3
+  seq: 8
 }
 
 post {
@@ -16,8 +16,8 @@ body:json {
     "slug": "folder-1",
     "parentResourceId": null,
     "ownership": {
-      "level": "user",
-      "userId": "test"
+      "level": "org",
+      "orgId": "test"
     }
   }
 }
