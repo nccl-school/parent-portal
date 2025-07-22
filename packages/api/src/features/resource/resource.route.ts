@@ -91,12 +91,19 @@ resource.get("/tree/:path{.+}", async (c) => {
   const fullPath = c.req.param("path") ?? ""; // e.g. "folder-1/folder-1-1"
   const slugParams = fullPath.split("/");
 
-  let resourceGraph: DBResourceTree = {};
+  const resourceGraph: DBResourceTree = {};
 
-  async function findResource(parentResourceId: string, slugs: string[]) {
+  async function findResource(
+    parentResourceId: string,
+    slugs: string[],
+    currentNode: DBResourceTree = resourceGraph
+  ) {
     const levelRecords = await db.resource.findMany({
       where: {
         parentResourceId,
+        NOT: {
+          id: "__ROOT__",
+        },
       },
     });
     const record = await db.resource.findUnique({
@@ -117,7 +124,7 @@ resource.get("/tree/:path{.+}", async (c) => {
     }
 
     for (const levelRecord of levelRecords) {
-      resourceGraph[levelRecord.id] = {
+      currentNode[levelRecord.id] = {
         ...levelRecord,
         children:
           levelRecord.id === record.id
@@ -132,8 +139,7 @@ resource.get("/tree/:path{.+}", async (c) => {
 
     const [_, ...restSlugs] = slugs;
     if (restSlugs.length === 0) return;
-    resourceGraph = resourceGraph[record.id].children;
-    await findResource(record.id, restSlugs);
+    await findResource(record.id, restSlugs, currentNode[record.id].children);
   }
 
   console.log(slugParams);
