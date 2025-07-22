@@ -233,7 +233,7 @@ resource.post(
     const db = c.get("db");
     const body = c.req.valid("json");
 
-    const record = await db.resource.create({
+    const createFolder = db.resource.create({
       data: {
         name: body.name,
         parentResourceId: body.parentResourceId ?? "__ROOT__",
@@ -242,7 +242,17 @@ resource.post(
         ...createResourceOwnership(c, body),
       },
     });
-    const json = await serialize(CreateFolderResponseSchema, record);
+
+    const folder = await tryPrisma(createFolder, {
+      unique_constraint_violation: `A folder with the slug of "${body.slug}" already exists for this folder. Please change the slug name of the folder.`,
+      fallback: "An error occurred when trying to create the folder",
+      fk_violation:
+        body.owner === "user"
+          ? "The 'userId' you have entered is invalid"
+          : "The 'orgId' you have entered is invalid",
+    });
+
+    const json = await serialize(CreateFolderResponseSchema, folder);
     return c.json(json);
   }
 );

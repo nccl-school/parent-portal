@@ -164,7 +164,7 @@ export const CreateFileRequestSchema = CreateResourceOwnershipLevel.and(
     file: zFile,
     name: checkProfanity(z.string("A file name is required")),
     slug: checkProfanity(z.string("A slug is required")),
-    parentResourceId: z.string().nullable().optional(),
+    parentResourceId: z.string().optional(),
   })
 );
 export const CreateFileResponseSchema = ResourceSchema.pick({
@@ -182,7 +182,7 @@ export const CreateFolderRequestSchema = CreateResourceOwnershipLevel.and(
   z.object({
     name: checkProfanity(z.string("A folder name is required")),
     slug: checkProfanity(z.string("A slug is required")),
-    parentResourceId: z.string().nullable(),
+    parentResourceId: z.string().optional(),
   })
 );
 export const CreateFolderResponseSchema = ResourceSchema.pick({
