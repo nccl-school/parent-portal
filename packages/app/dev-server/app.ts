@@ -1,6 +1,11 @@
 import "react-router";
+import path from "node:path";
+
 import { createRequestHandler } from "@react-router/express";
 import express from "express";
+import dotenv from "dotenv";
+
+dotenv.config({ path: path.resolve(import.meta.dirname, "../../../.env") });
 
 type EnvVars = {
   // run time

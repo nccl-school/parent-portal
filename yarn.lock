@@ -2891,6 +2891,7 @@ __metadata:
     compression: "npm:1.8.0"
     cross-env: "npm:7.0.3"
     date-fns: "npm:4.1.0"
+    dotenv: "npm:17.2.0"
     express: "npm:^5.1.0"
     googleapis: "npm:^153.0.0"
     isbot: "npm:5.1.28"
