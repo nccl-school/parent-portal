@@ -8,6 +8,7 @@ import {
   CreateFolderResponseSchema,
   GetResourceResponseSchema,
   ResourceIDParamsSchema,
+  type DBResourceTree,
 } from "./resource.utils.js";
 
 import { getEnvVar } from "../../utils/util.envVar.js";
@@ -42,17 +43,14 @@ resource.get("/:id", validate("param", ResourceIDParamsSchema), async (c) => {
 });
 
 // GET / api/resource/path/* | Get a specific resource by its slug path
-resource.get("/path/*", async (c) => {
+resource.get("/path/:path{.+}", async (c) => {
   const db = c.get("db");
-  const fullPath = c.req.param("*") ?? ""; // e.g. "folder-1/folder-1-1"
+  const fullPath = c.req.param("path") ?? ""; // e.g. "folder-1/folder-1-1"
   const slugParams = fullPath.split("/");
-
-  if (slugParams.length === 0) {
-    throw new ErrorSet.badRequest("At least 1 path slug is required");
-  }
 
   let resource: Resource | undefined = undefined;
   async function findResource(parentResourceId: string, slugs: string[]) {
+    console.log({ parentResourceId, slug: slugs[0] });
     const record = await db.resource.findUnique({
       where: {
         slug_parentResourceId: {
@@ -72,10 +70,10 @@ resource.get("/path/*", async (c) => {
     resource = record;
     const [_, ...restSlugs] = slugs;
     if (restSlugs.length === 0) return;
-    findResource(record.parentResourceId, restSlugs);
+    await findResource(record.id, restSlugs);
   }
 
-  findResource("__ROOT__", slugParams);
+  await findResource("__ROOT__", slugParams);
 
   if (!resource) {
     throw new ErrorSet.notFound(
@@ -85,6 +83,63 @@ resource.get("/path/*", async (c) => {
 
   const json = await serialize(GetResourceResponseSchema, resource);
   return c.json(json);
+});
+
+// GET / api/resource/tree/* | Get a specific resource tree by its slug path
+resource.get("/tree/:path{.+}", async (c) => {
+  const db = c.get("db");
+  const fullPath = c.req.param("path") ?? ""; // e.g. "folder-1/folder-1-1"
+  const slugParams = fullPath.split("/");
+
+  let resourceGraph: DBResourceTree = {};
+
+  async function findResource(parentResourceId: string, slugs: string[]) {
+    const levelRecords = await db.resource.findMany({
+      where: {
+        parentResourceId,
+      },
+    });
+    const record = await db.resource.findUnique({
+      where: {
+        slug_parentResourceId: {
+          parentResourceId,
+          slug: slugs[0],
+        },
+      },
+      include: {
+        childResources: true,
+      },
+    });
+    if (!record) {
+      throw new ErrorSet.notFound(
+        `Unable to find the request resource at path: ${fullPath}`
+      );
+    }
+
+    for (const levelRecord of levelRecords) {
+      resourceGraph[levelRecord.id] = {
+        ...levelRecord,
+        children:
+          levelRecord.id === record.id
+            ? record.childResources.reduce<DBResourceTree>(
+                (accum, record) =>
+                  Object.assign(accum, { [record.id]: record }),
+                {}
+              )
+            : {},
+      };
+    }
+
+    const [_, ...restSlugs] = slugs;
+    if (restSlugs.length === 0) return;
+    resourceGraph = resourceGraph[record.id].children;
+    await findResource(record.id, restSlugs);
+  }
+
+  console.log(slugParams);
+  await findResource("__ROOT__", slugParams);
+
+  return c.json(resourceGraph);
 });
 
 // GET /api/resource/file/current | Get a list of files owned by the current user

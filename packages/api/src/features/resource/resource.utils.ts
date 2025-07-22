@@ -6,6 +6,12 @@ import {
   zDateStringSchema,
   zFile,
 } from "../../utils/util.schema.js";
+import type { Resource as DBResource } from "../../_generated/prisma/client.js";
+
+export type DBResourceTreeNode = DBResource & {
+  children: { [key: string]: DBResourceTreeNode };
+};
+export type DBResourceTree = { [key: string]: DBResourceTreeNode };
 
 export const ResourceTypeSchema = z.literal([
   "FOLDER",
