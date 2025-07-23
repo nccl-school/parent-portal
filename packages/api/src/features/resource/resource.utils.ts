@@ -38,6 +38,7 @@ export const ResourceSchema = z.object({
   createdAt: zDateStringSchema,
   updatedAt: zDateStringSchema,
 });
+export type Resource = z.infer<typeof ResourceSchema>;
 
 // -- Utils
 export const ResourceIDParamsSchema = z.object({ id: z.string() });
@@ -163,6 +164,8 @@ export const GetResourceResponseSchema = z.object({
   ...GetSchema.shape,
   childResources: GetSchema.array(),
 });
+export type GetResourceResponse = z.infer<typeof GetResourceResponseSchema>;
+
 export const GetResourceListResponseSchema = GetResourceResponseSchema.array();
 export const GetFileListResponseSchema = GetResourceResponseSchema.omit({
   childResources: true,

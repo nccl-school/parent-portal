@@ -1,4 +1,4 @@
-import type { ResourceTree } from "./resource.utils.js";
+import type { GetResourceResponse, ResourceTree } from "./resource.utils.js";
 
 import {
   ApiClient,
@@ -17,10 +17,20 @@ export class ResourceClient extends ApiClient {
   public async getTreeByPath(pathOrSlugs: string[] | string) {
     const path = Array.isArray(pathOrSlugs)
       ? pathOrSlugs.join("/")
-      : pathOrSlugs;
-    console.log({ path });
+      : pathOrSlugs || "__ROOT__";
     return this._get<ResourceTree>({
       path: `/tree/${path}`,
+    });
+  }
+
+  /**
+   * Gets a specific resource and it's children by
+   * a slug path
+   */
+  public async getResourceByPath(path: string) {
+    console.log({ path });
+    return this._get<GetResourceResponse>({
+      path: `/path/${path || "__ROOT__"}`,
     });
   }
 }

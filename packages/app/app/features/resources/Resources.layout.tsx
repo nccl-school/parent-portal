@@ -4,8 +4,10 @@ import { makeColor, makeRem, makeResponsive } from "@nccl/theme";
 import { Outlet } from "react-router";
 
 import type { Route } from "./+types/Resources.layout";
+import { ResourceFolderTree } from "./ResouceFolderList";
 
 import { getNCCLClient } from "../../utils/server";
+import { renderData } from "../../utils/client";
 
 const styles = css`
   ${makeResponsive({ from: "tablet" })} {
@@ -23,7 +25,7 @@ const styles = css`
 
 const stylesExplorer = css`
   grid-area: explorer;
-  padding: 0 ${makeRem(32)};
+  padding: 0 ${makeRem(24)};
   overflow: auto;
   border-right: 1px solid ${makeColor("neutral-light-100")};
 
@@ -67,7 +69,6 @@ export async function loader(args: Route.LoaderArgs) {
 }
 
 export default function ResourcesLayout({ loaderData }: Route.ComponentProps) {
-  console.log(loaderData);
   return (
     <div className={styles}>
       <div className={stylesExplorer}>
@@ -76,9 +77,14 @@ export default function ResourcesLayout({ loaderData }: Route.ComponentProps) {
             Folders
           </Typography>
         </header>
-        <nav></nav>
-
-        {/* <ResourcesExplorer /> */}
+        <nav>
+          {renderData(loaderData, {
+            loading: "Loading folders...",
+            ok: (data) => (
+              <ResourceFolderTree resourceTree={data} baseRoute="/resources" />
+            ),
+          })}
+        </nav>
       </div>
       <form className={stylesSearch}>
         <InputSearch dxSize="lg" dxVariant="contrasted" placeholder="Search" />
@@ -95,9 +101,6 @@ export default function ResourcesLayout({ loaderData }: Route.ComponentProps) {
             Folder 2
           </Typography>
         </div>
-        <Typography dxNode="div" dxVariant="heading4">
-          All Files
-        </Typography>
       </div>
       <div className={stylesMain}>
         <Outlet />

@@ -50,12 +50,11 @@ resource.get("/:id", validate("param", ResourceIDParamsSchema), async (c) => {
 // GET / api/resource/path/* | Get a specific resource by its slug path
 resource.get("/path/:path{.+}", async (c) => {
   const db = c.get("db");
-  const fullPath = c.req.param("path") ?? ""; // e.g. "folder-1/folder-1-1"
+  const fullPath = c.req.param("path") ?? "__ROOT__"; // e.g. "folder-1/folder-1-1"
   const slugParams = fullPath.split("/");
 
   let resource: Resource | undefined = undefined;
   async function findResource(parentResourceId: string, slugs: string[]) {
-    console.log({ parentResourceId, slug: slugs[0] });
     const record = await db.resource.findUnique({
       where: {
         slug_parentResourceId: {
@@ -64,7 +63,13 @@ resource.get("/path/:path{.+}", async (c) => {
         },
       },
       include: {
-        childResources: true,
+        childResources: {
+          where: {
+            NOT: {
+              id: "__ROOT__",
+            },
+          },
+        },
       },
     });
     if (!record) {
@@ -103,7 +108,7 @@ resource.get("/tree/:path{.+}", async (c) => {
     slugs: string[],
     currentLeaf: ResourceTree = resourceTree
   ) {
-    const levelRecords = await db.resource.findMany({
+    const getLevelRecords = db.resource.findMany({
       where: {
         parentResourceId,
         NOT: {
@@ -111,7 +116,7 @@ resource.get("/tree/:path{.+}", async (c) => {
         },
       },
     });
-    const record = await db.resource.findUnique({
+    const getRecord = db.resource.findUnique({
       where: {
         slug_parentResourceId: {
           parentResourceId,
@@ -122,6 +127,12 @@ resource.get("/tree/:path{.+}", async (c) => {
         childResources: true,
       },
     });
+
+    const [levelRecords, record] = await Promise.all([
+      getLevelRecords,
+      getRecord,
+    ]);
+
     if (!record) {
       throw new ErrorSet.notFound(
         `Unable to find the request resource at path: ${fullPath}`
@@ -149,7 +160,6 @@ resource.get("/tree/:path{.+}", async (c) => {
   }
 
   await findResource("__ROOT__", slugParams);
-  console.log(resourceTree);
 
   const data = await serialize(ResourceTreeSchema, resourceTree);
 
