@@ -174,20 +174,18 @@ There was an error when trying to serialize what was returned from the server:
   }
 
   protected async _get<
-    S extends ZodType,
+    T,
     Q extends ZodType = ZodType,
     P extends ZodType = ZodType,
   >({
     path,
     query,
     params,
-    serializer,
   }: {
     path: string;
     params?: [schema: P, data: z.infer<P>];
     query?: [schema: Q, data: z.infer<Q> | undefined];
-    serializer: S;
-  }): Promise<z.output<S>> {
+  }): Promise<T> {
     // Assemble the request
     const headers = this.#requestHeaders;
     headers.set("content-type", "application/json");
@@ -200,14 +198,13 @@ There was an error when trying to serialize what was returned from the server:
     // Fetch the data
     const req = new Request(url, { headers });
     const res = await fetch(req);
-    const json = await res.json();
+    const json = (await res.json()) as T;
 
     if (!res.ok) {
       throw deserializeError(json, req);
     }
 
-    const data = this.#serialize(serializer, json);
-    return data as z.output<S>;
+    return json;
   }
 
   protected async _delete<

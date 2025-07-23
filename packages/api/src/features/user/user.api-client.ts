@@ -1,16 +1,16 @@
 import type z from "zod/v4";
 
 import {
-  GetUserListResponseSchema,
   GetUserParamsSchema,
-  GetUserResponseSchema,
   InviteUsersRequestSchema,
   InviteUsersResponseSchema,
   ResendInviteUserParamsSchema,
-  ResendInviteUserResponseSchema,
   UpdateUserRoleParamsSchema,
   UpdateUserRoleRequestSchema,
   UpdateUserRoleResponseSchema,
+  type GetUserListResponse,
+  type GetUserResponse,
+  type ResendInviteUserResponse,
 } from "./user.utils.js";
 
 import {
@@ -27,10 +27,9 @@ export class UserClient extends ApiClient {
    * Get a list of users
    */
   public async getUserList() {
-    return this._get({
+    return this._get<GetUserListResponse>({
       path: `/`,
       //   query: [GetSuggestionListQuerySchema, query],
-      serializer: GetUserListResponseSchema,
     });
   }
 
@@ -38,10 +37,9 @@ export class UserClient extends ApiClient {
    * Get a user by ID
    */
   public async getUser(userId: string) {
-    return this._get({
+    return this._get<GetUserResponse>({
       path: "/:id",
       params: [GetUserParamsSchema, { id: userId }],
-      serializer: GetUserResponseSchema,
     });
   }
 
@@ -78,10 +76,9 @@ export class UserClient extends ApiClient {
    * Resend an invitation to a user
    */
   public async resendInvitation(userId: string) {
-    return this._get({
+    return this._get<ResendInviteUserResponse>({
       path: "/resend-invite/:id",
       params: [ResendInviteUserParamsSchema, { id: userId }],
-      serializer: ResendInviteUserResponseSchema,
     });
   }
 }

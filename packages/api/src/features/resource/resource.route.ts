@@ -11,7 +11,8 @@ import {
   GetFileListResponseSchema,
   GetResourceResponseSchema,
   ResourceIDParamsSchema,
-  type DBResourceTree,
+  ResourceTreeSchema,
+  type ResourceTree,
 } from "./resource.utils.js";
 
 import { getEnvVar } from "../../utils/util.envVar.js";
@@ -95,12 +96,12 @@ resource.get("/tree/:path{.+}", async (c) => {
   const fullPath = c.req.param("path") ?? ""; // e.g. "folder-1/folder-1-1"
   const slugParams = fullPath.split("/");
 
-  const resourceGraph: DBResourceTree = {};
+  const resourceTree: ResourceTree = {};
 
   async function findResource(
     parentResourceId: string,
     slugs: string[],
-    currentNode: DBResourceTree = resourceGraph
+    currentLeaf: ResourceTree = resourceTree
   ) {
     const levelRecords = await db.resource.findMany({
       where: {
@@ -128,27 +129,31 @@ resource.get("/tree/:path{.+}", async (c) => {
     }
 
     for (const levelRecord of levelRecords) {
-      currentNode[levelRecord.id] = {
-        ...levelRecord,
-        children:
-          levelRecord.id === record.id
-            ? record.childResources.reduce<DBResourceTree>(
-                (accum, record) =>
-                  Object.assign(accum, { [record.id]: record }),
-                {}
-              )
-            : {},
-      };
+      if (levelRecord.id === record.id && record.childResources.length > 0) {
+        currentLeaf[levelRecord.id] = {
+          ...levelRecord,
+          children: record.childResources.reduce<ResourceTree>(
+            (accum, record) => Object.assign(accum, { [record.id]: record }),
+            {}
+          ),
+        };
+      } else {
+        currentLeaf[levelRecord.id] = levelRecord;
+      }
     }
 
     const [_, ...restSlugs] = slugs;
     if (restSlugs.length === 0) return;
-    await findResource(record.id, restSlugs, currentNode[record.id].children);
+    if (record.childResources.length === 0) return;
+    await findResource(record.id, restSlugs, currentLeaf[record.id].children);
   }
 
   await findResource("__ROOT__", slugParams);
+  console.log(resourceTree);
 
-  return c.json(resourceGraph);
+  const data = await serialize(ResourceTreeSchema, resourceTree);
+
+  return c.json(data);
 });
 
 // GET /api/resource/file/current | Get a list of files owned by the current user

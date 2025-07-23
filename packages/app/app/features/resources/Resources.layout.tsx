@@ -1,7 +1,9 @@
 import { css } from "@linaria/core";
 import { InputSearch, Typography } from "@nccl/components";
 import { makeColor, makeRem, makeResponsive } from "@nccl/theme";
-import { Outlet, type LoaderFunctionArgs } from "react-router";
+import { Outlet } from "react-router";
+
+import type { Route } from "./+types/Resources.layout";
 
 import { getNCCLClient } from "../../utils/server";
 
@@ -52,16 +54,20 @@ const stylesMain = css`
   background: ${makeColor("white")};
 `;
 
-export async function loader(args: LoaderFunctionArgs) {
+export async function loader(args: Route.LoaderArgs) {
+  const { "*": slugPath } = args.params;
+
   const ncclClient = getNCCLClient(args);
   try {
-    // const tree = await ncclClient
+    const tree = await ncclClient.resource.getTreeByPath(slugPath);
+    return tree;
   } catch (error) {
     return ncclClient.serializeError(error);
   }
 }
 
-export default function ResourcesLayout() {
+export default function ResourcesLayout({ loaderData }: Route.ComponentProps) {
+  console.log(loaderData);
   return (
     <div className={styles}>
       <div className={stylesExplorer}>

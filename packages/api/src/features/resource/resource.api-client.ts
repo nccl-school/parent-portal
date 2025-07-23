@@ -1,8 +1,9 @@
+import type { ResourceTree } from "./resource.utils.js";
+
 import {
   ApiClient,
   type ApiClientOptions,
 } from "../../api-client/ApiClient.js";
-import { GetRoleListResponseSchema } from "../role/role.utils.js";
 
 export class ResourceClient extends ApiClient {
   constructor(options: ApiClientOptions) {
@@ -14,9 +15,12 @@ export class ResourceClient extends ApiClient {
    * nested array of folder slugs
    */
   public async getTreeByPath(pathOrSlugs: string[] | string) {
-    return this._get({
-      path: Array.isArray(pathOrSlugs) ? pathOrSlugs.join("/") : pathOrSlugs,
-      serializer: GetRoleListResponseSchema,
+    const path = Array.isArray(pathOrSlugs)
+      ? pathOrSlugs.join("/")
+      : pathOrSlugs;
+    console.log({ path });
+    return this._get<ResourceTree>({
+      path: `/tree/${path}`,
     });
   }
 }

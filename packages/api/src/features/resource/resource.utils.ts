@@ -11,11 +11,6 @@ import type { Resource as DBResource } from "../../_generated/prisma/client.js";
 import { exhaustiveMatchGuard } from "../../utils/util.exhaustiveMatchGuard.js";
 import { ErrorSet } from "../../utils/util.errors.js";
 
-export type DBResourceTreeNode = DBResource & {
-  children: { [key: string]: DBResourceTreeNode };
-};
-export type DBResourceTree = { [key: string]: DBResourceTreeNode };
-
 export const ResourceTypeSchema = z.literal([
   "FOLDER",
   "FILE",
@@ -32,9 +27,9 @@ export const ResourceSchema = z.object({
   parentResourceId: z.string().nullable(),
   ownerOrgId: z.string().nullable(),
   ownerUserId: z.string().nullable(),
-  mimeType: z.string(),
+  mimeType: z.string().nullable(),
   fileUrl: z.string().nullable(),
-  externalSource: z.string(),
+  externalSource: z.string().nullable(),
   externalId: z.string().nullable(),
   webViewLink: z.string().nullable(),
   exportLink: z.string().nullable(),
@@ -136,6 +131,21 @@ export function createFileStoragePath<
       return exhaustiveMatchGuard(data);
   }
 }
+// -- Get a resource tree
+export const ResourceTreeSchema: z.ZodType<Record<string, ResourceTreeNode>> =
+  z.lazy(() =>
+    z.record(
+      z.string(),
+      z.object({
+        ...ResourceSchema.shape,
+        children: ResourceTreeSchema.optional(),
+      })
+    )
+  );
+export type ResourceTreeNode = z.infer<typeof ResourceSchema> & {
+  children?: Record<string, ResourceTreeNode>;
+};
+export type ResourceTree = z.infer<typeof ResourceTreeSchema>;
 
 // --- Get a Resource
 const GetSchema = ResourceSchema.pick({

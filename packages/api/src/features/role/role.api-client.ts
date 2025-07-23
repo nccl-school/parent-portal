@@ -1,4 +1,4 @@
-import { GetRoleListResponseSchema } from "./role.utils.js";
+import { type GetRoleListResponse } from "./role.utils.js";
 
 import {
   ApiClient,
@@ -14,9 +14,8 @@ export class RoleClient extends ApiClient {
    * Get a list of roles
    */
   public async getRoleList() {
-    return this._get({
+    return this._get<GetRoleListResponse>({
       path: `/`,
-      serializer: GetRoleListResponseSchema,
     });
   }
 }

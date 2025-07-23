@@ -14,7 +14,7 @@ export default [
     ]),
     // - /resources
     layout("./features/resources/Resources.layout.tsx", [
-      route("resources", "./features/resources/Resources.route.tsx"),
+      route("resources/*", "./features/resources/Resources.route.tsx"),
     ]),
     // - /directory
     layout("./features/directory/Directory.layout.tsx", [

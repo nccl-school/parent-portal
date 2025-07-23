@@ -31,6 +31,7 @@ export const GetUserResponseSchema = z.object({
   ...UserSchema.omit({ role: true }).shape,
   roleId: RolesSchema,
 });
+export type GetUserResponse = z.infer<typeof GetUserResponseSchema>;
 
 // Create a user
 export const CreateUserRequestSchema = UserSchema.pick({
@@ -62,3 +63,6 @@ export const InviteUsersResponseSchema = z.object({
 // ReInvite User
 export const ResendInviteUserParamsSchema = z.object({ id: z.string() });
 export const ResendInviteUserResponseSchema = zMessageSchema;
+export type ResendInviteUserResponse = z.infer<
+  typeof ResendInviteUserResponseSchema
+>;

@@ -4,18 +4,18 @@ import {
   SuggestionIDParamsSchema,
   CreateSuggestionRequestSchema,
   GetSuggestionListQuerySchema,
-  GetSuggestionListResponseSchema,
-  GetSuggestionResponseSchema,
   UpdateSuggestionRequestSchema,
   UpdateSuggestionResponseSchema,
   CreateSuggestionVoteRequest,
   CreateSuggestionResponseSchema,
   CreateSuggestionVoteResponse,
-  GetSuggestionCommentsResponseSchema,
   CreateSuggestionCommentsRequestSchema,
   CreateSuggestionCommentsResponseSchema,
   DeleteSuggestionCommentResponseSchema,
   CommentIDParamsSchema,
+  type GetSuggestionListResponse,
+  type GetSuggestionResponse,
+  type GetSuggestionCommentsResponse,
 } from "./suggestion.utils.js";
 
 import {
@@ -34,10 +34,9 @@ export class SuggestionClient extends ApiClient {
   public async getSuggestionList(
     query?: z.infer<typeof GetSuggestionListQuerySchema>
   ) {
-    return this._get({
+    return this._get<GetSuggestionListResponse>({
       path: `/`,
       query: [GetSuggestionListQuerySchema, query],
-      serializer: GetSuggestionListResponseSchema,
     });
   }
 
@@ -45,10 +44,9 @@ export class SuggestionClient extends ApiClient {
    *  Get a single suggestion by ID
    */
   async getSuggestion(id: string) {
-    return this._get({
+    return this._get<GetSuggestionResponse>({
       path: "/:id",
       params: [SuggestionIDParamsSchema, { id }],
-      serializer: GetSuggestionResponseSchema,
     });
   }
 
@@ -103,10 +101,9 @@ export class SuggestionClient extends ApiClient {
    * in descending order ()
    */
   async getCommentsList(suggestionId: string) {
-    return this._get({
+    return this._get<GetSuggestionCommentsResponse>({
       path: "/:id/comment",
       params: [SuggestionIDParamsSchema, { id: suggestionId }],
-      serializer: GetSuggestionCommentsResponseSchema,
     });
   }
 
