@@ -146,7 +146,6 @@ resource.get("/tree/:path{.+}", async (c) => {
     await findResource(record.id, restSlugs, currentNode[record.id].children);
   }
 
-  console.log(slugParams);
   await findResource("__ROOT__", slugParams);
 
   return c.json(resourceGraph);
