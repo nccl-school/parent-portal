@@ -48,9 +48,9 @@ const styles = css`
       justify-content: start;
     }
   }
-  &.j-left {
+  &.j-right {
     div {
-      justify-content: start;
+      justify-content: end;
     }
   }
   &.j-center {

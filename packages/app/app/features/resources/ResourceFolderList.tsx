@@ -1,30 +1,13 @@
 import { css } from "@linaria/core";
 import type { ResourceTree } from "@nccl/api/client";
-import { Icon, Typography } from "@nccl/components";
 import { makeColor, makeRem, makeReset } from "@nccl/theme";
-import { Link, useLocation } from "react-router";
-import { classes } from "@stratum-ui/core/utils";
 
-import { getResourceIcon } from "./resources.utils";
+import { getResourceIcon, getResourceIconColor } from "./resources.utils";
+import { ResourceFolderListItem } from "./ResourceFolderListItem";
 
 const styles = css`
   ${makeReset("ul")};
 
-  a {
-    ${makeReset("anchor")};
-    &:visited {
-      color: unset;
-      text-decoration: unset;
-    }
-    padding: 0 ${makeRem(12)};
-    background: transparent;
-    border-radius: ${makeRem(8)};
-
-    &:hover,
-    &.active {
-      background: ${makeColor("tertiary-50", { opacity: 0.4 })};
-    }
-  }
   li {
     margin: ${makeRem(2)} 0;
   }
@@ -43,15 +26,6 @@ const styles = css`
   }
 `;
 
-const itemStyles = css`
-  display: grid;
-  grid-template-columns: ${makeRem(20)} 1fr;
-  align-items: center;
-  width: 100%;
-  gap: ${makeRem(12)};
-  height: ${makeRem(36)};
-`;
-
 export function ResourceFolderTree({
   resourceTree,
   baseRoute,
@@ -59,7 +33,6 @@ export function ResourceFolderTree({
   resourceTree: ResourceTree;
   baseRoute: string;
 }) {
-  const { pathname } = useLocation();
   const resourceEntries = Object.entries(resourceTree);
   if (resourceEntries.length === 0) return null;
   return (
@@ -69,23 +42,13 @@ export function ResourceFolderTree({
         const resourceSlug = `${baseRoute}/${resource.slug}`;
         return (
           <li key={resourceId}>
-            <Link
-              className={classes(itemStyles, {
-                active: pathname === resourceSlug,
-              })}
+            <ResourceFolderListItem
               to={resourceSlug}
+              dxIcon={getResourceIcon(resource)}
+              dxColor={getResourceIconColor(resource)}
             >
-              <div>
-                <Icon
-                  dxIcon={getResourceIcon(resource)}
-                  dxSize={20}
-                  dxColor="tertiary-500"
-                />
-              </div>
-              <Typography dxNode="div" dxVariant="body3">
-                {resource.name}
-              </Typography>
-            </Link>
+              {resource.name}
+            </ResourceFolderListItem>
             {resource.children ? (
               <ResourceFolderTree
                 resourceTree={resource.children}

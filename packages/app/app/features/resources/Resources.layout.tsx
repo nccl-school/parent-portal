@@ -1,11 +1,17 @@
 import { css } from "@linaria/core";
 import { InputSearch, Typography } from "@nccl/components";
 import { makeColor, makeRem, makeResponsive } from "@nccl/theme";
-import { href, Link, NavLink, Outlet } from "react-router";
+import { Link, Outlet } from "react-router";
 import { Fragment } from "react/jsx-runtime";
 
 import type { Route } from "./+types/Resources.layout";
-import { ResourceFolderTree } from "./ResouceFolderList";
+import { ResourceFolderTree } from "./ResourceFolderList";
+import {
+  ResourcesBreadcrumbDelimiter,
+  ResourcesBreadcrumb,
+  BreadcrumbText,
+} from "./ResourcesBreadcrumb";
+import { ResourceFolderListItem } from "./ResourceFolderListItem";
 
 import { getNCCLClient } from "../../utils/server";
 import { renderData } from "../../utils/client";
@@ -45,9 +51,24 @@ const stylesSearch = css`
 `;
 const stylesBreadcrumb = css`
   grid-area: breadcrumb;
+  display: flex;
+  align-items: center;
   padding: 0 ${makeRem(32)};
-  padding-bottom: ${makeRem(32)};
+  padding-bottom: ${makeRem(4)};
   background: ${makeColor("white")};
+
+  a {
+    color: ${makeColor("neutral-light-900")} !important;
+    text-decoration: none;
+
+    &:hover {
+      color: ${makeColor("neutral-dark-900")} !important;
+      text-decoration: underline;
+    }
+    &:visited {
+      color: unset;
+    }
+  }
 `;
 const stylesPreview = css`
   grid-area: preview;
@@ -86,10 +107,20 @@ export default function ResourcesLayout({ loaderData }: Route.ComponentProps) {
           {renderData(loaderData, {
             loading: "Loading folders...",
             ok: (data) => (
-              <ResourceFolderTree
-                resourceTree={data.tree}
-                baseRoute="/resources"
-              />
+              <>
+                <ResourceFolderListItem
+                  to="/resources"
+                  end
+                  dxIcon="files-01-stroke-standard"
+                  dxColor="primary"
+                >
+                  All files
+                </ResourceFolderListItem>
+                <ResourceFolderTree
+                  resourceTree={data.tree}
+                  baseRoute="/resources"
+                />
+              </>
             ),
           })}
         </nav>
@@ -100,36 +131,25 @@ export default function ResourcesLayout({ loaderData }: Route.ComponentProps) {
       <div className={stylesBreadcrumb}>
         <nav style={{ display: "flex", gap: ".5rem" }}>
           <Link to="/resources">
-            <Typography dxVariant="caption" dxNode="span">
-              All Files
-            </Typography>
+            <BreadcrumbText>All Files</BreadcrumbText>
           </Link>
           {renderData(loaderData, {
             loading: "Loading...",
             ok: (data) =>
               data.breadcrumbs.map((breadcrumb, i, origArr) => {
+                const isLast = i === origArr.length - 1;
                 const relPath = breadcrumb.pathSegments.join("/");
 
-                const Content = (
-                  <Typography dxVariant="caption" dxNode="span">
-                    {breadcrumb.name}
-                  </Typography>
-                );
+                if (breadcrumb.id === "__ROOT__") return null;
+
                 return (
                   <Fragment key={breadcrumb.id}>
-                    <Typography dxVariant="caption" dxNode="span">
-                      /
-                    </Typography>
-                    {i === origArr.length - 1 ? (
-                      Content
-                    ) : (
-                      <NavLink
-                        key={breadcrumb.id}
-                        to={href("/resources/*", { "*": relPath })}
-                      >
-                        {Content}
-                      </NavLink>
-                    )}
+                    <ResourcesBreadcrumbDelimiter />
+                    <ResourcesBreadcrumb
+                      breadcrumb={breadcrumb}
+                      isLast={isLast}
+                      relPath={relPath}
+                    />
                   </Fragment>
                 );
               }),

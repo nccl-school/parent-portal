@@ -1,6 +1,7 @@
 import { css } from "@linaria/core";
 import { Typography } from "@nccl/components";
 import { makeColor, makeRem } from "@nccl/theme";
+import { classes } from "@stratum-ui/core/utils";
 import type { ReactNode } from "react";
 
 const styles = css`
@@ -10,12 +11,16 @@ const styles = css`
   gap: ${makeRem(16)};
   max-width: 100ch;
   border-radius: ${makeRem(16)};
-  border: 1px solid ${makeColor("neutral-light-200")};
+
   text-align: center;
   margin: 0 auto;
 
+  &:not(.no-border) {
+    border: 1px solid ${makeColor("neutral-light-200")};
+  }
+
   img {
-    width: ${makeRem(100)};
+    width: var(--img-size);
     aspect-ratio: 1 / 1;
   }
 
@@ -34,9 +39,19 @@ export function EmptyState(props: {
   imgAlt: string;
   title: string;
   children: ReactNode;
+  className?: string;
+  borderless?: boolean;
+  imgSize?: number;
 }) {
   return (
-    <div className={styles}>
+    <div
+      className={classes(styles, props.className, {
+        "no-border": props.borderless,
+      })}
+      style={{
+        "--img-size": makeRem(props.imgSize ?? 100),
+      }}
+    >
       <img src={props.imgSrc} alt={props.imgAlt} />
       <Typography dxVariant="heading4" dxNode="div" className="es-title">
         {props.title}

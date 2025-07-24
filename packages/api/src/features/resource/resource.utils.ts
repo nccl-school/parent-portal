@@ -155,6 +155,7 @@ const GetSchema = ResourceSchema.pick({
   name: true,
   type: true,
   parentResourceId: true,
+  mimeType: true,
   ownerOrgId: true,
   ownerUserId: true,
   createdAt: true,
