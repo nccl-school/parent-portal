@@ -9,9 +9,11 @@ import {
   CreateFolderResponseSchema,
   createResourceOwnership,
   GetFileListResponseSchema,
+  GetResourceBreadcrumbResponseSchema,
   GetResourceResponseSchema,
   ResourceIDParamsSchema,
   ResourceTreeSchema,
+  type GetResourceBreadcrumbResponse,
   type ResourceTree,
 } from "./resource.utils.js";
 
@@ -87,12 +89,57 @@ resource.get("/path/:path{.+}", async (c) => {
 
   if (!resource) {
     throw new ErrorSet.notFound(
-      `Unable to find the request resource at path: ${fullPath}`
+      `Unable to find the requested resource at path: ${fullPath}`
     );
   }
 
   const json = await serialize(GetResourceResponseSchema, resource);
   return c.json(json);
+});
+
+// GET /api/resource/breadcrumb/path/* | Get the breadcrumb for the path
+resource.get("/breadcrumb/:path{.+}", async (c) => {
+  const db = c.get("db");
+  const fullPath = c.req.param("path") ?? ""; // e.g. "folder-1/folder-1-1"
+  const slugs = fullPath.split("/");
+
+  const crumbs: GetResourceBreadcrumbResponse = [];
+
+  async function findResource(parentResourceId: string, slugIndex = 0) {
+    const slug = slugs[slugIndex];
+    if (!slug) return;
+
+    const resource = await db.resource.findUnique({
+      where: {
+        slug_parentResourceId: {
+          parentResourceId,
+          slug,
+        },
+      },
+    });
+
+    if (!resource) {
+      throw new ErrorSet.notFound(
+        `Unable to find the requested resource by slug: ${slug}`
+      );
+    }
+
+    const { id, name } = resource;
+
+    crumbs.push({
+      id,
+      name,
+      slug,
+      pathSegments: [...slugs.slice(0, slugIndex + 1)],
+    });
+
+    await findResource(id, slugIndex + 1);
+  }
+
+  await findResource("__ROOT__");
+
+  const data = await serialize(GetResourceBreadcrumbResponseSchema, crumbs);
+  return c.json(data);
 });
 
 // GET / api/resource/tree/* | Get a specific resource tree by its slug path

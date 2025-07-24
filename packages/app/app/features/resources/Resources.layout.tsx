@@ -1,7 +1,8 @@
 import { css } from "@linaria/core";
 import { InputSearch, Typography } from "@nccl/components";
 import { makeColor, makeRem, makeResponsive } from "@nccl/theme";
-import { Outlet } from "react-router";
+import { href, Link, NavLink, Outlet } from "react-router";
+import { Fragment } from "react/jsx-runtime";
 
 import type { Route } from "./+types/Resources.layout";
 import { ResourceFolderTree } from "./ResouceFolderList";
@@ -61,8 +62,12 @@ export async function loader(args: Route.LoaderArgs) {
 
   const ncclClient = getNCCLClient(args);
   try {
-    const tree = await ncclClient.resource.getTreeByPath(slugPath);
-    return tree;
+    const [tree, breadcrumbs] = await Promise.all([
+      ncclClient.resource.getTreeByPath(slugPath),
+      ncclClient.resource.getPathBreadcrumb(slugPath),
+    ]);
+
+    return { tree, breadcrumbs };
   } catch (error) {
     return ncclClient.serializeError(error);
   }
@@ -81,7 +86,10 @@ export default function ResourcesLayout({ loaderData }: Route.ComponentProps) {
           {renderData(loaderData, {
             loading: "Loading folders...",
             ok: (data) => (
-              <ResourceFolderTree resourceTree={data} baseRoute="/resources" />
+              <ResourceFolderTree
+                resourceTree={data.tree}
+                baseRoute="/resources"
+              />
             ),
           })}
         </nav>
@@ -90,17 +98,43 @@ export default function ResourcesLayout({ loaderData }: Route.ComponentProps) {
         <InputSearch dxSize="lg" dxVariant="contrasted" placeholder="Search" />
       </form>
       <div className={stylesBreadcrumb}>
-        <div style={{ display: "flex", gap: ".5rem" }}>
-          <Typography dxVariant="caption" dxNode="span">
-            All Files
-          </Typography>
-          <Typography dxVariant="caption" dxNode="span">
-            Folder 1
-          </Typography>
-          <Typography dxVariant="caption" dxNode="span">
-            Folder 2
-          </Typography>
-        </div>
+        <nav style={{ display: "flex", gap: ".5rem" }}>
+          <Link to="/resources">
+            <Typography dxVariant="caption" dxNode="span">
+              All Files
+            </Typography>
+          </Link>
+          {renderData(loaderData, {
+            loading: "Loading...",
+            ok: (data) =>
+              data.breadcrumbs.map((breadcrumb, i, origArr) => {
+                const relPath = breadcrumb.pathSegments.join("/");
+
+                const Content = (
+                  <Typography dxVariant="caption" dxNode="span">
+                    {breadcrumb.name}
+                  </Typography>
+                );
+                return (
+                  <Fragment key={breadcrumb.id}>
+                    <Typography dxVariant="caption" dxNode="span">
+                      /
+                    </Typography>
+                    {i === origArr.length - 1 ? (
+                      Content
+                    ) : (
+                      <NavLink
+                        key={breadcrumb.id}
+                        to={href("/resources/*", { "*": relPath })}
+                      >
+                        {Content}
+                      </NavLink>
+                    )}
+                  </Fragment>
+                );
+              }),
+          })}
+        </nav>
       </div>
       <div className={stylesMain}>
         <Outlet />

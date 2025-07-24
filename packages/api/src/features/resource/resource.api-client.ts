@@ -1,4 +1,8 @@
-import type { GetResourceResponse, ResourceTree } from "./resource.utils.js";
+import type {
+  GetResourceBreadcrumbResponse,
+  GetResourceResponse,
+  ResourceTree,
+} from "./resource.utils.js";
 
 import {
   ApiClient,
@@ -28,9 +32,18 @@ export class ResourceClient extends ApiClient {
    * a slug path
    */
   public async getResourceByPath(path: string) {
-    console.log({ path });
     return this._get<GetResourceResponse>({
       path: `/path/${path || "__ROOT__"}`,
+    });
+  }
+
+  /**
+   * Gets the breadcrumb for a provided path
+   * of slugs
+   */
+  public async getPathBreadcrumb(path: string) {
+    return this._get<GetResourceBreadcrumbResponse>({
+      path: `/breadcrumb/${path || "__ROOT__"}`,
     });
   }
 }

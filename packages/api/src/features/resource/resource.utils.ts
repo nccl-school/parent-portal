@@ -171,6 +171,21 @@ export const GetFileListResponseSchema = GetResourceResponseSchema.omit({
   childResources: true,
 }).array();
 
+// --- Get a breadcrumb by path
+export const GetResourceBreadcrumbResponseSchema = z
+  .object({
+    ...ResourceSchema.pick({
+      id: true,
+      name: true,
+      slug: true,
+    }).shape,
+    pathSegments: z.string().array(),
+  })
+  .array();
+export type GetResourceBreadcrumbResponse = z.infer<
+  typeof GetResourceBreadcrumbResponseSchema
+>;
+
 // --- Create a file
 export const CreateFileRequestSchema = CreateResourceOwnershipLevel.and(
   z.object({
