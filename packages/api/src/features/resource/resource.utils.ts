@@ -24,7 +24,7 @@ export const ResourceSchema = z.object({
   slug: z.string(),
   name: zCleanStringSchema,
   type: ResourceTypeSchema,
-  parentResourceId: z.string().nullable(),
+  parentResourceId: z.string(),
   ownerOrgId: z.string().nullable(),
   ownerUserId: z.string().nullable(),
   mimeType: z.string().nullable(),

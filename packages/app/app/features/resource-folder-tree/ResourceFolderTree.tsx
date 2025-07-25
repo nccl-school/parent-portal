@@ -4,14 +4,14 @@ import { href, useFetcher } from "react-router";
 import merge from "lodash.merge";
 import cloneDeep from "lodash.clonedeep";
 
-import { FolderTree } from "./FolderTree";
+import { FolderTree, type FolderTreeNodeClickHandler } from "./FolderTree";
 import { normalizeFolderPath } from "./resource-folder-tree.utils";
 
 export function ResourceFolderTree({
   onSelect,
   initialPath,
 }: {
-  onSelect?: (path: string) => void;
+  onSelect?: FolderTreeNodeClickHandler;
   initialPath?: string;
 }) {
   const { load, data } = useFetcher();
@@ -35,10 +35,10 @@ export function ResourceFolderTree({
     });
   }, [data]);
 
-  const handleSelectFolder = useCallback<(path: string) => void>(
-    (path) => {
+  const handleSelectFolder = useCallback<FolderTreeNodeClickHandler>(
+    (path, resource) => {
       setCurrentPath(path);
-      if (onSelect) onSelect(path);
+      if (onSelect) onSelect(path, resource);
     },
     [onSelect]
   );

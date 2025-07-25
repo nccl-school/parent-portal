@@ -1,5 +1,5 @@
 import { css } from "@linaria/core";
-import type { ResourceTree } from "@nccl/api/client";
+import type { ResourceTree, ResourceTreeNode } from "@nccl/api/client";
 import { makeColor, makeRem, makeReset } from "@nccl/theme";
 
 import { FolderTreeNode } from "./FolderTreeNode";
@@ -30,6 +30,11 @@ const styles = css`
   }
 `;
 
+export type FolderTreeNodeClickHandler = (
+  path: string,
+  treeNode: ResourceTreeNode
+) => void;
+
 export function FolderTree({
   resourceTree,
   currentPath,
@@ -38,7 +43,7 @@ export function FolderTree({
 }: {
   resourceTree: ResourceTree;
   currentPath: string;
-  onSelectFolder: (path: string) => void;
+  onSelectFolder: FolderTreeNodeClickHandler;
   basePath: string;
 }) {
   const resourceEntries = Object.entries(resourceTree);
@@ -48,12 +53,12 @@ export function FolderTree({
       {resourceEntries.map(([resourceId, resource]) => {
         if (resource.type !== "FOLDER") return null;
         const resourcePath = `${basePath}/${resource.slug}`;
+
         return (
           <li key={resourceId}>
             <FolderTreeNode
+              onClick={() => onSelectFolder(resourcePath, resource)}
               isActive={currentPath === resourcePath}
-              onClick={onSelectFolder}
-              path={resourcePath}
               dxIcon={getResourceIcon(resource)}
               dxColor={getResourceIconColor(resource)}
             >

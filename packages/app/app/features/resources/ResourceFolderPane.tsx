@@ -43,8 +43,7 @@ export function ResourceFolderPane() {
       </header>
       <nav>
         <FolderTreeNode
-          path=""
-          onClick={handleSelectFolder}
+          onClick={() => handleSelectFolder("")}
           isActive={pathname === "/resources"}
           dxIcon="files-01-stroke-standard"
           dxColor="primary"

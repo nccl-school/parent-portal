@@ -121,9 +121,10 @@ export function ResourcesCreateFolderContent() {
           {location === locationOptions.OTHER_LOCATION && (
             <div className={treeStyles}>
               <ResourceFolderTree
-                onSelect={(path) => {
+                onSelect={(path, resource) => {
                   setState((draft) => {
                     draft.path = path;
+                    draft.parentResourceId = resource.id;
                   });
                 }}
               />

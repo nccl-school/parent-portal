@@ -2,7 +2,7 @@ import { css } from "@linaria/core";
 import { Icon, Typography, type IconProps } from "@nccl/components";
 import { makeColor, makeRem, makeReset } from "@nccl/theme";
 import { classes } from "@stratum-ui/core/utils";
-import { useCallback } from "react";
+import { type MouseEventHandler } from "react";
 
 const styles = css`
   ${makeReset("button")};
@@ -36,24 +36,15 @@ export function FolderTreeNode({
   dxIcon,
   dxColor,
   children,
-  path,
   onClick,
   isActive,
 }: Pick<IconProps, "dxIcon" | "dxColor"> & {
   children: string;
   isActive: boolean;
-  path: string;
-  onClick: (path: string) => void;
+  onClick: MouseEventHandler<HTMLButtonElement>;
 }) {
-  const handleClick = useCallback(() => {
-    onClick(path);
-  }, [onClick, path]);
-
   return (
-    <button
-      className={classes(styles, { active: isActive })}
-      onClick={handleClick}
-    >
+    <button className={classes(styles, { active: isActive })} onClick={onClick}>
       <Icon dxIcon={dxIcon} dxColor={dxColor} dxSize={20} />
       <Typography dxNode="div" dxVariant="body3">
         {children}
