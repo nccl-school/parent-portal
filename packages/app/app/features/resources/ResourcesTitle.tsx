@@ -23,7 +23,7 @@ export function ResourcesTitle({
   children,
 }: {
   title: string;
-  children: ReactNode;
+  children?: ReactNode;
 }) {
   return (
     <div className={stylesTitle}>

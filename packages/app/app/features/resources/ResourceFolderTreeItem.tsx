@@ -3,7 +3,7 @@ import { Icon, Typography, type IconProps } from "@nccl/components";
 import { makeColor, makeRem, makeReset } from "@nccl/theme";
 import { NavLink, type NavLinkProps } from "react-router";
 
-const itemStyles = css`
+const styles = css`
   ${makeReset("anchor")};
 
   display: grid;
@@ -27,7 +27,7 @@ const itemStyles = css`
   }
 `;
 
-export function ResourceFolderListItem({
+export function ResourceFolderTreeItem({
   dxIcon,
   to,
   end,
@@ -36,7 +36,7 @@ export function ResourceFolderListItem({
 }: Pick<IconProps, "dxIcon" | "dxColor"> &
   Pick<NavLinkProps, "end" | "to"> & { children: string }) {
   return (
-    <NavLink className={itemStyles} to={to} end={end}>
+    <NavLink className={styles} to={to} end={end}>
       <Icon dxIcon={dxIcon} dxColor={dxColor} dxSize={20} />
       <Typography dxNode="div" dxVariant="body3">
         {children}

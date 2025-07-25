@@ -3,7 +3,7 @@ import type { ResourceTree } from "@nccl/api/client";
 import { makeColor, makeRem, makeReset } from "@nccl/theme";
 
 import { getResourceIcon, getResourceIconColor } from "./resources.utils";
-import { ResourceFolderListItem } from "./ResourceFolderListItem";
+import { ResourceFolderTreeItem } from "./ResourceFolderTreeItem";
 
 const styles = css`
   ${makeReset("ul")};
@@ -42,13 +42,13 @@ export function ResourceFolderTree({
         const resourceSlug = `${baseRoute}/${resource.slug}`;
         return (
           <li key={resourceId}>
-            <ResourceFolderListItem
+            <ResourceFolderTreeItem
               to={resourceSlug}
               dxIcon={getResourceIcon(resource)}
               dxColor={getResourceIconColor(resource)}
             >
               {resource.name}
-            </ResourceFolderListItem>
+            </ResourceFolderTreeItem>
             {resource.children ? (
               <ResourceFolderTree
                 resourceTree={resource.children}

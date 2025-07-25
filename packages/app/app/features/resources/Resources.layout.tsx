@@ -1,17 +1,21 @@
 import { css } from "@linaria/core";
-import { InputSearch, Typography } from "@nccl/components";
 import { makeColor, makeRem, makeResponsive } from "@nccl/theme";
-import { Link, Outlet } from "react-router";
+import { Outlet } from "react-router";
 import { Fragment } from "react/jsx-runtime";
 
 import type { Route } from "./+types/Resources.layout";
-import { ResourceFolderTree } from "./ResourceFolderList";
+import { ResourceFolderTree } from "./ResourceFolderTree";
 import {
   ResourcesBreadcrumbDelimiter,
   ResourcesBreadcrumb,
-  BreadcrumbText,
 } from "./ResourcesBreadcrumb";
-import { ResourceFolderListItem } from "./ResourceFolderListItem";
+import { ResourceFolderTreeItem } from "./ResourceFolderTreeItem";
+import { ResourceFolderPane } from "./ResourceFolderPane";
+import { ResourceMain } from "./ResourceMain";
+import { ResourceMainSearch } from "./ResourceMainSearch";
+import { ResourceMainRecentlyViewed } from "./ResourceMainRecentlyViewed";
+import { ResourceMainBreadcrumbs } from "./ResourceMainBreadcrumbs";
+import { ResourcePreview } from "./ResourcePreview";
 
 import { getNCCLClient } from "../../utils/server";
 import { renderData } from "../../utils/client";
@@ -20,59 +24,13 @@ const styles = css`
   ${makeResponsive({ from: "tablet" })} {
     display: grid;
     grid-template-columns: ${makeRem(300)} 1fr auto;
-    grid-template-areas:
-      "explorer search preview"
-      "explorer breadcrumb preview"
-      "explorer main preview";
-    grid-template-rows: auto auto 1fr;
+    grid-template-rows: 1fr;
     height: 100%;
     width: 100%;
+    overflow: hidden;
   }
 `;
 
-const stylesExplorer = css`
-  grid-area: explorer;
-  padding: 0 ${makeRem(24)};
-  overflow: auto;
-  border-right: 1px solid ${makeColor("neutral-light-100")};
-
-  header {
-    padding: ${makeRem(32)} 0;
-  }
-
-  nav {
-    padding-bottom: ${makeRem(32)} 0;
-  }
-`;
-const stylesSearch = css`
-  grid-area: search;
-  padding: ${makeRem(32)};
-  background: ${makeColor("white")};
-`;
-const stylesBreadcrumb = css`
-  grid-area: breadcrumb;
-  display: flex;
-  align-items: center;
-  padding: 0 ${makeRem(32)};
-  padding-bottom: ${makeRem(4)};
-  background: ${makeColor("white")};
-
-  a {
-    color: ${makeColor("neutral-light-900")} !important;
-    text-decoration: none;
-
-    &:hover {
-      color: ${makeColor("neutral-dark-900")} !important;
-      text-decoration: underline;
-    }
-    &:visited {
-      color: unset;
-    }
-  }
-`;
-const stylesPreview = css`
-  grid-area: preview;
-`;
 const stylesMain = css`
   grid-area: main;
   background: ${makeColor("white")};
@@ -97,42 +55,31 @@ export async function loader(args: Route.LoaderArgs) {
 export default function ResourcesLayout({ loaderData }: Route.ComponentProps) {
   return (
     <div className={styles}>
-      <div className={stylesExplorer}>
-        <header>
-          <Typography dxNode="div" dxVariant="heading4">
-            Folders
-          </Typography>
-        </header>
-        <nav>
-          {renderData(loaderData, {
-            loading: "Loading folders...",
-            ok: (data) => (
-              <>
-                <ResourceFolderListItem
-                  to="/resources"
-                  end
-                  dxIcon="files-01-stroke-standard"
-                  dxColor="primary"
-                >
-                  All files
-                </ResourceFolderListItem>
-                <ResourceFolderTree
-                  resourceTree={data.tree}
-                  baseRoute="/resources"
-                />
-              </>
-            ),
-          })}
-        </nav>
-      </div>
-      <form className={stylesSearch}>
-        <InputSearch dxSize="lg" dxVariant="contrasted" placeholder="Search" />
-      </form>
-      <div className={stylesBreadcrumb}>
-        <nav style={{ display: "flex", gap: ".5rem" }}>
-          <Link to="/resources">
-            <BreadcrumbText>All Files</BreadcrumbText>
-          </Link>
+      <ResourceFolderPane>
+        {renderData(loaderData, {
+          loading: "Loading folders...",
+          ok: (data) => (
+            <>
+              <ResourceFolderTreeItem
+                to="/resources"
+                end
+                dxIcon="files-01-stroke-standard"
+                dxColor="primary"
+              >
+                All files
+              </ResourceFolderTreeItem>
+              <ResourceFolderTree
+                resourceTree={data.tree}
+                baseRoute="/resources"
+              />
+            </>
+          ),
+        })}
+      </ResourceFolderPane>
+      <ResourceMain>
+        <ResourceMainSearch />
+        <ResourceMainRecentlyViewed />
+        <ResourceMainBreadcrumbs>
           {renderData(loaderData, {
             loading: "Loading...",
             ok: (data) =>
@@ -154,12 +101,12 @@ export default function ResourcesLayout({ loaderData }: Route.ComponentProps) {
                 );
               }),
           })}
-        </nav>
-      </div>
-      <div className={stylesMain}>
-        <Outlet />
-      </div>
-      <div className={stylesPreview}></div>
+        </ResourceMainBreadcrumbs>
+        <div className={stylesMain}>
+          <Outlet />
+        </div>
+      </ResourceMain>
+      <ResourcePreview />
     </div>
   );
 }

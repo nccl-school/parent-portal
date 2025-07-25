@@ -52,7 +52,7 @@ const stylesEmpty = css`
 export default function ResourcesRoute({ loaderData }: Route.ComponentProps) {
   const title = renderData(loaderData, {
     loading: "Loading...",
-    ok: (d) => (d.parentResourceId === "__ROOT__" ? "All Files" : d.name),
+    ok: (d) => (d.id === "__ROOT__" ? "All Files" : d.name),
   }) as string;
 
   return (
@@ -65,6 +65,13 @@ export default function ResourcesRoute({ loaderData }: Route.ComponentProps) {
           dxStartIcon="upload-01-stroke-standard"
         >
           Upload
+        </Button>
+        <Button
+          dxVariant="outlined"
+          dxSize="md"
+          dxStartIcon="resources-add-stroke-standard"
+        >
+          Add
         </Button>
         <Button
           dxVariant="outlined"
