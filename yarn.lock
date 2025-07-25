@@ -2883,6 +2883,8 @@ __metadata:
     "@types/gapi": "npm:0.0.47"
     "@types/gapi.auth2": "npm:0.0.61"
     "@types/gapi.client": "npm:1.0.8"
+    "@types/lodash.clonedeep": "npm:^4"
+    "@types/lodash.merge": "npm:^4"
     "@types/morgan": "npm:^1.9.10"
     "@types/node": "npm:24.0.14"
     "@types/react": "npm:19.1.8"
@@ -2895,6 +2897,8 @@ __metadata:
     express: "npm:^5.1.0"
     googleapis: "npm:^153.0.0"
     isbot: "npm:5.1.28"
+    lodash.clonedeep: "npm:^4.5.0"
+    lodash.merge: "npm:4.6.2"
     morgan: "npm:^1.10.0"
     react: "npm:19.1.0"
     react-dom: "npm:19.1.0"
@@ -4262,6 +4266,31 @@ __metadata:
   version: 1.5.4
   resolution: "@types/leo-profanity@npm:1.5.4"
   checksum: 10c0/525a748975ddd6bcf3e64201e6b88b34e9e8e6ca51564d0f2b7ecc8de311db0a21e964bf0b4212c84a9fe45e5c971e2a5e3e67dfcc7f209a675ee3f656d38813
+  languageName: node
+  linkType: hard
+
+"@types/lodash.clonedeep@npm:^4":
+  version: 4.5.9
+  resolution: "@types/lodash.clonedeep@npm:4.5.9"
+  dependencies:
+    "@types/lodash": "npm:*"
+  checksum: 10c0/2f224ce9578046bccd1cd9594fb73540600ebd3d59a45695166a6123e2c376b84ab106b005a00453f357907f25bc8bfd2271b822be76e8f5527eadb4690b5e96
+  languageName: node
+  linkType: hard
+
+"@types/lodash.merge@npm:^4":
+  version: 4.6.9
+  resolution: "@types/lodash.merge@npm:4.6.9"
+  dependencies:
+    "@types/lodash": "npm:*"
+  checksum: 10c0/2e2ccacdceb2e23343a514e8c24540fc4e1f1ffd616b645eb72ec685da9389d99a2544f04d61921e46a6768f8cc0fe5f58d4f7edaba9bc50552f0ca7df905e83
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:*":
+  version: 4.17.20
+  resolution: "@types/lodash@npm:4.17.20"
+  checksum: 10c0/98cdd0faae22cbb8079a01a3bb65aa8f8c41143367486c1cbf5adc83f16c9272a2a5d2c1f541f61d0d73da543c16ee1d21cf2ef86cb93cd0cc0ac3bced6dd88f
   languageName: node
   linkType: hard
 
@@ -9251,7 +9280,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.merge@npm:^4.6.2":
+"lodash.clonedeep@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "lodash.clonedeep@npm:4.5.0"
+  checksum: 10c0/2caf0e4808f319d761d2939ee0642fa6867a4bbf2cfce43276698828380756b99d4c4fa226d881655e6ac298dd453fe12a5ec8ba49861777759494c534936985
+  languageName: node
+  linkType: hard
+
+"lodash.merge@npm:4.6.2, lodash.merge@npm:^4.6.2":
   version: 4.6.2
   resolution: "lodash.merge@npm:4.6.2"
   checksum: 10c0/402fa16a1edd7538de5b5903a90228aa48eb5533986ba7fa26606a49db2572bf414ff73a2c9f5d5fd36b31c46a5d5c7e1527749c07cbcf965ccff5fbdf32c506

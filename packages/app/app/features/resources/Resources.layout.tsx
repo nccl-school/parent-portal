@@ -4,12 +4,10 @@ import { Outlet } from "react-router";
 import { Fragment } from "react/jsx-runtime";
 
 import type { Route } from "./+types/Resources.layout";
-import { ResourceFolderTree } from "./ResourceFolderTree";
 import {
   ResourcesBreadcrumbDelimiter,
   ResourcesBreadcrumb,
 } from "./ResourcesBreadcrumb";
-import { ResourceFolderTreeItem } from "./ResourceFolderTreeItem";
 import { ResourceFolderPane } from "./ResourceFolderPane";
 import { ResourceMain } from "./ResourceMain";
 import { ResourceMainSearch } from "./ResourceMainSearch";
@@ -19,6 +17,7 @@ import { ResourcePreview } from "./ResourcePreview";
 
 import { getNCCLClient } from "../../utils/server";
 import { renderData } from "../../utils/client";
+import { ResourcesCreateFolder } from "../resources-create-folder";
 
 const styles = css`
   ${makeResponsive({ from: "tablet" })} {
@@ -55,28 +54,9 @@ export async function loader(args: Route.LoaderArgs) {
 export default function ResourcesLayout({ loaderData }: Route.ComponentProps) {
   return (
     <div className={styles}>
-      <ResourceFolderPane>
-        {renderData(loaderData, {
-          loading: "Loading folders...",
-          ok: (data) => (
-            <>
-              <ResourceFolderTreeItem
-                to="/resources"
-                end
-                dxIcon="files-01-stroke-standard"
-                dxColor="primary"
-              >
-                All files
-              </ResourceFolderTreeItem>
-              <ResourceFolderTree
-                resourceTree={data.tree}
-                baseRoute="/resources"
-              />
-            </>
-          ),
-        })}
-      </ResourceFolderPane>
+      <ResourceFolderPane />
       <ResourceMain>
+        <ResourcesCreateFolder.Component />
         <ResourceMainSearch />
         <ResourceMainRecentlyViewed />
         <ResourceMainBreadcrumbs>

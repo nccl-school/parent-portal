@@ -2,8 +2,12 @@ import { css } from "@linaria/core";
 import type { ResourceTree } from "@nccl/api/client";
 import { makeColor, makeRem, makeReset } from "@nccl/theme";
 
-import { getResourceIcon, getResourceIconColor } from "./resources.utils";
-import { ResourceFolderTreeItem } from "./ResourceFolderTreeItem";
+import { FolderTreeNode } from "./FolderTreeNode";
+
+import {
+  getResourceIcon,
+  getResourceIconColor,
+} from "../resources/resources.utils";
 
 const styles = css`
   ${makeReset("ul")};
@@ -26,12 +30,16 @@ const styles = css`
   }
 `;
 
-export function ResourceFolderTree({
+export function FolderTree({
   resourceTree,
-  baseRoute,
+  currentPath,
+  onSelectFolder,
+  basePath,
 }: {
   resourceTree: ResourceTree;
-  baseRoute: string;
+  currentPath: string;
+  onSelectFolder: (path: string) => void;
+  basePath: string;
 }) {
   const resourceEntries = Object.entries(resourceTree);
   if (resourceEntries.length === 0) return null;
@@ -39,20 +47,24 @@ export function ResourceFolderTree({
     <ul className={styles}>
       {resourceEntries.map(([resourceId, resource]) => {
         if (resource.type !== "FOLDER") return null;
-        const resourceSlug = `${baseRoute}/${resource.slug}`;
+        const resourcePath = `${basePath}/${resource.slug}`;
         return (
           <li key={resourceId}>
-            <ResourceFolderTreeItem
-              to={resourceSlug}
+            <FolderTreeNode
+              isActive={currentPath === resourcePath}
+              onClick={onSelectFolder}
+              path={resourcePath}
               dxIcon={getResourceIcon(resource)}
               dxColor={getResourceIconColor(resource)}
             >
               {resource.name}
-            </ResourceFolderTreeItem>
+            </FolderTreeNode>
             {resource.children ? (
-              <ResourceFolderTree
+              <FolderTree
+                currentPath={currentPath}
+                onSelectFolder={onSelectFolder}
                 resourceTree={resource.children}
-                baseRoute={resourceSlug}
+                basePath={resourcePath}
               />
             ) : null}
           </li>

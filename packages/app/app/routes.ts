@@ -46,6 +46,7 @@ export default [
   // APIs
   ...prefix("api", [
     ...prefix("role", [route("/", "./api/api.role.getRoles.ts")]),
+    ...prefix("resource", [route("/tree/*", "./api/api.resource.tree.ts")]),
     ...prefix("suggestion", [
       route("/", "./api/api.suggestion.getManyOrCreateUnique.ts"),
       route("/comment/:id", "./api/api.suggestion.comment.ts"),

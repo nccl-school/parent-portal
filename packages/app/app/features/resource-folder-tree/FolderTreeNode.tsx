@@ -1,10 +1,12 @@
 import { css } from "@linaria/core";
 import { Icon, Typography, type IconProps } from "@nccl/components";
 import { makeColor, makeRem, makeReset } from "@nccl/theme";
-import { NavLink, type NavLinkProps } from "react-router";
+import { classes } from "@stratum-ui/core/utils";
+import { useCallback } from "react";
 
 const styles = css`
-  ${makeReset("anchor")};
+  ${makeReset("button")};
+  text-align: left;
 
   display: grid;
   grid-template-columns: ${makeRem(20)} 1fr;
@@ -12,6 +14,9 @@ const styles = css`
   width: 100%;
   gap: ${makeRem(12)};
   height: ${makeRem(36)};
+
+  &.active {
+  }
 
   &:visited {
     color: unset;
@@ -27,20 +32,32 @@ const styles = css`
   }
 `;
 
-export function ResourceFolderTreeItem({
+export function FolderTreeNode({
   dxIcon,
-  to,
-  end,
   dxColor,
   children,
-}: Pick<IconProps, "dxIcon" | "dxColor"> &
-  Pick<NavLinkProps, "end" | "to"> & { children: string }) {
+  path,
+  onClick,
+  isActive,
+}: Pick<IconProps, "dxIcon" | "dxColor"> & {
+  children: string;
+  isActive: boolean;
+  path: string;
+  onClick: (path: string) => void;
+}) {
+  const handleClick = useCallback(() => {
+    onClick(path);
+  }, [onClick, path]);
+
   return (
-    <NavLink className={styles} to={to} end={end}>
+    <button
+      className={classes(styles, { active: isActive })}
+      onClick={handleClick}
+    >
       <Icon dxIcon={dxIcon} dxColor={dxColor} dxSize={20} />
       <Typography dxNode="div" dxVariant="body3">
         {children}
       </Typography>
-    </NavLink>
+    </button>
   );
 }

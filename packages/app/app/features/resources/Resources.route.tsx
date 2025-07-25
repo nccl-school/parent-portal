@@ -19,6 +19,7 @@ import { placeholder } from "../../utils/isomorphic";
 import { LoadingState } from "../../components/states/LoadingState";
 import { dates, renderData } from "../../utils/client";
 import { getNCCLClient } from "../../utils/server";
+import { ResourcesCreateFolder } from "../resources-create-folder";
 
 export async function loader(args: Route.LoaderArgs) {
   const { "*": slugPath } = args.params;
@@ -77,6 +78,7 @@ export default function ResourcesRoute({ loaderData }: Route.ComponentProps) {
           dxVariant="outlined"
           dxSize="md"
           dxStartIcon="folder-add-stroke-standard"
+          onClick={ResourcesCreateFolder.launch}
         >
           Create folder
         </Button>
