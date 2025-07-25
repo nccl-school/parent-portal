@@ -39,10 +39,15 @@ const styles = css`
       font-size: ${makeRem(20)};
     }
     & > .subtitle {
+      margin-top: ${makeRem(4)};
       color: ${makeColor("neutral-light-1100")};
       font-size: ${makeRem(16)};
       line-height: 1.3;
     }
+  }
+
+  & > div {
+    margin-top: ${makeRem(8)};
   }
 `;
 
@@ -61,13 +66,13 @@ export const FormGroup = forwardRef<HTMLFieldSetElement, FormGroupProps>(
               </Typography>
             )}
             {dxSubtitle && (
-              <Typography dxNode="div" dxVariant="body1" className="subtitle">
+              <Typography dxNode="div" dxVariant="body3" className="subtitle">
                 {dxSubtitle}
               </Typography>
             )}
           </legend>
         ) : null}
-        {children}
+        <div>{children}</div>
       </fieldset>
     );
   }
