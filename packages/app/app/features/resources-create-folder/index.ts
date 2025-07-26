@@ -3,6 +3,7 @@ import { css } from "@linaria/core";
 import { makeRem } from "@nccl/theme";
 
 import { ResourcesCreateFolderContent } from "./ResourcesCreateFolder";
+import type { ResourcesCreateFolderModalState } from "./resources-create-folder.utils";
 
 const styles = css`
   width: ${makeRem(600)};
@@ -12,10 +13,11 @@ const styles = css`
   overflow: hidden;
 `;
 
-export const ResourcesCreateFolder = new ModalController({
-  props: {
-    dxVariant: "basic",
-    className: styles,
-  },
-  ModalContent: ResourcesCreateFolderContent,
-});
+export const ResourcesCreateFolder =
+  new ModalController<ResourcesCreateFolderModalState>({
+    props: {
+      dxVariant: "basic",
+      className: styles,
+    },
+    ModalContent: ResourcesCreateFolderContent,
+  });

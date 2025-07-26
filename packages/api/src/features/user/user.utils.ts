@@ -48,6 +48,9 @@ export const UpdateUserRoleRequestSchema = z.object({
   role: RolesSchema,
 });
 export const UpdateUserRoleResponseSchema = UserSchema;
+export type UpdateUserRoleResponse = z.infer<
+  typeof UpdateUserRoleResponseSchema
+>;
 
 // Invite Users
 export const InviteUsersRequestSchema = z.object({
@@ -59,6 +62,7 @@ export const InviteUsersResponseSchema = z.object({
   message: z.string(),
   userCount: z.number(),
 });
+export type InviteUsersResponse = z.infer<typeof InviteUsersResponseSchema>;
 
 // ReInvite User
 export const ResendInviteUserParamsSchema = z.object({ id: z.string() });

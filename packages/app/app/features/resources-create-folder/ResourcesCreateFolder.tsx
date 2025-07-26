@@ -15,14 +15,20 @@ import {
   ModalHeader,
   ModalHeaderTitle,
   Typography,
+  useModalContext,
 } from "@nccl/components";
 import { makeColor, makeRem } from "@nccl/theme";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useImmer } from "use-immer";
+import { href, useFetcher } from "react-router";
+import type { CreateFolderRequest } from "@nccl/api/client";
+import type { action } from "app/api/api.resource.folder";
+
+import type { ResourcesCreateFolderModalState } from "./resources-create-folder.utils";
 
 import { placeholder } from "../../utils/isomorphic";
 import { ResourceFolderTree } from "../resource-folder-tree/ResourceFolderTree";
-import { slugify } from "../../utils/client";
+import { getValidationErrors, isError, slugify } from "../../utils/client";
 
 const locationOptions = {
   THIS_FOLDER: "this-folder",
@@ -45,6 +51,8 @@ const tagStyles = css`
 `;
 
 export function ResourcesCreateFolderContent() {
+  const { state: modalState, close: closeModal } =
+    useModalContext<ResourcesCreateFolderModalState>();
   const [location, setLocation] = useState<string>(locationOptions.THIS_FOLDER);
   const [state, setState] = useImmer<{
     name: string;
@@ -54,9 +62,32 @@ export function ResourcesCreateFolderContent() {
   }>({
     name: "",
     slug: "",
-    path: "",
-    parentResourceId: "",
+    path: modalState.currentPath,
+    parentResourceId: modalState.initParentResourceId,
   });
+
+  const fetcher = useFetcher<typeof action>();
+  console.log(fetcher.data);
+
+  const handleSubmit = useCallback(async () => {
+    const stateWithOwner: CreateFolderRequest = {
+      ...state,
+      owner: "school", // we don't want to create any ownership
+    };
+    await fetcher.submit(stateWithOwner, {
+      method: "POST",
+      action: href("/api/resource/folder"),
+      encType: "application/json",
+    });
+  }, [state, fetcher]);
+
+  useEffect(() => {
+    if (!fetcher.data) return;
+    if (isError(fetcher.data)) return;
+    closeModal();
+  }, [closeModal, fetcher.data]);
+
+  const errors = getValidationErrors<keyof CreateFolderRequest>(fetcher.data);
 
   return (
     <>
@@ -72,6 +103,7 @@ export function ResourcesCreateFolderContent() {
             <InputText
               name="name"
               dxLabel="Folder name"
+              dxError={errors.name?.[0]}
               onChange={({ currentTarget: { value } }) => {
                 setState((draft) => {
                   draft.name = value;
@@ -83,6 +115,7 @@ export function ResourcesCreateFolderContent() {
               name="slug"
               dxLabel="Folder slug"
               dxHint="This will be used in the URL. Use only lowercase letters, numbers, and dashes. No spaces or special characters"
+              dxError={errors.slug?.[0]}
               value={state.slug}
               onChange={({ currentTarget: { value } }) =>
                 setState((draft) => {
@@ -104,7 +137,7 @@ export function ResourcesCreateFolderContent() {
                 This folder
               </Typography>
               <Typography dxNode="div" dxVariant="caption">
-                folder path / folder path / this folder
+                {modalState.currentPath}
               </Typography>
             </InputRadio>
             <InputRadio
@@ -168,7 +201,12 @@ export function ResourcesCreateFolderContent() {
       </ModalBody>
       <ModalFooter>
         <ModalFooterCancel />
-        <ModalFooterSubmit dxColor="primary" type="submit" isLoading={false}>
+        <ModalFooterSubmit
+          dxColor="primary"
+          type="button"
+          isLoading={false}
+          onClick={handleSubmit}
+        >
           Submit
         </ModalFooterSubmit>
       </ModalFooter>

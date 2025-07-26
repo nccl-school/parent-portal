@@ -6,6 +6,7 @@ import {
   zCleanStringSchema,
   zDateStringSchema,
   zFile,
+  zString,
 } from "../../utils/util.schema.js";
 import type { Resource as DBResource } from "../../_generated/prisma/client.js";
 import { exhaustiveMatchGuard } from "../../utils/util.exhaustiveMatchGuard.js";
@@ -209,11 +210,12 @@ export type CreateFileResponse = z.infer<typeof CreateFileResponseSchema>;
 // --- Create a folder
 export const CreateFolderRequestSchema = CreateResourceOwnershipLevel.and(
   z.object({
-    name: checkProfanity(z.string("A folder name is required")),
-    slug: checkProfanity(z.string("A slug is required")),
+    name: zString({ required: "A folder name is required" }),
+    slug: zString({ required: "A slug is required" }),
     parentResourceId: z.string().optional(),
   })
 );
+export type CreateFolderRequest = z.infer<typeof CreateFolderRequestSchema>;
 export const CreateFolderResponseSchema = ResourceSchema.pick({
   id: true,
   slug: true,

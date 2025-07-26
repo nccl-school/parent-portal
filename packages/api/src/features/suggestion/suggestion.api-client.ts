@@ -5,17 +5,17 @@ import {
   CreateSuggestionRequestSchema,
   GetSuggestionListQuerySchema,
   UpdateSuggestionRequestSchema,
-  UpdateSuggestionResponseSchema,
   CreateSuggestionVoteRequest,
-  CreateSuggestionResponseSchema,
-  CreateSuggestionVoteResponse,
   CreateSuggestionCommentsRequestSchema,
-  CreateSuggestionCommentsResponseSchema,
   DeleteSuggestionCommentResponseSchema,
   CommentIDParamsSchema,
   type GetSuggestionListResponse,
   type GetSuggestionResponse,
   type GetSuggestionCommentsResponse,
+  type CreateSuggestionResponse,
+  type UpdateSuggestionResponse,
+  type CreateSuggestionVoteResponse,
+  type CreateSuggestionCommentsResponse,
 } from "./suggestion.utils.js";
 
 import {
@@ -56,11 +56,10 @@ export class SuggestionClient extends ApiClient {
   async createSuggestion(
     suggestion: z.infer<typeof CreateSuggestionRequestSchema>
   ) {
-    return this._mutateJSON({
+    return this._mutateJSON<CreateSuggestionResponse>({
       method: "POST",
       path: "/",
       body: [CreateSuggestionRequestSchema, suggestion],
-      serializer: CreateSuggestionResponseSchema,
     });
   }
 
@@ -71,12 +70,11 @@ export class SuggestionClient extends ApiClient {
     id: string,
     suggestion: z.infer<typeof UpdateSuggestionRequestSchema>
   ) {
-    return this._mutateJSON({
+    return this._mutateJSON<UpdateSuggestionResponse>({
       method: "PUT",
       path: "/:id",
       params: [SuggestionIDParamsSchema, { id }],
       body: [UpdateSuggestionRequestSchema, suggestion],
-      serializer: UpdateSuggestionResponseSchema,
     });
   }
 
@@ -87,12 +85,11 @@ export class SuggestionClient extends ApiClient {
     suggestionId: string,
     body: z.infer<typeof CreateSuggestionVoteRequest>
   ) {
-    return this._mutateJSON({
+    return this._mutateJSON<CreateSuggestionVoteResponse>({
       method: "POST",
       path: "/:id/vote",
       params: [SuggestionIDParamsSchema, { id: suggestionId }],
       body: [CreateSuggestionVoteRequest, body],
-      serializer: CreateSuggestionVoteResponse,
     });
   }
 
@@ -114,12 +111,11 @@ export class SuggestionClient extends ApiClient {
     suggestionId: string,
     comment: z.infer<typeof CreateSuggestionCommentsRequestSchema>
   ) {
-    return this._mutateJSON({
+    return this._mutateJSON<CreateSuggestionCommentsResponse>({
       method: "POST",
       path: "/:id/comment",
       params: [SuggestionIDParamsSchema, { id: suggestionId }],
       body: [CreateSuggestionCommentsRequestSchema, comment],
-      serializer: CreateSuggestionCommentsResponseSchema,
     });
   }
 

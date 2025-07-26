@@ -3,14 +3,14 @@ import type z from "zod/v4";
 import {
   GetUserParamsSchema,
   InviteUsersRequestSchema,
-  InviteUsersResponseSchema,
   ResendInviteUserParamsSchema,
   UpdateUserRoleParamsSchema,
   UpdateUserRoleRequestSchema,
-  UpdateUserRoleResponseSchema,
   type GetUserListResponse,
   type GetUserResponse,
+  type InviteUsersResponse,
   type ResendInviteUserResponse,
+  type UpdateUserRoleResponse,
 } from "./user.utils.js";
 
 import {
@@ -50,12 +50,11 @@ export class UserClient extends ApiClient {
     userId: string,
     body: z.infer<typeof UpdateUserRoleRequestSchema>
   ) {
-    return this._mutateJSON({
+    return this._mutateJSON<UpdateUserRoleResponse>({
       method: "PUT",
       path: "/:id/role",
       params: [UpdateUserRoleParamsSchema, { id: userId }],
       body: [UpdateUserRoleRequestSchema, body],
-      serializer: UpdateUserRoleResponseSchema,
     });
   }
 
@@ -64,11 +63,10 @@ export class UserClient extends ApiClient {
    * the same role
    */
   public async inviteUsers(body: z.infer<typeof InviteUsersRequestSchema>) {
-    return this._mutateJSON({
+    return this._mutateJSON<InviteUsersResponse>({
       method: "POST",
       path: "/invite",
       body: [InviteUsersRequestSchema, body],
-      serializer: InviteUsersResponseSchema,
     });
   }
 

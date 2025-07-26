@@ -17,7 +17,7 @@ import { ResourcesTableCellName } from "./ResourcesTableCellName";
 import { EmptyState } from "../../components/states/EmptyState";
 import { placeholder } from "../../utils/isomorphic";
 import { LoadingState } from "../../components/states/LoadingState";
-import { dates, renderData } from "../../utils/client";
+import { dates, getData, renderData } from "../../utils/client";
 import { getNCCLClient } from "../../utils/server";
 import { ResourcesCreateFolder } from "../resources-create-folder";
 
@@ -26,8 +26,8 @@ export async function loader(args: Route.LoaderArgs) {
 
   const ncclClient = getNCCLClient(args);
   try {
-    const tree = await ncclClient.resource.getResourceByPath(slugPath);
-    return tree;
+    const resource = await ncclClient.resource.getResourceByPath(slugPath);
+    return resource;
   } catch (error) {
     return ncclClient.serializeError(error);
   }
@@ -50,7 +50,10 @@ const stylesEmpty = css`
   }
 `;
 
-export default function ResourcesRoute({ loaderData }: Route.ComponentProps) {
+export default function ResourcesRoute({
+  loaderData,
+  params,
+}: Route.ComponentProps) {
   const title = renderData(loaderData, {
     loading: "Loading...",
     ok: (d) => (d.id === "__ROOT__" ? "All Files" : d.name),
@@ -59,14 +62,6 @@ export default function ResourcesRoute({ loaderData }: Route.ComponentProps) {
   return (
     <>
       <ResourcesTitle title={title}>
-        <Button
-          dxVariant="outlined"
-          dxColor="secondary"
-          dxSize="md"
-          dxStartIcon="upload-01-stroke-standard"
-        >
-          Upload
-        </Button>
         <Button
           dxVariant="outlined"
           dxSize="md"
@@ -78,7 +73,15 @@ export default function ResourcesRoute({ loaderData }: Route.ComponentProps) {
           dxVariant="outlined"
           dxSize="md"
           dxStartIcon="folder-add-stroke-standard"
-          onClick={ResourcesCreateFolder.launch}
+          onClick={(e) => {
+            const resource = getData(loaderData);
+            if (!resource) return; // TODO: Throw a toast
+
+            ResourcesCreateFolder.launch(e, {
+              currentPath: params["*"],
+              initParentResourceId: resource.id,
+            });
+          }}
         >
           Create folder
         </Button>

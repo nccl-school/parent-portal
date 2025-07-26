@@ -1,7 +1,11 @@
-import type {
-  GetResourceBreadcrumbResponse,
-  GetResourceResponse,
-  ResourceTree,
+import type { z } from "zod/v4";
+
+import {
+  CreateFolderRequestSchema,
+  type CreateFolderResponse,
+  type GetResourceBreadcrumbResponse,
+  type GetResourceResponse,
+  type ResourceTree,
 } from "./resource.utils.js";
 
 import {
@@ -44,6 +48,17 @@ export class ResourceClient extends ApiClient {
   public async getPathBreadcrumb(path: string) {
     return this._get<GetResourceBreadcrumbResponse>({
       path: `/breadcrumb/${path || "__ROOT__"}`,
+    });
+  }
+
+  /**
+   * Create a new folder
+   */
+  public async createFolder(folder: z.infer<typeof CreateFolderRequestSchema>) {
+    return this._mutateJSON<CreateFolderResponse>({
+      method: "POST",
+      path: "/folder",
+      body: [CreateFolderRequestSchema, folder],
     });
   }
 }

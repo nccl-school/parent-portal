@@ -123,6 +123,17 @@ export function parseFetcherData<D>(data: D): ParseFetcherResult<D> {
   return { status: "ok", data: data as Exclude<D, ErrorResponse> };
 }
 
+export function getData<D>(loaderData: D) {
+  const res = parseFetcherData<D>(loaderData);
+  switch (res.status) {
+    case "ok":
+      return res.data as NonNullable<Exclude<D, ErrorResponse>>;
+
+    default:
+      return undefined;
+  }
+}
+
 export function renderData<D>(
   data: D,
   callbacks: {

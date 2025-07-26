@@ -121,22 +121,20 @@ There was an error when trying to serialize what was returned from the server:
   }
 
   protected async _mutateJSON<
-    S extends ZodType,
+    T,
     P extends ZodType = ZodType,
     B extends ZodType = ZodType,
   >({
     path,
     params,
     body,
-    serializer,
     method,
   }: {
     path: string;
     params?: [schema: P, data: z.infer<P>];
     body?: [schema: B, data: z.infer<B>];
-    serializer: S;
     method: "POST" | "PUT";
-  }): Promise<z.output<S>> {
+  }): Promise<T> {
     // Assemble the request
     const headers = this.#requestHeaders;
     headers.set("content-type", "application/json");
@@ -161,16 +159,13 @@ There was an error when trying to serialize what was returned from the server:
     // Fetch the data
     const req = new Request(url, reqInit);
     const res = await fetch(req);
-    const json = await res.json();
+    const json = (await res.json()) as T;
 
     if (!res.ok) {
       throw deserializeError(json, req);
     }
 
-    // Serialize the data
-
-    const data = this.#serialize(serializer, json);
-    return data as z.output<S>;
+    return json;
   }
 
   protected async _get<
