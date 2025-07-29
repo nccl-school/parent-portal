@@ -198,6 +198,7 @@ model Resource {
   id               String               @id @default(cuid())
   slug             String
   name             String
+  description      String?
   type             ResourceType
   parentResourceId String               @db.VarChar(191)
   parentResource   Resource?            @relation("ResourceChildren", fields: [parentResourceId], references: [id])

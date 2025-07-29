@@ -14,8 +14,9 @@ const styles = css`
   background: ${makeColor("white")};
   padding-bottom: ${makeRem(16)};
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: ${makeRem(24)};
   z-index: 10;
 `;
 

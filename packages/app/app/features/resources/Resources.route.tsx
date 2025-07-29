@@ -14,6 +14,7 @@ import type { Route } from "./+types/Resources.route";
 import { ResourcesTitle } from "./ResourcesTitle";
 import { ResourcesTableCellName } from "./ResourcesTableCellName";
 import { ResourceItemActionDelete } from "./ResourceItemActionDelete";
+import { ResourceItemActionEdit } from "./ResourceItemActionEdit";
 
 import { EmptyState } from "../../components/states/EmptyState";
 import { placeholder } from "../../utils/isomorphic";
@@ -23,6 +24,7 @@ import { getNCCLClient } from "../../utils/server";
 import { ResourcesCreateFolder } from "../resources-create-folder";
 import { ResourcesAdd } from "../resources-add/ResourcesAdd";
 import { ResourceActionDelete } from "../resource-action-delete/ResourceActionDelete";
+import { ResourceActionEdit } from "../resource-action-edit/ResourceActionEdit";
 
 export async function loader(args: Route.LoaderArgs) {
   const { "*": slugPath } = args.params;
@@ -109,6 +111,7 @@ export default function ResourcesRoute({
 
       {/* Actions */}
       <ResourceActionDelete.Component />
+      <ResourceActionEdit.Component />
 
       {renderData(loaderData, {
         loading: (
@@ -162,12 +165,7 @@ export default function ResourcesRoute({
                           justifyContent: "flex-end",
                         }}
                       >
-                        <Button
-                          dxVariant="icon"
-                          dxIcon="pencil-edit-01-stroke-standard"
-                          dxSize="md"
-                          dxStyle="outlined"
-                        />
+                        <ResourceItemActionEdit {...childResource} />
                         <Button
                           dxVariant="icon"
                           dxIcon="node-edit-stroke-standard"
