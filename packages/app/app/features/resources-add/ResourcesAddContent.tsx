@@ -2,7 +2,6 @@ import {
   Icon,
   ModalBody,
   ModalFooter,
-  ModalFooterCancel,
   ModalFooterSubmit,
   ModalHeader,
   ModalHeaderTitle,

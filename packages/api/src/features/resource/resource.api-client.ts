@@ -2,6 +2,7 @@ import type { z } from "zod/v4";
 
 import {
   CreateFolderRequestSchema,
+  ResourceIDParamsSchema,
   type CreateFolderResponse,
   type GetResourceBreadcrumbResponse,
   type GetResourceResponse,
@@ -59,6 +60,16 @@ export class ResourceClient extends ApiClient {
       method: "POST",
       path: "/folder",
       body: [CreateFolderRequestSchema, folder],
+    });
+  }
+
+  /**
+   * Delete a resource
+   */
+  public async delete(resourceId: string) {
+    return this._delete<CreateFolderResponse>({
+      path: "/:id",
+      params: [ResourceIDParamsSchema, { id: resourceId }],
     });
   }
 }

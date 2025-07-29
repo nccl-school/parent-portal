@@ -1,16 +1,19 @@
 import { z } from "zod/v4";
 import type { Context } from "hono";
+import { Storage } from "@google-cloud/storage";
 
 import {
   checkProfanity,
   zCleanStringSchema,
   zDateStringSchema,
   zFile,
+  zMessageSchema,
   zString,
 } from "../../utils/util.schema.js";
 import type { Resource as DBResource } from "../../_generated/prisma/client.js";
 import { exhaustiveMatchGuard } from "../../utils/util.exhaustiveMatchGuard.js";
 import { ErrorSet } from "../../utils/util.errors.js";
+import { getEnvVar } from "../../utils/util.envVar.js";
 
 export const ResourceTypeSchema = z.literal([
   "FOLDER",
@@ -209,6 +212,12 @@ export const CreateFileResponseSchema = ResourceSchema.pick({
 });
 export type CreateFileResponse = z.infer<typeof CreateFileResponseSchema>;
 
+// --- Delete a resource
+export const DeleteResourceResponseSchema = zMessageSchema;
+export type DeleteResourceResponse = z.infer<
+  typeof DeleteResourceResponseSchema
+>;
+
 // --- Create a folder
 export const CreateFolderRequestSchema = CreateResourceOwnershipLevel.and(
   z.object({
@@ -229,3 +238,133 @@ export const CreateFolderResponseSchema = ResourceSchema.pick({
   updatedAt: true,
 });
 export type CreateFolderResponse = z.infer<typeof CreateFolderResponseSchema>;
+
+// functions
+
+export function getBucket<C extends Context>(c: C) {
+  const { GCP_CLOUD_STORAGE_BUCKET } = getEnvVar(c);
+  const storage = new Storage(); // uses local credentials
+  const bucket = storage.bucket(GCP_CLOUD_STORAGE_BUCKET);
+  return bucket;
+}
+
+export async function getResourceById<C extends Context>(
+  id: string,
+  c: C,
+  options?: { includeAccessRules: boolean }
+) {
+  const includeAccessRules = options?.includeAccessRules ?? false;
+  const db = c.get("db");
+  const record = await db.resource.findUnique({
+    where: { id },
+    include: { childResources: true, accessRules: includeAccessRules },
+  });
+  if (!record) {
+    throw new ErrorSet.notFound("Unable to find the requested resource");
+  }
+
+  return record;
+}
+
+type ResourceAccessRules = {
+  read: true;
+  create: boolean;
+  update: boolean;
+  delete: boolean;
+};
+
+export async function getUserResourceAccess<C extends Context>(
+  id: string,
+  c: C
+): Promise<[DBResource, ResourceAccessRules]> {
+  const currentUser = c.get("currentUser");
+  const db = c.get("db");
+
+  const [resource, orgMemberships] = await Promise.all([
+    getResourceById(id, c, { includeAccessRules: true }),
+    db.organizationMembership.findMany({
+      where: {
+        userId: currentUser.id,
+      },
+    }),
+  ]);
+
+  const base = {
+    read: true,
+    create: false,
+    update: false,
+    delete: false,
+  } as const;
+
+  function createResponse(
+    data: ResourceAccessRules
+  ): [DBResource, ResourceAccessRules] {
+    return [resource, data];
+  }
+
+  // ✅ 1. System-level admin always has full access
+  if (currentUser.roleId === "ADMIN") {
+    return createResponse({
+      read: true,
+      create: true,
+      update: true,
+      delete: true,
+    });
+  }
+
+  // ✅ 2. Direct user ownership
+  if (currentUser.id === resource.ownerUserId) {
+    return createResponse({
+      read: true,
+      create: true,
+      update: true,
+      delete: true,
+    });
+  }
+
+  // ✅ 3. Match effective access rules
+  for (const rule of resource.accessRules) {
+    const isDirectUser = rule.userId === currentUser.id;
+    const isSchoolWide = rule.isPublic === true;
+
+    const hasMatchingOrgMembership = orgMemberships.find((membership) => {
+      const matchesOrgWide =
+        rule.orgWide && membership.organizationId === resource.ownerOrgId;
+      const matchesRole =
+        rule.orgRole &&
+        membership.organizationId === resource.ownerOrgId &&
+        membership.role === rule.orgRole;
+
+      return matchesOrgWide || matchesRole;
+    });
+
+    if (isDirectUser || isSchoolWide || hasMatchingOrgMembership) {
+      switch (rule.permission) {
+        case "MANAGER":
+          return createResponse({
+            read: true,
+            create: true,
+            update: true,
+            delete: true,
+          });
+        case "EDITOR":
+          return createResponse({
+            read: true,
+            create: false,
+            update: true,
+            delete: false,
+          });
+        case "VIEWER":
+          return createResponse({
+            read: true,
+            create: false,
+            update: false,
+            delete: false,
+          });
+      }
+    }
+  }
+
+  // ❌ 4. No matching rule = read-only
+  return createResponse(base);
+}

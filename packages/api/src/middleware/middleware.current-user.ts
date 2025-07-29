@@ -9,6 +9,11 @@ export const cacheTagsMiddleware = {
   CURRENT_USER: "get_current_user",
 };
 
+export type CurrentUser = {
+  id: string;
+  roleId: Roles;
+};
+
 declare global {
   interface CustomJwtSessionClaims {
     metadata: {
@@ -24,10 +29,7 @@ declare global {
 
 declare module "hono" {
   interface ContextVariableMap {
-    currentUser: {
-      id: string;
-      roleId: Roles;
-    };
+    currentUser: CurrentUser;
   }
 }
 

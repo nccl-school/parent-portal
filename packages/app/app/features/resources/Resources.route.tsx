@@ -13,6 +13,7 @@ import { css } from "@linaria/core";
 import type { Route } from "./+types/Resources.route";
 import { ResourcesTitle } from "./ResourcesTitle";
 import { ResourcesTableCellName } from "./ResourcesTableCellName";
+import { ResourceItemActionDelete } from "./ResourceItemActionDelete";
 
 import { EmptyState } from "../../components/states/EmptyState";
 import { placeholder } from "../../utils/isomorphic";
@@ -21,6 +22,7 @@ import { dates, getData, renderData } from "../../utils/client";
 import { getNCCLClient } from "../../utils/server";
 import { ResourcesCreateFolder } from "../resources-create-folder";
 import { ResourcesAdd } from "../resources-add/ResourcesAdd";
+import { ResourceActionDelete } from "../resource-action-delete/ResourceActionDelete";
 
 export async function loader(args: Route.LoaderArgs) {
   const { "*": slugPath } = args.params;
@@ -105,6 +107,9 @@ export default function ResourcesRoute({
         </Button>
       </ResourcesTitle>
 
+      {/* Actions */}
+      <ResourceActionDelete.Component />
+
       {renderData(loaderData, {
         loading: (
           <TableRow>
@@ -118,7 +123,7 @@ export default function ResourcesRoute({
             <div className={stylesEmpty}>
               <EmptyState
                 imgSrc="/images/image-icon-island.png"
-                imgSize={200}
+                imgSize={180}
                 imgAlt="all-the-things"
                 title="There's nothing in here"
                 borderless
@@ -181,13 +186,7 @@ export default function ResourcesRoute({
                           dxSize="md"
                           dxStyle="outlined"
                         />
-                        <Button
-                          dxVariant="icon"
-                          dxIcon="delete-02-stroke-standard"
-                          dxSize="md"
-                          dxStyle="outlined"
-                          dxColor="danger"
-                        />
+                        <ResourceItemActionDelete {...childResource} />
                       </div>
                     </TableBodyCol>
                   </TableRow>

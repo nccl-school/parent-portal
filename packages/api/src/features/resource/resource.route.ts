@@ -1,5 +1,4 @@
-import { Hono, type Context } from "hono";
-import { Storage } from "@google-cloud/storage";
+import { Hono } from "hono";
 
 import {
   CreateFileRequestSchema,
@@ -8,46 +7,85 @@ import {
   CreateFolderRequestSchema,
   CreateFolderResponseSchema,
   createResourceOwnership,
+  DeleteResourceResponseSchema,
+  getBucket,
   GetFileListResponseSchema,
   GetResourceBreadcrumbResponseSchema,
+  getResourceById,
   GetResourceResponseSchema,
+  getUserResourceAccess,
   ResourceIDParamsSchema,
   ResourceTreeSchema,
   type GetResourceBreadcrumbResponse,
   type ResourceTree,
 } from "./resource.utils.js";
 
-import { getEnvVar } from "../../utils/util.envVar.js";
 import { validate } from "../../middleware/middleware.validate.js";
 import { serialize } from "../../utils/util.serialize.js";
 import { ErrorSet } from "../../utils/util.errors.js";
 import { authorize } from "../../middleware/middleware.authorize.js";
 import type { Resource } from "../../_generated/prisma/client.js";
 import { tryPrisma } from "../../utils/util.prisma.js";
-
-function getBucket<C extends Context>(c: C) {
-  const { GCP_CLOUD_STORAGE_BUCKET } = getEnvVar(c);
-  const storage = new Storage(); // uses local credentials
-  const bucket = storage.bucket(GCP_CLOUD_STORAGE_BUCKET);
-  return bucket;
-}
+import { exhaustiveMatchGuard } from "../../utils/util.exhaustiveMatchGuard.js";
 
 export const resource = new Hono();
 
 // GET / api/resource/:id | Get a specific resource by ID
 resource.get("/:id", validate("param", ResourceIDParamsSchema), async (c) => {
-  const db = c.get("db");
   const { id } = c.req.valid("param");
-  const record = await db.resource.findUnique({
-    where: { id: id },
-    include: { childResources: true },
-  });
-  if (!record) {
-    throw new ErrorSet.notFound("Unable to find the requested resource");
-  }
+  const record = await getResourceById(id, c);
   const json = await serialize(GetResourceResponseSchema, record);
   return c.json(json);
 });
+
+// DELETE /api/resource/:id | Delete a specific resource by ID
+resource.delete(
+  "/:id",
+  validate("param", ResourceIDParamsSchema),
+  async (c) => {
+    const db = c.get("db");
+    const { id } = c.req.valid("param");
+    const [resource, canUser] = await getUserResourceAccess(id, c);
+
+    if (!canUser.delete) {
+      throw new ErrorSet.unauthorized(
+        "You are not authorized to delete this resource."
+      );
+    }
+
+    switch (resource.type) {
+      case "FILE": {
+        const transaction = db.$transaction(async (tx) => {
+          await tx.resource.delete({ where: { id } });
+          const bucket = getBucket(c);
+          if (!resource.fileUrl) {
+            throw new ErrorSet.serverError(
+              "This resource is missing a pointer to bucket storage. This should not have happened. Please contact support."
+            );
+          }
+          await bucket.file(resource.fileUrl).delete();
+        });
+        await tryPrisma(transaction, {
+          fallback: "There was an error when trying to delete the resource",
+        });
+        const json = await serialize(DeleteResourceResponseSchema, {
+          message: `Successfully deleted ${resource.name}.`,
+        });
+        return c.json(json);
+      }
+
+      case "EXTERNAL_DOC":
+      case "LINK":
+      case "FOLDER":
+        throw new ErrorSet.methodNotAllowed(
+          `DELETE is not allowed for this the ${resource.type} resource type at this time.`
+        );
+
+      default:
+        return exhaustiveMatchGuard(resource.type);
+    }
+  }
+);
 
 // GET / api/resource/path/* | Get a specific resource by its slug path
 resource.get("/path/:path{.+}", async (c) => {
