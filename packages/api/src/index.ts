@@ -6,6 +6,7 @@ import { logger } from "hono/logger";
 import dotenv from "dotenv";
 import { clerkMiddleware } from "@hono/clerk-auth";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
+import { cors } from "hono/cors";
 
 import { prismaMiddleware } from "./middleware/middleware.prisma.js";
 import { currentUserMiddleware } from "./middleware/middleware.current-user.js";
@@ -25,6 +26,14 @@ const app = new Hono();
 
 // Middleware - Log and add the db to the context
 app.use(logger());
+app.use(
+  "/api/*",
+  cors({
+    origin: "*", // or specific domains: ["https://yourapp.com"]
+    allowHeaders: ["Authorization", "Content-Type"],
+    allowMethods: ["*"],
+  })
+);
 app.use("/api/*", prismaMiddleware);
 
 // Webhooks

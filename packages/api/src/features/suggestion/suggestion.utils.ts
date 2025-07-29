@@ -14,7 +14,6 @@ export const SuggestionCommentSchema = z.object({
   id: z.string(),
   comment: zString({
     required: "A comment is required",
-    profanity: false,
   }),
   isAnonymous: z.boolean().optional().default(false),
   createdBy: UserSchema,

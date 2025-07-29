@@ -13,7 +13,8 @@ export type TabProps = TabPropsNative & TabPropsCustom;
 const styles = css`
   padding: ${makeRem(8)} ${makeRem(16)};
   transition: all 0.15s ease-in-out;
-  color: ${makeColor("neutral-dark-200")};
+  color: ${makeColor("neutral-light-600")};
+  font-weight: ${makeFontWeight("body-bold")} !important;
 
   &:hover {
     cursor: pointer;
@@ -24,7 +25,6 @@ const styles = css`
 
   &.selected {
     color: ${makeColor("secondary-1100")};
-    font-weight: ${makeFontWeight("body-bold")};
   }
 `;
 

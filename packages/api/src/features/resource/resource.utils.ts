@@ -18,6 +18,7 @@ export const ResourceTypeSchema = z.literal([
   "LINK",
   "EXTERNAL_DOC",
 ]);
+export type ResourceType = z.infer<typeof ResourceTypeSchema>;
 
 // Base Schema
 export const ResourceSchema = z.object({
@@ -197,6 +198,7 @@ export const CreateFileRequestSchema = CreateResourceOwnershipLevel.and(
     parentResourceId: z.string().optional(),
   })
 );
+export type CreateFileRequest = z.infer<typeof CreateFileRequestSchema>;
 export const CreateFileResponseSchema = ResourceSchema.pick({
   id: true,
   slug: true,

@@ -18,6 +18,7 @@ import { ResourcePreview } from "./ResourcePreview";
 import { getNCCLClient } from "../../utils/server";
 import { renderData } from "../../utils/client";
 import { ResourcesCreateFolder } from "../resources-create-folder";
+import { ResourcesAdd } from "../resources-add/ResourcesAdd";
 
 const styles = css`
   ${makeResponsive({ from: "tablet" })} {
@@ -57,6 +58,7 @@ export default function ResourcesLayout({ loaderData }: Route.ComponentProps) {
       <ResourceFolderPane />
       <ResourceMain>
         <ResourcesCreateFolder.Component />
+        <ResourcesAdd.Component />
         <ResourceMainSearch />
         <ResourceMainRecentlyViewed />
         <ResourceMainBreadcrumbs>

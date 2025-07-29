@@ -1,0 +1,6 @@
+{
+  "extends": "@gfdigital/tsconfig/library",
+  "compilerOptions": {
+    "esModuleInterop": true
+  }
+}

@@ -1,8 +1,10 @@
+import type { ReactNode } from "react";
+
 import { useModalContext } from "./modal.useModalContext.js";
 
 import { Button } from "../button/Button.js";
 
-export function ModalFooterCancel() {
+export function ModalFooterCancel({ children }: { children?: ReactNode }) {
   const { close: closeModal } = useModalContext();
   return (
     <Button
@@ -12,7 +14,7 @@ export function ModalFooterCancel() {
       type="button"
       onClick={closeModal}
     >
-      close
+      {children || "close"}
     </Button>
   );
 }

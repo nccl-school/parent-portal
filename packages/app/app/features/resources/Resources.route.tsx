@@ -20,6 +20,7 @@ import { LoadingState } from "../../components/states/LoadingState";
 import { dates, getData, renderData } from "../../utils/client";
 import { getNCCLClient } from "../../utils/server";
 import { ResourcesCreateFolder } from "../resources-create-folder";
+import { ResourcesAdd } from "../resources-add/ResourcesAdd";
 
 export async function loader(args: Route.LoaderArgs) {
   const { "*": slugPath } = args.params;
@@ -66,6 +67,15 @@ export default function ResourcesRoute({
           dxVariant="outlined"
           dxSize="md"
           dxStartIcon="resources-add-stroke-standard"
+          onClick={(e) => {
+            const resource = getData(loaderData);
+            if (!resource) return; // TODO: Throw a toast
+
+            ResourcesAdd.launch(e, {
+              currentPath: params["*"],
+              initParentResourceId: resource.id,
+            });
+          }}
         >
           Add
         </Button>
@@ -149,13 +159,19 @@ export default function ResourcesRoute({
                       >
                         <Button
                           dxVariant="icon"
-                          dxIcon="share-08-stroke-standard"
+                          dxIcon="pencil-edit-01-stroke-standard"
                           dxSize="md"
                           dxStyle="outlined"
                         />
                         <Button
                           dxVariant="icon"
-                          dxIcon="delete-02-stroke-standard"
+                          dxIcon="node-edit-stroke-standard"
+                          dxSize="md"
+                          dxStyle="outlined"
+                        />
+                        <Button
+                          dxVariant="icon"
+                          dxIcon="share-08-stroke-standard"
                           dxSize="md"
                           dxStyle="outlined"
                         />
@@ -164,6 +180,13 @@ export default function ResourcesRoute({
                           dxIcon="link-01-stroke-standard"
                           dxSize="md"
                           dxStyle="outlined"
+                        />
+                        <Button
+                          dxVariant="icon"
+                          dxIcon="delete-02-stroke-standard"
+                          dxSize="md"
+                          dxStyle="outlined"
+                          dxColor="danger"
                         />
                       </div>
                     </TableBodyCol>

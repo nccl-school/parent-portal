@@ -7,6 +7,8 @@ import cloneDeep from "lodash.clonedeep";
 import { FolderTree, type FolderTreeNodeClickHandler } from "./FolderTree";
 import { normalizeFolderPath } from "./resource-folder-tree.utils";
 
+import { LoadingState } from "../../components/states/LoadingState";
+
 export function ResourceFolderTree({
   onSelect,
   initialPath,
@@ -42,6 +44,8 @@ export function ResourceFolderTree({
     },
     [onSelect]
   );
+
+  if (!data) return <LoadingState>Loading folders...</LoadingState>;
 
   return (
     <FolderTree

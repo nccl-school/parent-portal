@@ -235,6 +235,7 @@ resource.get("/file/current", async (c) => {
 resource.post("/file", validate("form", CreateFileRequestSchema), async (c) => {
   const db = c.get("db");
   const { file, ...form } = c.req.valid("form");
+  const parentResourceId = form.parentResourceId ?? "__ROOT__";
 
   // Wrap the creation and file URL update in a transaction
   const transaction = db.$transaction(async (tx) => {
@@ -245,7 +246,7 @@ resource.post("/file", validate("form", CreateFileRequestSchema), async (c) => {
         slug: form.slug,
         mimeType: file.type,
         ...createResourceOwnership(c, form),
-        parentResourceId: "__ROOT__",
+        parentResourceId,
       },
     });
 
@@ -263,7 +264,7 @@ resource.post("/file", validate("form", CreateFileRequestSchema), async (c) => {
   });
 
   const resource = await tryPrisma(transaction, {
-    unique_constraint_violation: `A file with a slug of "${form.slug}" has already been created for this this parent resource. Please change the slug to a unique value.`,
+    unique_constraint_violation: `A file with a slug of "${form.slug}" has already been created for this "${parentResourceId}" parent resource. Please change the slug to a unique value.`,
     fallback: "An error occurred when trying to create the file",
   });
 

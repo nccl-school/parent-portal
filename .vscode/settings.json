@@ -1,5 +1,11 @@
 {
-  "cSpell.words": ["Cloudrun", "fetcherdata", "gfdigital", "NCCL"],
+  "cSpell.words": [
+    "Cloudrun",
+    "fetcherdata",
+    "gfdigital",
+    "NCCL",
+    "revalidator"
+  ],
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "files.associations": {
     "wrangler.json": "jsonc"
