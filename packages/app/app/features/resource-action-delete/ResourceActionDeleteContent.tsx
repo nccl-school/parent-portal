@@ -19,7 +19,9 @@ export function ResourceActionDeleteContent() {
   const { close: closeModal, state: resource } =
     useModalContext<ResourceActionDeleteModalState>();
 
-  const { data, Form } = useFetcher();
+  const { data, Form, state } = useFetcher();
+
+  const isLoading = state !== "idle";
 
   useEffect(() => {
     if (!data) return;
@@ -50,17 +52,22 @@ export function ResourceActionDeleteContent() {
         />
       </ModalBody>
       <Form
+        method="DELETE"
         action={match(resource)
           .with({ type: "FILE" }, () =>
-            href("/api/resource/file", { id: resource.id })
+            href("/api/resource/:id", { id: resource.id })
           )
           .otherwise(() => "NOT IMPLEMENTED")}
-        method="DELETE"
       >
         <ModalFooter>
           <ModalFooterCancel />
-          <Button dxVariant="contained" dxColor="danger" dxSize="md">
-            Delete
+          <Button
+            dxVariant="contained"
+            dxColor="danger"
+            dxSize="md"
+            disabled={isLoading}
+          >
+            {isLoading ? "Deleting..." : "Delete"}
           </Button>
         </ModalFooter>
       </Form>

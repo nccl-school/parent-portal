@@ -47,6 +47,7 @@ export default [
   ...prefix("api", [
     ...prefix("role", [route("/", "./api/api.role.getRoles.ts")]),
     ...prefix("resource", [
+      route("/:id", "./api/api.resource.ts"),
       route("/folder", "./api/api.resource.folder.ts"),
       route("/tree/*", "./api/api.resource.tree.ts"),
     ]),
