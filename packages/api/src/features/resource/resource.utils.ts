@@ -255,6 +255,14 @@ export type UpdateResourceMetaResponse = z.infer<
   typeof UpdateResourceMetaResponseSchema
 >;
 
+// --- Move resource
+export const MoveResourceRequestSchema = ResourceSchema.pick({
+  parentResourceId: true,
+});
+export type MoveResourceRequest = z.infer<typeof MoveResourceRequestSchema>;
+export const MoveResourceResponseSchema = GetResourceResponseSchema;
+export type MoveResourceResponse = z.infer<typeof MoveResourceResponseSchema>;
+
 // functions
 
 export function getBucket<C extends Context>(c: C) {

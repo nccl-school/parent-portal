@@ -2,6 +2,7 @@ import type { z } from "zod/v4";
 
 import {
   CreateFolderRequestSchema,
+  MoveResourceRequestSchema,
   ResourceIDParamsSchema,
   UpdateResourceMetaRequestSchema,
   type CreateFolderResponse,
@@ -84,6 +85,21 @@ export class ResourceClient extends ApiClient {
       path: "/:id/meta",
       params: [ResourceIDParamsSchema, { id: resourceId }],
       body: [UpdateResourceMetaRequestSchema, meta],
+    });
+  }
+
+  /**
+   * Move a resource into a different directory
+   */
+  public async move(resourceId: string, newParentResourceId: string) {
+    return this._mutateJSON({
+      method: "PUT",
+      path: "/:id/meta",
+      params: [ResourceIDParamsSchema, { id: resourceId }],
+      body: [
+        MoveResourceRequestSchema,
+        { parentResourceId: newParentResourceId },
+      ],
     });
   }
 }

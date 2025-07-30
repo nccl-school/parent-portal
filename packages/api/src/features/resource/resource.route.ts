@@ -14,6 +14,8 @@ import {
   getResourceById,
   GetResourceResponseSchema,
   getUserResourceAccess,
+  MoveResourceRequestSchema,
+  MoveResourceResponseSchema,
   ResourceIDParamsSchema,
   ResourceTreeSchema,
   UpdateResourceMetaRequestSchema,
@@ -271,7 +273,7 @@ resource.get("/file/current", async (c) => {
   return c.json(data);
 });
 
-// POST /api/resource/:id/meta | Update a resources meta information
+// PUT /api/resource/:id/meta | Update a resources meta information
 resource.put(
   "/:id/meta",
   validate("param", ResourceIDParamsSchema),
@@ -292,6 +294,29 @@ resource.put(
       },
     });
     const res = await serialize(UpdateResourceMetaResponseSchema, record);
+    return c.json(res);
+  }
+);
+
+// PUT /api/resource/:id/move | Update a resources parent
+resource.put(
+  "/:id/move",
+  validate("param", ResourceIDParamsSchema),
+  validate("json", MoveResourceRequestSchema),
+  async (c) => {
+    const db = c.get("db");
+    const params = c.req.valid("param");
+    const body = c.req.valid("json");
+    const record = await db.resource.update({
+      where: { id: params.id },
+      data: {
+        parentResourceId: body.parentResourceId,
+      },
+      include: {
+        childResources: true,
+      },
+    });
+    const res = await serialize(MoveResourceResponseSchema, record);
     return c.json(res);
   }
 );
