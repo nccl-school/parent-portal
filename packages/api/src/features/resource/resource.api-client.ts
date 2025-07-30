@@ -94,7 +94,7 @@ export class ResourceClient extends ApiClient {
   public async move(resourceId: string, newParentResourceId: string) {
     return this._mutateJSON({
       method: "PUT",
-      path: "/:id/meta",
+      path: "/:id/move",
       params: [ResourceIDParamsSchema, { id: resourceId }],
       body: [
         MoveResourceRequestSchema,

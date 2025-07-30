@@ -1,4 +1,5 @@
 import {
+  Callout,
   DescriptionList,
   DescriptionListData,
   DescriptionListTag,
@@ -13,10 +14,16 @@ import {
 } from "@nccl/components";
 import { css } from "@linaria/core";
 import { makeColor, makeRem } from "@nccl/theme";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { href, useFetcher } from "react-router";
+import type {
+  MoveResourceRequest,
+  MoveResourceResponse,
+} from "@nccl/api/client";
 
 import type { ResourceActionMoveModalState } from "./resource-action-move.utils";
 
+import { getValidationErrors, isError } from "../../utils/client";
 import { placeholder } from "../../utils/isomorphic";
 import { ResourceFolderTree } from "../resource-folder-tree/ResourceFolderTree";
 
@@ -34,11 +41,27 @@ const infoStyles = css`
 
 export function ResourceActionMoveContent() {
   const {
-    state: { initialPath },
+    close: closeModal,
+    state: { resource, initialPath },
   } = useModalContext<ResourceActionMoveModalState>();
   const [state, setState] = useState<{ path: string; id: string } | undefined>(
     undefined
   );
+
+  const {
+    Form,
+    data,
+    state: fetcherState,
+  } = useFetcher<MoveResourceResponse>();
+
+  useEffect(() => {
+    if (!data || isError(data)) return;
+    // TODO: Add toast
+    closeModal();
+  }, [closeModal, data]);
+
+  const isLoading = fetcherState !== "idle";
+  const validationErrors = getValidationErrors<keyof MoveResourceRequest>(data);
 
   return (
     <>
@@ -50,6 +73,13 @@ export function ResourceActionMoveContent() {
       </ModalHeader>
 
       <ModalBody>
+        {validationErrors.parentResourceId?.[0] && !state?.id && (
+          <Callout
+            className={infoStyles}
+            description="Please select a new destination for the resource"
+            variant="danger"
+          />
+        )}
         <DescriptionList className={infoStyles}>
           <DescriptionListTag>Original Path</DescriptionListTag>
           <DescriptionListData>{initialPath}</DescriptionListData>
@@ -65,12 +95,18 @@ export function ResourceActionMoveContent() {
           />
         </div>
       </ModalBody>
-      <ModalFooter>
-        <ModalFooterCancel />
-        <ModalFooterSubmit isLoading={false} type="submit">
-          Save and close
-        </ModalFooterSubmit>
-      </ModalFooter>
+      <Form
+        method="PUT"
+        action={href("/api/resource/:id/move", { id: resource.id })}
+      >
+        <input type="hidden" name="parentResourceId" value={state?.id} />
+        <ModalFooter>
+          <ModalFooterCancel />
+          <ModalFooterSubmit isLoading={isLoading} type="submit">
+            save & close
+          </ModalFooterSubmit>
+        </ModalFooter>
+      </Form>
     </>
   );
 }

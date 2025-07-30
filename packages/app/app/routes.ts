@@ -49,6 +49,7 @@ export default [
     ...prefix("resource", [
       route("/:id", "./api/api.resource.ts"),
       route("/:id/meta", "./api/api.resource.meta.ts"),
+      route("/:id/move", "./api/api.resource.move.ts"),
       route("/folder", "./api/api.resource.folder.ts"),
       route("/tree/*", "./api/api.resource.tree.ts"),
     ]),
