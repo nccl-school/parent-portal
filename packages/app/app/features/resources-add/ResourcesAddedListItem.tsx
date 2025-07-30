@@ -135,7 +135,10 @@ export const ResourcesAddedListItem = memo(function ResourcesAddedListItem(
         });
       };
 
-      xhr.open("POST", "http://localhost:8080/api/resource/file");
+      xhr.open(
+        "POST",
+        `${import.meta.env.VITE_NCCL_API_URL}/api/resource/file`
+      );
       xhr.setRequestHeader("Authorization", `Bearer ${token}`);
       const formData = new FormData();
 
