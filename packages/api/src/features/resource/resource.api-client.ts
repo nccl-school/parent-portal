@@ -3,10 +3,12 @@ import type { z } from "zod/v4";
 import {
   CreateFolderRequestSchema,
   ResourceIDParamsSchema,
+  UpdateResourceMetaRequestSchema,
   type CreateFolderResponse,
   type GetResourceBreadcrumbResponse,
   type GetResourceResponse,
   type ResourceTree,
+  type UpdateResourceMetaRequest,
 } from "./resource.utils.js";
 
 import {
@@ -70,6 +72,18 @@ export class ResourceClient extends ApiClient {
     return this._delete<CreateFolderResponse>({
       path: "/:id",
       params: [ResourceIDParamsSchema, { id: resourceId }],
+    });
+  }
+
+  /**
+   * Update the meta information (name, slug, description)
+   */
+  public async updateMeta(resourceId: string, meta: UpdateResourceMetaRequest) {
+    return this._mutateJSON({
+      method: "PUT",
+      path: "/:id/meta",
+      params: [ResourceIDParamsSchema, { id: resourceId }],
+      body: [UpdateResourceMetaRequestSchema, meta],
     });
   }
 }

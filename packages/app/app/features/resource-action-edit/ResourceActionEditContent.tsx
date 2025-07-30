@@ -1,4 +1,7 @@
-import type { GetResourceResponse } from "@nccl/api/client";
+import type {
+  GetResourceResponse,
+  UpdateResourceMetaRequest,
+} from "@nccl/api/client";
 import {
   InputGroup,
   InputText,
@@ -13,21 +16,23 @@ import {
   useModalContext,
 } from "@nccl/components";
 import { useEffect, useState } from "react";
-import { useFetcher } from "react-router";
+import { href, useFetcher } from "react-router";
 
-import { slugify } from "../../utils/client";
+import { getValidationErrors, isError, slugify } from "../../utils/client";
 
 export function ResourceActionEditContent() {
-  const { state: resource } =
+  const { state: resource, close: closeModal } =
     useModalContext<GetResourceResponse["childResources"][0]>();
   const [autoSlug, setAutoSlug] = useState(resource.slug);
-
   const { Form, data, state } = useFetcher();
+
+  const errors = getValidationErrors<keyof UpdateResourceMetaRequest>(data);
   const isLoading = state !== "idle";
 
   useEffect(() => {
-    if (!data) return;
-  }, [data]);
+    if (!data || isError(data)) return;
+    closeModal();
+  }, [closeModal, data]);
 
   return (
     <>
@@ -38,12 +43,16 @@ export function ResourceActionEditContent() {
           is about.
         </ModalHeaderSubtitle>
       </ModalHeader>
-      <Form>
+      <Form
+        method="PUT"
+        action={href("/api/resource/:id/meta", { id: resource.id })}
+      >
         <ModalBody>
           <InputGroup>
             <InputText
               dxLabel="Name"
               name="name"
+              dxError={errors.name?.[0]}
               defaultValue={resource.name}
               onChange={({ currentTarget: { value } }) =>
                 setAutoSlug(slugify(value))
@@ -51,14 +60,17 @@ export function ResourceActionEditContent() {
             />
             <InputText
               dxLabel="URL Slug"
+              name="slug"
               dxHint="This becomes part of the URL path (e.g. /resources/your-slug)"
               value={autoSlug}
+              dxError={errors.slug?.[0]}
               onChange={({ currentTarget: { value } }) =>
                 setAutoSlug(slugify(value))
               }
             />
             <InputTextarea
               dxLabel="Description"
+              dxError={errors.description?.[0]}
               name="description"
               rows={5}
               defaultValue={resource.description ?? undefined}
@@ -67,7 +79,7 @@ export function ResourceActionEditContent() {
         </ModalBody>
         <ModalFooter>
           <ModalFooterCancel />
-          <ModalFooterSubmit isLoading={isLoading}>
+          <ModalFooterSubmit isLoading={isLoading} type="submit">
             Save and close
           </ModalFooterSubmit>
         </ModalFooter>

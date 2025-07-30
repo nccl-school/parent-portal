@@ -16,6 +16,8 @@ import {
   getUserResourceAccess,
   ResourceIDParamsSchema,
   ResourceTreeSchema,
+  UpdateResourceMetaRequestSchema,
+  UpdateResourceMetaResponseSchema,
   type GetResourceBreadcrumbResponse,
   type ResourceTree,
 } from "./resource.utils.js";
@@ -268,6 +270,31 @@ resource.get("/file/current", async (c) => {
   const data = await serialize(GetFileListResponseSchema, records);
   return c.json(data);
 });
+
+// POST /api/resource/:id/meta | Update a resources meta information
+resource.put(
+  "/:id/meta",
+  validate("param", ResourceIDParamsSchema),
+  validate("json", UpdateResourceMetaRequestSchema),
+  async (c) => {
+    const db = c.get("db");
+    const params = c.req.valid("param");
+    const body = c.req.valid("json");
+    const record = await db.resource.update({
+      where: { id: params.id },
+      data: {
+        name: body.name,
+        description: body.description || null,
+        slug: body.slug,
+      },
+      include: {
+        childResources: true,
+      },
+    });
+    const res = await serialize(UpdateResourceMetaResponseSchema, record);
+    return c.json(res);
+  }
+);
 
 // POST api/resource | Upload a current user file
 resource.post("/file", validate("form", CreateFileRequestSchema), async (c) => {

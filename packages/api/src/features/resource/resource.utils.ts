@@ -241,6 +241,20 @@ export const CreateFolderResponseSchema = ResourceSchema.pick({
 });
 export type CreateFolderResponse = z.infer<typeof CreateFolderResponseSchema>;
 
+// --- Update meta
+export const UpdateResourceMetaRequestSchema = ResourceSchema.pick({
+  name: true,
+  description: true,
+  slug: true,
+});
+export type UpdateResourceMetaRequest = z.infer<
+  typeof UpdateResourceMetaRequestSchema
+>;
+export const UpdateResourceMetaResponseSchema = GetResourceResponseSchema;
+export type UpdateResourceMetaResponse = z.infer<
+  typeof UpdateResourceMetaResponseSchema
+>;
+
 // functions
 
 export function getBucket<C extends Context>(c: C) {

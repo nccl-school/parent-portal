@@ -1,0 +1,23 @@
+meta {
+  name: Update a resources meta information
+  type: http
+  seq: 20
+}
+
+put {
+  url: {{API_DOMAIN}}/api/resource/:id/meta
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: cmdeo33e90001sbzacg7qu91w
+}
+
+body:json {
+  {
+    "name": "test update",
+    "slug": "test-update",
+    "description": "this is a description"
+  }
+}
