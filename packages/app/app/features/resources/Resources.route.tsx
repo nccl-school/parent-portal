@@ -16,6 +16,7 @@ import { ResourcesTableCellName } from "./ResourcesTableCellName";
 import { ResourceItemActionDelete } from "./ResourceItemActionDelete";
 import { ResourceItemActionEdit } from "./ResourceItemActionEdit";
 import { ResourceItemActionMove } from "./ResourceItemActionMove";
+import { ResourceItemActionAccess } from "./ResourceItemActionAccess";
 
 import { EmptyState } from "../../components/states/EmptyState";
 import { placeholder } from "../../utils/isomorphic";
@@ -27,6 +28,7 @@ import { ResourcesAdd } from "../resources-add/ResourcesAdd";
 import { ResourceActionDelete } from "../resource-action-delete/ResourceActionDelete";
 import { ResourceActionEdit } from "../resource-action-edit/ResourceActionEdit";
 import { ResourceActionMove } from "../resource-action-move/ResourceActionMove";
+import { ResourceActionAccess } from "../resource-action-access/ResourceActionAccess";
 
 export async function loader(args: Route.LoaderArgs) {
   const { "*": slugPath } = args.params;
@@ -115,6 +117,7 @@ export default function ResourcesRoute({
       <ResourceActionDelete.Component />
       <ResourceActionEdit.Component />
       <ResourceActionMove.Component />
+      <ResourceActionAccess.Component />
 
       {renderData(loaderData, {
         loading: (
@@ -173,12 +176,7 @@ export default function ResourcesRoute({
                           resource={childResource}
                           initialPath={params["*"]}
                         />
-                        <Button
-                          dxVariant="icon"
-                          dxIcon="share-08-stroke-standard"
-                          dxSize="md"
-                          dxStyle="outlined"
-                        />
+                        <ResourceItemActionAccess {...childResource} />
                         <Button
                           dxVariant="icon"
                           dxIcon="link-01-stroke-standard"

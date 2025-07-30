@@ -1,4 +1,3 @@
-import { useUser } from "@clerk/react-router";
 import { Button } from "@nccl/components";
 import type { GetResourceResponse } from "@nccl/api/client";
 
@@ -7,8 +6,6 @@ import { ResourceActionDelete } from "../resource-action-delete/ResourceActionDe
 export function ResourceItemActionDelete(
   resource: GetResourceResponse["childResources"][0]
 ) {
-  const { user } = useUser();
-  console.log(user);
   return (
     <Button
       dxVariant="icon"

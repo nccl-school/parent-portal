@@ -11,7 +11,6 @@ import {
 import { ResourceFolderPane } from "./ResourceFolderPane";
 import { ResourceMain } from "./ResourceMain";
 import { ResourceMainSearch } from "./ResourceMainSearch";
-import { ResourceMainRecentlyViewed } from "./ResourceMainRecentlyViewed";
 import { ResourceMainBreadcrumbs } from "./ResourceMainBreadcrumbs";
 import { ResourcePreview } from "./ResourcePreview";
 
@@ -60,7 +59,7 @@ export default function ResourcesLayout({ loaderData }: Route.ComponentProps) {
         <ResourcesCreateFolder.Component />
         <ResourcesAdd.Component />
         <ResourceMainSearch />
-        <ResourceMainRecentlyViewed />
+        {/* <ResourceMainRecentlyViewed /> */}
         <ResourceMainBreadcrumbs>
           {renderData(loaderData, {
             loading: "Loading...",

@@ -1,19 +1,18 @@
 import { Button } from "@nccl/components";
 import type { GetResourceResponse } from "@nccl/api/client";
 
-import { ResourceActionEdit } from "../resource-action-edit/ResourceActionEdit";
+import { ResourceActionAccess } from "../resource-action-access/ResourceActionAccess";
 
-export function ResourceItemActionEdit(
+export function ResourceItemActionAccess(
   resource: GetResourceResponse["childResources"][0]
 ) {
   return (
     <Button
       dxVariant="icon"
-      dxIcon="pencil-edit-01-stroke-standard"
+      dxIcon="user-lock-01-stroke-standard"
       dxSize="md"
       dxStyle="outlined"
-      dxColor="primary"
-      onClick={(e) => ResourceActionEdit.launch(e, resource)}
+      onClick={(e) => ResourceActionAccess.launch(e, resource)}
     />
   );
 }

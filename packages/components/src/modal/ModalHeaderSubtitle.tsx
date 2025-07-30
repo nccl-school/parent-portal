@@ -1,4 +1,4 @@
-import type { JSX } from "react";
+import type { JSX, ReactNode } from "react";
 import { forwardRef } from "react";
 import { css } from "@linaria/core";
 import { makeColor, makeRem } from "@nccl/theme";
@@ -8,7 +8,7 @@ import { Typography } from "../typography/Typography.js";
 
 export type ModalHeaderSubtitlePropsNative = JSX.IntrinsicElements["div"];
 export type ModalHeaderSubtitlePropsCustom = {
-  children: string;
+  children: ReactNode;
 };
 export type ModalHeaderSubtitleProps = ModalHeaderSubtitlePropsNative &
   ModalHeaderSubtitlePropsCustom;

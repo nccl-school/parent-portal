@@ -24,14 +24,12 @@ export function ResourceFolderTree({
   // fetch the tree at the selected path
   useEffect(() => {
     const routePath = normalizeFolderPath(currentPath);
-    console.log({ currentPath, routePath });
     load(href("/api/resource/tree/*", { "*": routePath }));
   }, [load, currentPath]);
 
   // when the tree is returned, updated the state
   useEffect(() => {
     if (!data) return;
-    console.log({ data });
     setTree((prevState) => {
       return merge(cloneDeep(prevState), data);
     });

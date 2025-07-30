@@ -1,4 +1,3 @@
-import { useUser } from "@clerk/react-router";
 import { Button } from "@nccl/components";
 import type { GetResourceResponse } from "@nccl/api/client";
 
@@ -11,8 +10,6 @@ export function ResourceItemActionMove({
   resource: GetResourceResponse["childResources"][0];
   initialPath: string;
 }) {
-  const { user } = useUser();
-  console.log(user);
   return (
     <Button
       dxVariant="icon"
