@@ -58,7 +58,7 @@ export function FolderTree({
           <li key={resourceId}>
             <FolderTreeNode
               onClick={() => onSelectFolder(resourcePath, resource)}
-              isActive={currentPath === resourcePath}
+              isActive={resourcePath === normalizePath(currentPath)}
               dxIcon={getResourceIcon(resource)}
               dxColor={getResourceIconColor(resource)}
             >
@@ -77,4 +77,12 @@ export function FolderTree({
       })}
     </ul>
   );
+}
+
+function normalizePath(currentPath: string) {
+  if (currentPath === "__ROOT__") return "/";
+  if (currentPath.startsWith("/")) {
+    return currentPath;
+  }
+  return `/${currentPath}`;
 }
