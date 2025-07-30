@@ -71,6 +71,8 @@ export function ResourcesAddContent() {
   const TabContent = activeTab.Component;
   const { close: closeModal } = useModalContext();
   const revalidator = useRevalidator();
+  console.log(import.meta.env);
+
   return (
     <>
       <ModalHeader>
