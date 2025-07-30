@@ -15,6 +15,7 @@ import { ResourcesTitle } from "./ResourcesTitle";
 import { ResourcesTableCellName } from "./ResourcesTableCellName";
 import { ResourceItemActionDelete } from "./ResourceItemActionDelete";
 import { ResourceItemActionEdit } from "./ResourceItemActionEdit";
+import { ResourceItemActionMove } from "./ResourceItemActionMove";
 
 import { EmptyState } from "../../components/states/EmptyState";
 import { placeholder } from "../../utils/isomorphic";
@@ -25,6 +26,7 @@ import { ResourcesCreateFolder } from "../resources-create-folder";
 import { ResourcesAdd } from "../resources-add/ResourcesAdd";
 import { ResourceActionDelete } from "../resource-action-delete/ResourceActionDelete";
 import { ResourceActionEdit } from "../resource-action-edit/ResourceActionEdit";
+import { ResourceActionMove } from "../resource-action-move/ResourceActionMove";
 
 export async function loader(args: Route.LoaderArgs) {
   const { "*": slugPath } = args.params;
@@ -112,6 +114,7 @@ export default function ResourcesRoute({
       {/* Actions */}
       <ResourceActionDelete.Component />
       <ResourceActionEdit.Component />
+      <ResourceActionMove.Component />
 
       {renderData(loaderData, {
         loading: (
@@ -166,11 +169,9 @@ export default function ResourcesRoute({
                         }}
                       >
                         <ResourceItemActionEdit {...childResource} />
-                        <Button
-                          dxVariant="icon"
-                          dxIcon="node-edit-stroke-standard"
-                          dxSize="md"
-                          dxStyle="outlined"
+                        <ResourceItemActionMove
+                          resource={childResource}
+                          initialPath={params["*"]}
                         />
                         <Button
                           dxVariant="icon"
