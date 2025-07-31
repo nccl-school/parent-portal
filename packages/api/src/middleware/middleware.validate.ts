@@ -13,7 +13,7 @@ export function validate<
   T extends ZodType,
   Target extends keyof ValidationTargets,
 >(target: Target, schema: T) {
-  return zValidator(target, schema, async (res, c) => {
+  return zValidator(target, schema, async (res) => {
     if (!res.success) {
       const flatErr = z.flattenError(res.error);
       console.error(flatErr);

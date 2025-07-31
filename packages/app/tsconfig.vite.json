@@ -6,7 +6,7 @@
     "app/**/.server/**/*",
     "app/**/.client/**/*",
     "database/**/*",
-    "dev-server/**/*"
+    "server/**/*"
   ],
   "compilerOptions": {
     "composite": true,

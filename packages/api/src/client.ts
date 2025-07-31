@@ -4,6 +4,7 @@ import { RoleClient } from "./features/role/role.api-client.js";
 import { SuggestionClient } from "./features/suggestion/suggestion.api-client.js";
 import { UserClient } from "./features/user/user.api-client.js";
 import { serializeError } from "./utils/util.errors.js";
+import "./_generated/prisma/models.js";
 
 export * from "./features/role/role.utils.js";
 export * from "./features/suggestion/suggestion.utils.js";
