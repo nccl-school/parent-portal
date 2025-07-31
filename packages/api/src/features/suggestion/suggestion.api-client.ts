@@ -7,7 +7,6 @@ import {
   UpdateSuggestionRequestSchema,
   CreateSuggestionVoteRequest,
   CreateSuggestionCommentsRequestSchema,
-  DeleteSuggestionCommentResponseSchema,
   CommentIDParamsSchema,
   type GetSuggestionListResponse,
   type GetSuggestionResponse,
@@ -123,7 +122,6 @@ export class SuggestionClient extends ApiClient {
     return this._delete({
       path: "/comment/:id",
       params: [CommentIDParamsSchema, { id: suggestionCommentId }],
-      serializer: DeleteSuggestionCommentResponseSchema,
     });
   }
 }

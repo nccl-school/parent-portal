@@ -349,20 +349,15 @@ export async function getUserResourceAccess<C extends Context>(
   // ✅ 3. Match effective access rules
   for (const rule of resource.accessRules) {
     const isDirectUser = rule.userId === currentUser.id;
-    const isSchoolWide = rule.isPublic === true;
+    const isSchoolWide = rule.allSchool === true;
 
-    const hasMatchingOrgMembership = orgMemberships.find((membership) => {
-      const matchesOrgWide =
-        rule.orgWide && membership.organizationId === resource.ownerOrgId;
-      const matchesRole =
-        rule.orgRole &&
-        membership.organizationId === resource.ownerOrgId &&
-        membership.role === rule.orgRole;
-
-      return matchesOrgWide || matchesRole;
+    const isOrgUser = orgMemberships.find((membership) => {
+      const isOrgUser =
+        rule.orgId && membership.organizationId === resource.ownerOrgId;
+      return isOrgUser;
     });
 
-    if (isDirectUser || isSchoolWide || hasMatchingOrgMembership) {
+    if (isDirectUser || isSchoolWide || isOrgUser) {
       switch (rule.permission) {
         case "MANAGER":
           return createResponse({

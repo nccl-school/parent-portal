@@ -408,3 +408,9 @@ resource.post(
     return c.json(json);
   }
 );
+
+// resource.post("/:id/access", async (c) => {
+//   const db = c.get("db");
+// });
+
+// resource.put("/:id/access/:access_rule_id", async (c) => {});

@@ -234,27 +234,31 @@ model Resource {
 
 model ResourceAccessRule {
   id         String             @id @default(cuid())
-  nodeId     String
-  node       Resource           @relation(fields: [nodeId], references: [id])
+  resourceId String
+  resource   Resource           @relation(fields: [resourceId], references: [id])
   permission ResourcePermission // VIEWER, MANAGER, etc.
-  // Give just this user access to this file or folder.
-  // Useful when sharing a resource with one person (e.g. personal file, contractor, external collaborator).
+  // Grant access to a specific user.
+  // Useful for personal files, sharing with contractors, or assigning ownership.
   userId     String?
-  // Give access to anyone in the resource's organization who holds a specific role.
-  // Useful when only managers or editors within an org should have elevated permissions like edit or manage.
-  orgRole    OrgRole? // e.g., 'manager', 'editor' from OrganizationMembership.role
-  // Give everyone in the resource's organization access to this file or folder.
-  // Useful when an admin uploads shared content that all members of the org should be able to view.
-  orgWide    Boolean?
-  // Give all authenticated users in the school access to this file or folder, regardless of their organization.
-  // Useful for handbooks, announcements, or templates that should be visible to all users in the system but not exposed to the public.
-  isPublic   Boolean?           @default(false)
+
+  // Grant access to all members of a specific organization.
+  // Useful when an organization owns or manages shared content like policies or internal resources.
+  orgId String?
+
+  // Grant access to all authenticated users in the school, regardless of their organization.
+  // Useful for handbooks, newsletters, and public-facing resources restricted to logged-in users.
+  allSchool Boolean? @default(false)
 
   createdAt DateTime @default(now())
+
+  // Prevent duplicates
+  @@unique([resourceId, userId])
+  @@unique([resourceId, orgId])
+  @@unique([resourceId, allSchool])
 }
 
 enum ResourcePermission {
+  VIEWER
   EDITOR
   MANAGER
-  VIEWER
 }

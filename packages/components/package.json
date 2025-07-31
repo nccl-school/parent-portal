@@ -35,10 +35,10 @@
     "@stratum-ui/react": "0.2.0",
     "fuse.js": "^7.1.0",
     "immer": "10.1.1",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
     "sass": "1.89.2",
-    "ts-pattern": "^5.7.1"
+    "ts-pattern": "^5.8.0"
   },
   "devDependencies": {
     "@babel/core": "7.28.0",
@@ -54,8 +54,8 @@
     "@stratum-ui/cli": "0.4.0",
     "@types/babel__core": "7.20.5",
     "@types/node": "24.1.0",
-    "@types/react": "19.1.8",
-    "@types/react-dom": "19.1.6",
+    "@types/react": "19.1.9",
+    "@types/react-dom": "19.1.7",
     "@vitejs/plugin-react": "4.7.0",
     "@wyw-in-js/vite": "0.7.0",
     "mockingjson": "0.0.4",
