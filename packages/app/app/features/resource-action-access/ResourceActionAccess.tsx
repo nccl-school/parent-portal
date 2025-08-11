@@ -7,6 +7,9 @@ import type { ResourceActionAccessModalState } from "./resource-action-access.ut
 
 const styles = css`
   width: ${makeRem(600)};
+  min-height: 60vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
 `;
 
 export const ResourceActionAccess =

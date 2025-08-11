@@ -1,5 +1,5 @@
 import { css } from "@linaria/core";
-import { Card, Typography } from "@nccl/components";
+import { Card, InputSelect, Typography } from "@nccl/components";
 import { makeRem } from "@nccl/theme";
 
 const cardStyles = css`
@@ -21,12 +21,12 @@ export function ResourceActionAccessContentSchool() {
         </Typography>
       </div>
       <form action="">
-        <select>
+        <InputSelect dxSize="md">
           <option value="">Cannot access</option>
           <option value="">Can view</option>
           <option value="">Can edit</option>
           <option value="">Can manage</option>
-        </select>
+        </InputSelect>
       </form>
     </Card>
   );
