@@ -21,6 +21,7 @@ export * from "./callout/index.js";
 export * from "./lists-description/index.js";
 export * from "./utils/index.js";
 export * from "./progress/index.js";
+export * from "./card/index.js";
 
 export * from "./input-checkbox/index.js";
 export * from "./input-radio/index.js";

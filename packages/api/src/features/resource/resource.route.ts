@@ -543,8 +543,6 @@ resource.post(
     const { id: resourceId } = c.req.valid("param");
     const body = c.req.valid("json");
 
-    tryPrisma();
-
     let res;
     switch (body.level) {
       case "USER": {

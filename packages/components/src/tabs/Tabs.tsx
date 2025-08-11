@@ -26,6 +26,10 @@ const styles = css`
     text-decoration: none !important;
     cursor: pointer !important;
   }
+
+  li {
+    border-bottom: 1px solid ${makeColor("light-400")};
+  }
 `;
 
 const divStyles = css`
