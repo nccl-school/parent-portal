@@ -1,0 +1,22 @@
+meta {
+  name: Create an access rule (school)
+  type: http
+  seq: 25
+}
+
+post {
+  url: {{API_DOMAIN}}/api/resource/:id/access
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: cmdeohrzg0003sb0dphx69qn6
+}
+
+body:json {
+  {
+    "level": "SCHOOL",
+    "permission": "VIEWER"
+  }
+}

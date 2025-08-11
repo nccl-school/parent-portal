@@ -3,7 +3,7 @@ import type { z } from "zod/v4";
 import {
   CreateFolderRequestSchema,
   MoveResourceRequestSchema,
-  ResourceIDParamsSchema,
+  ParamsIDSchema,
   UpdateResourceMetaRequestSchema,
   type CreateFolderResponse,
   type GetResourceBreadcrumbResponse,
@@ -72,7 +72,7 @@ export class ResourceClient extends ApiClient {
   public async delete(resourceId: string) {
     return this._delete<CreateFolderResponse>({
       path: "/:id",
-      params: [ResourceIDParamsSchema, { id: resourceId }],
+      params: [ParamsIDSchema, { id: resourceId }],
     });
   }
 
@@ -83,7 +83,7 @@ export class ResourceClient extends ApiClient {
     return this._mutateJSON({
       method: "PUT",
       path: "/:id/meta",
-      params: [ResourceIDParamsSchema, { id: resourceId }],
+      params: [ParamsIDSchema, { id: resourceId }],
       body: [UpdateResourceMetaRequestSchema, meta],
     });
   }
@@ -95,7 +95,7 @@ export class ResourceClient extends ApiClient {
     return this._mutateJSON({
       method: "PUT",
       path: "/:id/move",
-      params: [ResourceIDParamsSchema, { id: resourceId }],
+      params: [ParamsIDSchema, { id: resourceId }],
       body: [
         MoveResourceRequestSchema,
         { parentResourceId: newParentResourceId },

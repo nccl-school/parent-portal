@@ -47,7 +47,8 @@ export function ResourceActionDeleteContent() {
           </ul>
         </Typography>
         <Callout
-          variant="info"
+          variant="danger"
+          omitIcon
           description="This action is permanent and cannot be undone."
         />
       </ModalBody>

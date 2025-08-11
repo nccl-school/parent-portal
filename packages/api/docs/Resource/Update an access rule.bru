@@ -1,0 +1,21 @@
+meta {
+  name: Update an access rule
+  type: http
+  seq: 26
+}
+
+put {
+  url: {{API_DOMAIN}}/api/resource/access/:id
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: cme72wq5k0003sboucypr0dsk
+}
+
+body:json {
+  {
+    "permission": "EDITOR"
+  }
+}
