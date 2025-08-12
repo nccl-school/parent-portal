@@ -12,16 +12,11 @@ import { css } from "@linaria/core";
 
 import type { Route } from "./+types/Resources.route";
 import { ResourcesTitle } from "./ResourcesTitle";
-import { ResourcesTableCellName } from "./ResourcesTableCellName";
-import { ResourceItemActionDelete } from "./ResourceItemActionDelete";
-import { ResourceItemActionEdit } from "./ResourceItemActionEdit";
-import { ResourceItemActionMove } from "./ResourceItemActionMove";
-import { ResourceItemActionAccess } from "./ResourceItemActionAccess";
+import { ResourceItem } from "./ResourceItem";
 
 import { EmptyState } from "../../components/states/EmptyState";
-import { placeholder } from "../../utils/isomorphic";
 import { LoadingState } from "../../components/states/LoadingState";
-import { dates, getData, renderData } from "../../utils/client";
+import { getData, renderData } from "../../utils/client";
 import { getNCCLClient } from "../../utils/server";
 import { ResourcesCreateFolder } from "../resources-create-folder";
 import { ResourcesAdd } from "../resources-add/ResourcesAdd";
@@ -131,15 +126,15 @@ export default function ResourcesRoute({
           resource.childResources.length === 0 ? (
             <div className={stylesEmpty}>
               <EmptyState
-                imgSrc="/images/image-icon-island.png"
-                imgSize={180}
+                imgSrc="/images/image-icon-black-hole.png"
+                imgSize={200}
                 imgAlt="all-the-things"
                 title="There's nothing in here"
                 borderless
               >
                 <div style={{ width: "40ch", margin: "0 auto" }}>
-                  Doesn't look like there's anything in this folder. So take a
-                  second and enjoy this tranquil moment.
+                  Doesn't look like there's anything in this folder... just you,
+                  the folder and the abyss.
                 </div>
               </EmptyState>
             </div>
@@ -150,44 +145,19 @@ export default function ResourcesRoute({
                   <TableHeadCol>Name</TableHeadCol>
                   <TableHeadCol>Last Modified</TableHeadCol>
                   <TableHeadCol>Size</TableHeadCol>
-                  <TableHeadCol dxJustify="right"></TableHeadCol>
+                  <TableHeadCol>Who can access</TableHeadCol>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {resource.childResources.map((childResource) => (
-                  <TableRow key={childResource.id}>
-                    <TableBodyCol>
-                      <ResourcesTableCellName {...childResource} />
-                    </TableBodyCol>
-                    <TableBodyCol>
-                      {dates.format(childResource.updatedAt, "Relative")}
-                    </TableBodyCol>
-                    <TableBodyCol>{placeholder}</TableBodyCol>
-                    <TableBodyCol>
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: makeRem(8),
-                          justifyContent: "flex-end",
-                        }}
-                      >
-                        <ResourceItemActionEdit {...childResource} />
-                        <ResourceItemActionMove
-                          resource={childResource}
-                          initialPath={params["*"]}
-                        />
-                        <ResourceItemActionAccess {...childResource} />
-                        <Button
-                          dxVariant="icon"
-                          dxIcon="link-01-stroke-standard"
-                          dxSize="md"
-                          dxStyle="outlined"
-                        />
-                        <ResourceItemActionDelete {...childResource} />
-                      </div>
-                    </TableBodyCol>
-                  </TableRow>
-                ))}
+                {resource.childResources.map((childResource) => {
+                  return (
+                    <ResourceItem
+                      key={childResource.id}
+                      resource={childResource}
+                      initialPath={params["*"]}
+                    />
+                  );
+                })}
               </TableBody>
             </Table>
           ),
