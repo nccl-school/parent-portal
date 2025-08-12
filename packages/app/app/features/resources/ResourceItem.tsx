@@ -1,6 +1,8 @@
 import type { GetResourceResponse } from "@nccl/api/client";
 import { TableBodyCol, TableRow } from "@nccl/components";
 import { useRef } from "react";
+import { css } from "@linaria/core";
+import { makeRem } from "@nccl/theme";
 
 import {
   ResourceItemActions,
@@ -10,6 +12,20 @@ import { ResourcesTableCellName } from "./ResourcesTableCellName";
 
 import { dates } from "../../utils/client";
 import { placeholder } from "../../utils/isomorphic";
+
+const styles = css`
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  & > div {
+    display: flex;
+    gap: ${makeRem(8)};
+    height: 100%;
+    align-items: center;
+  }
+`;
 
 export function ResourceItem({
   initialPath,
@@ -23,8 +39,12 @@ export function ResourceItem({
   return (
     <TableRow
       key={resource.id}
-      onMouseEnter={controlRef.current?.handleOpen}
-      onMouseLeave={controlRef.current?.handleClose}
+      onMouseEnter={() => {
+        controlRef.current?.handleOpen();
+      }}
+      onMouseLeave={() => {
+        controlRef.current?.handleClose();
+      }}
     >
       <TableBodyCol>
         <ResourcesTableCellName {...resource} />
@@ -34,11 +54,13 @@ export function ResourceItem({
       </TableBodyCol>
       <TableBodyCol>{placeholder}</TableBodyCol>
       <TableBodyCol>{placeholder}</TableBodyCol>
-      <ResourceItemActions
-        controlRef={controlRef}
-        initialPath={initialPath}
-        resource={resource}
-      />
+      <TableBodyCol className={styles}>
+        <ResourceItemActions
+          controlRef={controlRef}
+          initialPath={initialPath}
+          resource={resource}
+        />
+      </TableBodyCol>
     </TableRow>
   );
 }
