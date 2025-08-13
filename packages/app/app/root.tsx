@@ -13,6 +13,8 @@ import "@nccl/theme/reset.css";
 import "@nccl/theme/root.css";
 import "@nccl/components/css";
 
+import { Toaster } from "@nccl/components";
+
 import type { Route } from "./+types/root";
 
 export async function loader(args: Route.LoaderArgs) {
@@ -74,6 +76,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
+        <Toaster.Render />
         <ScrollRestoration />
         <Scripts />
       </body>
