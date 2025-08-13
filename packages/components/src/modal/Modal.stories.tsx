@@ -13,6 +13,7 @@ import { ModalHeaderSubtitle } from "./ModalHeaderSubtitle.js";
 import styles from "../_core/modal/modal.module.scss";
 import { ModalEngine } from "../_core/modal/index.js";
 import { Typography } from "../typography/Typography.js";
+import { Toaster } from "../toast/index.js";
 
 const meta: Meta = {
   title: "Overlay / Modal",
@@ -236,6 +237,17 @@ function ModalContent() {
         earum necessitatibus nemo officia quam illo reiciendis. Quia harum
         doloribus officiis. Aliquam voluptate porro hic molestias possimus ea
         voluptatum libero?
+        <button
+          onClick={() =>
+            Toaster.launch({
+              variant: "success",
+              message: "This is a popver in a dialog",
+              dismissal: "manual",
+            })
+          }
+        >
+          launch toast
+        </button>
       </ModalBody>
       <ModalFooter>
         <button onClick={close}>close</button>
@@ -252,6 +264,7 @@ export const WithContoller = () => {
   return (
     <>
       <ImperativeModal.Component />
+      <Toaster.Render />
       <button
         onClick={(e) =>
           ImperativeModal.launch(e, {

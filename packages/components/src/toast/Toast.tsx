@@ -47,7 +47,6 @@ const styles = css`
       transform: translateX(100%);
     }
   }
-  --border-color: ;
 
   @keyframes progress {
     from {
@@ -58,30 +57,22 @@ const styles = css`
     }
   }
 
-  &.${TOAST_VARIANTS.ERROR} {
-    --progress-color: ${makeColor("danger-100")};
-    --shadow-color: ${makeColor("danger", { opacity: 0.1 })};
-  }
-  &.${TOAST_VARIANTS.SUCCESS} {
-    --progress-color: ${makeColor("success-100")};
-    --shadow-color: ${makeColor("success", { opacity: 0.1 })};
-  }
-
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  grid-template-rows: auto auto auto;
-  grid-template-areas:
-    "icon title close"
-    "icon message message";
-  animation: slide-in 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  column-gap: ${makeRem(12)};
-  row-gap: ${makeRem(8)};
-  padding: ${makeRem(12)};
+  position: relative;
+  background: ${makeColor("white")};
   border: 1px solid ${makeColor("light-500")};
   border-radius: ${makeRem(8)};
   box-shadow: var(--shadow-color) 0px 4px 12px;
-  background: linear-gradient(125deg, var(--shadow-color) 0%, #fff 60%);
-  position: relative;
+  animation: slide-in 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+
+  &.${TOAST_VARIANTS.ERROR} {
+    --progress-color: ${makeColor("danger-200")};
+    --shadow-color: ${makeColor("danger", { opacity: 0.2 })};
+  }
+  &.${TOAST_VARIANTS.SUCCESS} {
+    --progress-color: ${makeColor("success-200")};
+    --shadow-color: ${makeColor("success", { opacity: 0.2 })};
+  }
 
   &.close {
     animation: slide-out 0.5s cubic-bezier(0.22, 1, 0.36, 1);
@@ -103,6 +94,18 @@ const styles = css`
   }
 `;
 
+const contentStyles = css`
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto auto auto;
+  grid-template-areas:
+    "icon title close"
+    "icon message message";
+  column-gap: ${makeRem(12)};
+  row-gap: ${makeRem(8)};
+  padding: ${makeRem(12)};
+  background: linear-gradient(125deg, var(--shadow-color) 0%, #fff 60%);
+`;
 const iconStyles = css`
   grid-area: icon;
 `;
@@ -157,31 +160,33 @@ export function Toast(props: ToastProps) {
         autoDuration
           ? {
               // @ts-expect-error CSS custom properties are valid styles
-              "--visible-duration": `${autoDuration / 1000}s`,
+              "--visible-duration": `${autoDuration / 1_000}s`,
             }
           : {}
       }
     >
-      <div className={iconStyles}>
-        <Icon dxIcon={icon} dxColor={iconColor} dxSize={24} />
-      </div>
-      <Typography dxVariant="body1" dxNode="div" className={titleStyles}>
-        {props.title ?? variantProps.title}
-      </Typography>
-      <Button
-        className={closeStyles}
-        dxVariant="icon"
-        dxIcon="cancel-01-solid-standard"
-        onClick={() => props.onClose()}
-      />
-      <div className={messageStyles}>
-        {typeof props.message === "string" ? (
-          <Typography dxNode="p" dxVariant="body3">
-            {props.message}
-          </Typography>
-        ) : (
-          props.message
-        )}
+      <div className={contentStyles}>
+        <div className={iconStyles}>
+          <Icon dxIcon={icon} dxColor={iconColor} dxSize={24} />
+        </div>
+        <Typography dxVariant="body1" dxNode="div" className={titleStyles}>
+          {props.title ?? variantProps.title}
+        </Typography>
+        <Button
+          className={closeStyles}
+          dxVariant="icon"
+          dxIcon="cancel-01-solid-standard"
+          onClick={() => props.onClose()}
+        />
+        <div className={messageStyles}>
+          {typeof props.message === "string" ? (
+            <Typography dxNode="p" dxVariant="body3">
+              {props.message}
+            </Typography>
+          ) : (
+            props.message
+          )}
+        </div>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import {
   Button,
   FormGroup,
   InputText,
+  Toaster,
   useModalContext,
 } from "@nccl/components";
 import { match } from "ts-pattern";
@@ -49,6 +50,11 @@ export function ResourcesAddContentGoogleDoc() {
 
       case "error":
         console.log(res.error);
+        Toaster.launch({
+          variant: "error",
+          message: res.error.message,
+          dismissal: "manual",
+        });
         break;
 
       case "loading":

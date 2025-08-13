@@ -10,6 +10,7 @@ export type DefaultToastProps = {
 };
 type ToasterState<T> = {
   toasts: Map<string, T>;
+  container: HTMLElement | null;
 };
 
 type ToasterParams<T extends DefaultToastProps> = {
@@ -24,7 +25,7 @@ export class Toaster<T extends DefaultToastProps> extends ExternalStore<
   containerClassName?: string;
 
   constructor({ ToastComponent, containerClassName }: ToasterParams<T>) {
-    super({ toasts: new Map() });
+    super({ toasts: new Map(), container: null });
     this.containerClassName = containerClassName;
     this.Render = this.Render.bind(this);
     this.ToastComponent = ToastComponent.bind(this);
@@ -62,8 +63,11 @@ export class Toaster<T extends DefaultToastProps> extends ExternalStore<
     const onClose = async () => {
       this.close(toastId);
     };
+    const openDialogs = document.querySelectorAll("dialog[open]");
+    const container = openDialogs.item(openDialogs.length - 1) ?? document.body;
 
     this.setState((draft) => {
+      draft.container = container as HTMLElement;
       draft.toasts.set(toastId, {
         ...props,
         onClose,
@@ -81,14 +85,27 @@ export class Toaster<T extends DefaultToastProps> extends ExternalStore<
     );
 
     const toasts = [...state.toasts.entries()];
-    if (toasts.length === 0) return null;
+    if (toasts.length === 0 || !state.container) return null;
+
     return createPortal(
-      <div className={className}>
+      <div
+        className={className}
+        popover="manual"
+        ref={(node) => {
+          if (!node) return;
+
+          node.showPopover();
+
+          return () => {
+            node.hidePopover();
+          };
+        }}
+      >
         {toasts.map(([toastId, toastProps]) => {
           return <Component key={toastId} {...toastProps} id={toastId} />;
         })}
       </div>,
-      document.body
+      state.container
     );
   }
 }
