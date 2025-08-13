@@ -23,7 +23,6 @@ export type ToastProps = DefaultToastProps & {
   message: ReactNode;
   iconName?: IconNames;
   iconColor?: ColorAndVariants;
-  disableAutoClose?: boolean;
 } & ({ dismissal: "manual" } | { dismissal: "auto"; duration?: number });
 
 const styles = css`
@@ -172,12 +171,17 @@ export function Toast(props: ToastProps) {
         <Typography dxVariant="body1" dxNode="div" className={titleStyles}>
           {props.title ?? variantProps.title}
         </Typography>
-        <Button
-          className={closeStyles}
-          dxVariant="icon"
-          dxIcon="cancel-01-solid-standard"
-          onClick={() => props.onClose()}
-        />
+        <div className={closeStyles}>
+          {!autoDuration && (
+            <Button
+              className={closeStyles}
+              dxVariant="icon"
+              dxIcon="cancel-01-solid-standard"
+              onClick={() => props.onClose()}
+            />
+          )}
+        </div>
+
         <div className={messageStyles}>
           {typeof props.message === "string" ? (
             <Typography dxNode="p" dxVariant="body3">
