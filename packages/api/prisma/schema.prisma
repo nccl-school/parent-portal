@@ -191,7 +191,6 @@ enum ResourceType {
 
 enum FileSource {
   GOOGLE_DOCS
-  CUSTOM_UPLOAD
 }
 
 model Resource {
@@ -215,11 +214,9 @@ model Resource {
   mimeType String? // For files, e.g. 'application/pdf', 'application/vnd.google-apps.document'
   fileUrl  String? // For GCS, signed URLs, or exportable file links
 
-  // External Drive file metadata
+  // External file metadata
   externalSource FileSource? // Indicates origin (e.g., GOOGLE_DRIVE)
   externalId     String? // e.g., Google Drive file ID
-  webViewLink    String? // e.g., https://docs.google.com/document/d/abc123/view
-  exportLink     String? // optional: export endpoint for download (PDF, HTML, etc.)
 
   // Link to internal app entities
   linkType     String? // e.g. 'project', 'user', 'task'

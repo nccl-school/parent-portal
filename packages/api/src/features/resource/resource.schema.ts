@@ -32,8 +32,6 @@ export const ResourceSchema = z.object({
   fileUrl: z.string().nullable(),
   externalSource: z.string().nullable(),
   externalId: z.string().nullable(),
-  webViewLink: z.string().nullable(),
-  exportLink: z.string().nullable(),
   linkType: z.string().nullable(),
   linkTargetId: z.string().nullable(),
   createdAt: zDateStringSchema,
@@ -160,15 +158,16 @@ export const CreateFileRequestSchema = CreateResourceOwnershipLevel.and(
   })
 );
 export type CreateFileRequest = z.infer<typeof CreateFileRequestSchema>;
-export const CreateFileResponseSchema = ResourceSchema.pick({
-  id: true,
-  slug: true,
-  name: true,
-  parentResourceId: true,
-  createdAt: true,
-  updatedAt: true,
-});
-export type CreateFileResponse = z.infer<typeof CreateFileResponseSchema>;
+
+export const CreateGoogleDocRequestSchema = CreateResourceOwnershipLevel.and(
+  z.object({
+    url: z.url(),
+    parentResourceId: z.string().optional(),
+  })
+);
+export type CreateGoogleDocRequest = z.infer<
+  typeof CreateGoogleDocRequestSchema
+>;
 
 // --- Delete a resource
 export const DeleteResourceResponseSchema = zMessageSchema;
@@ -185,17 +184,18 @@ export const CreateFolderRequestSchema = CreateResourceOwnershipLevel.and(
   })
 );
 export type CreateFolderRequest = z.infer<typeof CreateFolderRequestSchema>;
-export const CreateFolderResponseSchema = ResourceSchema.pick({
+
+export const CreateResourceResponseSchema = ResourceSchema.pick({
   id: true,
   slug: true,
   name: true,
   parentResourceId: true,
-  ownerOrgId: true,
-  ownerUserId: true,
   createdAt: true,
   updatedAt: true,
 });
-export type CreateFolderResponse = z.infer<typeof CreateFolderResponseSchema>;
+export type CreateResourceResponse = z.infer<
+  typeof CreateResourceResponseSchema
+>;
 
 // --- Update meta
 export const UpdateResourceMetaRequestSchema = ResourceSchema.pick({

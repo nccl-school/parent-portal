@@ -2,9 +2,8 @@ import { Hono } from "hono";
 
 import {
   CreateFileRequestSchema,
-  CreateFileResponseSchema,
+  CreateResourceResponseSchema,
   CreateFolderRequestSchema,
-  CreateFolderResponseSchema,
   CreateResourceAccessRuleRequestSchema,
   CreateResourceAccessRuleResponseSchema,
   DeleteResourceResponseSchema,
@@ -25,6 +24,7 @@ import {
   UpdateResourceAccessRuleRequestSchema,
   UpdateResourceAccessRuleResponseSchema,
   DeleteResourceAccessRuleResponseSchema,
+  CreateGoogleDocRequestSchema,
 } from "./resource.schema.js";
 import {
   getResourceById,
@@ -32,6 +32,8 @@ import {
   getBucket,
   createFileStoragePath,
   createResourceOwnership,
+  parseGoogleDocsURL,
+  fetchGoogleDocMetadataFromGoogleDrive,
 } from "./resource.utils.js";
 
 import { validate } from "../../middleware/middleware.validate.js";
@@ -41,6 +43,7 @@ import { authorize } from "../../middleware/middleware.authorize.js";
 import type { Resource } from "../../_generated/prisma/client.js";
 import { tryPrisma } from "../../utils/util.prisma.js";
 import { exhaustiveMatchGuard } from "../../utils/util.exhaustiveMatchGuard.js";
+import { getEnvVar } from "../../utils/util.envVar.js";
 
 export const resource = new Hono();
 
@@ -377,15 +380,47 @@ resource.post("/file", validate("form", CreateFileRequestSchema), async (c) => {
     contentType: file.type,
   });
 
-  const data = await serialize(CreateFileResponseSchema, resource);
+  const data = await serialize(CreateResourceResponseSchema, resource);
 
   return c.json(data);
 });
 
+// POST /api/resource/google-doc | Create a new Google Doc
+resource.post(
+  "/google-doc",
+  authorize(["ADMIN", "STAFF"]),
+  validate("json", CreateGoogleDocRequestSchema),
+  async (c) => {
+    const { url, ...json } = c.req.valid("json");
+    const db = c.get("db");
+    const { GOOGLE_CALENDAR_API_KEY } = getEnvVar(c);
+    const parentResourceId = json.parentResourceId ?? "__ROOT__";
+    const googleDocParsed = parseGoogleDocsURL(url);
+    const googleDocMeta = await fetchGoogleDocMetadataFromGoogleDrive(
+      googleDocParsed.externalId,
+      GOOGLE_CALENDAR_API_KEY
+    );
+
+    const googleDoc = await db.resource.create({
+      data: {
+        ...googleDocMeta,
+        type: "EXTERNAL_DOC",
+        externalId: googleDocParsed.externalId,
+        mimeType: googleDocParsed.mimeType,
+        ...createResourceOwnership(c, json),
+        parentResourceId,
+      },
+    });
+
+    const data = await serialize(CreateResourceResponseSchema, googleDoc);
+    return c.json(data);
+  }
+);
+
 // POST /api/resource/folder | Create a new folder
 resource.post(
   "/folder",
-  authorize("ADMIN"),
+  authorize(["ADMIN", "STAFF"]),
   validate("json", CreateFolderRequestSchema),
   async (c) => {
     const db = c.get("db");
@@ -410,7 +445,7 @@ resource.post(
           : "The 'orgId' you have entered is invalid",
     });
 
-    const json = await serialize(CreateFolderResponseSchema, folder);
+    const json = await serialize(CreateResourceResponseSchema, folder);
     return c.json(json);
   }
 );

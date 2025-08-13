@@ -5,11 +5,11 @@ meta {
 }
 
 get {
-  url: {{API_DOMAIN}}/api/resource/path/:path1
+  url: {{API_DOMAIN}}/api/resource/path/:path
   body: none
   auth: inherit
 }
 
 params:path {
-  path1: folder-1
+  path: __ROOT__
 }

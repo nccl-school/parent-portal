@@ -8,6 +8,7 @@ import type { Resource as DBResource } from "../../_generated/prisma/client.js";
 import { ErrorSet } from "../../utils/util.errors.js";
 import { getEnvVar } from "../../utils/util.envVar.js";
 import { exhaustiveMatchGuard } from "../../utils/util.exhaustiveMatchGuard.js";
+import { slugify } from "../../utils/utils.general.js";
 
 export function getBucket<C extends Context>(c: C) {
   const { GCP_CLOUD_STORAGE_BUCKET } = getEnvVar(c);
@@ -194,5 +195,52 @@ export function createFileStoragePath<
 
     default:
       return exhaustiveMatchGuard(data);
+  }
+}
+
+export function parseGoogleDocsURL(rawUrl: string) {
+  const url = new URL(rawUrl);
+
+  // Step 1: Enforce correct host
+  if (url.hostname !== "docs.google.com") {
+    throw new ErrorSet.badRequest("Only 'docs.google.com' links are allowed");
+  }
+
+  // Step 2: Validate path and extract file ID
+  const match = url.pathname.match(/^\/document\/d\/([a-zA-Z0-9_-]{10,})/);
+  if (!match) {
+    throw new ErrorSet.badRequest("Invalid Google Docs file ID format");
+  }
+
+  const externalId = match[1];
+
+  // Step 3: Build sanitized URLs
+  const baseDocUrl = `https://docs.google.com/document/d/${externalId}`;
+  return {
+    externalId,
+    baseDocUrl,
+    mimeType: "application/vnd.google-apps.document",
+  };
+}
+
+export async function fetchGoogleDocMetadataFromGoogleDrive(
+  fileId: string,
+  API_KEY: string
+): Promise<{ name: string; slug: string }> {
+  const name = `Google Doc - ${fileId}`;
+  const slug = slugify(name);
+  try {
+    const res = await fetch(
+      `https://www.googleapis.com/drive/v3/files/${fileId}?key=${API_KEY}`
+    );
+    if (!res.ok) return { name, slug };
+    const json = await res.json();
+    const driveName = typeof json.name === "string" ? json.name : name;
+    return {
+      name: driveName,
+      slug: slugify(driveName),
+    };
+  } catch {
+    return { name, slug };
   }
 }
