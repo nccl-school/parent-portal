@@ -50,6 +50,8 @@ export default [
       route("/:id", "./api/api.resource.ts"),
       route("/:id/meta", "./api/api.resource.meta.ts"),
       route("/:id/move", "./api/api.resource.move.ts"),
+      route("/:id/access", "./api/api.resource.access.ts"),
+      route("/:id/access/school", "./api/api.resource.access.school.ts"),
       route("/folder", "./api/api.resource.folder.ts"),
       route("/tree/*", "./api/api.resource.tree.ts"),
     ]),

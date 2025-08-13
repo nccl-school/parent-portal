@@ -46,6 +46,11 @@ export const ResourceAccessRulePermissionSchema = z.literal([
   "EDITOR",
   "MANAGER",
 ]);
+export const resourceAccessPermissions = {
+  viewer: "VIEWER",
+  editor: "EDITOR",
+  manager: "MANAGER",
+} as const;
 export type ResourceAccessRulePermission = z.infer<
   typeof ResourceAccessRulePermissionSchema
 >;
@@ -275,4 +280,10 @@ export type UpdateResourceAccessRuleRequest = z.infer<
 export const UpdateResourceAccessRuleResponseSchema = ResourceAccessRuleSchema;
 export type UpdateResourceAccessRuleResponse = z.infer<
   typeof UpdateResourceAccessRuleResponseSchema
+>;
+
+// --- Delete an access rule
+export const DeleteResourceAccessRuleResponseSchema = zMessageSchema;
+export type DeleteResourceAccessRuleResponse = z.infer<
+  typeof DeleteResourceAccessRuleResponseSchema
 >;

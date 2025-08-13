@@ -2,15 +2,20 @@ import type { z } from "zod/v4";
 
 import {
   CreateFolderRequestSchema,
+  CreateResourceAccessRuleRequestSchema,
   MoveResourceRequestSchema,
   ParamsIDSchema,
+  UpdateResourceAccessRuleRequestSchema,
   UpdateResourceMetaRequestSchema,
   type CreateFolderResponse,
+  type CreateResourceAccessRuleRequest,
   type GetResourceBreadcrumbResponse,
   type GetResourceResponse,
+  type GetResourceSchoolAccessRuleResponse,
   type ResourceTree,
+  type UpdateResourceAccessRuleRequest,
   type UpdateResourceMetaRequest,
-} from "./resource.utils.js";
+} from "./resource.schema.js";
 
 import {
   ApiClient,
@@ -100,6 +105,59 @@ export class ResourceClient extends ApiClient {
         MoveResourceRequestSchema,
         { parentResourceId: newParentResourceId },
       ],
+    });
+  }
+
+  /**
+   * Get the unique school access record for a resource. If the record
+   * exists than the resource has a school access record. If it doesn't
+   * than only the user that uploaded the folder can see the resource and
+   * the endpoint will return null
+   */
+  public async getAccessRuleSchool(resourceId: string) {
+    return this._get<GetResourceSchoolAccessRuleResponse>({
+      path: "/:id/access/school",
+      params: [ParamsIDSchema, { id: resourceId }],
+    });
+  }
+
+  /**
+   * Create a new access rule for a particular resource
+   */
+  public async createAccessRule(
+    resourceId: string,
+    body: CreateResourceAccessRuleRequest
+  ) {
+    return this._mutateJSON({
+      method: "POST",
+      path: "/:id/access",
+      params: [ParamsIDSchema, { id: resourceId }],
+      body: [CreateResourceAccessRuleRequestSchema, body],
+    });
+  }
+
+  /**
+   * Update a new access rule for a particular resource
+   */
+  public async updateAccessRule(
+    resourceAccessId: string,
+    body: UpdateResourceAccessRuleRequest
+  ) {
+    return this._mutateJSON({
+      method: "PUT",
+      path: "/access/:id",
+      params: [ParamsIDSchema, { id: resourceAccessId }],
+      body: [UpdateResourceAccessRuleRequestSchema, body],
+    });
+  }
+
+  /**
+   * Delete an access rule for a particular resource
+   */
+  public async deleteAccessRule(resourceAccessId: string) {
+    return this._delete({
+      path: "/access/:id",
+      params: [ParamsIDSchema, { id: resourceAccessId }],
     });
   }
 }

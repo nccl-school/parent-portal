@@ -24,6 +24,7 @@ import {
   GetResourceOrgAccessRulesResponseSchema,
   UpdateResourceAccessRuleRequestSchema,
   UpdateResourceAccessRuleResponseSchema,
+  DeleteResourceAccessRuleResponseSchema,
 } from "./resource.schema.js";
 import {
   getResourceById,
@@ -613,5 +614,8 @@ resource.delete("/access/:id", validate("param", ParamsIDSchema), async (c) => {
   const db = c.get("db");
   const { id } = c.req.valid("param");
   await db.resourceAccessRule.delete({ where: { id } });
-  return c.body(null, 204);
+  const data = await serialize(DeleteResourceAccessRuleResponseSchema, {
+    message: "Successfully delete resource access rule",
+  });
+  return c.json(data);
 });
