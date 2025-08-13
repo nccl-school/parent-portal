@@ -60,8 +60,8 @@ export function ResourcesAddContentGoogleDoc() {
   return (
     <>
       <FormGroup
-        dxTitle="1. Paste a Google Doc URL"
-        dxSubtitle="Auto load some information from the URL before adding it to the system"
+        dxTitle="1. Google Doc URL"
+        dxSubtitle="Copy and paste the Google Doc URL into the input below to auto upload the doc."
       >
         <Form
           action={href("/api/resource/google-doc/load")}
