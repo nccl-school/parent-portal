@@ -25,8 +25,6 @@ import {
   UpdateResourceAccessRuleResponseSchema,
   DeleteResourceAccessRuleResponseSchema,
   CreateGoogleDocRequestSchema,
-  ValidateGoogleDocResponseSchema,
-  ValidateGoogleDocRequestSchema,
 } from "./resource.schema.js";
 import {
   getResourceById,
@@ -387,27 +385,6 @@ resource.post("/file", validate("form", CreateFileRequestSchema), async (c) => {
   return c.json(data);
 });
 
-// POST /api/resource/google-doc/validate | Create a new Google Doc
-resource.post(
-  "/google-doc/validate",
-  authorize(["ADMIN", "STAFF"]),
-  validate("json", ValidateGoogleDocRequestSchema),
-  async (c) => {
-    const { url } = c.req.valid("json");
-    const { GOOGLE_CALENDAR_API_KEY } = getEnvVar(c);
-    const googleDocParsed = parseGoogleDocsURL(url);
-    const googleDocMeta = await fetchGoogleDocMetadataFromGoogleDrive(
-      googleDocParsed.externalId,
-      GOOGLE_CALENDAR_API_KEY
-    );
-    const data = await serialize(ValidateGoogleDocResponseSchema, {
-      id: googleDocParsed.externalId,
-      ...googleDocMeta,
-    });
-    return c.json(data);
-  }
-);
-
 // POST /api/resource/google-doc | Create a new Google Doc
 resource.post(
   "/google-doc",
@@ -424,7 +401,7 @@ resource.post(
       GOOGLE_CALENDAR_API_KEY
     );
 
-    const googleDoc = await db.resource.create({
+    const createGoogleDoc = db.resource.create({
       data: {
         ...googleDocMeta,
         type: "EXTERNAL_DOC",
@@ -433,6 +410,11 @@ resource.post(
         ...createResourceOwnership(c, json),
         parentResourceId,
       },
+    });
+    const googleDoc = await tryPrisma(createGoogleDoc, {
+      fallback:
+        "There was an error when trying to add the Google Doc into the system",
+      unique_constraint_violation: `A Google Doc with the slug "${googleDocMeta.slug}" has already been added to the system. This most likely happened because you've already added this Google Doc in this folder.`,
     });
 
     const data = await serialize(CreateResourceResponseSchema, googleDoc);

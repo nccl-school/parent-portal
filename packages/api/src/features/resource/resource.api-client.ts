@@ -7,7 +7,7 @@ import {
   ParamsIDSchema,
   UpdateResourceAccessRuleRequestSchema,
   UpdateResourceMetaRequestSchema,
-  type CreateFolderResponse,
+  type CreateResourceResponse,
   type CreateResourceAccessRuleRequest,
   type GetResourceBreadcrumbResponse,
   type GetResourceResponse,
@@ -15,6 +15,7 @@ import {
   type ResourceTree,
   type UpdateResourceAccessRuleRequest,
   type UpdateResourceMetaRequest,
+  CreateGoogleDocRequestSchema,
 } from "./resource.schema.js";
 
 import {
@@ -64,7 +65,7 @@ export class ResourceClient extends ApiClient {
    * Create a new folder
    */
   public async createFolder(folder: z.infer<typeof CreateFolderRequestSchema>) {
-    return this._mutateJSON<CreateFolderResponse>({
+    return this._mutateJSON<CreateResourceResponse>({
       method: "POST",
       path: "/folder",
       body: [CreateFolderRequestSchema, folder],
@@ -72,10 +73,23 @@ export class ResourceClient extends ApiClient {
   }
 
   /**
+   * Create a Google Doc
+   */
+  public async createGoogleDoc(
+    googleDoc: z.infer<typeof CreateGoogleDocRequestSchema>
+  ) {
+    return this._mutateJSON<CreateResourceResponse>({
+      method: "POST",
+      path: "/google-doc",
+      body: [CreateGoogleDocRequestSchema, googleDoc],
+    });
+  }
+
+  /**
    * Delete a resource
    */
   public async delete(resourceId: string) {
-    return this._delete<CreateFolderResponse>({
+    return this._delete<CreateResourceResponse>({
       path: "/:id",
       params: [ParamsIDSchema, { id: resourceId }],
     });

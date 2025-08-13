@@ -53,6 +53,7 @@ export default [
       route("/:id/access", "./api/api.resource.access.ts"),
       route("/:id/access/school", "./api/api.resource.access.school.ts"),
       route("/folder", "./api/api.resource.folder.ts"),
+      route("/google-doc/load", "./api/api.resource.google-doc.load.ts"),
       route("/tree/*", "./api/api.resource.tree.ts"),
     ]),
     ...prefix("suggestion", [

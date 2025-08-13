@@ -6,12 +6,9 @@ import { FormGroup, useModalContext } from "@nccl/components";
 import { useImmer } from "use-immer";
 import { match } from "ts-pattern";
 
-import {
-  ResourcesAddedListItem,
-  type ResourcesAddedListItemFile,
-} from "./ResourcesAddedListItem";
 import type { ResourcesAddModalState } from "./resources-add.utils";
 import { ResourcesAddedList } from "./ResourcesAddedList";
+import { ResourcesAddedListItemFile } from "./ResourcesAddedListItemFile";
 
 import { LoadingState } from "../../components/states/LoadingState";
 import { EmptyState } from "../../components/states/EmptyState";
@@ -118,7 +115,7 @@ export function ResourcesAddContentFile() {
             .otherwise((d) =>
               d.map((file, i) => (
                 <li key={`${file.file.name}_${i}`}>
-                  <ResourcesAddedListItem {...file} />
+                  <ResourcesAddedListItemFile {...file} />
                 </li>
               ))
             )}

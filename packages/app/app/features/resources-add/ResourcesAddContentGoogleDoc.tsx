@@ -1,30 +1,80 @@
 import { css } from "@linaria/core";
-import { makeRem, makeReset } from "@nccl/theme";
-import { useState } from "react";
-import { Button, InputText } from "@nccl/components";
+import { makeRem } from "@nccl/theme";
+import {
+  Button,
+  FormGroup,
+  InputText,
+  useModalContext,
+} from "@nccl/components";
+import { match } from "ts-pattern";
+import { href, useFetcher } from "react-router";
+import { useImmer } from "use-immer";
+import { useEffect } from "react";
+
+import { ResourcesAddedList } from "./ResourcesAddedList";
+import {
+  ResourcesAddedListItemGoogleDoc,
+  type ResourcesAddedListItemGoogleDocProps,
+} from "./ResourcesAddedListItemGoogleDoc";
+import type { ResourcesAddModalState } from "./resources-add.utils";
+
+import { LoadingState } from "../../components/states/LoadingState";
+import { parseFetcherData } from "../../utils/client";
 
 const styles = css`
-  ${makeReset("ul")};
-
-  li > div {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: end;
-    gap: ${makeRem(16)};
-  }
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: ${makeRem(16)};
 `;
 
-type ExternalDoc = { name: string; href: string };
-
 export function ResourcesAddContentGoogleDoc() {
-  const [docs, setDocs] = useState<ExternalDoc[]>([]);
+  const {
+    state: { initParentResourceId },
+  } = useModalContext<ResourcesAddModalState>();
+  const [docs, setDocs] = useImmer<ResourcesAddedListItemGoogleDocProps[]>([]);
+  const { Form, data, state } = useFetcher();
+
+  const isLoading = state !== "idle";
+
+  useEffect(() => {
+    if (!data) return;
+    const res = parseFetcherData(data);
+    switch (res.status) {
+      case "ok":
+        setDocs((draft) => {
+          draft.push(data);
+        });
+        break;
+
+      case "error":
+        console.log(res.error);
+        break;
+
+      case "loading":
+      default:
+        break;
+    }
+  }, [data, setDocs]);
 
   return (
-    <ul className={styles}>
-      <li>
-        <div>
+    <>
+      <FormGroup
+        dxTitle="1. Paste a Google Doc URL"
+        dxSubtitle="Auto load some information from the URL before adding it to the system"
+      >
+        <Form
+          action={href("/api/resource/google-doc/load")}
+          method="POST"
+          className={styles}
+        >
+          <input
+            type="hidden"
+            value={initParentResourceId}
+            name="parentResourceId"
+          />
           <InputText
-            name="link"
+            name="url"
             dxLabel="Google Doc Share URL"
             dxSize="md"
             type="url"
@@ -34,11 +84,26 @@ export function ResourcesAddContentGoogleDoc() {
             dxSize="md"
             dxVariant="outlined"
             dxStartIcon="tick-01-solid-standard"
+            disabled={isLoading}
+            type="submit"
           >
-            Create
+            {isLoading ? "Loading..." : "Upload"}
           </Button>
-        </div>
-      </li>
-    </ul>
+        </Form>
+      </FormGroup>
+      <FormGroup dxTitle="2. Manage added Google Docs">
+        <ResourcesAddedList>
+          {match(docs)
+            .with([], () => <LoadingState>Nothing added yet</LoadingState>)
+            .otherwise((d) =>
+              d.map((doc) => (
+                <li key={doc.id}>
+                  <ResourcesAddedListItemGoogleDoc {...doc} />
+                </li>
+              ))
+            )}
+        </ResourcesAddedList>
+      </FormGroup>
+    </>
   );
 }

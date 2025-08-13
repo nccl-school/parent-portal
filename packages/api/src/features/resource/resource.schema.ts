@@ -159,22 +159,7 @@ export const CreateFileRequestSchema = CreateResourceOwnershipLevel.and(
 );
 export type CreateFileRequest = z.infer<typeof CreateFileRequestSchema>;
 
-export const ValidateGoogleDocRequestSchema = z.object({
-  url: z.url(),
-  parentResourceId: z.string().optional(),
-});
-export type ValidateGoogleDocRequest = z.infer<
-  typeof ValidateGoogleDocRequestSchema
->;
-export const ValidateGoogleDocResponseSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  slug: z.string(),
-});
-export type ValidateGoogleDocResponse = z.infer<
-  typeof ValidateGoogleDocResponseSchema
->;
-
+// --- Create a Google Doc
 export const CreateGoogleDocRequestSchema = CreateResourceOwnershipLevel.and(
   z.object({
     url: z.url(),
