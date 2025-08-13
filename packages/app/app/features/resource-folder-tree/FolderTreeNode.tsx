@@ -7,6 +7,7 @@ import { type MouseEventHandler } from "react";
 const styles = css`
   ${makeReset("button")};
   text-align: left;
+  cursor: pointer;
 
   display: grid;
   grid-template-columns: ${makeRem(20)} 1fr;

@@ -11,6 +11,8 @@ const styles = css`
   position: sticky;
   top: 0;
   z-index: 12;
+
+  white-space: nowrap;
 `;
 
 export const TableHead = forwardRef<HTMLTableSectionElement, TableHeadProps>(
