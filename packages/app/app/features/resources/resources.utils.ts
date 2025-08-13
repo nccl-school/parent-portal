@@ -14,13 +14,16 @@ export function getResourceIcon<T extends Pick<Resource, "type" | "mimeType">>(
       if (resource.mimeType?.includes("pdf")) {
         return "pdf-02-stroke-standard";
       }
+      if (resource.mimeType?.includes("png")) {
+        return "image-01-stroke-standard";
+      }
       return "file-01-stroke-standard";
 
     case "LINK":
       return "file-link-stroke-standard";
 
     case "EXTERNAL_DOC":
-      return "file-sync-stroke-standard";
+      return "google-doc-stroke-standard";
 
     default:
       return exhaustiveMatchGuard(resource.type);
@@ -44,7 +47,7 @@ export function getResourceIconColor<
       return "tertiary-1100";
 
     case "EXTERNAL_DOC":
-      return "secondary-700";
+      return "primary-700";
 
     default:
       return exhaustiveMatchGuard(resource.type);
