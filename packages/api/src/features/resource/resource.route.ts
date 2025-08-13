@@ -25,6 +25,8 @@ import {
   UpdateResourceAccessRuleResponseSchema,
   DeleteResourceAccessRuleResponseSchema,
   CreateGoogleDocRequestSchema,
+  ValidateGoogleDocResponseSchema,
+  ValidateGoogleDocRequestSchema,
 } from "./resource.schema.js";
 import {
   getResourceById,
@@ -384,6 +386,27 @@ resource.post("/file", validate("form", CreateFileRequestSchema), async (c) => {
 
   return c.json(data);
 });
+
+// POST /api/resource/google-doc/validate | Create a new Google Doc
+resource.post(
+  "/google-doc/validate",
+  authorize(["ADMIN", "STAFF"]),
+  validate("json", ValidateGoogleDocRequestSchema),
+  async (c) => {
+    const { url } = c.req.valid("json");
+    const { GOOGLE_CALENDAR_API_KEY } = getEnvVar(c);
+    const googleDocParsed = parseGoogleDocsURL(url);
+    const googleDocMeta = await fetchGoogleDocMetadataFromGoogleDrive(
+      googleDocParsed.externalId,
+      GOOGLE_CALENDAR_API_KEY
+    );
+    const data = await serialize(ValidateGoogleDocResponseSchema, {
+      id: googleDocParsed.externalId,
+      ...googleDocMeta,
+    });
+    return c.json(data);
+  }
+);
 
 // POST /api/resource/google-doc | Create a new Google Doc
 resource.post(
