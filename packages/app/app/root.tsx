@@ -7,19 +7,16 @@ import {
   ScrollRestoration,
 } from "react-router";
 import { rootAuthLoader } from "@clerk/react-router/ssr.server";
-import { ClerkProvider } from "@clerk/react-router";
+// import { ClerkProvider } from "@clerk/react-router";
 import { css } from "@linaria/core";
 import "@nccl/theme/reset.css";
 import "@nccl/theme/root.css";
 import "@nccl/components/css";
 
 import { Toaster } from "@nccl/components";
+import { HighlightInit } from "@highlight-run/remix/client";
 
 import type { Route } from "./+types/root";
-
-export async function loader(args: Route.LoaderArgs) {
-  return rootAuthLoader(args);
-}
 
 const rootStyles = css`
   :global() {
@@ -32,6 +29,16 @@ const rootStyles = css`
     }
   }
 `;
+
+export async function loader(args: Route.LoaderArgs) {
+  return {
+    rootAuthLoader: rootAuthLoader(args),
+    ENV: {
+      ENVIRONMENT: args.context.env.NODE_ENV,
+      HIGHLIGHT_PROJECT_ID: args.context.env.HIGHLIGHT_PROJECT_ID,
+    },
+  };
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -86,13 +93,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App({ loaderData }: Route.ComponentProps) {
   return (
-    <ClerkProvider loaderData={loaderData}>
+    // <ClerkProvider loaderData={loaderData.rootAuthLoader}>
+    <>
+      <HighlightInit
+        projectId={loaderData.ENV.HIGHLIGHT_PROJECT_ID}
+        serviceName="NCCL Parent Portal | Client"
+        environment={loaderData.ENV.ENVIRONMENT}
+        tracingOrigins
+        networkRecording={{ enabled: true, recordHeadersAndBody: true }}
+      />
       <Outlet />
-    </ClerkProvider>
+    </>
+    // </ClerkProvider>
   );
 }
 
-export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+export function ErrorBoundary({ error, loaderData }: Route.ErrorBoundaryProps) {
+  console.log(loaderData);
   let message = "Oops!";
   let details = "An unexpected error occurred.";
   let stack: string | undefined;
@@ -110,6 +127,14 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 
   return (
     <main className="pt-16 p-4 container mx-auto">
+      <script src="https://unpkg.com/highlight.run"></script>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+							H.init('${loaderData?.ENV.HIGHLIGHT_PROJECT_ID}');
+						`,
+        }}
+      />
       <h1>{message}</h1>
       <p>{details}</p>
       {stack && (

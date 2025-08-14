@@ -2372,6 +2372,52 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@highlight-run/hono@npm:^1.0.24":
+  version: 1.0.24
+  resolution: "@highlight-run/hono@npm:1.0.24"
+  dependencies:
+    "@highlight-run/node": "npm:3.12.21"
+  checksum: 10c0/2c08555e5593cc2ddf2cba0368905dadd4605b7661b6036c74f2586a97f0e9fb9377d0db2b1720d306d8d62e5362453e4f11179f4f73fd12de0670560f137a7c
+  languageName: node
+  linkType: hard
+
+"@highlight-run/node@npm:3.12.21":
+  version: 3.12.21
+  resolution: "@highlight-run/node@npm:3.12.21"
+  dependencies:
+    "@prisma/instrumentation": "npm:>=5.0.0"
+    highlight.run: "npm:9.19.1"
+    require-in-the-middle: "npm:^7.4.0"
+  checksum: 10c0/d5dcc4ec38cd78b8112b7ef03bdb3cea3d1efe8c6fd5fe7225ab8615a0c42daad110b25d450d13931b5c89b900251fcc743695cecc911ec9d2c81510cfe3781b
+  languageName: node
+  linkType: hard
+
+"@highlight-run/react@npm:20.0.1":
+  version: 20.0.1
+  resolution: "@highlight-run/react@npm:20.0.1"
+  peerDependencies:
+    highlight.run: 9.19.1
+    react: ">=16"
+    react-dom: ">=16"
+  checksum: 10c0/6dd8c62b97652fa37989de5cf74a1ad395480d6b61c6cca6350f4e295fe1d641479e20410204669c56d33f18d358f6734d7f2e6b4b6f43799888c3abbd704590
+  languageName: node
+  linkType: hard
+
+"@highlight-run/remix@npm:^2.0.120":
+  version: 2.0.120
+  resolution: "@highlight-run/remix@npm:2.0.120"
+  dependencies:
+    "@highlight-run/node": "npm:3.12.21"
+    "@highlight-run/react": "npm:20.0.1"
+    "@opentelemetry/instrumentation": "npm:>=0.53.0"
+    highlight.run: "npm:9.19.1"
+    js-cookie: "npm:^3.0.5"
+  peerDependencies:
+    react: ">=18"
+  checksum: 10c0/aab7ccc5b3f998a046f1a16562d476c91531fe4c01cf04ce2780b3c47042882bcf01888bff53648766ddf432e4ee61f1fd6d4851714d956c0712360e5961034b
+  languageName: node
+  linkType: hard
+
 "@hono/clerk-auth@npm:3.0.3":
   version: 3.0.3
   resolution: "@hono/clerk-auth@npm:3.0.3"
@@ -2791,6 +2837,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@launchdarkly/js-client-sdk-common@npm:1.13.0":
+  version: 1.13.0
+  resolution: "@launchdarkly/js-client-sdk-common@npm:1.13.0"
+  dependencies:
+    "@launchdarkly/js-sdk-common": "npm:2.17.0"
+  checksum: 10c0/3ef0c4f753a485802010b3406ec49316a43eca1770101caf8f2ee698c1b17323ad76f193007993345f96c1da82b2acf1705e7c8739fef42a25cf0ef268953b07
+  languageName: node
+  linkType: hard
+
+"@launchdarkly/js-client-sdk@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "@launchdarkly/js-client-sdk@npm:0.6.0"
+  dependencies:
+    "@launchdarkly/js-client-sdk-common": "npm:1.13.0"
+  checksum: 10c0/047fc59dc6f5090667ed1c904a7cc62c09febb7ae1371a36ad5a9d26beeb5133868ea148ed2ac18280b76de90fcdc1987754b0cd64e9d428489dd2845cf46156
+  languageName: node
+  linkType: hard
+
+"@launchdarkly/js-sdk-common@npm:2.17.0":
+  version: 2.17.0
+  resolution: "@launchdarkly/js-sdk-common@npm:2.17.0"
+  checksum: 10c0/5e85edf847d7cf6ee62af79dd9f11019e0a58070355a3fac576e5c7e5051f4c7f313ba9d64f3b6659a5ca175a7ee55307ddda43dabb8a670e0647c6acdb1cc6f
+  languageName: node
+  linkType: hard
+
 "@linaria/core@npm:6.3.0":
   version: 6.3.0
   resolution: "@linaria/core@npm:6.3.0"
@@ -2890,6 +2961,7 @@ __metadata:
     "@clerk/express": "npm:1.7.20"
     "@gfdigital/tsconfig": "npm:0.3.1"
     "@google-cloud/storage": "npm:7.16.0"
+    "@highlight-run/hono": "npm:^1.0.24"
     "@hono/clerk-auth": "npm:3.0.3"
     "@hono/node-server": "npm:1.18.2"
     "@hono/zod-validator": "npm:0.7.2"
@@ -2964,6 +3036,7 @@ __metadata:
     "@babel/preset-typescript": "npm:7.27.1"
     "@clerk/react-router": "npm:1.9.0"
     "@gfdigital/tsconfig": "npm:0.3.1"
+    "@highlight-run/remix": "npm:^2.0.120"
     "@linaria/core": "npm:6.3.0"
     "@nccl/api": "workspace:"
     "@nccl/components": "workspace:*"
@@ -3145,6 +3218,60 @@ __metadata:
   dependencies:
     which: "npm:^3.0.0"
   checksum: 10c0/d0696b8d9f7e16562cd1e520e4919000164be042b5c9998a45b4e87d41d9619fcecf2a343621c6fa85ed2671cbe87ab07e381a7faea4e5132c371dbb05893f31
+  languageName: node
+  linkType: hard
+
+"@opentelemetry/api-logs@npm:0.203.0":
+  version: 0.203.0
+  resolution: "@opentelemetry/api-logs@npm:0.203.0"
+  dependencies:
+    "@opentelemetry/api": "npm:^1.3.0"
+  checksum: 10c0/e7a0a0ff46aaeb62192a99f45ef4889222e4fea09be25cab6fea811afc2df95c02ea050b2c98dfc0fc5a6ec6a623d87096af2751fdf91ddbb3afcab61b5325da
+  languageName: node
+  linkType: hard
+
+"@opentelemetry/api-logs@npm:0.57.2":
+  version: 0.57.2
+  resolution: "@opentelemetry/api-logs@npm:0.57.2"
+  dependencies:
+    "@opentelemetry/api": "npm:^1.3.0"
+  checksum: 10c0/1e514d3fd4ca68e7e8b008794a95ee0562a5d9e1d3ebb02647b245afaa6c2d72cc14e99e3ea47a1d1007f8a965c62bfb6170e1aa26756230bea063cfde2898bf
+  languageName: node
+  linkType: hard
+
+"@opentelemetry/api@npm:^1.3.0":
+  version: 1.9.0
+  resolution: "@opentelemetry/api@npm:1.9.0"
+  checksum: 10c0/9aae2fe6e8a3a3eeb6c1fdef78e1939cf05a0f37f8a4fae4d6bf2e09eb1e06f966ece85805626e01ba5fab48072b94f19b835449e58b6d26720ee19a58298add
+  languageName: node
+  linkType: hard
+
+"@opentelemetry/instrumentation@npm:>=0.53.0":
+  version: 0.203.0
+  resolution: "@opentelemetry/instrumentation@npm:0.203.0"
+  dependencies:
+    "@opentelemetry/api-logs": "npm:0.203.0"
+    import-in-the-middle: "npm:^1.8.1"
+    require-in-the-middle: "npm:^7.1.1"
+  peerDependencies:
+    "@opentelemetry/api": ^1.3.0
+  checksum: 10c0/b9de27ea7b42c54b1d0dab15dac62d4fc71c781bb6a48e90fa4ce8ce97be1b78e1fa9f05f58c39f68ca0e4a5590b8538d04209482f6b0632958926f7e80a28c1
+  languageName: node
+  linkType: hard
+
+"@opentelemetry/instrumentation@npm:^0.52.0 || ^0.53.0 || ^0.54.0 || ^0.55.0 || ^0.56.0 || ^0.57.0":
+  version: 0.57.2
+  resolution: "@opentelemetry/instrumentation@npm:0.57.2"
+  dependencies:
+    "@opentelemetry/api-logs": "npm:0.57.2"
+    "@types/shimmer": "npm:^1.2.0"
+    import-in-the-middle: "npm:^1.8.1"
+    require-in-the-middle: "npm:^7.1.1"
+    semver: "npm:^7.5.2"
+    shimmer: "npm:^1.2.1"
+  peerDependencies:
+    "@opentelemetry/api": ^1.3.0
+  checksum: 10c0/79ca65b66357665d19f89da7027da25ea1c6b55ecdacb0a99534923743c80deb9282870db563de8ae284b13e7e0aab8413efa1937f199deeaef069e07c7e4875
   languageName: node
   linkType: hard
 
@@ -3420,6 +3547,17 @@ __metadata:
   dependencies:
     "@prisma/debug": "npm:6.14.0"
   checksum: 10c0/2d33f6b2831576639080e626e8ffc2c5ac9cc5abe6f549856f37a9731d3728ae1d19b0e304db4c0ed92589a8cca7b4ce75576c2719b6aad1b1455ff0db2d76ad
+  languageName: node
+  linkType: hard
+
+"@prisma/instrumentation@npm:>=5.0.0":
+  version: 6.14.0
+  resolution: "@prisma/instrumentation@npm:6.14.0"
+  dependencies:
+    "@opentelemetry/instrumentation": "npm:^0.52.0 || ^0.53.0 || ^0.54.0 || ^0.55.0 || ^0.56.0 || ^0.57.0"
+  peerDependencies:
+    "@opentelemetry/api": ^1.8
+  checksum: 10c0/aaf49b8ab48b780f697cee97d79345cff5d3a245a8d786ca6b29b1318e79bc7b26b26c3d2084f793afc939ea3af12ea2ac8bfaef6cd3163817d010b3b04d20ea
   languageName: node
   linkType: hard
 
@@ -4739,6 +4877,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/shimmer@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "@types/shimmer@npm:1.2.0"
+  checksum: 10c0/6f7bfe1b55601cfc3ae713fc74a03341f3834253b8b91cb2add926d5949e4a63f7e666f59c2a6e40a883a5f9e2f3e3af10f9d3aed9b60fced0bda87659e58d8d
+  languageName: node
+  linkType: hard
+
 "@types/tough-cookie@npm:*":
   version: 4.0.5
   resolution: "@types/tough-cookie@npm:4.0.5"
@@ -5248,6 +5393,15 @@ __metadata:
     mime-types: "npm:~2.1.34"
     negotiator: "npm:0.6.3"
   checksum: 10c0/3a35c5f5586cfb9a21163ca47a5f77ac34fa8ceb5d17d2fa2c0d81f41cbd7f8c6fa52c77e2c039acc0f4d09e71abdc51144246900f6bef5e3c4b333f77d89362
+  languageName: node
+  linkType: hard
+
+"acorn-import-attributes@npm:^1.9.5":
+  version: 1.9.5
+  resolution: "acorn-import-attributes@npm:1.9.5"
+  peerDependencies:
+    acorn: ^8
+  checksum: 10c0/5926eaaead2326d5a86f322ff1b617b0f698aa61dc719a5baa0e9d955c9885cc71febac3fb5bacff71bbf2c4f9c12db2056883c68c53eb962c048b952e1e013d
   languageName: node
   linkType: hard
 
@@ -6089,6 +6243,13 @@ __metadata:
   dependencies:
     consola: "npm:^3.2.3"
   checksum: 10c0/d26ad82a9a4a8858c7e149d90b878a3eceecd4cfd3e2ed3cd5f9a06212e451fb4f8cbe0fa39a3acb1b3e8f18e22db8ee5def5829384bad50e823d4b301609b48
+  languageName: node
+  linkType: hard
+
+"cjs-module-lexer@npm:^1.2.2":
+  version: 1.4.3
+  resolution: "cjs-module-lexer@npm:1.4.3"
+  checksum: 10c0/076b3af85adc4d65dbdab1b5b240fe5b45d44fcf0ef9d429044dd94d19be5589376805c44fb2d4b3e684e5fe6a9b7cf3e426476a6507c45283c5fc6ff95240be
   languageName: node
   linkType: hard
 
@@ -8960,6 +9121,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"highlight.run@npm:9.19.1":
+  version: 9.19.1
+  resolution: "highlight.run@npm:9.19.1"
+  dependencies:
+    "@launchdarkly/js-client-sdk": "npm:^0.6.0"
+    imurmurhash: "npm:^0.1.4"
+  checksum: 10c0/1c78f2b99f154c76dd57edcbf49fcc3f49770307784554828029508638c8a878f8c9e8776c5cec28ae052b5d60a6f10c1a54399c5efeb0fc8ceb45e01bb8adee
+  languageName: node
+  linkType: hard
+
 "hono@npm:4.9.1":
   version: 4.9.1
   resolution: "hono@npm:4.9.1"
@@ -9113,6 +9284,18 @@ __metadata:
     parent-module: "npm:^1.0.0"
     resolve-from: "npm:^4.0.0"
   checksum: 10c0/bf8cc494872fef783249709385ae883b447e3eb09db0ebd15dcead7d9afe7224dad7bd7591c6b73b0b19b3c0f9640eb8ee884f01cfaf2887ab995b0b36a0cbec
+  languageName: node
+  linkType: hard
+
+"import-in-the-middle@npm:^1.8.1":
+  version: 1.14.2
+  resolution: "import-in-the-middle@npm:1.14.2"
+  dependencies:
+    acorn: "npm:^8.14.0"
+    acorn-import-attributes: "npm:^1.9.5"
+    cjs-module-lexer: "npm:^1.2.2"
+    module-details-from-path: "npm:^1.0.3"
+  checksum: 10c0/ee614a09d3772ad39f8005d798458e541cbfb897b8f97623f4bac527eecc51984586cfbf8f195715df5c463ec0b7fce8086489dc12f758ffe5ea485b8a29da01
   languageName: node
   linkType: hard
 
@@ -9591,7 +9774,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-cookie@npm:3.0.5":
+"js-cookie@npm:3.0.5, js-cookie@npm:^3.0.5":
   version: 3.0.5
   resolution: "js-cookie@npm:3.0.5"
   checksum: 10c0/04a0e560407b4489daac3a63e231d35f4e86f78bff9d792011391b49c59f721b513411cd75714c418049c8dc9750b20fcddad1ca5a2ca616c3aca4874cce5b3a
@@ -10277,6 +10460,13 @@ __metadata:
   version: 0.0.4
   resolution: "mockingjson@npm:0.0.4"
   checksum: 10c0/040bf2a84272f8ddaa0af87cfea3c99c6b21de1040de7c096d1086e856343ee2876488307a98bd43ea982ad32e44ee3cffdd247c1311c2cbc98db4fdefe9c4f0
+  languageName: node
+  linkType: hard
+
+"module-details-from-path@npm:^1.0.3":
+  version: 1.0.4
+  resolution: "module-details-from-path@npm:1.0.4"
+  checksum: 10c0/10863413e96dab07dee917eae07afe46f7bf853065cc75a7d2a718adf67574857fb64f8a2c0c9af12ac733a9a8cf652db7ed39b95f7a355d08106cb9cc50c83b
   languageName: node
   linkType: hard
 
@@ -11838,6 +12028,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"require-in-the-middle@npm:^7.1.1, require-in-the-middle@npm:^7.4.0":
+  version: 7.5.2
+  resolution: "require-in-the-middle@npm:7.5.2"
+  dependencies:
+    debug: "npm:^4.3.5"
+    module-details-from-path: "npm:^1.0.3"
+    resolve: "npm:^1.22.8"
+  checksum: 10c0/43a2dac5520e39d13c413650895715e102d6802e6cc6ff322017bd948f12a9657fe28435f7cbbcba437b167f02e192ac7af29fa35cabd5d0c375d071c0605e01
+  languageName: node
+  linkType: hard
+
 "requires-port@npm:^1.0.0":
   version: 1.0.0
   resolution: "requires-port@npm:1.0.0"
@@ -12240,7 +12441,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^7.6.2":
+"semver@npm:^7.5.2, semver@npm:^7.6.2":
   version: 7.7.2
   resolution: "semver@npm:7.7.2"
   bin:
@@ -12393,6 +12594,13 @@ __metadata:
     "@shikijs/vscode-textmate": "npm:^10.0.2"
     "@types/hast": "npm:^3.0.4"
   checksum: 10c0/3cae825d8c341d7334e541efad30125fac0064db6004359e661a594782d59f93f66f2dcb5dbc1d8cb6508c43ccdd03ed6cf1d22306b382bc1f395a6130e5cbbb
+  languageName: node
+  linkType: hard
+
+"shimmer@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "shimmer@npm:1.2.1"
+  checksum: 10c0/ae8b27c389db2a00acfc8da90240f11577685a8f3e40008f826a3bea8b4f3b3ecd305c26be024b4a0fd3b123d132c1569d6e238097960a9a543b6c60760fb46a
   languageName: node
   linkType: hard
 

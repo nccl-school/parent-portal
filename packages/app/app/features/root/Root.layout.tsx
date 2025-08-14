@@ -2,6 +2,9 @@ import { Outlet } from "react-router";
 import { css } from "@linaria/core";
 import { makeColor, makeCustom, makeResponsive } from "@nccl/theme";
 import { classes } from "@stratum-ui/core/utils";
+import { useUser } from "@clerk/react-router";
+import { H } from "@highlight-run/remix/client";
+import { useEffect } from "react";
 
 import type { Route } from "./+types/Root.layout";
 import { RootNavbar } from "./RootNavbar";
@@ -79,6 +82,19 @@ const styles = css`
 `;
 
 export default function RootLayout() {
+  const { user } = useUser();
+
+  const email = user?.emailAddresses[0].emailAddress;
+  const fullName = user?.fullName;
+
+  // Track the user's session
+  useEffect(() => {
+    if (!email) return;
+    H.identify(email, {
+      name: fullName,
+    });
+  }, [email, fullName]);
+
   return (
     <div className={classes(styles, backgroundGradient)}>
       <div className="layout-head">

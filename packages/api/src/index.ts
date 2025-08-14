@@ -17,6 +17,7 @@ import { webhooks } from "./features/webhooks/webhooks.route.js";
 import { role } from "./features/role/role.route.js";
 import { task } from "./features/task/task.route.js";
 import { resource } from "./features/resource/resource.route.js";
+import { highlightIoMiddleware } from "./middleware/middleware.highlight-io.js";
 
 // Environment Vars
 const envPath = path.resolve(import.meta.dirname, "../../../.env");
@@ -26,6 +27,7 @@ const app = new Hono();
 
 // Middleware - Log and add the db to the context
 app.use(logger());
+app.use(highlightIoMiddleware);
 app.use(
   "/api/*",
   cors({

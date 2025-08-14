@@ -15,6 +15,8 @@ type EnvVars = {
   NCCL_APP_URL: string;
   NCCL_API_URL: string;
   CLERK_PUBLISHABLE_KEY: string;
+  NODE_ENV: string;
+  HIGHLIGHT_PROJECT_ID: string;
 };
 
 declare module "react-router" {
@@ -44,6 +46,8 @@ app.use(
           GOOGLE_CALENDAR_ID_NCCL_PUBLIC: envVar(
             "GOOGLE_CALENDAR_ID_NCCL_PUBLIC"
           ),
+          HIGHLIGHT_PROJECT_ID: envVar("HIGHLIGHT_PROJECT_ID"),
+          NODE_ENV: envVar("NODE_ENV"),
         },
       };
     },
