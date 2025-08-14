@@ -31,7 +31,7 @@ export function ResourceItemActions({
     })
   );
 
-  if (!isOpen || resource.type === "FOLDER") return null;
+  if (!isOpen) return null;
 
   return (
     <>
@@ -39,7 +39,7 @@ export function ResourceItemActions({
       <ResourceItemActionMove resource={resource} initialPath={initialPath} />
       <ResourceItemActionAccess {...resource} />
       <ResourceItemActionCopyLink {...resource} />
-      <ResourceItemActionDelete {...resource} />
+      {resource.type !== "FOLDER" && <ResourceItemActionDelete {...resource} />}
     </>
   );
 }

@@ -2,7 +2,7 @@ import type { GetResourceResponse } from "@nccl/api/client";
 import { TableBodyCol, TableRow } from "@nccl/components";
 import { useRef } from "react";
 import { css } from "@linaria/core";
-import { makeRem } from "@nccl/theme";
+import { makeColor, makeRem } from "@nccl/theme";
 
 import {
   ResourceItemActions,
@@ -12,6 +12,14 @@ import { ResourcesTableCellName } from "./ResourcesTableCellName";
 
 import { dates } from "../../utils/client";
 import { placeholder } from "../../utils/isomorphic";
+
+const rowStyles = css`
+  &:hover {
+    td {
+      background: ${makeColor("light-200")};
+    }
+  }
+`;
 
 const styles = css`
   position: absolute;
@@ -38,6 +46,7 @@ export function ResourceItem({
 
   return (
     <TableRow
+      className={rowStyles}
       key={resource.id}
       onMouseEnter={() => {
         controlRef.current?.handleOpen();

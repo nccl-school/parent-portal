@@ -98,14 +98,14 @@ export default function ResourcesRoute({
         >
           Create folder
         </Button>
-        <Button
+        {/* <Button
           dxVariant="outlined"
           dxSize="md"
           dxColor="tertiary"
           dxStartIcon="share-08-stroke-standard"
         >
           Share
-        </Button>
+        </Button> */}
       </ResourcesTitle>
 
       {/* Actions */}
