@@ -18,7 +18,6 @@ export function Demo() {
     Toaster.launch({
       message: randSentence(),
       variant: variantsArr[Math.floor(Math.random() * variantsArr.length)],
-      dismissal: "auto",
     });
   }
 

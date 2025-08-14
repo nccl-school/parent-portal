@@ -23,7 +23,9 @@ export type ToastProps = DefaultToastProps & {
   message: ReactNode;
   iconName?: IconNames;
   iconColor?: ColorAndVariants;
-} & ({ dismissal: "manual" } | { dismissal: "auto"; duration?: number });
+  dismiss?: "manual" | "auto";
+  duration?: number;
+};
 
 const styles = css`
   @keyframes slide-in {
@@ -142,8 +144,8 @@ export function Toast(props: ToastProps) {
   const variantProps = variantMap[props.variant];
   const icon = props.iconName ?? variantProps.iconName;
   const iconColor = props.iconColor ?? variantProps.color;
-  const autoDuration =
-    props.dismissal === "auto" ? (props.duration ?? 3_000) : undefined;
+  const dismiss = props.dismiss ?? "auto";
+  const autoDuration = dismiss ? (props.duration ?? 3_000) : undefined;
   const onClose = props.onClose;
 
   useEffect(() => {

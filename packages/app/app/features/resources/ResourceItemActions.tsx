@@ -1,11 +1,11 @@
 import type { GetResourceResponse } from "@nccl/api/client";
-import { Button } from "@nccl/components";
 import { useImperativeHandle, useState, type RefObject } from "react";
 
 import { ResourceItemActionAccess } from "./ResourceItemActionAccess";
 import { ResourceItemActionDelete } from "./ResourceItemActionDelete";
 import { ResourceItemActionEdit } from "./ResourceItemActionEdit";
 import { ResourceItemActionMove } from "./ResourceItemActionMove";
+import { ResourceItemActionCopyLink } from "./ResourceItemActionCopyLink";
 
 export type ResourceActionControllerRef = {
   handleOpen: () => void;
@@ -38,12 +38,7 @@ export function ResourceItemActions({
       <ResourceItemActionEdit {...resource} />
       <ResourceItemActionMove resource={resource} initialPath={initialPath} />
       <ResourceItemActionAccess {...resource} />
-      <Button
-        dxVariant="icon"
-        dxIcon="link-01-stroke-standard"
-        dxSize="md"
-        dxStyle="outlined"
-      />
+      <ResourceItemActionCopyLink {...resource} />
       <ResourceItemActionDelete {...resource} />
     </>
   );

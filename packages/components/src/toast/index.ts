@@ -3,7 +3,7 @@ import { classes } from "@stratum-ui/core/utils";
 import { makeRem } from "@nccl/theme";
 
 import type { ToastProps } from "./Toast.js";
-import { Toast } from "./Toast.js";
+import { Toast as ToastComponent } from "./Toast.js";
 import { Toaster as ToastController } from "./Toaster.js";
 
 const styles = css`
@@ -22,6 +22,15 @@ const styles = css`
 `;
 
 export const Toaster = new ToastController<ToastProps>({
-  ToastComponent: Toast,
+  ToastComponent,
   containerClassName: classes("toaster", styles),
 });
+
+type ToastFnOptions = Partial<Omit<ToastProps, "message" | "variant">>;
+
+export const Toast = {
+  error: (message: string, options?: ToastFnOptions) =>
+    Toaster.launch({ variant: "error", message, ...options }),
+  success: (message: string, options?: ToastFnOptions) =>
+    Toaster.launch({ variant: "success", message, ...options }),
+};
