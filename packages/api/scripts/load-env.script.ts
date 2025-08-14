@@ -12,7 +12,10 @@ export function loadEnv() {
 
     case "test:host":
       dotenv.config({
-        path: [path.resolve(import.meta.dirname, "../../../.env.spec")],
+        path: [
+          path.resolve(import.meta.dirname, "../../../.env.spec"),
+          path.resolve(import.meta.dirname, "../../../.env"),
+        ],
       });
       process.env.DATABASE_URL = `postgresql://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_HOST}:${process.env.POSTGRES_PORT}/${process.env.POSTGRES_DB}`;
       break;
