@@ -8,13 +8,31 @@ import { Typography } from "../typography/Typography.js";
 const meta: Meta = {
   title: "InputRadio",
   component: InputRadio,
-} satisfies Meta<typeof meta>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Basic: Story = {
   args: {} as InputRadioProps,
+};
+
+export const BasicWithLabel: Story = {
+  args: {
+    children: (
+      <>
+        <Typography dxNode="div" dxVariant="body3">
+          There can be anything in here
+        </Typography>
+        <Typography dxNode="div" dxVariant="caption">
+          There can be anything in herehere can be anything in herehere can be
+          anything in herehere can be anything in herehere can be anything in
+          herehere can be anything in herehere can be anything in herehere can
+          be anything in herehere can be anything in here
+        </Typography>
+      </>
+    ),
+  } as InputRadioProps,
 };
 
 export const CardSmall: Story = {

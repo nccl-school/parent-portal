@@ -1,5 +1,5 @@
 import { css } from "@linaria/core";
-import { makeColor, makeFontWeight, makeRem } from "@nccl/theme";
+import { makeColor, makeRem } from "@nccl/theme";
 import { classes } from "@stratum-ui/core/utils";
 import type { JSX } from "react";
 import { forwardRef } from "react";
@@ -34,15 +34,16 @@ const styles = css`
     display: block;
     margin-bottom: ${makeRem(12)};
 
-    & > .title {
-      font-weight: ${makeFontWeight("body-semiBold")};
-      font-size: ${makeRem(20)};
-    }
     & > .subtitle {
+      margin-top: ${makeRem(4)};
       color: ${makeColor("neutral-light-1100")};
       font-size: ${makeRem(16)};
       line-height: 1.3;
     }
+  }
+
+  & > div {
+    margin-top: ${makeRem(8)};
   }
 `;
 
@@ -56,18 +57,18 @@ export const FormGroup = forwardRef<HTMLFieldSetElement, FormGroupProps>(
         {dxTitle || dxSubtitle ? (
           <legend>
             {dxTitle && (
-              <Typography dxNode="div" dxVariant="body1" className="title">
+              <Typography dxNode="div" dxVariant="heading5" className="title">
                 {dxTitle}
               </Typography>
             )}
             {dxSubtitle && (
-              <Typography dxNode="div" dxVariant="body1" className="subtitle">
+              <Typography dxNode="div" dxVariant="body3" className="subtitle">
                 {dxSubtitle}
               </Typography>
             )}
           </legend>
         ) : null}
-        {children}
+        <div>{children}</div>
       </fieldset>
     );
   }

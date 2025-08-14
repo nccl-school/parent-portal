@@ -108,6 +108,7 @@ model User {
   groups            UserGroup[]
   suggestionVotes   SuggestionVote[]
   SuggestionComment SuggestionComment[]
+  Resource          Resource[]
 }
 
 model UserGroup {
@@ -161,15 +162,100 @@ model Organization {
   createdAt   DateTime                 @default(now())
   updatedAt   DateTime                 @updatedAt
   memberships OrganizationMembership[]
+  Resource    Resource[]
 }
 
 model OrganizationMembership {
   id             String       @id // Clerk membership ID
   userId         String
   organizationId String
-  role           String
+  role           OrgRole
   user           User         @relation(fields: [userId], references: [id])
   organization   Organization @relation(fields: [organizationId], references: [id])
 
   @@unique([userId, organizationId]) // Enforcing relational integrity at the DB level
+}
+
+enum OrgRole {
+  MEMBER
+  MANAGER
+  PARTICIPANT
+}
+
+enum ResourceType {
+  FOLDER
+  FILE
+  LINK
+  EXTERNAL_DOC
+}
+
+enum FileSource {
+  GOOGLE_DOCS
+}
+
+model Resource {
+  id               String               @id @default(cuid())
+  slug             String
+  name             String
+  description      String?
+  type             ResourceType
+  parentResourceId String               @db.VarChar(191)
+  parentResource   Resource?            @relation("ResourceChildren", fields: [parentResourceId], references: [id])
+  childResources   Resource[]           @relation("ResourceChildren")
+  // The owning org
+  ownerOrgId       String?
+  org              Organization?        @relation(fields: [ownerOrgId], references: [id])
+  // The owning user
+  ownerUserId      String?
+  owner            User?                @relation(fields: [ownerUserId], references: [id])
+  accessRules      ResourceAccessRule[]
+
+  // File metadata
+  mimeType String? // For files, e.g. 'application/pdf', 'application/vnd.google-apps.document'
+  fileUrl  String? // For GCS, signed URLs, or exportable file links
+
+  // External file metadata
+  externalSource FileSource? // Indicates origin (e.g., GOOGLE_DRIVE)
+  externalId     String? // e.g., Google Drive file ID
+
+  // Link to internal app entities
+  linkType     String? // e.g. 'project', 'user', 'task'
+  linkTargetId String? // external foreign key or UUID
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // unique constraint on slug per parent id
+  @@unique([slug, parentResourceId])
+}
+
+model ResourceAccessRule {
+  id         String             @id @default(cuid())
+  resourceId String
+  resource   Resource           @relation(fields: [resourceId], references: [id])
+  permission ResourcePermission // VIEWER, MANAGER, etc.
+  // Grant access to a specific user.
+  // Useful for personal files, sharing with contractors, or assigning ownership.
+  userId     String?
+
+  // Grant access to all members of a specific organization.
+  // Useful when an organization owns or manages shared content like policies or internal resources.
+  orgId String?
+
+  // Grant access to all authenticated users in the school, regardless of their organization.
+  // Useful for handbooks, newsletters, and public-facing resources restricted to logged-in users.
+  allSchool Boolean? @default(false)
+
+  createdAt DateTime @default(now())
+
+  // Prevent duplicates
+  @@unique([resourceId, userId])
+  @@unique([resourceId, orgId])
+  @@unique([resourceId, allSchool])
+}
+
+enum ResourcePermission {
+  VIEWER
+  EDITOR
+  MANAGER
 }

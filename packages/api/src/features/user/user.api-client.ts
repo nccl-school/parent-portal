@@ -1,16 +1,16 @@
 import type z from "zod/v4";
 
 import {
-  GetUserListResponseSchema,
   GetUserParamsSchema,
-  GetUserResponseSchema,
   InviteUsersRequestSchema,
-  InviteUsersResponseSchema,
   ResendInviteUserParamsSchema,
-  ResendInviteUserResponseSchema,
   UpdateUserRoleParamsSchema,
   UpdateUserRoleRequestSchema,
-  UpdateUserRoleResponseSchema,
+  type GetUserListResponse,
+  type GetUserResponse,
+  type InviteUsersResponse,
+  type ResendInviteUserResponse,
+  type UpdateUserRoleResponse,
 } from "./user.utils.js";
 
 import {
@@ -27,10 +27,9 @@ export class UserClient extends ApiClient {
    * Get a list of users
    */
   public async getUserList() {
-    return this._get({
+    return this._get<GetUserListResponse>({
       path: `/`,
       //   query: [GetSuggestionListQuerySchema, query],
-      serializer: GetUserListResponseSchema,
     });
   }
 
@@ -38,10 +37,9 @@ export class UserClient extends ApiClient {
    * Get a user by ID
    */
   public async getUser(userId: string) {
-    return this._get({
+    return this._get<GetUserResponse>({
       path: "/:id",
       params: [GetUserParamsSchema, { id: userId }],
-      serializer: GetUserResponseSchema,
     });
   }
 
@@ -52,12 +50,11 @@ export class UserClient extends ApiClient {
     userId: string,
     body: z.infer<typeof UpdateUserRoleRequestSchema>
   ) {
-    return this._mutateJSON({
+    return this._mutateJSON<UpdateUserRoleResponse>({
       method: "PUT",
       path: "/:id/role",
       params: [UpdateUserRoleParamsSchema, { id: userId }],
       body: [UpdateUserRoleRequestSchema, body],
-      serializer: UpdateUserRoleResponseSchema,
     });
   }
 
@@ -66,11 +63,10 @@ export class UserClient extends ApiClient {
    * the same role
    */
   public async inviteUsers(body: z.infer<typeof InviteUsersRequestSchema>) {
-    return this._mutateJSON({
+    return this._mutateJSON<InviteUsersResponse>({
       method: "POST",
       path: "/invite",
       body: [InviteUsersRequestSchema, body],
-      serializer: InviteUsersResponseSchema,
     });
   }
 
@@ -78,10 +74,9 @@ export class UserClient extends ApiClient {
    * Resend an invitation to a user
    */
   public async resendInvitation(userId: string) {
-    return this._get({
+    return this._get<ResendInviteUserResponse>({
       path: "/resend-invite/:id",
       params: [ResendInviteUserParamsSchema, { id: userId }],
-      serializer: ResendInviteUserResponseSchema,
     });
   }
 }

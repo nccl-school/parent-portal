@@ -9,7 +9,8 @@ export function ModalFooterSubmit({
   children,
   isLoading,
   dxColor = "primary",
-}: Pick<ButtonProps, "type"> & {
+  onClick,
+}: Pick<ButtonProps, "type" | "onClick"> & {
   isLoading: boolean;
   children: ReactNode;
   dxColor?: ButtonContainedPropsCustom["dxColor"];
@@ -21,6 +22,7 @@ export function ModalFooterSubmit({
       dxSize="md"
       type={type}
       disabled={isLoading}
+      onClick={onClick}
     >
       {children}
     </Button>

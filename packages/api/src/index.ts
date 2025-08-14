@@ -6,6 +6,7 @@ import { logger } from "hono/logger";
 import dotenv from "dotenv";
 import { clerkMiddleware } from "@hono/clerk-auth";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
+import { cors } from "hono/cors";
 
 import { prismaMiddleware } from "./middleware/middleware.prisma.js";
 import { currentUserMiddleware } from "./middleware/middleware.current-user.js";
@@ -15,6 +16,7 @@ import { serializeError } from "./utils/util.errors.js";
 import { webhooks } from "./features/webhooks/webhooks.route.js";
 import { role } from "./features/role/role.route.js";
 import { task } from "./features/task/task.route.js";
+import { resource } from "./features/resource/resource.route.js";
 
 // Environment Vars
 const envPath = path.resolve(import.meta.dirname, "../../../.env");
@@ -24,6 +26,14 @@ const app = new Hono();
 
 // Middleware - Log and add the db to the context
 app.use(logger());
+app.use(
+  "/api/*",
+  cors({
+    origin: "*", // or specific domains: ["https://yourapp.com"]
+    allowHeaders: ["Authorization", "Content-Type"],
+    allowMethods: ["*"],
+  })
+);
 app.use("/api/*", prismaMiddleware);
 
 // Webhooks
@@ -38,6 +48,7 @@ app.route("/api/suggestion", suggestion);
 app.route("/api/task", task);
 app.route("/api/role", role);
 app.route("/api/user", user);
+app.route("/api/resource", resource);
 
 // Errors
 app.onError((error, c) => {

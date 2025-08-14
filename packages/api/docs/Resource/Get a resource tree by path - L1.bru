@@ -1,0 +1,15 @@
+meta {
+  name: Get a resource tree by path - L1
+  type: http
+  seq: 18
+}
+
+get {
+  url: {{API_DOMAIN}}/api/resource/tree/:path1
+  body: none
+  auth: inherit
+}
+
+params:path {
+  path1: folder-1
+}

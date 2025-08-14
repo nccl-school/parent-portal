@@ -1,0 +1,21 @@
+meta {
+  name: Move a resource
+  type: http
+  seq: 23
+}
+
+put {
+  url: {{API_DOMAIN}}/api/resource/:id/move
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: cmdeohrzg0003sb0dphx69qn6
+}
+
+body:json {
+  {
+    "parentResourceId": "cmddb2lhp0003sbmygs6jswv1"
+  }
+}

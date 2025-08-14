@@ -1,0 +1,23 @@
+meta {
+  name: Create an access rule (user)
+  type: http
+  seq: 28
+}
+
+post {
+  url: {{API_DOMAIN}}/api/resource/:id/access
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: cmdeohrzg0003sb0dphx69qn6
+}
+
+body:json {
+  {
+    "level": "USER",
+    "userId": "cmdpw71d10001sbvxb46bvesk",
+    "permission": "VIEWER"
+  }
+}

@@ -22,7 +22,7 @@ jobs:
       - name: Create .env file
         run: |
           touch .env
-          touch .env.spec
+          touch .env.spec 
           echo POSTGRES_DB=${{ vars.POSTGRES_DB }} >> .env
           echo POSTGRES_USER=${{ vars.POSTGRES_USER }} >> .env
           echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
@@ -31,6 +31,7 @@ jobs:
           echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
           echo AUTH_TOKEN=${{ secrets.AUTH_TOKEN }} >> .env
           echo NCCL_API_URL=${{ vars.NCCL_API_URL }} >> .env
+          echo VITE_NCCL_API_URL=${{ vars.NCCL_API_URL }} >> .env
           echo NCCL_APP_URL=${{ vars.NCCL_APP_URL }} >> .env
           echo CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }} >> .env
           echo CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }} >> .env
@@ -64,6 +65,7 @@ jobs:
         run: yarn build
         env:
           VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
+          VITE_NCCL_API_URL: ${{ vars.NCCL_API_URL }}
           TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
           TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
@@ -76,7 +78,6 @@ jobs:
       - name: Pause for containers
         run: |
           docker compose ps
-          sleep 2
 
       - name: Reset and seed DB
         working-directory: packages/api
@@ -84,7 +85,6 @@ jobs:
           NODE_ENV: test:host
         run: |
           npx prisma migrate reset --force --skip-generate
-          npx tsx ./prisma/seed.js
 
       - name: Run API tests
         run: npx playwright test

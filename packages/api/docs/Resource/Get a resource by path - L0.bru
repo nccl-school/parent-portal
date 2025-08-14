@@ -1,0 +1,15 @@
+meta {
+  name: Get a resource by path - L0
+  type: http
+  seq: 13
+}
+
+get {
+  url: {{API_DOMAIN}}/api/resource/path/:path
+  body: none
+  auth: inherit
+}
+
+params:path {
+  path: __ROOT__
+}

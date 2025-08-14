@@ -1,0 +1,15 @@
+meta {
+  name: Get resource's access rules (org)
+  type: http
+  seq: 26
+}
+
+get {
+  url: {{API_DOMAIN}}/api/resource/:id/access/org
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: cmdeohrzg0003sb0dphx69qn6
+}

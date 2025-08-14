@@ -14,7 +14,6 @@ export const SuggestionCommentSchema = z.object({
   id: z.string(),
   comment: zString({
     required: "A comment is required",
-    profanity: false,
   }),
   isAnonymous: z.boolean().optional().default(false),
   createdBy: UserSchema,
@@ -110,6 +109,9 @@ export const UpdateSuggestionRequestSchema = SuggestionSchema.omit({
 export const UpdateSuggestionResponseSchema = SuggestionSchema.omit({
   comments: true,
 });
+export type UpdateSuggestionResponse = z.infer<
+  typeof UpdateSuggestionResponseSchema
+>;
 
 export const GetSuggestionVotesParamsSchema = z.object({ id: z.string() });
 
@@ -121,7 +123,10 @@ export type SuggestionVoteType = z.infer<typeof SuggestionVoteTypeSchema>;
 export const CreateSuggestionVoteRequest = z.object({
   type: SuggestionVoteTypeSchema,
 });
-export const CreateSuggestionVoteResponse = zMessageSchema;
+export const CreateSuggestionVoteResponseSchema = zMessageSchema;
+export type CreateSuggestionVoteResponse = z.infer<
+  typeof CreateSuggestionVoteResponseSchema
+>;
 
 // Get a suggestions comments
 export const GetSuggestionCommentsResponseSchema = z

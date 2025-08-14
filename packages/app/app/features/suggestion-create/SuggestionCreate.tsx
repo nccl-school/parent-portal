@@ -30,7 +30,7 @@ export const SuggestionCreateDrawer = new ModalController({
 });
 
 const className = css`
-  width: ${makeRem(500)};
+  width: ${makeRem(600)};
   height: 100%;
   display: grid;
   grid-template-rows: auto 1fr auto;

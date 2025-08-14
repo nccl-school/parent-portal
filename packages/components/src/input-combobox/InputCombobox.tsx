@@ -72,7 +72,6 @@ const popoverStyles = css`
 `;
 
 export function InputCombobox<O extends InputComboboxOption>({
-  children,
   DXListComponent,
   dxPlaceholder,
   dxOptions,

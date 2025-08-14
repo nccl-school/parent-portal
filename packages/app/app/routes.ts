@@ -14,7 +14,7 @@ export default [
     ]),
     // - /resources
     layout("./features/resources/Resources.layout.tsx", [
-      route("resources", "./features/resources/Resources.route.tsx"),
+      route("resources/*", "./features/resources/Resources.route.tsx"),
     ]),
     // - /directory
     layout("./features/directory/Directory.layout.tsx", [
@@ -46,6 +46,16 @@ export default [
   // APIs
   ...prefix("api", [
     ...prefix("role", [route("/", "./api/api.role.getRoles.ts")]),
+    ...prefix("resource", [
+      route("/:id", "./api/api.resource.ts"),
+      route("/:id/meta", "./api/api.resource.meta.ts"),
+      route("/:id/move", "./api/api.resource.move.ts"),
+      route("/:id/access", "./api/api.resource.access.ts"),
+      route("/:id/access/school", "./api/api.resource.access.school.ts"),
+      route("/folder", "./api/api.resource.folder.ts"),
+      route("/google-doc/load", "./api/api.resource.google-doc.load.ts"),
+      route("/tree/*", "./api/api.resource.tree.ts"),
+    ]),
     ...prefix("suggestion", [
       route("/", "./api/api.suggestion.getManyOrCreateUnique.ts"),
       route("/comment/:id", "./api/api.suggestion.comment.ts"),
@@ -58,6 +68,7 @@ export default [
       ]),
     ]),
     ...prefix("user", [
+      route("/", "./api/api.user.ts"),
       route("/invite", "./api/api.user.inviteUsers.ts"),
       route("/resend-invite/:id", "./api/api.user.resendInvite.ts"),
       route("/:id", "./api/api.user.getUserById.ts", [

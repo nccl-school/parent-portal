@@ -1,0 +1,7 @@
+{
+  "extends": "@gfdigital/tsconfig/library",
+  "compilerOptions": {
+    "noCheck": false
+  },
+  "include": ["src"]
+}

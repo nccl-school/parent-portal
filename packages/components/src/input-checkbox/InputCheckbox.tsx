@@ -15,27 +15,28 @@ const containerStyles = css`
   display: grid;
   grid-template-columns: auto;
 
-  .cb {
-    grid-area: box;
-  }
-  .cb-label {
-    grid-area: label;
-    white-space: nowrap;
-  }
-
   &.before,
   &.after {
-    grid-template-columns: repeat(2, min-content);
     gap: ${makeRem(8)};
   }
 
   &.before {
     grid-template-areas: "label box";
+    grid-template-columns: auto auto;
   }
 
   &.after {
     grid-template-areas: "box label";
+    grid-template-columns: auto 1fr;
   }
+`;
+
+const boxStyles = css`
+  grid-area: box;
+`;
+
+const labelStyles = css`
+  grid-area: label;
 `;
 
 const styles = css`
@@ -107,7 +108,7 @@ export const InputCheckbox = forwardRef<HTMLInputElement, InputCheckboxProps>(
   ) {
     return (
       <label className={classes(containerStyles, dxLabelOrientation)}>
-        <div className={classes(styles, className, "cb")}>
+        <div className={classes(styles, className, boxStyles)}>
           <input
             type="checkbox"
             {...restProps}
@@ -115,7 +116,7 @@ export const InputCheckbox = forwardRef<HTMLInputElement, InputCheckboxProps>(
             ref={ref}
           />
         </div>
-        {children && <div className="cb-label">{children}</div>}
+        {children && <div className={labelStyles}>{children}</div>}
       </label>
     );
   }

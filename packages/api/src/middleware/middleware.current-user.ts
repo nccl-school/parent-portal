@@ -9,6 +9,11 @@ export const cacheTagsMiddleware = {
   CURRENT_USER: "get_current_user",
 };
 
+export type CurrentUser = {
+  id: string;
+  roleId: Roles;
+};
+
 declare global {
   interface CustomJwtSessionClaims {
     metadata: {
@@ -24,10 +29,7 @@ declare global {
 
 declare module "hono" {
   interface ContextVariableMap {
-    currentUser: {
-      id: string;
-      roleId: Roles;
-    };
+    currentUser: CurrentUser;
   }
 }
 
@@ -73,10 +75,10 @@ export const currentUserMiddleware = createMiddleware(async (c, next) => {
         roleId: clerkUser.publicMetadata.role ?? "USER",
       },
     });
-    console.log("Creating the user in the db", user);
+    console.log("Creating the user in the db", user.id);
   }
 
-  console.log("Setting the user to the context", user);
+  console.log("Setting the user to the context", user.id);
   c.set("currentUser", {
     id: user.id,
     roleId: user.roleId,

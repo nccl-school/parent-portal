@@ -4,18 +4,17 @@ import {
   SuggestionIDParamsSchema,
   CreateSuggestionRequestSchema,
   GetSuggestionListQuerySchema,
-  GetSuggestionListResponseSchema,
-  GetSuggestionResponseSchema,
   UpdateSuggestionRequestSchema,
-  UpdateSuggestionResponseSchema,
   CreateSuggestionVoteRequest,
-  CreateSuggestionResponseSchema,
-  CreateSuggestionVoteResponse,
-  GetSuggestionCommentsResponseSchema,
   CreateSuggestionCommentsRequestSchema,
-  CreateSuggestionCommentsResponseSchema,
-  DeleteSuggestionCommentResponseSchema,
   CommentIDParamsSchema,
+  type GetSuggestionListResponse,
+  type GetSuggestionResponse,
+  type GetSuggestionCommentsResponse,
+  type CreateSuggestionResponse,
+  type UpdateSuggestionResponse,
+  type CreateSuggestionVoteResponse,
+  type CreateSuggestionCommentsResponse,
 } from "./suggestion.utils.js";
 
 import {
@@ -34,10 +33,9 @@ export class SuggestionClient extends ApiClient {
   public async getSuggestionList(
     query?: z.infer<typeof GetSuggestionListQuerySchema>
   ) {
-    return this._get({
+    return this._get<GetSuggestionListResponse>({
       path: `/`,
       query: [GetSuggestionListQuerySchema, query],
-      serializer: GetSuggestionListResponseSchema,
     });
   }
 
@@ -45,10 +43,9 @@ export class SuggestionClient extends ApiClient {
    *  Get a single suggestion by ID
    */
   async getSuggestion(id: string) {
-    return this._get({
+    return this._get<GetSuggestionResponse>({
       path: "/:id",
       params: [SuggestionIDParamsSchema, { id }],
-      serializer: GetSuggestionResponseSchema,
     });
   }
 
@@ -58,11 +55,10 @@ export class SuggestionClient extends ApiClient {
   async createSuggestion(
     suggestion: z.infer<typeof CreateSuggestionRequestSchema>
   ) {
-    return this._mutateJSON({
+    return this._mutateJSON<CreateSuggestionResponse>({
       method: "POST",
       path: "/",
       body: [CreateSuggestionRequestSchema, suggestion],
-      serializer: CreateSuggestionResponseSchema,
     });
   }
 
@@ -73,12 +69,11 @@ export class SuggestionClient extends ApiClient {
     id: string,
     suggestion: z.infer<typeof UpdateSuggestionRequestSchema>
   ) {
-    return this._mutateJSON({
+    return this._mutateJSON<UpdateSuggestionResponse>({
       method: "PUT",
       path: "/:id",
       params: [SuggestionIDParamsSchema, { id }],
       body: [UpdateSuggestionRequestSchema, suggestion],
-      serializer: UpdateSuggestionResponseSchema,
     });
   }
 
@@ -89,12 +84,11 @@ export class SuggestionClient extends ApiClient {
     suggestionId: string,
     body: z.infer<typeof CreateSuggestionVoteRequest>
   ) {
-    return this._mutateJSON({
+    return this._mutateJSON<CreateSuggestionVoteResponse>({
       method: "POST",
       path: "/:id/vote",
       params: [SuggestionIDParamsSchema, { id: suggestionId }],
       body: [CreateSuggestionVoteRequest, body],
-      serializer: CreateSuggestionVoteResponse,
     });
   }
 
@@ -103,10 +97,9 @@ export class SuggestionClient extends ApiClient {
    * in descending order ()
    */
   async getCommentsList(suggestionId: string) {
-    return this._get({
+    return this._get<GetSuggestionCommentsResponse>({
       path: "/:id/comment",
       params: [SuggestionIDParamsSchema, { id: suggestionId }],
-      serializer: GetSuggestionCommentsResponseSchema,
     });
   }
 
@@ -117,12 +110,11 @@ export class SuggestionClient extends ApiClient {
     suggestionId: string,
     comment: z.infer<typeof CreateSuggestionCommentsRequestSchema>
   ) {
-    return this._mutateJSON({
+    return this._mutateJSON<CreateSuggestionCommentsResponse>({
       method: "POST",
       path: "/:id/comment",
       params: [SuggestionIDParamsSchema, { id: suggestionId }],
       body: [CreateSuggestionCommentsRequestSchema, comment],
-      serializer: CreateSuggestionCommentsResponseSchema,
     });
   }
 
@@ -130,7 +122,6 @@ export class SuggestionClient extends ApiClient {
     return this._delete({
       path: "/comment/:id",
       params: [CommentIDParamsSchema, { id: suggestionCommentId }],
-      serializer: DeleteSuggestionCommentResponseSchema,
     });
   }
 }

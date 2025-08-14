@@ -26,6 +26,10 @@ const styles = css`
     text-decoration: none !important;
     cursor: pointer !important;
   }
+
+  li {
+    border-bottom: 1px solid ${makeColor("light-400")};
+  }
 `;
 
 const divStyles = css`
@@ -49,7 +53,10 @@ export const Tabs = forwardRef<HTMLUListElement, TabsProps>(function Tabs(
   const navRef = useRef<HTMLElement | null>(null);
 
   const moveNode = useCallback<
-    UseTrackingNodeCallback<HTMLDivElement, HTMLAnchorElement>
+    UseTrackingNodeCallback<
+      HTMLDivElement,
+      HTMLAnchorElement | HTMLButtonElement
+    >
   >(
     (anchor, div) => {
       if (!navRef.current) return;
@@ -67,12 +74,10 @@ export const Tabs = forwardRef<HTMLUListElement, TabsProps>(function Tabs(
     [navRef]
   );
 
-  const divRef = useTrackingNode<HTMLDivElement, HTMLAnchorElement>(
-    navRef,
-    ".active",
-    moveNode,
-    { attributeFilter: ["class"] }
-  );
+  const divRef = useTrackingNode<
+    HTMLDivElement,
+    HTMLAnchorElement | HTMLButtonElement
+  >(navRef, ".active", moveNode, { attributeFilter: ["class"] });
 
   return (
     <nav ref={navRef}>

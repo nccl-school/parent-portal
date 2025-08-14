@@ -1,0 +1,29 @@
+{
+  "name": "@nccl/tools",
+  "version": "1.0.0",
+  "description": "A collection of development tools for testing",
+  "type": "module",
+  "scripts": {
+    "generate:pdf": "yarn tsx ./generate-pdf.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/nccl-school/parent-portal.git"
+  },
+  "author": "Drew DeCarme (drew@greenflash.digital)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nccl-school/parent-portal/issues"
+  },
+  "homepage": "https://github.com/nccl-school/parent-portal#readme",
+  "dependencies": {
+    "pdfkit": "0.17.1"
+  },
+  "devDependencies": {
+    "@gfdigital/tsconfig": "^0.3.1",
+    "@types/node": "^24.2.1",
+    "@types/pdfkit": "^0.17.2",
+    "tsx": "4.20.4",
+    "typescript": "^5.9.2"
+  }
+}

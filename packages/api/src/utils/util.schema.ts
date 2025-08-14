@@ -21,6 +21,10 @@ export const zQueryParam = z
   })
   .optional();
 
+export const zFile = z
+  .instanceof(File)
+  .refine((file) => file.size > 0, { message: "A file is required" });
+
 export const zCleanStringSchema = z
   .string()
   .refine((val) => !leoProfanity.check(val), {
@@ -33,14 +37,14 @@ export function checkProfanity<T extends ZodString>(s: T) {
   });
 }
 
-export function zString(options?: { required?: string; profanity?: boolean }) {
+export function zString(options?: { required?: string }) {
   const baseSchema = z.string().refine(
     (value) => {
       return options?.required && value;
     },
     { error: options?.required }
   );
-  if (!options?.profanity) return checkProfanity(baseSchema);
+  return checkProfanity(baseSchema);
   return baseSchema;
 }
 

@@ -26,6 +26,7 @@ const styles = css`
     top: 0;
     bottom: 0;
     outline: none;
+    margin: 0;
   }
 
   &.card {
@@ -59,7 +60,52 @@ const styles = css`
     }
   }
 
-  &.basic {
+  &.default {
+    padding-left: ${makeRem(32)};
+    position: relative;
+    min-height: ${makeRem(32)};
+    display: inline-block;
+    border-radius: ${makeRem(2)};
+
+    &:has(div),
+    &:has(span) {
+      padding-right: ${makeRem(6)};
+      padding-top: ${makeRem(6)};
+      padding-bottom: ${makeRem(6)};
+    }
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      height: ${makeRem(32)};
+      aspect-ratio: 1 / 1;
+      background: transparent;
+      border-radius: 50%;
+      transform: scale(0.5);
+      transform-origin: center;
+      left: 0;
+      top: 0;
+    }
+    &::before {
+      border: 2px solid ${makeColor("neutral-light-400")};
+    }
+    &::after {
+      opacity: 0;
+      border: 4px solid ${makeColor("white")};
+      scale: 0.8;
+      transform-origin: center;
+    }
+
+    &:has(input:checked) {
+      &::before {
+        border-color: ${makeColor("secondary-1200")};
+        background-color: ${makeColor("secondary-1200")};
+      }
+      &::after {
+        opacity: 1;
+      }
+    }
   }
 `;
 

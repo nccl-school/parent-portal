@@ -108,6 +108,7 @@ jobs:
     env:
       NODE_ENV: production
       VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
+      VITE_NCCL_API_URL: ${{ vars.NCCL_API_URL }}
       TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
       TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
     steps:

@@ -123,6 +123,17 @@ export function parseFetcherData<D>(data: D): ParseFetcherResult<D> {
   return { status: "ok", data: data as Exclude<D, ErrorResponse> };
 }
 
+export function getData<D>(loaderData: D) {
+  const res = parseFetcherData<D>(loaderData);
+  switch (res.status) {
+    case "ok":
+      return res.data as NonNullable<Exclude<D, ErrorResponse>>;
+
+    default:
+      return undefined;
+  }
+}
+
 export function renderData<D>(
   data: D,
   callbacks: {
@@ -141,4 +152,14 @@ export function renderData<D>(
       return callbacks.ok(state.data as NonNullable<Exclude<D, ErrorResponse>>);
     })
     .exhaustive();
+}
+
+export function slugify(input: string): string {
+  return input
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "") // remove special characters except spaces and hyphens
+    .replace(/\s+/g, "-") // replace spaces with hyphens
+    .replace(/--+/g, "-") // collapse multiple hyphens
+    .replace(/^-+|-+$/g, ""); // trim leading/trailing hyphens
 }

@@ -26,6 +26,9 @@ const ErrorResponseSchema = z.discriminatedUnion("error_type", [
     error_type: z.literal("not_found"),
   }),
   ErrorResponseBase.extend({
+    error_type: z.literal("bad_request"),
+  }),
+  ErrorResponseBase.extend({
     error_type: z.literal("validation"),
     errors: z.record(z.string(), z.array(z.string())),
   }),
@@ -123,6 +126,16 @@ class ServerErrorValidation extends ServerError<"validation"> {
   }
 }
 
+class ServerErrorBadRequest extends ServerError<"bad_request"> {
+  constructor(message = "Bad request") {
+    super({
+      error_type: "bad_request",
+      message,
+      status: 400,
+    });
+  }
+}
+
 class ServerErrorUnknown extends ServerError<"unknown"> {
   constructor(message = "An unknown error occurred") {
     super({
@@ -141,6 +154,7 @@ export const ErrorSet = {
   serverError: ServerErrorServerError,
   validation: ServerErrorValidation,
   unknown: ServerErrorUnknown,
+  badRequest: ServerErrorBadRequest,
 };
 
 /**

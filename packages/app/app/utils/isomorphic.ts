@@ -1,5 +1,5 @@
 import { css } from "@linaria/core";
-import type { ZodObject } from "zod/v4";
+import type { ZodObject, ZodType } from "zod/v4";
 import { z } from "zod/v4";
 
 export function capitalizeFirstLetter(str: string): string {
@@ -12,7 +12,7 @@ export function pause(ms: number): Promise<void> {
 
 export const placeholder = "-- --";
 
-export async function validateFormData<T extends ZodObject>(
+export async function validateFormData<T extends ZodType>(
   schema: T,
   formData: FormData
 ) {

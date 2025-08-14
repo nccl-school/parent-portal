@@ -29,8 +29,8 @@ export class ModalController<
       openOnMount: true,
     });
     this._props = { ...props, dxVariant: props?.dxVariant ?? "basic" };
-    this.launch = this.launch.bind(this);
     this.ModalContent = ModalContent;
+    this.launch = this.launch.bind(this);
     this.Component = this.Component.bind(this);
   }
 

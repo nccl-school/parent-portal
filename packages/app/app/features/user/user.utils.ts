@@ -15,5 +15,5 @@ export const roleIcon: {
  */
 export function getUserName(user: User) {
   if (user.lastName) return `${user.firstName} ${user.lastName}`;
-  return user.firstName;
+  return String(user.firstName);
 }

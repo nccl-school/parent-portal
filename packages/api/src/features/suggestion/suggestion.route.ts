@@ -10,7 +10,7 @@ import {
   GetSuggestionResponseSchema,
   UpdateSuggestionRequestSchema,
   GetSuggestionListQuerySchema,
-  CreateSuggestionVoteResponse,
+  CreateSuggestionVoteResponseSchema,
   GetSuggestionCommentsResponseSchema,
   CreateSuggestionCommentsRequestSchema,
   CreateSuggestionCommentsResponseSchema,
@@ -216,7 +216,7 @@ suggestion.post(
     // record exists, but the submission was the same so we toggle
     if (record && record.type === body.type) {
       await db.suggestionVote.delete({ where: { id: record.id } });
-      const data = await serialize(CreateSuggestionVoteResponse, {
+      const data = await serialize(CreateSuggestionVoteResponseSchema, {
         message: `Successfully removed vote for suggestion ${params.id}`,
       });
       return c.json(data);
@@ -227,7 +227,7 @@ suggestion.post(
         where: { id: record.id },
         data: { type: body.type },
       });
-      const data = await serialize(CreateSuggestionVoteResponse, {
+      const data = await serialize(CreateSuggestionVoteResponseSchema, {
         message: `Successfully changed vote from ${record.type} to ${body.type} for suggestion ${params.id}`,
       });
       return c.json(data);
@@ -240,7 +240,7 @@ suggestion.post(
         createdById: currentUser.id,
       },
     });
-    const data = await serialize(CreateSuggestionVoteResponse, {
+    const data = await serialize(CreateSuggestionVoteResponseSchema, {
       message: `Successfully voted ${body.type} for suggestion ${params.id}`,
     });
     return c.json(data);
