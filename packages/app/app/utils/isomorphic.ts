@@ -1,6 +1,6 @@
 import { css } from "@linaria/core";
-import type { ZodObject, ZodType } from "zod/v4";
-import { z } from "zod/v4";
+import type { ZodObject, ZodType } from "zod";
+import { z } from "zod";
 
 export function capitalizeFirstLetter(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);

@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 
 export const TaskSchemaSyncClerkWith = z.object({
   type: z.literal("sync_db_with_clerk"),

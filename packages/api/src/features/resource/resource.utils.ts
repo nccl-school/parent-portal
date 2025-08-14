@@ -1,6 +1,6 @@
 import type { Context } from "hono";
 import { Storage } from "@google-cloud/storage";
-import type z from "zod/v4";
+import type z from "zod";
 
 import type { CreateResourceOwnershipLevel } from "./resource.schema.js";
 

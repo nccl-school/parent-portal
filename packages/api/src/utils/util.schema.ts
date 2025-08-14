@@ -1,6 +1,6 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 import leoProfanity from "leo-profanity";
-import type { ZodRawShape, ZodString } from "zod/v4";
+import type { ZodRawShape, ZodString } from "zod";
 
 export const zDateStringSchema = z.preprocess(
   (val) => {

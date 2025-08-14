@@ -1,5 +1,5 @@
 import { data } from "react-router";
-import { z, ZodError } from "zod/v4";
+import { z, ZodError } from "zod";
 
 export type ErrorPayloadValidation<K extends string = string> = {
   error_type: "validation";

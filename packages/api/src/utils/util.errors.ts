@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { z, ZodError } from "zod/v4";
+import { z, ZodError } from "zod";
 
 const ErrorResponseBase = z.object({
   status: z.number(),

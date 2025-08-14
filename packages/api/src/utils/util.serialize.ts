@@ -1,5 +1,5 @@
-import type { z, ZodError as Zod4Error, ZodType } from "zod/v4";
-import { flattenError } from "zod/v4";
+import type { z, ZodError as Zod4Error, ZodType } from "zod";
+import { flattenError } from "zod";
 
 import { ErrorSet } from "./util.errors.js";
 
