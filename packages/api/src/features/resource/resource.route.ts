@@ -267,7 +267,7 @@ resource.get("/tree/:path{.+}", async (c) => {
 // GET /api/resource/file/current | Get a list of files owned by the current user
 resource.get("/file/current", async (c) => {
   const db = c.get("db");
-  const currentUser = c.get("currentUser");
+  const currentUser = c.get("user");
   const records = await db.resource.findMany({
     where: {
       type: "FILE",

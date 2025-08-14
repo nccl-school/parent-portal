@@ -88,27 +88,31 @@ enum UserStatus {
 }
 
 model User {
-  id           String     @id @default(cuid())
-  authId       String?    @unique
-  email        String     @unique
-  firstName    String?
-  lastName     String?
-  imageUrl     String?
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  role         Role       @relation(fields: [roleId], references: [id])
-  roleId       RoleName
-  status       UserStatus @default(INVITED)
-  invitationId String?    @unique
-  invitedAt    DateTime?
+  id                 String                   @id @default(cuid())
+  email              String                   @unique
+  name               String
+  emailVerified      Boolean
+  imageUrl           String?
+  banned             Boolean?                 @default(false)
+  banReason          String?
+  banExpires         DateTime?
+  isSuper            Boolean?                 @default(false)
+  createdAt          DateTime                 @default(now())
+  updatedAt          DateTime                 @updatedAt
+  role               Role                     @relation(fields: [roleId], references: [id])
+  roleId             RoleName
+  memberships        OrganizationMembership[]
+  suggestions        Suggestion[]
+  students           UserStudent[]
+  groups             UserGroup[]
+  suggestionVotes    SuggestionVote[]
+  suggestionComments SuggestionComment[]
+  resources          Resource[]
+  sessions           Session[]
+  accounts           Account[]
+  image              String?
 
-  memberships       OrganizationMembership[]
-  suggestions       Suggestion[]
-  students          UserStudent[]
-  groups            UserGroup[]
-  suggestionVotes   SuggestionVote[]
-  SuggestionComment SuggestionComment[]
-  Resource          Resource[]
+  @@map("user")
 }
 
 model UserGroup {
@@ -173,7 +177,8 @@ model OrganizationMembership {
   user           User         @relation(fields: [userId], references: [id])
   organization   Organization @relation(fields: [organizationId], references: [id])
 
-  @@unique([userId, organizationId]) // Enforcing relational integrity at the DB level
+  // Enforcing relational integrity at the DB level
+  @@unique([userId, organizationId])
 }
 
 enum OrgRole {
@@ -258,4 +263,51 @@ enum ResourcePermission {
   VIEWER
   EDITOR
   MANAGER
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  impersonatedBy String?
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
 }

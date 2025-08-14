@@ -4,20 +4,18 @@ import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { logger } from "hono/logger";
 import dotenv from "dotenv";
-import { clerkMiddleware } from "@hono/clerk-auth";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
 import { cors } from "hono/cors";
 
 import { prismaMiddleware } from "./middleware/middleware.prisma.js";
-import { currentUserMiddleware } from "./middleware/middleware.current-user.js";
+import { sessionMiddleware } from "./middleware/middleware.session.js";
+import { highlightIOMiddleware } from "./middleware/middleware.highlight-io.js";
 import { suggestion } from "./features/suggestion/suggestion.route.js";
 import { user } from "./features/user/user.route.js";
 import { serializeError } from "./utils/util.errors.js";
-import { webhooks } from "./features/webhooks/webhooks.route.js";
 import { role } from "./features/role/role.route.js";
-import { task } from "./features/task/task.route.js";
+import { authentication } from "./features/auth/auth.route.js";
 import { resource } from "./features/resource/resource.route.js";
-import { highlightIoMiddleware } from "./middleware/middleware.highlight-io.js";
 
 // Environment Vars
 const envPath = path.resolve(import.meta.dirname, "../../../.env");
@@ -25,29 +23,28 @@ dotenv.config({ path: envPath });
 
 const app = new Hono();
 
-// Middleware - Log and add the db to the context
-app.use(logger());
-app.use(highlightIoMiddleware);
 app.use(
-  "/api/*",
+  "*",
   cors({
     origin: "*", // or specific domains: ["https://yourapp.com"]
-    allowHeaders: ["Authorization", "Content-Type"],
+    allowHeaders: ["Content-Type", "Authorization"],
     allowMethods: ["*"],
+    exposeHeaders: ["Content-Length"],
+    maxAge: 600,
+    credentials: true,
   })
 );
-app.use("/api/*", prismaMiddleware);
-
-// Webhooks
-app.route("/api/webhooks", webhooks);
+app.use(logger());
+app.route("/api/auth", authentication);
 
 // Middleware - Authenticate and add the current user to the context
-app.use("/api/*", clerkMiddleware());
-app.use("/api/*", currentUserMiddleware);
+app.use("/api/*", sessionMiddleware);
+
+app.use("/api/*", prismaMiddleware);
+app.use(highlightIOMiddleware);
 
 // Authenticated routes
 app.route("/api/suggestion", suggestion);
-app.route("/api/task", task);
 app.route("/api/role", role);
 app.route("/api/user", user);
 app.route("/api/resource", resource);

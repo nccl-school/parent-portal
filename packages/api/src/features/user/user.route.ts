@@ -61,7 +61,7 @@ user.put(
     const param = c.req.valid("param");
     const db = c.get("db");
     console.log("Updating user in db");
-    const dbUser = await db.user.update({
+    const user = await db.user.update({
       data: {
         roleId: body.role,
       },
@@ -73,23 +73,8 @@ user.put(
       },
     });
 
-    if (!dbUser.authId) {
-      throw new ErrorSet.serverError(
-        "The db user is out of sync with the authentication system. Cannot update the authentication cached mirror."
-      );
-    }
-
-    console.log("Updating clerk cached mirror");
-    const clerk = c.get("clerk");
-    await clerk.users.updateUser(dbUser.authId, {
-      publicMetadata: {
-        role: body.role,
-        db_id: dbUser.id,
-      },
-    });
-
     // Invalidate the current user cache
-    const data = await serialize(UpdateUserRoleResponseSchema, dbUser);
+    const data = await serialize(UpdateUserRoleResponseSchema, user);
     return c.json(data);
   }
 );
@@ -169,7 +154,6 @@ user.get(
   validate("param", ResendInviteUserParamsSchema),
   async (c) => {
     const params = c.req.valid("param");
-    const clerk = c.get("clerk");
     const db = c.get("db");
     const env = getEnvVar(c);
 
