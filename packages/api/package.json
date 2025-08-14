@@ -11,9 +11,6 @@
     "client:build": "yarn tsc --project tsconfig.client.json",
     "client:check": "yarn tsc --project tsconfig.client-check.json"
   },
-  "prisma": {
-    "seed": "yarn tsx ./prisma/seed.ts"
-  },
   "exports": {
     ".": "./dist/index.js",
     "./client": "./dist-client/client.js"
