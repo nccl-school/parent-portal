@@ -23,6 +23,7 @@ export * from "./utils/index.js";
 export * from "./progress/index.js";
 export * from "./card/index.js";
 export * from "./toast/index.js";
+export * from "./tooltip/index.js";
 
 export * from "./input-checkbox/index.js";
 export * from "./input-radio/index.js";
