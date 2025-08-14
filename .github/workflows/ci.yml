@@ -85,7 +85,6 @@ jobs:
           NODE_ENV: test:host
         run: |
           npx prisma migrate reset --force --skip-generate
-          npx tsx ./prisma/seed.js
 
       - name: Run API tests
         run: npx playwright test
