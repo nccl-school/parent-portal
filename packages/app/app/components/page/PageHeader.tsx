@@ -14,6 +14,10 @@ export type PageHeaderProps = PageHeaderPropsNative & PageHeaderPropsCustom;
 const styles = css`
   ${makeResponsive({ to: "laptop" })} {
     padding: ${makeCustom("page--gutter-mobile")};
+
+    h2 {
+      font-size: ${makeRem(24)} !important;
+    }
   }
   ${makeResponsive({ from: "laptop" })} {
     padding: ${makeCustom("page--gutter-desktop")};

@@ -7,6 +7,12 @@ import {
 } from "@react-router/dev/routes";
 
 export default [
+  // - /sign-in
+  layout("features/auth/Auth.layout.tsx", [
+    // route("/sign-in", "features/auth/AuthSignIn.route.tsx"),
+    // route("/forgot-password", "features/auth/AuthForgotPassword.route.tsx"),
+    route("/accept-invite", "features/auth/AuthAcceptInvite.route.tsx"),
+  ]),
   layout("./features/root/Root.layout.tsx", [
     // - /
     layout("./features/home/Home.layout.tsx", [
@@ -40,9 +46,7 @@ export default [
       route("resources", "./features/admin-resources/AdminResources.route.tsx"),
     ]),
   ]),
-  // - /sign-in/*
-  route("sign-in/*", "features/sign-in/SignIn.route.tsx"),
-  route("sign-up/*", "features/sign-up/SignUp.route.tsx"),
+
   // APIs
   ...prefix("api", [
     ...prefix("role", [route("/", "./api/api.role.getRoles.ts")]),
