@@ -11,5 +11,6 @@ export function getEnvVar<C extends Context>(c: C) {
     GCP_CLOUD_STORAGE_BUCKET: string;
     GOOGLE_CALENDAR_API_KEY: string;
     HIGHLIGHT_PROJECT_ID: string;
+    RESEND_API_KEY: string;
   }>(c);
 }

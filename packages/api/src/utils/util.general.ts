@@ -7,3 +7,10 @@ export function slugify(input: string): string {
     .replace(/--+/g, "-") // collapse multiple hyphens
     .replace(/^-+|-+$/g, ""); // trim leading/trailing hyphens
 }
+
+export function create64HexToken() {
+  return (
+    crypto.randomUUID().replace(/-/g, "") +
+    crypto.randomUUID().replace(/-/g, "")
+  );
+}

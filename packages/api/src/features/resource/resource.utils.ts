@@ -8,7 +8,7 @@ import type { Resource as DBResource } from "../../_generated/prisma/client.js";
 import { ErrorSet } from "../../utils/util.errors.js";
 import { getEnvVar } from "../../utils/util.envVar.js";
 import { exhaustiveMatchGuard } from "../../utils/util.exhaustiveMatchGuard.js";
-import { slugify } from "../../utils/utils.general.js";
+import { slugify } from "../../utils/util.general.js";
 
 export function getBucket<C extends Context>(c: C) {
   const { GCP_CLOUD_STORAGE_BUCKET } = getEnvVar(c);

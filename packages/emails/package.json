@@ -1,0 +1,40 @@
+{
+  "name": "@nccl/emails",
+  "version": "0.0.1",
+  "description": "A collection of transactional emails",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/emails/index.d.ts",
+      "import": "./dist/emails/index.js"
+    }
+  },
+  "scripts": {
+    "dev": "dotenv -e ../../.env -- email dev --dir=src/emails",
+    "build": "dotenv -e ../../.env -- yarn tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/nccl-school/parent-portal.git"
+  },
+  "author": "Drew DeCarme (drew@greenflash.digital)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nccl-school/parent-portal/issues"
+  },
+  "homepage": "https://github.com/nccl-school/parent-portal#readme",
+  "devDependencies": {
+    "@gfdigital/tsconfig": "^0.3.1",
+    "@react-email/preview-server": "4.2.8",
+    "dotenv": "17.2.1",
+    "dotenv-cli": "10.0.0",
+    "react-email": "4.2.8",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "@nccl/theme": "workspace:^",
+    "@react-email/components": "0.5.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
+  }
+}

@@ -42,7 +42,7 @@ export function RootNavbar() {
           />
           <NavbarItemText>Home</NavbarItemText>
         </RootNavbarItem>
-        <RootNavbarItem to={href("/resources")}>
+        <RootNavbarItem to={href("/resources/*", { "*": "" })}>
           <NavbarItemIcon
             dxBaseIcon="folder-02-stroke-standard"
             dxActiveIcon="folder-02-solid-standard"

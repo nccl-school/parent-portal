@@ -16,6 +16,7 @@ import { serializeError } from "./utils/util.errors.js";
 import { role } from "./features/role/role.route.js";
 import { authentication } from "./features/auth/auth.route.js";
 import { resource } from "./features/resource/resource.route.js";
+import { emailMiddleware } from "./middleware/middleware.email.js";
 
 // Environment Vars
 const envPath = path.resolve(import.meta.dirname, "../../../.env");
@@ -23,8 +24,10 @@ dotenv.config({ path: envPath });
 
 const app = new Hono();
 
+// Middleware - CORS, logging, transactional email
+app.use(logger());
+app.use(emailMiddleware);
 app.use(
-  "*",
   cors({
     origin: "*", // or specific domains: ["https://yourapp.com"]
     allowHeaders: ["Content-Type", "Authorization"],
@@ -34,14 +37,14 @@ app.use(
     credentials: true,
   })
 );
-app.use(logger());
+
+// Authentication routes
 app.route("/api/auth", authentication);
 
-// Middleware - Authenticate and add the current user to the context
-app.use("/api/*", sessionMiddleware);
-
-app.use("/api/*", prismaMiddleware);
+// Middleware - Session, DB, and
+app.use(sessionMiddleware);
 app.use(highlightIOMiddleware);
+app.use(prismaMiddleware);
 
 // Authenticated routes
 app.route("/api/suggestion", suggestion);

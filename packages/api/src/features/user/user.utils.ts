@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { zDateStringSchema, zMessageSchema } from "../../utils/util.schema.js";
-import { RoleSchema, RolesSchema } from "../role/role.utils.js";
+import { RolesSchema } from "../role/role.utils.js";
 
 export const UserStatusSchema = z.literal(["INVITED", "ACTIVE", "DISABLED"]);
 export type UserStatus = z.infer<typeof UserStatusSchema>;
@@ -9,15 +9,14 @@ export type UserStatus = z.infer<typeof UserStatusSchema>;
 export const UserSchema = z.object({
   id: z.string(),
   email: z.email(),
-  authId: z.string().nullable(),
+  name: z.string(),
+  emailVerified: z.boolean(),
   imageUrl: z.string().nullable(),
-  firstName: z.string().nullable(),
-  lastName: z.string().nullable(),
+  banned: z.boolean().nullable(),
+  banReason: z.string().nullable(),
+  isSuper: z.boolean().nullable(),
   createdAt: zDateStringSchema,
   updatedAt: zDateStringSchema,
-  status: UserStatusSchema,
-  invitationId: z.string().nullable(),
-  role: RoleSchema,
 });
 export type User = z.infer<typeof UserSchema>;
 
@@ -28,7 +27,7 @@ export type GetUserListResponse = z.infer<typeof GetUserListResponseSchema>;
 // Get a user
 export const GetUserParamsSchema = UserSchema.pick({ id: true });
 export const GetUserResponseSchema = z.object({
-  ...UserSchema.omit({ role: true }).shape,
+  ...UserSchema.shape,
   roleId: RolesSchema,
 });
 export type GetUserResponse = z.infer<typeof GetUserResponseSchema>;

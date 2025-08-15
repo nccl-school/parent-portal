@@ -503,15 +503,31 @@ resource.get(
             "A user rule was located without a userId. This should not have happened. Please contact support."
           );
         }
-        const user = await db.user.findUnique({ where: { id: rule.userId } });
+        const user = await db.user.findUnique({
+          where: { id: rule.userId },
+          include: {
+            role: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        });
         if (!user) {
           throw new ErrorSet.notFound(
             "The user who is granted access to this rule cannot be found. This should not have happened. Please contact support."
           );
         }
+        const {
+          role: { id: roleId },
+          ...restUser
+        } = user;
         return {
           ...rule,
-          user,
+          user: {
+            ...restUser,
+            roleId,
+          },
         };
       })
     );
