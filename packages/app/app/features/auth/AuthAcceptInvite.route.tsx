@@ -1,26 +1,46 @@
 import { exhaustiveMatchGuard } from "@stratum-ui/core/utils";
-import { Callout, Typography } from "@nccl/components";
+import { Callout } from "@nccl/components";
+import { AcceptInviteRequestSchema } from "@nccl/api/client";
+import { href, redirect } from "react-router";
 
 import type { Route } from "./+types/AuthAcceptInvite.route";
 import { AuthAcceptInviteValid } from "./AuthAcceptInviteValid";
 import { AuthAcceptInviteError } from "./AuthAcceptInviteError";
 
+import { validateFormData } from "../../utils/isomorphic";
 import { renderData } from "../../utils/client";
-import { PageHeader } from "../../components/page";
-// import { getNCCLClient } from "../../utils/server";
+import { getNCCLClient } from "../../utils/server";
 
 export async function loader(args: Route.LoaderArgs) {
-  //   if (!args.params.token) {
-  //     return { status: "error", reason: "token missing" } as const;
-  //   }
-  return { status: "ok", token: args.params.token } as const;
-  //   const ncclClient = getNCCLClient(args);
-  //   try {
-  //     const resource = await ncclClient.resource.getResourceByPath(slugPath);
-  //     return resource;
-  //   } catch (error) {
-  //     return ncclClient.serializeError(error);
-  //   }
+  const url = new URL(args.request.url);
+  const queryToken = url.searchParams.get("token");
+  if (!queryToken) {
+    return {
+      status: "missing_token",
+      reason: "A token is required in order to process your invitation.",
+    } as const;
+  }
+  const ncclClient = getNCCLClient(args);
+  try {
+    const res = await ncclClient.account.validateInviteToken(queryToken);
+    return res;
+  } catch (error) {
+    return ncclClient.serializeError(error);
+  }
+}
+
+export async function action(args: Route.ActionArgs) {
+  const ncclClient = getNCCLClient(args);
+  const formData = await args.request.formData();
+
+  try {
+    const data = await validateFormData(AcceptInviteRequestSchema, formData);
+    console.log(data);
+    await ncclClient.account.acceptInvite(data);
+    return redirect(href("/"));
+  } catch (error) {
+    return ncclClient.serializeError(error);
+  }
 }
 
 export default function AuthAcceptInviteRoute(args: Route.ComponentProps) {
@@ -30,15 +50,16 @@ export default function AuthAcceptInviteRoute(args: Route.ComponentProps) {
         loading: "Loading...",
         ok: (d) => {
           switch (d.status) {
-            case "error":
+            case "invalid_token":
+            case "missing_token":
               return (
                 <AuthAcceptInviteError>
                   <Callout variant="danger" omitIcon description={d.reason} />
                 </AuthAcceptInviteError>
               );
 
-            case "ok":
-              return <AuthAcceptInviteValid />;
+            case "valid":
+              return <AuthAcceptInviteValid email={d.email} />;
 
             default:
               exhaustiveMatchGuard(d);

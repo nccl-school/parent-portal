@@ -1,13 +1,9 @@
 import { Hono } from "hono";
-import { addDays, format } from "date-fns";
-import { InviteUserEmail } from "@nccl/emails";
 
 import {
   GetUserListResponseSchema,
   GetUserParamsSchema,
   GetUserResponseSchema,
-  InviteUsersRequestSchema,
-  InviteUsersResponseSchema,
   UpdateUserRoleParamsSchema,
   UpdateUserRoleRequestSchema,
   UpdateUserRoleResponseSchema,
@@ -16,9 +12,7 @@ import {
 import { validate } from "../../middleware/middleware.validate.js";
 import { ErrorSet } from "../../utils/util.errors.js";
 import { authorize } from "../../middleware/middleware.authorize.js";
-import { getEnvVar } from "../../utils/util.envVar.js";
 import { serialize } from "../../utils/util.serialize.js";
-import { create64HexToken } from "../../utils/util.general.js";
 
 export const user = new Hono();
 
@@ -76,77 +70,6 @@ user.put(
 
     // Invalidate the current user cache
     const data = await serialize(UpdateUserRoleResponseSchema, user);
-    return c.json(data);
-  }
-);
-
-// POST /api/user/invite | Invite 1 or many users
-user.post(
-  "/invite",
-  authorize("ADMIN"),
-  validate("json", InviteUsersRequestSchema),
-  async (c) => {
-    const body = c.req.valid("json");
-    const db = c.get("db");
-    const currentUser = c.get("user");
-    const env = getEnvVar(c);
-    const resend = c.get("resend");
-
-    const invitations = await db.invite.findMany();
-    const alreadyInvitedEmails = invitations.filter((invitation) => {
-      return body.email_addresses.includes(invitation.email);
-    });
-    if (alreadyInvitedEmails.length !== 0) {
-      throw new ErrorSet.validation({
-        email_addresses: alreadyInvitedEmails.map(
-          (e) => `"${e.email}" has already been invited`
-        ),
-      });
-    }
-
-    const createInviteAndEmailUsers = body.email_addresses.map((email) => {
-      return db.$transaction(async (tx) => {
-        const inviteToken = create64HexToken();
-        const inviteExpiresAt = addDays(new Date(), 7);
-
-        await tx.invite.create({
-          data: {
-            email: email,
-            token: inviteToken,
-            createdById: currentUser.id,
-            expiresAt: inviteExpiresAt,
-          },
-        });
-
-        // email user
-        const acceptInviteUrl = `${env.NCCL_APP_URL}/invite/${inviteToken}`;
-        const formattedExpiresAt = format(inviteExpiresAt, "PPPP");
-        const emailRes = await resend.emails.send({
-          from: "NCCL Parents <no-reply@ncclschool.org>",
-          to: email,
-          subject: "Invitation to join NCCL Parents",
-          react: (
-            <InviteUserEmail
-              inviteLink={acceptInviteUrl}
-              expiresInDays={7}
-              expiresOnDate={formattedExpiresAt}
-            />
-          ),
-        });
-        if (emailRes.error) {
-          console.log(emailRes.error);
-          throw new ErrorSet.badRequest(emailRes.error.message);
-        }
-      });
-    });
-
-    await Promise.all(createInviteAndEmailUsers);
-
-    const data = await serialize(InviteUsersResponseSchema, {
-      message: `Successfully invited ${body.email_addresses.length} users.`,
-      userCount: body.email_addresses.length,
-    });
-
     return c.json(data);
   }
 );

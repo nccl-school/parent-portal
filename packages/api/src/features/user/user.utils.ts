@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { zDateStringSchema, zMessageSchema } from "../../utils/util.schema.js";
+import { zDateStringSchema } from "../../utils/util.schema.js";
 import { RolesSchema } from "../role/role.utils.js";
 
 export const UserStatusSchema = z.literal(["INVITED", "ACTIVE", "DISABLED"]);
@@ -49,23 +49,4 @@ export const UpdateUserRoleRequestSchema = z.object({
 export const UpdateUserRoleResponseSchema = UserSchema;
 export type UpdateUserRoleResponse = z.infer<
   typeof UpdateUserRoleResponseSchema
->;
-
-// Invite Users
-export const InviteUsersRequestSchema = z.object({
-  email_addresses: z.array(z.email({ pattern: z.regexes.html5Email })),
-  role: RolesSchema,
-});
-export type InviteUsersRequest = z.infer<typeof InviteUsersRequestSchema>;
-export const InviteUsersResponseSchema = z.object({
-  message: z.string(),
-  userCount: z.number(),
-});
-export type InviteUsersResponse = z.infer<typeof InviteUsersResponseSchema>;
-
-// ReInvite User
-export const ResendInviteUserParamsSchema = z.object({ id: z.string() });
-export const ResendInviteUserResponseSchema = zMessageSchema;
-export type ResendInviteUserResponse = z.infer<
-  typeof ResendInviteUserResponseSchema
 >;

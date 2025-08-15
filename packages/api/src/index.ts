@@ -17,6 +17,7 @@ import { role } from "./features/role/role.route.js";
 import { authentication } from "./features/auth/auth.route.js";
 import { resource } from "./features/resource/resource.route.js";
 import { emailMiddleware } from "./middleware/middleware.email.js";
+import { account } from "./features/account/account.route.js";
 
 // Environment Vars
 const envPath = path.resolve(import.meta.dirname, "../../../.env");
@@ -26,7 +27,9 @@ const app = new Hono();
 
 // Middleware - CORS, logging, transactional email
 app.use(logger());
+app.use(highlightIOMiddleware);
 app.use(emailMiddleware);
+app.use(prismaMiddleware);
 app.use(
   cors({
     origin: "*", // or specific domains: ["https://yourapp.com"]
@@ -40,13 +43,10 @@ app.use(
 
 // Authentication routes
 app.route("/api/auth", authentication);
+app.route("/api/account", account);
 
-// Middleware - Session, DB, and
+// Session aware routes
 app.use(sessionMiddleware);
-app.use(highlightIOMiddleware);
-app.use(prismaMiddleware);
-
-// Authenticated routes
 app.route("/api/suggestion", suggestion);
 app.route("/api/role", role);
 app.route("/api/user", user);

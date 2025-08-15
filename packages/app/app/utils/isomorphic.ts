@@ -15,10 +15,10 @@ export const placeholder = "-- --";
 export async function validateFormData<T extends ZodType>(
   schema: T,
   formData: FormData
-) {
+): Promise<z.core.output<T>> {
   const formDataObj = Object.fromEntries(formData.entries());
-  console.log(formDataObj);
-  return z.parse(schema, formDataObj);
+  const data = z.parse(schema, formDataObj) as z.core.output<T>;
+  return data;
 }
 
 export function createValidator<T extends ZodObject>(schema: T) {

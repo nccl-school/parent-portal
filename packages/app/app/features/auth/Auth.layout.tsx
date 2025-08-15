@@ -8,16 +8,17 @@ import { backgroundGradient } from "../../utils/isomorphic";
 
 const styles = css`
   width: 100vw;
-  height: 100vh;
   display: grid;
   place-content: center;
 
   ${makeResponsive({ to: "laptop" })} {
+    min-height: 100vh;
     padding: 0;
   }
   ${makeResponsive({ from: "laptop" })} {
     display: grid;
     place-content: center;
+    height: 100vh;
   }
 
   article {
@@ -30,7 +31,7 @@ const styles = css`
 
     ${makeResponsive({ to: "laptop" })} {
       padding: ${makeRem(16)} ${makeRem(32)};
-      height: 100vh;
+      min-height: 100vh;
     }
     ${makeResponsive({ from: "laptop" })} {
       border-radius: ${makeRem(16)};
