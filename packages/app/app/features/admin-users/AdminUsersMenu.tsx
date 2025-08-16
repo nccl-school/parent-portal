@@ -8,8 +8,8 @@ import {
   type PopoverEngine,
 } from "@nccl/components";
 import { useCallback, useEffect, type MouseEventHandler } from "react";
-import type { User } from "@nccl/api/client";
-import { href, useFetcher } from "react-router";
+import type { GetUserResponse } from "@nccl/api/client";
+import { useFetcher } from "react-router";
 
 import { AdminUserPermissions } from "../admin-user-permissions";
 import { AdminUserProfile } from "../admin-user-profile";
@@ -18,7 +18,7 @@ export function AdminUsersMenu({
   popover,
   user,
 }: {
-  user: User;
+  user: GetUserResponse;
   popover: PopoverEngine;
 }) {
   const fetcher = useFetcher();
@@ -65,7 +65,7 @@ export function AdminUsersMenu({
           </PopoverMenuItemAction>
         </PopoverMenuItem>
 
-        {user.invitationId && user.status === "INVITED" && (
+        {/* {user.invitationId && user.status === "INVITED" && (
           <PopoverMenuItem>
             <fetcher.Form
               action={href("/api/user/resend-invite/:id", { id: user.id })}
@@ -80,7 +80,7 @@ export function AdminUsersMenu({
               </PopoverMenuItemAction>
             </fetcher.Form>
           </PopoverMenuItem>
-        )}
+        )} */}
       </PopoverMenu>
     </Popover>
   );

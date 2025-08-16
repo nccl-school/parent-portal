@@ -17,6 +17,7 @@ type EnvVars = {
   CLERK_PUBLISHABLE_KEY: string;
   NODE_ENV: string;
   HIGHLIGHT_PROJECT_ID: string;
+  NCCL_ENVIRONMENT: string;
 };
 
 declare module "react-router" {
@@ -48,6 +49,7 @@ app.use(
           ),
           HIGHLIGHT_PROJECT_ID: envVar("HIGHLIGHT_PROJECT_ID"),
           NODE_ENV: envVar("NODE_ENV"),
+          NCCL_ENVIRONMENT: envVar("NCCL_ENVIRONMENT"),
         },
       };
     },

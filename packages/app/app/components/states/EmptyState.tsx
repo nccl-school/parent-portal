@@ -49,6 +49,7 @@ export function EmptyState(props: {
         "no-border": props.borderless,
       })}
       style={{
+        // @ts-expect-error Custom CSS Properties are valid
         "--img-size": makeRem(props.imgSize ?? 100),
       }}
     >

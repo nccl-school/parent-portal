@@ -150,6 +150,8 @@ account.post(
     const newUser = await auth.api.signUpEmail({
       body: {
         email: invite.email,
+        firstName: body.firstName,
+        lastName: body.lastName,
         name: `${body.firstName} ${body.lastName}`,
         password: body.password,
         roleId: invite.roleId,

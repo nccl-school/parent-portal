@@ -10,6 +10,8 @@ export const UserSchema = z.object({
   id: z.string(),
   email: z.email(),
   name: z.string(),
+  firstName: z.string(),
+  lastName: z.string(),
   emailVerified: z.boolean(),
   imageUrl: z.string().nullable(),
   banned: z.boolean().nullable(),
@@ -19,6 +21,15 @@ export const UserSchema = z.object({
   updatedAt: zDateStringSchema,
 });
 export type User = z.infer<typeof UserSchema>;
+
+// Get Current user
+export const GetCurrentUserResponseSchema = z.object({
+  ...UserSchema.shape,
+  roleId: RolesSchema,
+});
+export type GetCurrentUserResponse = z.infer<
+  typeof GetCurrentUserResponseSchema
+>;
 
 // Get a list of users
 export const GetUserListResponseSchema = UserSchema.array();

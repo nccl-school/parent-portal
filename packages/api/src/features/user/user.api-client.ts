@@ -4,6 +4,7 @@ import {
   GetUserParamsSchema,
   UpdateUserRoleParamsSchema,
   UpdateUserRoleRequestSchema,
+  type GetCurrentUserResponse,
   type GetUserListResponse,
   type GetUserResponse,
   type UpdateUserRoleResponse,
@@ -17,6 +18,15 @@ import {
 export class UserClient extends ApiClient {
   constructor(options: ApiClientOptions) {
     super({ basePath: "/user", ...options });
+  }
+
+  /**
+   * Get the current user
+   */
+  public async getCurrentUser() {
+    return this._get<GetCurrentUserResponse>({
+      path: `/current`,
+    });
   }
 
   /**

@@ -34,6 +34,8 @@ export async function seedSuperUser() {
       const { user } = await auth.api.signUpEmail({
         body: {
           ...body,
+          firstName: "Clark",
+          lastName: "Kent",
           roleId: "ADMIN",
         },
       });

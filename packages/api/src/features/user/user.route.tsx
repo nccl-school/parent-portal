@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 
 import {
+  GetCurrentUserResponseSchema,
   GetUserListResponseSchema,
   GetUserParamsSchema,
   GetUserResponseSchema,
@@ -15,6 +16,30 @@ import { authorize } from "../../middleware/middleware.authorize.js";
 import { serialize } from "../../utils/util.serialize.js";
 
 export const user = new Hono();
+
+user.get("/current", async (c) => {
+  const db = c.get("db");
+  const currentUser = c.get("user");
+  const user = await db.user.findUnique({
+    where: {
+      id: currentUser.id,
+    },
+    include: {
+      role: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
+  if (!user) throw new ErrorSet.notFound("Cannot get the current user");
+  const { role, ...restUser } = user;
+  const data = await serialize(GetCurrentUserResponseSchema, {
+    ...restUser,
+    roleId: role.id,
+  });
+  return c.json(data);
+});
 
 // GET /api/user | Get a list of users
 user.get("/", authorize("ADMIN"), async (c) => {

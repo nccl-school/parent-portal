@@ -14,6 +14,8 @@ export const auth = betterAuth({
     // custom fields
     additionalFields: {
       roleId: { type: "string" },
+      firstName: { type: "string" },
+      lastName: { type: "string" },
       isSuper: { type: "boolean", input: false },
     },
   },

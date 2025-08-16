@@ -75,7 +75,7 @@ function ModalContent() {
                 Use the radio button's below to update{" "}
                 <b>{getUserName(user)}'s</b> access
               </Typography>
-              <RoleRadioGroup defaultCheckedRole={user.role.id} name="role" />
+              <RoleRadioGroup defaultCheckedRole={user.roleId} name="role" />
             </ModalBody>
           ),
           [user]

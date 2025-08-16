@@ -1,12 +1,13 @@
-import { getAuth } from "@clerk/react-router/ssr.server";
 import type { LoaderFunctionArgs } from "react-router";
 import type { Roles } from "@nccl/api/client";
+import { redirect } from "react-router";
+import { auth } from "@nccl/api/auth";
 
 import { ServerError } from "./utils.server.response";
 
 export async function getRole<T extends LoaderFunctionArgs>(loaderArgs: T) {
-  const { sessionClaims } = await getAuth(loaderArgs);
-  return sessionClaims?.metadata.role as Roles;
+  const { user } = await ensureSession(loaderArgs);
+  return user.roleId as Roles;
 }
 
 export async function isAdmin<T extends LoaderFunctionArgs>(loaderArgs: T) {
@@ -43,4 +44,20 @@ export async function isAuthorized(
   if (Array.isArray(roleOrRoles) && !roleOrRoles.includes(role)) {
     throw new ServerError.unauthorized();
   }
+}
+
+/**
+ * Ensure there is a logged-in user (via Better Auth cookie session).
+ * Throws a redirect to /sign-in if not authenticated.
+ */
+export async function ensureSession<T extends { request: Request }>(args: T) {
+  const session = await auth.api.getSession({ headers: args.request.headers });
+  if (!session) {
+    // preserve the originally requested URL
+    const url = new URL(args.request.url);
+    throw redirect(
+      `/sign-in?redirect_url=${encodeURIComponent(url.toString())}`
+    );
+  }
+  return { userId: session.user.id, ...session };
 }

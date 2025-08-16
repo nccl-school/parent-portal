@@ -6,8 +6,6 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
-import { rootAuthLoader } from "@clerk/react-router/ssr.server";
-// import { ClerkProvider } from "@clerk/react-router";
 import { css } from "@linaria/core";
 import "@nccl/theme/reset.css";
 import "@nccl/theme/root.css";
@@ -17,6 +15,7 @@ import { Toaster } from "@nccl/components";
 import { HighlightInit } from "@highlight-run/remix/client";
 
 import type { Route } from "./+types/root";
+import { getNCCLClient } from "./utils/server";
 
 const rootStyles = css`
   :global() {
@@ -31,10 +30,13 @@ const rootStyles = css`
 `;
 
 export async function loader(args: Route.LoaderArgs) {
+  const ncclClient = getNCCLClient(args);
+  const currentUser = await ncclClient.user.getCurrentUser();
+
   return {
-    rootAuthLoader: rootAuthLoader(args),
+    currentUser,
     ENV: {
-      ENVIRONMENT: args.context.env.NODE_ENV,
+      ENVIRONMENT: args.context.env.NCCL_ENVIRONMENT,
       HIGHLIGHT_PROJECT_ID: args.context.env.HIGHLIGHT_PROJECT_ID,
     },
   };
@@ -93,7 +95,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App({ loaderData }: Route.ComponentProps) {
   return (
-    // <ClerkProvider loaderData={loaderData.rootAuthLoader}>
     <>
       <HighlightInit
         projectId={loaderData.ENV.HIGHLIGHT_PROJECT_ID}
@@ -104,7 +105,6 @@ export default function App({ loaderData }: Route.ComponentProps) {
       />
       <Outlet />
     </>
-    // </ClerkProvider>
   );
 }
 

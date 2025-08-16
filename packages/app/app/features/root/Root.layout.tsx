@@ -11,10 +11,10 @@ import { RootNavbar } from "./RootNavbar";
 import { RootHeader } from "./RootHeader";
 
 import { backgroundGradient } from "../../utils/isomorphic";
-import { ensureUser } from "../../utils/server";
+import { ensureSession } from "../../utils/server";
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
-  await ensureUser(loaderArgs);
+  await ensureSession(loaderArgs);
 }
 
 const styles = css`
