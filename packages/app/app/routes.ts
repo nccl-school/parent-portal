@@ -71,12 +71,12 @@ export default [
         ),
       ]),
     ]),
-    ...prefix("auth", [route("/sign-out", "./api/api.auth.signOut.ts")]),
     ...prefix("account", [
       route("/invite", "./api/api.account.inviteUsers.ts"),
     ]),
     ...prefix("user", [
       route("/", "./api/api.user.ts"),
+      route("/invite", "./api/api.user.inviteUsers.ts"),
       route("/resend-invite/:id", "./api/api.user.resendInvite.ts"),
       route("/:id", "./api/api.user.getUserById.ts", [
         route("role", "./api/api.user.updateUserRole.ts"),

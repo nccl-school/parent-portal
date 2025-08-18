@@ -10,7 +10,6 @@ import { classes, exhaustiveMatchGuard } from "@stratum-ui/core/utils";
 import { memo, useEffect, useRef, useState } from "react";
 import { match } from "ts-pattern";
 
-import { useSession } from "../../hooks/hook.useSession";
 import {
   getResourceIcon,
   getResourceIconColor,
@@ -83,13 +82,13 @@ export const ResourcesAddedListItemFile = memo(
       | { status: "ok"; data: CreateResourceResponse }
       | { status: "error"; error: ErrorResponse }
     >({ status: "loading" });
-    const session = useSession();
+    const { getToken } = useAuth();
 
     useEffect(() => {
       async function uploadWithProgress() {
         if (hasStartedRef.current) return;
         hasStartedRef.current = true;
-        const token = session?.token;
+        const token = await getToken();
         if (!token) throw new Error("Missing auth token");
 
         const xhr = new XMLHttpRequest();
@@ -160,13 +159,13 @@ export const ResourcesAddedListItemFile = memo(
 
       uploadWithProgress();
     }, [
+      getToken,
       props.file,
       props.name,
       props.owner,
       props.parentResourceId,
       props.slug,
       props.type,
-      session?.token,
     ]);
 
     switch (props.type) {

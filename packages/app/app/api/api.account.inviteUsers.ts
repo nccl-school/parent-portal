@@ -1,7 +1,7 @@
 import { InviteUsersRequestSchema } from "@nccl/api/client";
 import z from "zod";
 
-import type { Route } from "./+types/api.account.inviteUsers";
+import type { Route } from "./+types/api.user.inviteUsers";
 
 import { validateFormData } from "../utils/isomorphic";
 import { getNCCLClient } from "../utils/server";
