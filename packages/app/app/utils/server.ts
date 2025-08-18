@@ -4,10 +4,9 @@ import { redirect } from "react-router";
 import { NCCLClient } from "@nccl/api/client";
 import { auth } from "@nccl/api/auth.server";
 
-// TODO: THIS WILL NOT WORK
 export async function getRole<T extends LoaderFunctionArgs>(loaderArgs: T) {
   const session = await ensureSession(loaderArgs);
-  return session.userId as Roles;
+  return session.user.roleId as Roles;
 }
 
 export async function isAdmin<T extends LoaderFunctionArgs>(loaderArgs: T) {
@@ -59,7 +58,7 @@ export async function ensureSession<T extends LoaderFunctionArgs>(args: T) {
     // preserve the originally requested URL
     const url = new URL(args.request.url);
     throw redirect(
-      `/sign-in?redirect_url=${encodeURIComponent(url.toString())}`
+      `/sign-in?callback_url=${encodeURIComponent(url.toString())}`
     );
   }
   return session;
@@ -90,4 +89,22 @@ export function getNCCLClient<A extends LoaderFunctionArgs<AppLoadContext>>(
   });
 
   return client;
+}
+
+export function withSetCookie(from: Response, to: Response) {
+  // Node 20+ (undici) sometimes exposes getSetCookie()
+  const anyHeaders = from.headers as Headers;
+  const cookies: string[] =
+    typeof anyHeaders.getSetCookie === "function"
+      ? anyHeaders.getSetCookie()
+      : (() => {
+          const v = from.headers.get("set-cookie");
+          // If multiple cookies were coalesced, split on comma that starts a new cookie (", " followed by token=)
+          return v ? v.split(/,(?=\s*[^\s=]+?=)/g) : [];
+        })();
+
+  for (const c of cookies) {
+    to.headers.append("set-cookie", c);
+  }
+  return to;
 }

@@ -9,7 +9,11 @@ import { AuthAcceptInviteError } from "./AuthAcceptInviteError";
 
 import { validateFormData } from "../../utils/isomorphic";
 import { renderData } from "../../utils/client";
-import { getNCCLClient } from "../../utils/server";
+import {
+  getAuthClient,
+  getNCCLClient,
+  withSetCookie,
+} from "../../utils/server";
 
 export async function loader(args: Route.LoaderArgs) {
   const url = new URL(args.request.url);
@@ -31,13 +35,26 @@ export async function loader(args: Route.LoaderArgs) {
 
 export async function action(args: Route.ActionArgs) {
   const ncclClient = getNCCLClient(args);
+  const authClient = getAuthClient();
   const formData = await args.request.formData();
 
   try {
-    const data = await validateFormData(AcceptInviteRequestSchema, formData);
-    console.log(data);
-    await ncclClient.account.acceptInvite(data);
-    return redirect(href("/"));
+    const body = await validateFormData(AcceptInviteRequestSchema, formData);
+    console.log("Accepting invite");
+    await ncclClient.account.acceptInvite(body);
+    console.log("Successfully accepted invite");
+    console.log("Signin in");
+    const signInRes = await authClient.signInEmail({
+      headers: args.request.headers,
+      body: {
+        email: body.email,
+        password: body.password,
+      },
+      asResponse: true,
+    });
+    console.log("Signin in... complete");
+
+    return withSetCookie(signInRes, redirect(href("/")));
   } catch (error) {
     return ncclClient.serializeError(error);
   }

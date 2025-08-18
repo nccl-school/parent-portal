@@ -17,8 +17,7 @@ export async function validateFormData<T extends ZodType>(
   formData: FormData
 ): Promise<z.core.output<T>> {
   const formDataObj = Object.fromEntries(formData.entries());
-  const data = z.parse(schema, formDataObj) as z.core.output<T>;
-  return data;
+  return z.parse(schema, formDataObj) as z.core.output<T>;
 }
 
 export function createValidator<T extends ZodObject>(schema: T) {
