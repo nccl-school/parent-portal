@@ -1,11 +1,12 @@
-import type { AppLoadContext, LoaderFunctionArgs } from "react-router";
+import type { LoaderFunctionArgs, AppLoadContext } from "react-router";
 import { ErrorSet, type Roles } from "@nccl/api/client";
 import { redirect } from "react-router";
-import { auth } from "@nccl/api/auth";
+import { NCCLClient } from "@nccl/api/client";
 
+// TODO: THIS WILL NOT WORK
 export async function getRole<T extends LoaderFunctionArgs>(loaderArgs: T) {
-  const { user } = await ensureSession(loaderArgs);
-  return user.roleId as Roles;
+  const session = await ensureSession(loaderArgs);
+  return session.userId as Roles;
 }
 
 export async function isAdmin<T extends LoaderFunctionArgs>(loaderArgs: T) {
@@ -48,8 +49,9 @@ export async function isAuthorized(
  * Ensure there is a logged-in user (via Better Auth cookie session).
  * Throws a redirect to /sign-in if not authenticated.
  */
-export async function ensureSession<T extends { request: Request }>(args: T) {
-  const session = await auth.api.getSession({ headers: args.request.headers });
+export async function ensureSession<T extends LoaderFunctionArgs>(args: T) {
+  const ncclClient = getNCCLClient(args);
+  const session = await ncclClient.account.getSession();
   if (!session) {
     // preserve the originally requested URL
     const url = new URL(args.request.url);
@@ -57,25 +59,10 @@ export async function ensureSession<T extends { request: Request }>(args: T) {
       `/sign-in?redirect_url=${encodeURIComponent(url.toString())}`
     );
   }
-  return { userId: session.user.id, ...session };
+  return session;
 }
 
-export class AuthClient {
-  headers: Headers;
-  constructor({ headers }: { headers: Headers }) {
-    this.headers = headers;
-  }
-
-  signOut() {
-    return auth.api.signOut({ headers: this.headers });
-  }
-
-  getSession() {
-    return auth.api.getSession({ headers: this.headers });
-  }
-}
-
-export function getAuthClient<A extends LoaderFunctionArgs<AppLoadContext>>(
+export function getNCCLClient<A extends LoaderFunctionArgs<AppLoadContext>>(
   args: A
 ) {
   // Grab some of the headers off of the original request
@@ -88,5 +75,11 @@ export function getAuthClient<A extends LoaderFunctionArgs<AppLoadContext>>(
   if (cookie) headers.set("cookie", cookie);
   if (authorization) headers.set("authorization", authorization);
 
-  return new AuthClient({ headers: args.request.headers });
+  const client = new NCCLClient({
+    rootUrl: args.context.env.NCCL_API_URL,
+    rootUrlSegments: ["api"],
+    headers,
+  });
+
+  return client;
 }

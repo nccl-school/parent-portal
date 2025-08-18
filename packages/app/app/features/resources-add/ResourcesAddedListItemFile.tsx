@@ -89,7 +89,7 @@ export const ResourcesAddedListItemFile = memo(
       async function uploadWithProgress() {
         if (hasStartedRef.current) return;
         hasStartedRef.current = true;
-        const token = session?.token;
+        const token = session?.session.token;
         if (!token) throw new Error("Missing auth token");
 
         const xhr = new XMLHttpRequest();
@@ -166,7 +166,7 @@ export const ResourcesAddedListItemFile = memo(
       props.parentResourceId,
       props.slug,
       props.type,
-      session?.token,
+      session?.session.token,
     ]);
 
     switch (props.type) {

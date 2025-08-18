@@ -1,13 +1,13 @@
 import { Header, HeaderActions, HeaderActionsItem } from "@nccl/components";
 
-import { RootHeaderUser } from "./RootHeaderUser";
+import { AppRootHeaderUser } from "./AppRootHeaderUser";
 
 export function RootHeader() {
   return (
     <Header>
       <HeaderActions>
         <HeaderActionsItem>
-          <RootHeaderUser />
+          <AppRootHeaderUser />
         </HeaderActionsItem>
       </HeaderActions>
     </Header>

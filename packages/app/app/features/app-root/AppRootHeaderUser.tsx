@@ -13,7 +13,7 @@ const styles = css`
   place-content: center;
 `;
 
-export function RootHeaderUser() {
+export function AppRootHeaderUser() {
   const user = useUser();
 
   return (

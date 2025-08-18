@@ -264,6 +264,8 @@ suggestion.get(
             id: true,
             imageUrl: true,
             email: true,
+            firstName: true,
+            lastName: true,
             role: true,
           },
         },

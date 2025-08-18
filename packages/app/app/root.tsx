@@ -29,14 +29,14 @@ const rootStyles = css`
   }
 `;
 
-export async function loader(args: Route.LoaderArgs) {
-  return {
-    ENV: {
-      ENVIRONMENT: args.context.env.NCCL_ENVIRONMENT,
-      HIGHLIGHT_PROJECT_ID: args.context.env.HIGHLIGHT_PROJECT_ID,
-    },
-  };
-}
+// export async function loader(args: Route.LoaderArgs) {
+//   return {
+//     ENV: {
+//       ENVIRONMENT: args.context.env.NCCL_ENVIRONMENT,
+//       HIGHLIGHT_PROJECT_ID: args.context.env.HIGHLIGHT_PROJECT_ID,
+//     },
+//   };
+// }
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -92,13 +92,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App({ loaderData }: Route.ComponentProps) {
   return (
     <>
-      <HighlightInit
+      {/* <HighlightInit
         projectId={loaderData.ENV.HIGHLIGHT_PROJECT_ID}
         serviceName="NCCL Parent Portal | Client"
         environment={loaderData.ENV.ENVIRONMENT}
         tracingOrigins
         networkRecording={{ enabled: true, recordHeadersAndBody: true }}
-      />
+      /> */}
       <Outlet />
     </>
   );
@@ -124,13 +124,13 @@ export function ErrorBoundary({ error, loaderData }: Route.ErrorBoundaryProps) {
   return (
     <main className="pt-16 p-4 container mx-auto">
       <script src="https://unpkg.com/highlight.run"></script>
-      <script
+      {/* <script
         dangerouslySetInnerHTML={{
           __html: `
 							H.init('${loaderData?.ENV.HIGHLIGHT_PROJECT_ID}');
 						`,
         }}
-      />
+      /> */}
       <h1>{message}</h1>
       <p>{details}</p>
       {stack && (

@@ -14,10 +14,24 @@ import {
   ApiClient,
   type ApiClientOptions,
 } from "../../api-client/ApiClient.js";
+import type { auth } from "../../auth.js";
 
 export class AccountClient extends ApiClient {
   constructor(options: ApiClientOptions) {
     super({ basePath: "/account", ...options });
+  }
+
+  public async signOut() {
+    return this._mutateJSON<ReturnType<typeof auth.api.signOut>>({
+      method: "POST",
+      path: "/sign-out",
+    });
+  }
+
+  public async getSession() {
+    return this._get<ReturnType<typeof auth.api.getSession>>({
+      path: "/session",
+    });
   }
 
   /**

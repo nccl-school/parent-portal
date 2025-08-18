@@ -20,24 +20,16 @@ export const user = new Hono();
 user.get("/current", async (c) => {
   const db = c.get("db");
   const currentUser = c.get("user");
-  const user = await db.user.findUnique({
+  const userWithRole = await db.user.findUnique({
     where: {
       id: currentUser.id,
     },
     include: {
-      role: {
-        select: {
-          id: true,
-        },
-      },
+      role: true,
     },
   });
-  if (!user) throw new ErrorSet.notFound("Cannot get the current user");
-  const { role, ...restUser } = user;
-  const data = await serialize(GetCurrentUserResponseSchema, {
-    ...restUser,
-    roleId: role.id,
-  });
+  if (!userWithRole) throw new ErrorSet.notFound("Cannot get the current user");
+  const data = await serialize(GetCurrentUserResponseSchema, userWithRole);
   return c.json(data);
 });
 
@@ -89,7 +81,7 @@ user.put(
         id: param.id,
       },
       include: {
-        role: {},
+        role: true,
       },
     });
 

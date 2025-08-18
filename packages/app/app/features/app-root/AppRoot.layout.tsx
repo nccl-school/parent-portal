@@ -5,16 +5,19 @@ import { classes } from "@stratum-ui/core/utils";
 import { H } from "@highlight-run/remix/client";
 import { useEffect } from "react";
 
-import type { Route } from "./+types/Root.layout";
-import { RootNavbar } from "./RootNavbar";
-import { RootHeader } from "./RootHeader";
+import type { Route } from "./+types/AppRoot.layout";
+import { RootNavbar } from "./AppRootNavbar";
+import { RootHeader } from "./AppRootHeader";
 
 import { backgroundGradient } from "../../utils/isomorphic";
-import { ensureSession } from "../../utils/server";
-import { useUser } from "../../hooks/hook.useUser";
+import { ensureSession, getNCCLClient } from "../../utils/server";
 
-export async function loader(loaderArgs: Route.LoaderArgs) {
-  await ensureSession(loaderArgs);
+export async function loader(args: Route.LoaderArgs) {
+  console.log("AppRoot Loader Fired");
+  const session = await ensureSession(args);
+  const ncclClient = getNCCLClient(args);
+  const currentUser = await ncclClient.user.getCurrentUser();
+  return { session, currentUser };
 }
 
 const styles = css`
@@ -81,11 +84,10 @@ const styles = css`
   }
 `;
 
-export default function RootLayout() {
-  const user = useUser();
+export default function AppRootLayout(args: Route.ComponentProps) {
+  const { firstName, lastName, email } = args.loaderData.currentUser;
 
-  const email = user?.email;
-  const fullName = `${user?.firstName} ${user?.lastName}`;
+  const fullName = `${firstName} ${lastName}`;
 
   // Track the user's session
   useEffect(() => {

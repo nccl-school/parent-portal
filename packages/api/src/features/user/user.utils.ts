@@ -62,7 +62,7 @@ export const UpdateUserRoleParamsSchema = z.object({
 export const UpdateUserRoleRequestSchema = z.object({
   role: RolesSchema,
 });
-export const UpdateUserRoleResponseSchema = RoleSchema;
+export const UpdateUserRoleResponseSchema = UserWithRoleSchema;
 export type UpdateUserRoleResponse = z.infer<
   typeof UpdateUserRoleResponseSchema
 >;
