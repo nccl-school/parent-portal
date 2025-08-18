@@ -51,13 +51,7 @@ export class NCCLClient {
   }
 
   async getSession() {
-    try {
-      const res = await auth.api.getSession({ headers: this.#headers });
-      return res?.session;
-    } catch {
-      throw new ErrorSet.serverError(
-        "There was an error when trying to fetch the users session"
-      );
-    }
+    const res = await auth.api.getSession({ headers: this.#headers });
+    return res?.session;
   }
 }

@@ -16,7 +16,6 @@ import { Toaster } from "@nccl/components";
 import { HighlightInit } from "@highlight-run/remix/client";
 
 import type { Route } from "./+types/root";
-import { getNCCLClient } from "./utils/server";
 
 const rootStyles = css`
   :global() {
@@ -31,13 +30,7 @@ const rootStyles = css`
 `;
 
 export async function loader(args: Route.LoaderArgs) {
-  const ncclClient = getNCCLClient(args);
-  const currentUser = await ncclClient.user.getCurrentUser();
-  const session = await ncclClient.getSession();
-
   return {
-    currentUser,
-    session,
     ENV: {
       ENVIRONMENT: args.context.env.NCCL_ENVIRONMENT,
       HIGHLIGHT_PROJECT_ID: args.context.env.HIGHLIGHT_PROJECT_ID,
