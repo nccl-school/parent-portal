@@ -1,4 +1,3 @@
-import { SignOutButton } from "@clerk/react-router";
 import {
   Navbar,
   NavbarGroup,
@@ -11,6 +10,7 @@ import type { ReactNode } from "react";
 import { href, NavLink, type NavLinkProps } from "react-router";
 
 import { Restrict } from "../auth/Restrict";
+import { AuthSignOutButton } from "../auth/AuthSignOutButton";
 
 function RootNavbarItem({
   children,
@@ -88,7 +88,7 @@ export function RootNavbar() {
           />
           <NavbarItemText>Help</NavbarItemText>
         </NavbarItem>
-        <SignOutButton redirectUrl="/sign-in">
+        <AuthSignOutButton>
           <NavbarItem>
             <NavbarItemIcon
               dxBaseIcon="logout-01-stroke-standard"
@@ -96,7 +96,7 @@ export function RootNavbar() {
             />
             <NavbarItemText>Logout</NavbarItemText>
           </NavbarItem>
-        </SignOutButton>
+        </AuthSignOutButton>
       </NavbarGroup>
     </Navbar>
   );
