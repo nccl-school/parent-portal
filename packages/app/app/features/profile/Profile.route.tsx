@@ -1,4 +1,3 @@
-import { UserProfile } from "@clerk/react-router";
 import { css } from "@linaria/core";
 import { makeFontFamily } from "@nccl/theme";
 
@@ -14,8 +13,6 @@ const clerkCSSOverrides = css`
 
 export default function ProfileRoute() {
   return (
-    <PageSection className={clerkCSSOverrides}>
-      <UserProfile />
-    </PageSection>
+    <PageSection className={clerkCSSOverrides}>Work in progress</PageSection>
   );
 }

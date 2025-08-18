@@ -28,7 +28,7 @@ export async function action(args: Route.ActionArgs) {
       ...body,
       email_addresses: emailArray,
     });
-    const res = await ncclClient.user.inviteUsers(requestBody);
+    const res = await ncclClient.account.inviteUsers(requestBody);
     return res;
   } catch (error) {
     return ncclClient.serializeError(error);

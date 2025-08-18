@@ -1,8 +1,7 @@
-import type { ErrorResponse } from "@nccl/api/client";
+import { ErrorResponseSchema, type ErrorResponse } from "@nccl/api/client";
 import type { ReactNode } from "react";
 import { match } from "ts-pattern";
 
-import type { ErrorPayloadValidation } from "./server";
 import { placeholder } from "./isomorphic";
 
 export class DateFactory {
@@ -86,25 +85,19 @@ export class DateFactory {
 
 export const dates = DateFactory.getInstance();
 
-function isValidationError<T extends string>(
-  data: unknown
-): data is ErrorPayloadValidation<T> {
-  return (
-    typeof data === "object" &&
-    data !== null &&
-    "error_type" in data &&
-    (data as ErrorResponse).error_type === "validation"
-  );
-}
-
 export function isError(data: unknown): data is ErrorResponse {
   return typeof data === "object" && data !== null && "error_type" in data;
 }
 
-export function getValidationErrors<K extends string>(
+export type ObjectKeys<T> = Extract<keyof T, string>;
+
+export function getValidationErrors<K extends Record<string, unknown>>(
   data: unknown
-): ErrorPayloadValidation<K>["errors"] {
-  return isValidationError<K>(data) ? data.errors : {};
+): Partial<Record<ObjectKeys<K>, string[]>> {
+  const parsed = ErrorResponseSchema.safeParse(data);
+  if (!parsed.success) return {};
+  if (parsed.data.error_type !== "validation") return {};
+  return parsed.data.errors as Partial<Record<ObjectKeys<K>, string[]>>;
 }
 
 type ParseFetcherResult<D> =

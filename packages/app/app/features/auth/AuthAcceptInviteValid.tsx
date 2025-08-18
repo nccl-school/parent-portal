@@ -10,7 +10,7 @@ import {
 } from "@nccl/components";
 import { makeColor, makeRem } from "@nccl/theme";
 import { Fragment, useState } from "react";
-import type { AcceptInviteRequestSchema } from "@nccl/api/client";
+import type { AcceptInviteRequest } from "@nccl/api/client";
 import { passwordRules } from "@nccl/api/client";
 import { css } from "@linaria/core";
 import {
@@ -48,8 +48,7 @@ export function AuthAcceptInviteValid({ email }: { email: string }) {
   const [urlSearchParams] = useSearchParams();
   const navigation = useNavigation();
   const data = useActionData();
-  const errors =
-    getValidationErrors<keyof typeof AcceptInviteRequestSchema.def.shape>(data);
+  const errors = getValidationErrors<AcceptInviteRequest>(data);
 
   return (
     <Form method="post">

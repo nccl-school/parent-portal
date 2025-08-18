@@ -1,10 +1,10 @@
 import { Button, usePopover } from "@nccl/components";
 import { useCallback, useRef, type RefCallback } from "react";
-import type { User } from "@nccl/api/client";
+import type { UserWithRole } from "@nccl/api/client";
 
 import { AdminUsersMenu } from "./AdminUsersMenu";
 
-export function AdminUsersTableCellMenu(user: User) {
+export function AdminUsersTableCellMenu(user: UserWithRole) {
   const popover = usePopover({ offset: 12, position: "bottom-span-left" });
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 

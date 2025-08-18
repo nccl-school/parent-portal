@@ -17,7 +17,7 @@ import {
 import { makeRem } from "@nccl/theme";
 import { useEffect } from "react";
 import { href, useFetcher } from "react-router";
-import type { CreateSuggestionResponseSchema } from "@nccl/api/client";
+import type { CreateSuggestionResponse } from "@nccl/api/client";
 
 import { getValidationErrors, isError } from "../../utils/client";
 import type { action as createUserAction } from "../../api/api.suggestion.getManyOrCreateUnique";
@@ -45,9 +45,7 @@ function ModalContent() {
   const { close: closeModal } = useModalContext();
 
   const fetcher = useFetcher<typeof createUserAction>();
-  const errors = getValidationErrors<
-    keyof typeof CreateSuggestionResponseSchema.shape
-  >(fetcher.data);
+  const errors = getValidationErrors<CreateSuggestionResponse>(fetcher.data);
 
   useEffect(() => {
     if (!fetcher.data) return;

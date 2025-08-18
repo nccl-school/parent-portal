@@ -1,8 +1,8 @@
-import type { GetUserResponse } from "@nccl/api/client";
+import type { UserWithRole } from "@nccl/api/client";
 import type { MouseEvent } from "react";
 
 export type AdminUserPermissionsModalState = {
-  user: GetUserResponse;
+  user: UserWithRole;
 };
 
 export type LaunchAdminUserPermissionsModal = (

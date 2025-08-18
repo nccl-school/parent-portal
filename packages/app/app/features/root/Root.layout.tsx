@@ -2,7 +2,6 @@ import { Outlet } from "react-router";
 import { css } from "@linaria/core";
 import { makeColor, makeCustom, makeResponsive } from "@nccl/theme";
 import { classes } from "@stratum-ui/core/utils";
-import { useUser } from "@clerk/react-router";
 import { H } from "@highlight-run/remix/client";
 import { useEffect } from "react";
 
@@ -12,6 +11,7 @@ import { RootHeader } from "./RootHeader";
 
 import { backgroundGradient } from "../../utils/isomorphic";
 import { ensureSession } from "../../utils/server";
+import { useUser } from "../../hooks/hook.useUser";
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
   await ensureSession(loaderArgs);
@@ -82,10 +82,10 @@ const styles = css`
 `;
 
 export default function RootLayout() {
-  const { user } = useUser();
+  const user = useUser();
 
-  const email = user?.emailAddresses[0].emailAddress;
-  const fullName = user?.fullName;
+  const email = user?.email;
+  const fullName = `${user?.firstName} ${user?.lastName}`;
 
   // Track the user's session
   useEffect(() => {

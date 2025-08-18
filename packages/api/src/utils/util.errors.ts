@@ -6,7 +6,7 @@ const ErrorResponseBase = z.object({
   message: z.string(),
 });
 
-const ErrorResponseSchema = z.discriminatedUnion("error_type", [
+export const ErrorResponseSchema = z.discriminatedUnion("error_type", [
   ErrorResponseBase.extend({
     error_type: z.literal("unknown"),
   }),

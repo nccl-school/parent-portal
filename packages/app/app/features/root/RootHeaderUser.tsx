@@ -1,8 +1,9 @@
-import { useUser } from "@clerk/react-router";
 import { css } from "@linaria/core";
 import { Avatar } from "@nccl/components";
 import { makeReset } from "@nccl/theme";
 import { href, Link } from "react-router";
+
+import { useUser } from "../../hooks/hook.useUser";
 
 const styles = css`
   width: 100%;
@@ -13,13 +14,13 @@ const styles = css`
 `;
 
 export function RootHeaderUser() {
-  const { user } = useUser();
+  const user = useUser();
 
   return (
     <Link to={href("/profile/*", { "*": "" })} className={styles}>
       <Avatar
         dxSize="xl"
-        dxSrc={user?.imageUrl}
+        dxSrc={user?.imageUrl ?? undefined}
         dxFirstName={user?.firstName ?? ""}
         dxLastName={user?.lastName ?? undefined}
       />

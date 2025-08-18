@@ -8,7 +8,7 @@ import {
   type PopoverEngine,
 } from "@nccl/components";
 import { useCallback, useEffect, type MouseEventHandler } from "react";
-import type { GetUserResponse } from "@nccl/api/client";
+import type { UserWithRole } from "@nccl/api/client";
 import { useFetcher } from "react-router";
 
 import { AdminUserPermissions } from "../admin-user-permissions";
@@ -18,7 +18,7 @@ export function AdminUsersMenu({
   popover,
   user,
 }: {
-  user: GetUserResponse;
+  user: UserWithRole;
   popover: PopoverEngine;
 }) {
   const fetcher = useFetcher();

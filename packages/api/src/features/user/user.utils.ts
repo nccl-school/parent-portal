@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { zDateStringSchema } from "../../utils/util.schema.js";
-import { RolesSchema } from "../role/role.utils.js";
+import { RoleSchema, RolesSchema } from "../role/role.utils.js";
 
 export const UserStatusSchema = z.literal(["INVITED", "ACTIVE", "DISABLED"]);
 export type UserStatus = z.infer<typeof UserStatusSchema>;
@@ -21,18 +21,23 @@ export const UserSchema = z.object({
   updatedAt: zDateStringSchema,
 });
 export type User = z.infer<typeof UserSchema>;
+export const UserWithRoleSchema = z.object({
+  ...UserSchema.shape,
+  role: RoleSchema,
+});
+export type UserWithRole = z.infer<typeof UserWithRoleSchema>;
 
 // Get Current user
 export const GetCurrentUserResponseSchema = z.object({
   ...UserSchema.shape,
-  roleId: RolesSchema,
+  role: RoleSchema,
 });
 export type GetCurrentUserResponse = z.infer<
   typeof GetCurrentUserResponseSchema
 >;
 
 // Get a list of users
-export const GetUserListResponseSchema = UserSchema.array();
+export const GetUserListResponseSchema = UserWithRoleSchema.array();
 export type GetUserListResponse = z.infer<typeof GetUserListResponseSchema>;
 
 // Get a user
@@ -57,7 +62,7 @@ export const UpdateUserRoleParamsSchema = z.object({
 export const UpdateUserRoleRequestSchema = z.object({
   role: RolesSchema,
 });
-export const UpdateUserRoleResponseSchema = UserSchema;
+export const UpdateUserRoleResponseSchema = RoleSchema;
 export type UpdateUserRoleResponse = z.infer<
   typeof UpdateUserRoleResponseSchema
 >;

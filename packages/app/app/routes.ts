@@ -71,6 +71,9 @@ export default [
         ),
       ]),
     ]),
+    ...prefix("account", [
+      route("/invite", "./api/api.account.inviteUsers.ts"),
+    ]),
     ...prefix("user", [
       route("/", "./api/api.user.ts"),
       route("/invite", "./api/api.user.inviteUsers.ts"),

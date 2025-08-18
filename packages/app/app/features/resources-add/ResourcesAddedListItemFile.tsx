@@ -8,7 +8,6 @@ import { Callout, Icon, Progress, Typography } from "@nccl/components";
 import { makeColor, makeRem } from "@nccl/theme";
 import { classes, exhaustiveMatchGuard } from "@stratum-ui/core/utils";
 import { memo, useEffect, useRef, useState } from "react";
-import { useAuth } from "@clerk/react-router";
 import { match } from "ts-pattern";
 
 import {

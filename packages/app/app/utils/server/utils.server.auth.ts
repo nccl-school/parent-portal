@@ -1,9 +1,7 @@
-import type { LoaderFunctionArgs } from "react-router";
-import type { Roles } from "@nccl/api/client";
+import type { AppLoadContext, LoaderFunctionArgs } from "react-router";
+import { ErrorSet, type Roles } from "@nccl/api/client";
 import { redirect } from "react-router";
 import { auth } from "@nccl/api/auth";
-
-import { ServerError } from "./utils.server.response";
 
 export async function getRole<T extends LoaderFunctionArgs>(loaderArgs: T) {
   const { user } = await ensureSession(loaderArgs);
@@ -36,13 +34,13 @@ export async function isAuthorized(
 ) {
   const role = await getRole(args);
   if (!role) {
-    throw new ServerError.unauthorized();
+    throw new ErrorSet.unauthorized();
   }
   if (typeof roleOrRoles === "string" && role !== roleOrRoles) {
-    throw new ServerError.unauthorized();
+    throw new ErrorSet.unauthorized();
   }
   if (Array.isArray(roleOrRoles) && !roleOrRoles.includes(role)) {
-    throw new ServerError.unauthorized();
+    throw new ErrorSet.unauthorized();
   }
 }
 
@@ -60,4 +58,35 @@ export async function ensureSession<T extends { request: Request }>(args: T) {
     );
   }
   return { userId: session.user.id, ...session };
+}
+
+export class AuthClient {
+  headers: Headers;
+  constructor({ headers }: { headers: Headers }) {
+    this.headers = headers;
+  }
+
+  signOut() {
+    return auth.api.signOut({ headers: this.headers });
+  }
+
+  getSession() {
+    return auth.api.getSession({ headers: this.headers });
+  }
+}
+
+export function getAuthClient<A extends LoaderFunctionArgs<AppLoadContext>>(
+  args: A
+) {
+  // Grab some of the headers off of the original request
+  const { cookie, authorization } = Object.fromEntries(
+    args.request.headers.entries()
+  );
+
+  // Set the selected headers to the new client
+  const headers = new Headers();
+  if (cookie) headers.set("cookie", cookie);
+  if (authorization) headers.set("authorization", authorization);
+
+  return new AuthClient({ headers: args.request.headers });
 }

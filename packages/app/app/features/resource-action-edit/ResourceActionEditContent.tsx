@@ -26,7 +26,7 @@ export function ResourceActionEditContent() {
   const [autoSlug, setAutoSlug] = useState(resource.slug);
   const { Form, data, state } = useFetcher();
 
-  const errors = getValidationErrors<keyof UpdateResourceMetaRequest>(data);
+  const errors = getValidationErrors<UpdateResourceMetaRequest>(data);
   const isLoading = state !== "idle";
 
   useEffect(() => {

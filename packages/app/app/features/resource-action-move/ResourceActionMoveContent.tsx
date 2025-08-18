@@ -61,7 +61,7 @@ export function ResourceActionMoveContent() {
   }, [closeModal, data]);
 
   const isLoading = fetcherState !== "idle";
-  const validationErrors = getValidationErrors<keyof MoveResourceRequest>(data);
+  const validationErrors = getValidationErrors<MoveResourceRequest>(data);
 
   return (
     <>
