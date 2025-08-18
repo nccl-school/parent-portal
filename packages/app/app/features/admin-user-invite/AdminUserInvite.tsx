@@ -49,7 +49,7 @@ function ModalContent() {
 
   return (
     <fetcher.Form
-      action={href("/api/user/invite")}
+      action={href("/api/account/invite")}
       method="POST"
       className={className}
     >

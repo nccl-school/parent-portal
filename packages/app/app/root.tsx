@@ -7,6 +7,7 @@ import {
   ScrollRestoration,
 } from "react-router";
 import { css } from "@linaria/core";
+
 import "@nccl/theme/reset.css";
 import "@nccl/theme/root.css";
 import "@nccl/components/css";
@@ -32,9 +33,11 @@ const rootStyles = css`
 export async function loader(args: Route.LoaderArgs) {
   const ncclClient = getNCCLClient(args);
   const currentUser = await ncclClient.user.getCurrentUser();
+  const session = await ncclClient.getSession();
 
   return {
     currentUser,
+    session,
     ENV: {
       ENVIRONMENT: args.context.env.NCCL_ENVIRONMENT,
       HIGHLIGHT_PROJECT_ID: args.context.env.HIGHLIGHT_PROJECT_ID,
