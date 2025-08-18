@@ -1,8 +1,11 @@
 import { css } from "@linaria/core";
 import { makeColor, makeRem, makeResponsive } from "@nccl/theme";
 import { classes } from "@stratum-ui/core/utils";
-import { Outlet } from "react-router";
+import { Outlet, redirect } from "react-router";
 
+import type { Route } from "./+types/Auth.layout";
+
+import { getAuthClient } from "../../utils/server";
 import { assembleTitle } from "../../utils/util.assemble-title";
 import { backgroundGradient } from "../../utils/isomorphic";
 
@@ -56,6 +59,17 @@ const styles = css`
     }
   }
 `;
+
+export async function loader(args: Route.LoaderArgs) {
+  const authClient = getAuthClient();
+  const session = await authClient.getSession({
+    headers: args.request.headers,
+  });
+  if (session) {
+    console.log("User is already signed in. Redirecting to home");
+    throw redirect("/");
+  }
+}
 
 export default function AuthLayout() {
   return (

@@ -43,7 +43,7 @@ export default [
 
   // - /auth
   layout("./features/auth/Auth.layout.tsx", [
-    // route("/sign-in", "features/auth/AuthSignIn.route.tsx"),
+    route("/sign-in", "features/auth/AuthSignIn.route.tsx"),
     // route("/forgot-password", "features/auth/AuthForgotPassword.route.tsx"),
     route("accept-invite", "./features/auth/AuthAcceptInvite.route.tsx"),
   ]),
