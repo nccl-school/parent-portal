@@ -1,21 +1,17 @@
 import { createMiddleware } from "hono/factory";
-import { Resend } from "resend";
 
 import { getEnvVar } from "../utils/util.envVar.js";
+import { createResendClient } from "../utils/util.resend.js";
 
 declare module "hono" {
   interface ContextVariableMap {
-    resend: ReturnType<typeof createResend>;
+    resend: ReturnType<typeof createResendClient>;
   }
-}
-
-function createResend(apiKey: string): Resend {
-  return new Resend(apiKey);
 }
 
 export const emailMiddleware = createMiddleware(async (c, next) => {
   const { RESEND_API_KEY } = getEnvVar(c);
-  const resend = createResend(RESEND_API_KEY);
+  const resend = createResendClient(RESEND_API_KEY);
   c.set("resend", resend);
 
   await next();

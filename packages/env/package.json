@@ -1,0 +1,19 @@
+{
+  "name": "@nccl/env",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "test": "tsx ./scripts/test.ts"
+  },
+  "author": "Drew DeCarme (drew@greenflash.digital)",
+  "license": "Apache-2.0",
+  "description": "",
+  "dependencies": {
+    "supermenv": "0.0.1"
+  },
+  "devDependencies": {
+    "@gfdigital/tsconfig": "^0.3.1",
+    "tsx": "^4.20.4",
+    "typescript": "^5.9.2"
+  }
+}

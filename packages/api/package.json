@@ -5,6 +5,7 @@
     "dev": "tsx watch src/index.ts",
     "build": "yarn api:build && yarn client:check && yarn client:build",
     "api:build": "tsc --project ./tsconfig.build.json",
+    "auth:dev": "tsc --project ./tsconfig.build.json --watch",
     "start": "node dist/index.js",
     "webhook:dev": "ngrok http --url=popular-chipmunk-ace.ngrok-free.app 8080",
     "client:dev": "yarn client:build --watch",

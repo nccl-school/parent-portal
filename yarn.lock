@@ -3424,6 +3424,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@nccl/env@workspace:packages/env":
+  version: 0.0.0-use.local
+  resolution: "@nccl/env@workspace:packages/env"
+  dependencies:
+    "@gfdigital/tsconfig": "npm:^0.3.1"
+    supermenv: "npm:0.0.1"
+    tsx: "npm:^4.20.4"
+    typescript: "npm:^5.9.2"
+  languageName: unknown
+  linkType: soft
+
 "@nccl/parent-portal@workspace:packages/app":
   version: 0.0.0-use.local
   resolution: "@nccl/parent-portal@workspace:packages/app"
@@ -9057,7 +9068,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotdir@npm:0.3.2":
+"dotdir@npm:0.3.2, dotdir@npm:^0.3.2":
   version: 0.3.2
   resolution: "dotdir@npm:0.3.2"
   dependencies:
@@ -9091,7 +9102,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:17.2.1, dotenv@npm:^17.1.0":
+"dotenv@npm:17.2.1, dotenv@npm:^17.1.0, dotenv@npm:^17.2.1":
   version: 17.2.1
   resolution: "dotenv@npm:17.2.1"
   checksum: 10c0/918dd2f9d8b8f86b0afabad9534793d51de3718c437f9e7b6525628cf68c1d4ae768cc37a5afff38c066f58a8ecf549f4ac6cd5617485bd328e826112cc2650a
@@ -16557,6 +16568,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"supermenv@npm:0.0.1, supermenv@workspace:packages/supermenv":
+  version: 0.0.0-use.local
+  resolution: "supermenv@workspace:packages/supermenv"
+  dependencies:
+    "@gfdigital/tsconfig": "npm:0.3.1"
+    dotdir: "npm:^0.3.2"
+    dotenv: "npm:^17.2.1"
+    tsx: "npm:4.20.4"
+    typescript: "npm:5.9.2"
+    zod: "npm:^4.0.17"
+  languageName: unknown
+  linkType: soft
+
 "supports-color@npm:^7.1.0":
   version: 7.2.0
   resolution: "supports-color@npm:7.2.0"
@@ -17006,7 +17030,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsx@npm:4.20.4":
+"tsx@npm:4.20.4, tsx@npm:^4.20.4":
   version: 4.20.4
   resolution: "tsx@npm:4.20.4"
   dependencies:
@@ -18357,7 +18381,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:4.0.17":
+"zod@npm:4.0.17, zod@npm:^4.0.17":
   version: 4.0.17
   resolution: "zod@npm:4.0.17"
   checksum: 10c0/c56ef4cc02f8f52be8724c5a8b338266202d68477c7606bee9b7299818b75c9adc27f16f4b6704a372f3e7578bd016f389de19bfec766564b7c39d0d327c540a

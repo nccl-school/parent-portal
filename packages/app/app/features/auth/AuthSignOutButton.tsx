@@ -1,5 +1,11 @@
+import { css } from "@linaria/core";
+import { makeReset } from "@nccl/theme";
 import type { MouseEvent, ReactNode } from "react";
-import { useSubmit } from "react-router";
+import { href, useSubmit } from "react-router";
+
+const styles = css`
+  ${makeReset("button")}
+`;
 
 export function AuthSignOutButton({
   redirectUrl = "/sign-in",
@@ -14,12 +20,21 @@ export function AuthSignOutButton({
     try {
       await submit(
         { redirectUrl },
-        { method: "POST", encType: "application/json" }
+        {
+          method: "POST",
+          navigate: false,
+          encType: "application/json",
+          action: href("/api/auth/sign-out"),
+        }
       );
     } catch (error) {
       console.error(error);
     }
   }
 
-  return <button onClick={handleClick}>{children}</button>;
+  return (
+    <button className={styles} onClick={handleClick}>
+      {children}
+    </button>
+  );
 }

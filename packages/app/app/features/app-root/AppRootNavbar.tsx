@@ -10,6 +10,7 @@ import type { ReactNode } from "react";
 import { href, NavLink, type NavLinkProps } from "react-router";
 
 import { Restrict } from "../auth/Restrict";
+import { AuthSignOutButton } from "../auth/AuthSignOutButton";
 // import { AuthSignOutButton } from "../auth/AuthSignOutButton";
 
 function RootNavbarItem({
@@ -88,7 +89,7 @@ export function RootNavbar() {
           />
           <NavbarItemText>Help</NavbarItemText>
         </NavbarItem>
-        <div>
+        <AuthSignOutButton>
           <NavbarItem>
             <NavbarItemIcon
               dxBaseIcon="logout-01-stroke-standard"
@@ -96,7 +97,7 @@ export function RootNavbar() {
             />
             <NavbarItemText>Logout</NavbarItemText>
           </NavbarItem>
-        </div>
+        </AuthSignOutButton>
       </NavbarGroup>
     </Navbar>
   );

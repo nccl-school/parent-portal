@@ -18,6 +18,7 @@ export {
   ErrorResponseSchema,
 } from "./utils/util.errors.js";
 export { ErrorSet } from "./utils/util.errors.js";
+export const parseError = serializeError;
 
 export class NCCLClient {
   suggestion: SuggestionClient;

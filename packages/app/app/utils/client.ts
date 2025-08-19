@@ -1,6 +1,7 @@
 import { ErrorResponseSchema, type ErrorResponse } from "@nccl/api/client";
 import type { ReactNode } from "react";
 import { match } from "ts-pattern";
+import z from "zod";
 
 import { placeholder } from "./isomorphic";
 
@@ -98,6 +99,43 @@ export function getValidationErrors<K extends Record<string, unknown>>(
   if (!parsed.success) return {};
   if (parsed.data.error_type !== "validation") return {};
   return parsed.data.errors as Partial<Record<ObjectKeys<K>, string[]>>;
+}
+
+const authErrorCodes = [
+  "USER_NOT_FOUND",
+  "FAILED_TO_CREATE_USER",
+  "FAILED_TO_CREATE_SESSION",
+  "FAILED_TO_UPDATE_USER",
+  "FAILED_TO_GET_SESSION",
+  "INVALID_PASSWORD",
+  "INVALID_EMAIL",
+  "INVALID_EMAIL_OR_PASSWORD",
+  "SOCIAL_ACCOUNT_ALREADY_LINKED",
+  "PROVIDER_NOT_FOUND",
+  "INVALID_TOKEN",
+  "ID_TOKEN_NOT_SUPPORTED",
+  "FAILED_TO_GET_USER_INFO",
+  "USER_EMAIL_NOT_FOUND",
+  "EMAIL_NOT_VERIFIED",
+  "PASSWORD_TOO_SHORT",
+  "PASSWORD_TOO_LONG",
+  "USER_ALREADY_EXISTS",
+  "EMAIL_CAN_NOT_BE_UPDATED",
+  "CREDENTIAL_ACCOUNT_NOT_FOUND",
+  "SESSION_EXPIRED",
+  "FAILED_TO_UNLINK_LAST_ACCOUNT",
+  "ACCOUNT_NOT_FOUND",
+  "USER_ALREADY_HAS_PASSWORD",
+];
+
+export function getAuthError(data: unknown) {
+  const parsed = z
+    .object({ message: z.string(), code: z.string() })
+    .safeParse(data);
+  if (!parsed.success) return undefined;
+  const { code, message } = parsed.data;
+  if (!authErrorCodes.includes(code)) return undefined;
+  return message;
 }
 
 type ParseFetcherResult<D> =

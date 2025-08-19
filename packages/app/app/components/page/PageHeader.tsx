@@ -28,8 +28,8 @@ const styles = css`
     width: 100%;
   }
 
-  & > .subtitle {
-    margin-top: ${makeRem(8)};
+  .subtitle {
+    margin-top: ${makeRem(8)} !important;
   }
 `;
 

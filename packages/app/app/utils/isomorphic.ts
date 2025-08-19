@@ -1,4 +1,5 @@
 import { css } from "@linaria/core";
+import type { ActionFunctionArgs } from "react-router";
 import type { ZodObject, ZodType } from "zod";
 import { z } from "zod";
 
@@ -18,6 +19,16 @@ export async function validateFormData<T extends ZodType>(
 ): Promise<z.core.output<T>> {
   const formDataObj = Object.fromEntries(formData.entries());
   return z.parse(schema, formDataObj) as z.core.output<T>;
+}
+
+export async function getFormData<
+  A extends ActionFunctionArgs,
+  T extends ZodObject,
+>(args: A, schema: T) {
+  const formData = await args.request.formData();
+  const formDataObj = Object.fromEntries(formData.entries());
+  const res = await schema.safeParseAsync(formDataObj);
+  return res;
 }
 
 export function createValidator<T extends ZodObject>(schema: T) {
