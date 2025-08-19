@@ -3,17 +3,30 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "test": "tsx ./scripts/test.ts"
+    "test": "tsx ./scripts/test.ts",
+    "build": "yarn tsc --project tsconfig.build.json",
+    "dev": "yarn build --watch"
   },
   "author": "Drew DeCarme (drew@greenflash.digital)",
   "license": "Apache-2.0",
-  "description": "",
+  "description": "A local library to centralize the fetching of runtime and buildtime environment variables for the NCCL packages",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/nccl-school/parent-portal.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nccl-school/parent-portal/issues"
+  },
+  "homepage": "https://github.com/nccl-school/parent-portal#readme",
   "dependencies": {
     "supermenv": "0.0.1"
   },
   "devDependencies": {
-    "@gfdigital/tsconfig": "^0.3.1",
-    "tsx": "^4.20.4",
-    "typescript": "^5.9.2"
+    "@gfdigital/tsconfig": "0.3.1",
+    "tsx": "4.20.4",
+    "typescript": "5.9.2"
   }
 }

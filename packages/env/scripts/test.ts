@@ -1,5 +1,6 @@
-import { createSupermenv } from "supermenv";
+import { getEnvVar, validateEnvVars } from "../index.js";
 
-const Supermenv = await createSupermenv();
+validateEnvVars();
 
-Supermenv.validate();
+const envVar = getEnvVar("NCCL_API_URL");
+console.log(envVar);

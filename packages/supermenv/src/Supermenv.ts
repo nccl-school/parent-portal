@@ -18,15 +18,15 @@ class Supermenv<C extends SupermenvConfig> {
     }
   }
 
-  validate<E>() {
+  validate() {
     const schema = this.#config.schema;
     const processEnv = process.env;
     const res = schema.safeParse(processEnv);
     if (!res.success) {
       throw new Error(`Invalid configuration format:
-    ${z.formatError(res.error)}`);
+    ${z.prettifyError(res.error)}`);
     }
-    return res as E;
+    return res.data as z.infer<C["schema"]>;
   }
 }
 
@@ -39,7 +39,7 @@ export async function createSupermenv() {
   const validated = SupermenvConfigSchema.safeParse(res.config);
   if (!validated.success) {
     throw new Error(`Invalid configuration format:
-    ${z.formatError(validated.error)}`);
+    ${z.prettifyError(validated.error)}`);
   }
   return new Supermenv(validated.data);
 }
