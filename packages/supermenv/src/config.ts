@@ -1,10 +1,10 @@
 import z from "zod/v4";
 
 export const SupermenvConfigSchema = z.object({
+  dotEnvPaths: z.string().array().optional(),
   schema: z.custom<z.ZodObject>((val) => val instanceof z.ZodObject, {
-    message: "schema must be valid Zod Object",
+    message: "`schema` must be valid Zod Object",
   }),
-  dotEnvFilePaths: z.string().array().optional(),
 });
 
 export type SupermenvConfig = z.infer<typeof SupermenvConfigSchema>;

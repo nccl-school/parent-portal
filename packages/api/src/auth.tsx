@@ -1,34 +1,27 @@
-import path from "node:path";
-
-import dotenv from "dotenv";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { ResetPasswordEmail } from "@nccl/emails";
+import { ENV } from "@nccl/env";
 
 import { createResendClient, EMAIL_FIELDS } from "./utils/util.resend.js";
 import { createPrismaClient } from "./utils/util.prisma.js";
 
-const envPath = path.resolve(import.meta.dirname, "../../../.env");
-dotenv.config({ path: envPath });
+const { NCCL_API_URL, NCCL_APP_URL, NCCL_ENVIRONMENT } = ENV.getAllEnvVars();
 
 const prisma = createPrismaClient();
 const resend = createResendClient();
 
 export const auth = betterAuth({
   telemetry: { enabled: false },
-  ...(process.env.NCCL_ENV === "local"
+  ...(NCCL_ENVIRONMENT === "local"
     ? {
-        trustedOrigins: [
-          process.env.NCCL_API_URL,
-          process.env.NCCL_APP_URL,
-        ].map((url) => String(url)),
+        trustedOrigins: [NCCL_API_URL, NCCL_APP_URL],
       }
     : {}),
   emailAndPassword: {
     enabled: true,
     async sendResetPassword(data) {
-      const resetLink = `${process.env.NCCL_API_URL}/api/auth${data.url}`;
-      console.log({ url: data.url, resetLink });
+      const resetLink = `${NCCL_API_URL}/api/auth${data.url}`;
       await resend.emails.send({
         from: EMAIL_FIELDS.from,
         subject: "Reset your password",

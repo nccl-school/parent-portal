@@ -1,10 +1,8 @@
 import { highlightMiddleware } from "@highlight-run/hono";
+import { ENV } from "@nccl/env";
 import { createMiddleware } from "hono/factory";
 
-import { getEnvVar } from "../utils/util.envVar.js";
-
-export const highlightIOMiddleware = createMiddleware(async (c, next) => {
-  const { HIGHLIGHT_PROJECT_ID } = getEnvVar(c);
-  highlightMiddleware({ projectID: HIGHLIGHT_PROJECT_ID });
+export const highlightIOMiddleware = createMiddleware(async (_c, next) => {
+  highlightMiddleware({ projectID: ENV.getEnvVar("HIGHLIGHT_PROJECT_ID") });
   await next();
 });

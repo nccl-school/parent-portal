@@ -1,9 +1,6 @@
-import path from "path";
-
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { logger } from "hono/logger";
-import dotenv from "dotenv";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
 import { cors } from "hono/cors";
 
@@ -18,10 +15,6 @@ import { authentication } from "./features/auth/auth.route.js";
 import { resource } from "./features/resource/resource.route.js";
 import { emailMiddleware } from "./middleware/middleware.email.js";
 import { account } from "./features/account/account.route.js";
-
-// Environment Vars
-const envPath = path.resolve(import.meta.dirname, "../../../.env");
-dotenv.config({ path: envPath });
 
 const app = new Hono();
 

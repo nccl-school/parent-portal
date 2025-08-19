@@ -1,14 +1,10 @@
-import path from "node:path";
+import { type SupermenvConfig } from "supermenv";
 
-import { z, type SupermenvConfig } from "supermenv";
-
-export type NCCLEnv = z.infer<(typeof config)["schema"]>;
+import { ENV_SCHEMA } from "../src/schema.js";
 
 const config = {
-  dotEnvFilePaths: [path.resolve(import.meta.dirname, "../../../../.env")],
-  schema: z.object({
-    NCCL_API_URL: z.url(),
-  }),
+  dotEnvPaths: ["../../../.env"],
+  schema: ENV_SCHEMA,
 } satisfies SupermenvConfig;
 
 export default config;

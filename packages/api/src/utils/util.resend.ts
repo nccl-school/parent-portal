@@ -1,7 +1,8 @@
+import { ENV } from "@nccl/env";
 import { Resend } from "resend";
 
 export function createResendClient(resendApiKey?: string) {
-  const API_KEY = resendApiKey ?? process.env.RESEND_API_KEY;
+  const API_KEY = resendApiKey ?? ENV.getEnvVar("RESEND_API_KEY");
   return new Resend(API_KEY);
 }
 

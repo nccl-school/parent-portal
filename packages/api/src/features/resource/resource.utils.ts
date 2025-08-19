@@ -1,19 +1,18 @@
 import type { Context } from "hono";
 import { Storage } from "@google-cloud/storage";
 import type z from "zod";
+import { ENV } from "@nccl/env";
 
 import type { CreateResourceOwnershipLevel } from "./resource.schema.js";
 
 import type { Resource as DBResource } from "../../_generated/prisma/client.js";
 import { ErrorSet } from "../../utils/util.errors.js";
-import { getEnvVar } from "../../utils/util.envVar.js";
 import { exhaustiveMatchGuard } from "../../utils/util.exhaustiveMatchGuard.js";
 import { slugify } from "../../utils/util.general.js";
 
-export function getBucket<C extends Context>(c: C) {
-  const { GCP_CLOUD_STORAGE_BUCKET } = getEnvVar(c);
+export function getBucket() {
   const storage = new Storage(); // uses local credentials
-  const bucket = storage.bucket(GCP_CLOUD_STORAGE_BUCKET);
+  const bucket = storage.bucket(ENV.getEnvVar("GCP_CLOUD_STORAGE_BUCKET"));
   return bucket;
 }
 

@@ -1,3 +1,5 @@
+import path from "node:path";
+
 import type { DotDirResponse } from "dotdir";
 import { DotDir } from "dotdir";
 import z from "zod";
@@ -5,17 +7,29 @@ import { config } from "dotenv";
 
 import { SupermenvConfigSchema, type SupermenvConfig } from "./config.js";
 
-class Supermenv<C extends SupermenvConfig> {
-  //   #configMeta: DotDirResponse<C>["meta"];
-  #config: DotDirResponse<C>["config"];
+class Supermenv<T extends Record<string, unknown>> {
+  #config: DotDirResponse<SupermenvConfig>["config"];
+  #meta: DotDirResponse<SupermenvConfig>["meta"];
 
-  constructor(supermenvConfig: C) {
-    // this.#configMeta = dotDir.meta;
-    this.#config = supermenvConfig;
-    if (this.#config.dotEnvFilePaths) {
-      console.log("Importing custom dotEnv filepaths");
-      config({ path: this.#config.dotEnvFilePaths });
+  constructor(dotDirRes: DotDirResponse<SupermenvConfig>) {
+    this.#config = dotDirRes.config;
+    this.#meta = dotDirRes.meta;
+
+    const dotEnvRelPaths = (dotDirRes.config.dotEnvPaths ?? []).map(
+      (absPath) => {
+        return path.resolve(this.#meta.dirPath, absPath);
+      }
+    );
+    this.loadDotEnvFiles(dotEnvRelPaths);
+  }
+
+  loadDotEnvFiles(paths: string[]) {
+    if (paths.length === 0) {
+      console.log("No dotEnv paths provided");
+      return;
     }
+    console.log("Importing custom dotEnv filepaths");
+    config({ path: paths });
   }
 
   validate() {
@@ -26,13 +40,29 @@ class Supermenv<C extends SupermenvConfig> {
       throw new Error(`Invalid configuration format:
     ${z.prettifyError(res.error)}`);
     }
-    return res.data as z.infer<C["schema"]>;
+    return res.data as T;
+  }
+
+  getAllEnvVars() {
+    return this.validate();
+  }
+
+  getEnvVar(key: keyof T) {
+    const vars = this.getAllEnvVars();
+    return vars[key];
   }
 }
 
-export async function createSupermenv() {
-  const dotDir = new DotDir();
-  const res = await dotDir.find({ dirName: "supermenv" });
+export async function createSupermenv<T extends Record<string, unknown>>({
+  rootDir,
+}: {
+  rootDir: string;
+}) {
+  const dotDir = new DotDir<SupermenvConfig>();
+  const res = await dotDir.find({
+    dirName: "supermenv",
+    cwd: rootDir,
+  });
   if (!res || !res.config) {
     throw new Error("Missing .supermenv config");
   }
@@ -41,5 +71,5 @@ export async function createSupermenv() {
     throw new Error(`Invalid configuration format:
     ${z.prettifyError(validated.error)}`);
   }
-  return new Supermenv(validated.data);
+  return new Supermenv<T>(res);
 }

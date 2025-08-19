@@ -3,6 +3,7 @@ import { PrismaNeon } from "@prisma/adapter-neon";
 import { neonConfig } from "@neondatabase/serverless";
 import ws from "ws";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { ENV } from "@nccl/env";
 
 import { ErrorSet } from "./util.errors.js";
 
@@ -39,11 +40,14 @@ export async function tryPrisma<T>(
   }
 }
 
+export type NCCLPrismaClient = ReturnType<typeof createPrismaClient>;
+
 export function createPrismaClient(databaseUrl?: string) {
-  const connectionString = databaseUrl ?? process.env.DATABASE_URL;
+  const { NODE_ENV, DATABASE_URL } = ENV.getAllEnvVars();
+  const connectionString = databaseUrl ?? DATABASE_URL;
 
   const adapter =
-    process.env.NODE_ENV !== "production"
+    NODE_ENV !== "production"
       ? new PrismaPg({ connectionString }) // local env = docker-compose
       : new PrismaNeon({ connectionString }); // higher env = neon
 

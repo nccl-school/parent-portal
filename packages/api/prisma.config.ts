@@ -1,8 +1,7 @@
 import type { PrismaConfig } from "prisma";
+import { ENV } from "@nccl/env";
 
-import { loadEnv } from "./scripts/load-env.script.js";
-
-loadEnv();
+ENV.validate();
 
 export default {
   migrations: {

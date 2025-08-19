@@ -1,6 +1,6 @@
-import { getEnvVar, validateEnvVars } from "../index.js";
+import { ENV } from "../src/index.js";
 
-validateEnvVars();
+ENV.getAllEnvVars();
 
-const envVar = getEnvVar("NCCL_API_URL");
+const envVar = ENV.getEnvVar("NCCL_API_URL");
 console.log(envVar);
