@@ -54,7 +54,7 @@ jobs:
 
       - name: Validate Environment Variables
         run: |
-          yarn workspace @nccl/env build
+          yarn turbo run build --filter @nccl/env
           yarn env:validate
 
       - name: Generate Prisma client
