@@ -4,9 +4,10 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
-    "dev": "cross-env NODE_ENV=development PORT=5173 node server.js",
+    "dev": "NODE_ENV=development PORT=5173 node server.js",
     "start": "node server.js",
-    "typecheck": "react-router typegen && tsc -b"
+    "typecheck": "react-router typegen && tsc -b",
+    "clean": "rm -rf .react-router .vite dist node_modules/.cache;"
   },
   "dependencies": {
     "@highlight-run/remix": "^2.0.120",

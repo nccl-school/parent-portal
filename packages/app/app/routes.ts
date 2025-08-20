@@ -95,5 +95,5 @@ export default [
     ]),
   ]),
   // test
-  // route("", "./features/test/Test.route.tsx"),
+  // route("/", "./features/test/Test.route.tsx"),
 ] satisfies RouteConfig;

@@ -16,6 +16,7 @@ export default defineConfig(({ isSsrBuild }) => ({
       },
     }),
   ],
+
   build: {
     rollupOptions: isSsrBuild
       ? {
