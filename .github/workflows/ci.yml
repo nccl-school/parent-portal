@@ -33,9 +33,6 @@ jobs:
           echo NCCL_API_URL=${{ vars.NCCL_API_URL }} >> .env
           echo VITE_NCCL_API_URL=${{ vars.NCCL_API_URL }} >> .env
           echo NCCL_APP_URL=${{ vars.NCCL_APP_URL }} >> .env
-          echo CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }} >> .env
-          echo CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }} >> .env
-          echo CLERK_WEBHOOK_SIGNING_SECRET=${{ secrets.CLERK_WEBHOOK_SIGNING_SECRET }} >> .env
           echo GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }} >> .env
           echo GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }} >> .env
 
@@ -67,8 +64,7 @@ jobs:
       - name: Build project
         run: yarn build
         env:
-          VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
-          VITE_NCCL_API_URL: ${{ vars.NCCL_API_URL }}
+          NCCL_API_URL: ${{ vars.NCCL_API_URL }}
           TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
           TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
