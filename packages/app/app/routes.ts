@@ -87,3 +87,7 @@ export default [
     ]),
   ]),
 ] satisfies RouteConfig;
+
+// export default [
+//   route("", "./features/test/Test.route.tsx"),
+// ] satisfies RouteConfig;

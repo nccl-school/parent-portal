@@ -3446,6 +3446,7 @@ __metadata:
     "@linaria/core": "npm:6.3.0"
     "@nccl/api": "workspace:"
     "@nccl/components": "workspace:*"
+    "@nccl/env": "workspace:^"
     "@nccl/theme": "workspace:"
     "@react-router/dev": "npm:7.8.1"
     "@react-router/express": "npm:7.8.1"

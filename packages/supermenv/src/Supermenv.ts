@@ -45,22 +45,21 @@ export class Supermenv<T extends Record<string, SupermenvVarValue>> {
   constructor(options: { vars: T; dotEnvPaths?: string[] }) {
     this.#dotEnvPaths = options.dotEnvPaths ?? [];
     this.#varDefs = options.vars;
-    console.log("marker");
     this.#errors = [];
     this.#source = process.env;
     this.load = this.load.bind(this);
   }
 
   load() {
-    console.log("Loading & validating environment vars...");
     this.loadDotEnvPaths(this.#dotEnvPaths);
+    console.log("Validating environment vars...");
     this.#validate();
-    console.log("Loading & validating environment vars... done.");
+    console.log("Validating environment vars... done.");
   }
 
   loadDotEnvPaths(paths: string[]) {
     if (paths.length === 0) return;
-    console.log("Loading Dotenv files...");
+    console.log("Loading Dotenv files...", paths);
     config({ path: paths });
     console.log("Loading Dotenv files... done.");
   }

@@ -6,18 +6,16 @@ import { ENV } from "@nccl/env";
 import { createResendClient, EMAIL_FIELDS } from "./utils/util.resend.js";
 import { createPrismaClient } from "./utils/util.prisma.js";
 
-const { NCCL_API_URL, NCCL_APP_URL, NCCL_ENVIRONMENT } = ENV.getAll();
+ENV.load();
+
+const { NCCL_API_URL, NCCL_APP_URL } = ENV.getAll();
 
 const prisma = createPrismaClient();
 const resend = createResendClient();
 
 export const auth = betterAuth({
   telemetry: { enabled: false },
-  ...(NCCL_ENVIRONMENT === "local"
-    ? {
-        trustedOrigins: [NCCL_API_URL, NCCL_APP_URL],
-      }
-    : {}),
+  trustedOrigins: [NCCL_API_URL, NCCL_APP_URL],
   emailAndPassword: {
     enabled: true,
     async sendResetPassword(data) {

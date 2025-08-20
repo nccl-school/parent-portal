@@ -65,6 +65,7 @@ export async function loader(args: Route.LoaderArgs) {
   const session = await authClient.getSession({
     headers: args.request.headers,
   });
+
   if (session) {
     console.log("User is already signed in. Redirecting to home");
     throw redirect("/");
