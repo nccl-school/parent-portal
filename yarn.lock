@@ -1301,6 +1301,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@epic-web/invariant@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@epic-web/invariant@npm:1.0.0"
+  checksum: 10c0/72dbeb026e4e4eb3bc9c65739b91408ca77ab7d603a2494fa2eff3790ec22892c4caba751cffdf30f5ccf0e7ba79c1e9c96cf0a357404b9432bf1365baac23ca
+  languageName: node
+  linkType: hard
+
 "@esbuild/aix-ppc64@npm:0.25.0":
   version: 0.25.0
   resolution: "@esbuild/aix-ppc64@npm:0.25.0"
@@ -3332,7 +3339,7 @@ __metadata:
     "@nccl/emails": "workspace:^"
     "@nccl/env": "workspace:^"
     "@neondatabase/serverless": "npm:1.0.1"
-    "@playwright/test": "npm:1.54.2"
+    "@playwright/test": "npm:1.55.0"
     "@prisma/adapter-neon": "npm:6.14.0"
     "@prisma/adapter-pg": "npm:6.14.0"
     "@prisma/client": "npm:^6.14.0"
@@ -3405,7 +3412,7 @@ __metadata:
   dependencies:
     "@gfdigital/tsconfig": "npm:^0.3.1"
     "@nccl/theme": "workspace:^"
-    "@react-email/components": "npm:0.5.0"
+    "@react-email/components": "npm:0.5.1"
     "@react-email/preview-server": "npm:4.2.8"
     dotenv: "npm:17.2.1"
     dotenv-cli: "npm:10.0.0"
@@ -3459,6 +3466,7 @@ __metadata:
     "@types/react-dom": "npm:19.1.7"
     "@wyw-in-js/vite": "npm:0.7.0"
     compression: "npm:1.8.1"
+    cross-env: "npm:10.0.0"
     date-fns: "npm:4.1.0"
     dotenv: "npm:17.2.1"
     express: "npm:5.1.0"
@@ -3960,14 +3968,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@playwright/test@npm:1.54.2":
-  version: 1.54.2
-  resolution: "@playwright/test@npm:1.54.2"
+"@playwright/test@npm:1.55.0":
+  version: 1.55.0
+  resolution: "@playwright/test@npm:1.55.0"
   dependencies:
-    playwright: "npm:1.54.2"
+    playwright: "npm:1.55.0"
   bin:
     playwright: cli.js
-  checksum: 10c0/a032d9714a91d6dc40405575ca65ec52f95b0ca95974cd0140e2c12b6c39fbe5311239b2d581b289acaa1e227dd871cf5c43a537f32457f6329723e4add6e6f1
+  checksum: 10c0/e68b59cd8271f1b57c0649fc0562ab2d5f6bba8c3653dd7bd52ca1338dc380fde34588d0254e3cd3f0f2b20af04a80dfb080419ceb7475990bb2fc4d8c474984
   languageName: node
   linkType: hard
 
@@ -4804,9 +4812,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-email/components@npm:0.5.0":
-  version: 0.5.0
-  resolution: "@react-email/components@npm:0.5.0"
+"@react-email/components@npm:0.5.1":
+  version: 0.5.1
+  resolution: "@react-email/components@npm:0.5.1"
   dependencies:
     "@react-email/body": "npm:0.1.0"
     "@react-email/button": "npm:0.2.0"
@@ -4823,14 +4831,14 @@ __metadata:
     "@react-email/link": "npm:0.0.12"
     "@react-email/markdown": "npm:0.0.15"
     "@react-email/preview": "npm:0.0.13"
-    "@react-email/render": "npm:1.2.0"
+    "@react-email/render": "npm:1.2.1"
     "@react-email/row": "npm:0.0.12"
     "@react-email/section": "npm:0.0.16"
     "@react-email/tailwind": "npm:1.2.2"
     "@react-email/text": "npm:0.1.5"
   peerDependencies:
     react: ^18.0 || ^19.0 || ^19.0.0-rc
-  checksum: 10c0/f3ce4b9a100b2954031501178fbb8ca88791017e15434aa4b131d6e9f6d6ad75dad9ebf36bb662d79bc079ed4bef3a92a99d10b6f79ede72d75c957257889dc4
+  checksum: 10c0/e1fc9f0fe3f5884674e289a6be91d2fd02a5fb226acd0a6261b6472cb35957d6f84d4aed582cda070765ac814187c898ee7fa8051626a40ca061ec40591a8510
   languageName: node
   linkType: hard
 
@@ -4976,9 +4984,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-email/render@npm:1.2.0":
-  version: 1.2.0
-  resolution: "@react-email/render@npm:1.2.0"
+"@react-email/render@npm:1.2.1":
+  version: 1.2.1
+  resolution: "@react-email/render@npm:1.2.1"
   dependencies:
     html-to-text: "npm:^9.0.5"
     prettier: "npm:^3.5.3"
@@ -4986,7 +4994,7 @@ __metadata:
   peerDependencies:
     react: ^18.0 || ^19.0 || ^19.0.0-rc
     react-dom: ^18.0 || ^19.0 || ^19.0.0-rc
-  checksum: 10c0/a1bcfe8417c6a7f1b635818c0edf329a9a784adb776af36ceccd1a474b36340fdb8c040af91839d9a464f487bbece56b53fbaf346b83e2c2b90d48ead189222c
+  checksum: 10c0/8ab468ccc42a1b07d6a1c4c4a84149a5f77048dab006b5e40aaf1e0f221c93173dcbb98e210eb49457b28ec632c353f80580e44cfa7fe13e9c6fb415b09be6cf
   languageName: node
   linkType: hard
 
@@ -8511,6 +8519,19 @@ __metadata:
     typescript:
       optional: true
   checksum: 10c0/1c1703be4f02a250b1d6ca3267e408ce16abfe8364193891afc94c2d5c060b69611fdc8d97af74b7e6d5d1aac0ab2fb94d6b079573146bc2d756c2484ce5f0ee
+  languageName: node
+  linkType: hard
+
+"cross-env@npm:10.0.0":
+  version: 10.0.0
+  resolution: "cross-env@npm:10.0.0"
+  dependencies:
+    "@epic-web/invariant": "npm:^1.0.0"
+    cross-spawn: "npm:^7.0.6"
+  bin:
+    cross-env: dist/bin/cross-env.js
+    cross-env-shell: dist/bin/cross-env-shell.js
+  checksum: 10c0/d16ffc3734106577d57b6253d81ab50294623bd59f96e161033eaf99c1c308ffbaba8463c23a6c0f72e841eff467cb7007a0a551f27554fcf2bbf6598cd828f9
   languageName: node
   linkType: hard
 
@@ -13104,7 +13125,8 @@ __metadata:
   dependencies:
     "@gfdigital/eslint-config": "npm:0.4.3"
     "@gfdigital/tsconfig": "npm:0.3.1"
-    "@playwright/test": "npm:1.54.2"
+    "@nccl/env": "workspace:^"
+    "@playwright/test": "npm:1.55.0"
     "@types/node": "npm:24.3.0"
     dotenv: "npm:17.2.1"
     eslint: "npm:9.33.0"
@@ -14151,27 +14173,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright-core@npm:1.54.2":
-  version: 1.54.2
-  resolution: "playwright-core@npm:1.54.2"
+"playwright-core@npm:1.55.0":
+  version: 1.55.0
+  resolution: "playwright-core@npm:1.55.0"
   bin:
     playwright-core: cli.js
-  checksum: 10c0/44850e20bf35237c8c3dedf1096c655f8af939dde53c5469f72cae3dd744966858a302419b909a73d7a2093323123e7ebcc0fdd55151b4193afb7812c1fd2c88
+  checksum: 10c0/c39d6aa30e7a4e73965942ca5e13405ae05c9cb49f755a35f04248c864c0b24cf662d9767f1797b3ec48d1cf4e54774dce4a19c16534bd5cfd2aa3da81c9dc3a
   languageName: node
   linkType: hard
 
-"playwright@npm:1.54.2":
-  version: 1.54.2
-  resolution: "playwright@npm:1.54.2"
+"playwright@npm:1.55.0":
+  version: 1.55.0
+  resolution: "playwright@npm:1.55.0"
   dependencies:
     fsevents: "npm:2.3.2"
-    playwright-core: "npm:1.54.2"
+    playwright-core: "npm:1.55.0"
   dependenciesMeta:
     fsevents:
       optional: true
   bin:
     playwright: cli.js
-  checksum: 10c0/6f642fa70179eee5d5bf8a90df2a6147c9638ff926f4f3ad0a0517396b8a3fe00ccebf13377e032a75b3f0b2610ec1562293e0cfc3bde234181c7a50af8af80a
+  checksum: 10c0/51605b7e57a5650e57972c5fdfc09d7a9934cca1cbee5beacca716fa801e25cb5bb7c1663de90c22b300fde884e5545a2b13a0505a93270b660687791c478304
   languageName: node
   linkType: hard
 
