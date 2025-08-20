@@ -393,12 +393,11 @@ resource.post(
   async (c) => {
     const { url, ...json } = c.req.valid("json");
     const db = c.get("db");
-    const { GOOGLE_CALENDAR_API_KEY } = ENV.getAllEnvVars();
     const parentResourceId = json.parentResourceId ?? "__ROOT__";
     const googleDocParsed = parseGoogleDocsURL(url);
     const googleDocMeta = await fetchGoogleDocMetadataFromGoogleDrive(
       googleDocParsed.externalId,
-      GOOGLE_CALENDAR_API_KEY
+      ENV.getOne("GOOGLE_CALENDAR_API_KEY")
     );
 
     const createGoogleDoc = db.resource.create({

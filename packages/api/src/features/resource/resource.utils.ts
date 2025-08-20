@@ -12,7 +12,7 @@ import { slugify } from "../../utils/util.general.js";
 
 export function getBucket() {
   const storage = new Storage(); // uses local credentials
-  const bucket = storage.bucket(ENV.getEnvVar("GCP_CLOUD_STORAGE_BUCKET"));
+  const bucket = storage.bucket(ENV.getOne("GCP_CLOUD_STORAGE_BUCKET"));
   return bucket;
 }
 

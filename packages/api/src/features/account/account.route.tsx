@@ -13,12 +13,12 @@ import {
 } from "./account.schema.js";
 import { createToken, findValidToken, markTokenUsed } from "./account.utils.js";
 
-import { ErrorSet } from "../../client.js";
 import { authorize } from "../../middleware/middleware.authorize.js";
 import { validate } from "../../middleware/middleware.validate.js";
 import { serialize } from "../../utils/util.serialize.js";
 import { auth } from "../../auth.js";
 import { sessionMiddleware } from "../../middleware/middleware.session.js";
+import { ErrorSet } from "../../utils/util.errors.js";
 
 export const account = new Hono();
 
@@ -78,7 +78,7 @@ account.post(
         );
 
         // email user
-        const acceptInviteUrl = `${ENV.getEnvVar("NCCL_APP_URL")}/accept-invite?token=${inviteTokenRaw}`;
+        const acceptInviteUrl = `${ENV.getOne("NCCL_APP_URL")}/accept-invite?token=${inviteTokenRaw}`;
         const formattedExpiresAt = format(inviteExpiresAt, "PPPP");
         const emailRes = await resend.emails.send({
           from: "NCCL Parents <no-reply@ncclschool.org>",

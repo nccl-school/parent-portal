@@ -1,7 +1,7 @@
 import type { PrismaConfig } from "prisma";
 import { ENV } from "@nccl/env";
 
-ENV.validate();
+ENV.load();
 
 export default {
   migrations: {

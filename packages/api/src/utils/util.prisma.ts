@@ -1,4 +1,3 @@
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { PrismaNeon } from "@prisma/adapter-neon";
 import { neonConfig } from "@neondatabase/serverless";
 import ws from "ws";
@@ -8,6 +7,7 @@ import { ENV } from "@nccl/env";
 import { ErrorSet } from "./util.errors.js";
 
 import { PrismaClient } from "../_generated/prisma/client.js";
+import { PrismaClientKnownRequestError } from "../_generated/prisma/internal/prismaNamespace.js";
 
 neonConfig.webSocketConstructor = ws;
 
@@ -40,10 +40,8 @@ export async function tryPrisma<T>(
   }
 }
 
-export type NCCLPrismaClient = ReturnType<typeof createPrismaClient>;
-
-export function createPrismaClient(databaseUrl?: string) {
-  const { NODE_ENV, DATABASE_URL } = ENV.getAllEnvVars();
+export function createPrismaClient(databaseUrl?: string): PrismaClient {
+  const { NODE_ENV, DATABASE_URL } = ENV.getAll();
   const connectionString = databaseUrl ?? DATABASE_URL;
 
   const adapter =

@@ -3342,6 +3342,7 @@ __metadata:
     "@playwright/test": "npm:1.54.2"
     "@prisma/adapter-neon": "npm:6.14.0"
     "@prisma/adapter-pg": "npm:6.14.0"
+    "@prisma/client": "npm:^6.14.0"
     "@prisma/extension-accelerate": "npm:2.0.2"
     "@types/express": "npm:5.0.3"
     "@types/leo-profanity": "npm:1.5.4"
@@ -3996,6 +3997,21 @@ __metadata:
     pg: "npm:^8.11.3"
     postgres-array: "npm:3.0.4"
   checksum: 10c0/72903e8d292c802417b9668ae3dff4f8a6376be1a7fb40f2f09c671f32be7e6ac065d472da12acc715ae85e97b1dd249d5883422174eefe239222f1572563287
+  languageName: node
+  linkType: hard
+
+"@prisma/client@npm:^6.14.0":
+  version: 6.14.0
+  resolution: "@prisma/client@npm:6.14.0"
+  peerDependencies:
+    prisma: "*"
+    typescript: ">=5.1.0"
+  peerDependenciesMeta:
+    prisma:
+      optional: true
+    typescript:
+      optional: true
+  checksum: 10c0/9019cea9a65012ca2237d52adfd22ad02faf829ff9d1636d288b47e9a5ba61b1fa0595eed2e085abb1427949d1a6f9b48c161bb92f02ccc0caa5c22009663593
   languageName: node
   linkType: hard
 
@@ -9028,17 +9044,6 @@ __metadata:
     esbuild: "npm:^0.25.4"
     ts-jolt: "npm:0.2.3"
   checksum: 10c0/190259eca8dcf55c1517370530ca49c94a3b82bffd7a11d7ae86e8bbbefd2417f2cedbba8e74ac3fbe6229232303ca840f1947e77bb9cec7673c56e547859569
-  languageName: node
-  linkType: hard
-
-"dotdir@npm:^0.4.6":
-  version: 0.4.6
-  resolution: "dotdir@npm:0.4.6"
-  dependencies:
-    "@changesets/cli": "npm:^2.29.4"
-    esbuild: "npm:^0.25.4"
-    ts-jolt: "npm:0.2.3"
-  checksum: 10c0/908b8bb7628983071e2086edffd182937f5737a4e9564b634e3dcf67d0481f89eacb0a52a408a2a7edde6503d87e6962bb8c7ac259f62708404b56faba5212ae
   languageName: node
   linkType: hard
 
@@ -16520,7 +16525,6 @@ __metadata:
   resolution: "supermenv@workspace:packages/supermenv"
   dependencies:
     "@gfdigital/tsconfig": "npm:0.3.1"
-    dotdir: "npm:^0.4.6"
     dotenv: "npm:^17.2.1"
     tsx: "npm:4.20.4"
     typescript: "npm:5.9.2"

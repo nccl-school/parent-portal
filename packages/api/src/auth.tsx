@@ -6,7 +6,7 @@ import { ENV } from "@nccl/env";
 import { createResendClient, EMAIL_FIELDS } from "./utils/util.resend.js";
 import { createPrismaClient } from "./utils/util.prisma.js";
 
-const { NCCL_API_URL, NCCL_APP_URL, NCCL_ENVIRONMENT } = ENV.getAllEnvVars();
+const { NCCL_API_URL, NCCL_APP_URL, NCCL_ENVIRONMENT } = ENV.getAll();
 
 const prisma = createPrismaClient();
 const resend = createResendClient();

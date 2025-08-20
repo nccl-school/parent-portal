@@ -24,7 +24,6 @@
   },
   "homepage": "https://github.com/nccl-school/parent-portal#readme",
   "dependencies": {
-    "dotdir": "^0.4.6",
     "dotenv": "^17.2.1",
     "zod": "^4.0.17"
   },

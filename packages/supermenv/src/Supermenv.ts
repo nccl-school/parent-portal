@@ -1,75 +1,184 @@
-import path from "node:path";
-
-import type { DotDirResponse } from "dotdir";
-import { DotDir } from "dotdir";
-import z from "zod";
 import { config } from "dotenv";
 
-import { SupermenvConfigSchema, type SupermenvConfig } from "./config.js";
+import { exhaustiveMatchGuard } from "./utils.js";
 
-class Supermenv<T extends Record<string, unknown>> {
-  #config: DotDirResponse<SupermenvConfig>["config"];
-  #meta: DotDirResponse<SupermenvConfig>["meta"];
+type PrimitiveSimple = "string" | "number" | "boolean" | "url" | "email";
+type PrimitiveLiteral = "literal";
 
-  constructor(dotDirRes: DotDirResponse<SupermenvConfig>) {
-    this.#config = dotDirRes.config;
-    this.#meta = dotDirRes.meta;
+export type SupermenvVarValue = { optional?: boolean; description?: string } & (
+  | {
+      type: PrimitiveSimple;
+    }
+  | {
+      type: "literal";
+      values: string[];
+    }
+);
 
-    const dotEnvRelPaths = (dotDirRes.config.dotEnvPaths ?? []).map(
-      (absPath) => {
-        return path.resolve(this.#meta.dirPath, absPath);
-      }
-    );
-    this.loadDotEnvFiles(dotEnvRelPaths);
+type TypeFor<T extends PrimitiveSimple | PrimitiveLiteral> = T extends "string"
+  ? string
+  : T extends "number"
+    ? number
+    : T extends "boolean"
+      ? boolean
+      : T extends "url"
+        ? string
+        : T extends "email"
+          ? string
+          : T extends "literal"
+            ? string
+            : never;
+
+export type SupermenvEnvVars<T extends Record<string, SupermenvVarValue>> = {
+  [K in keyof T]: T[K]["optional"] extends true
+    ? TypeFor<T[K]["type"]> | undefined
+    : TypeFor<T[K]["type"]>;
+};
+
+export class Supermenv<T extends Record<string, SupermenvVarValue>> {
+  #varDefs: T;
+  #errors: [string, string][];
+  #source: NodeJS.ProcessEnv;
+  #envVars: SupermenvEnvVars<T> | undefined;
+  #dotEnvPaths: string[];
+
+  constructor(options: { vars: T; dotEnvPaths?: string[] }) {
+    this.#dotEnvPaths = options.dotEnvPaths ?? [];
+    this.#varDefs = options.vars;
+    console.log("marker");
+    this.#errors = [];
+    this.#source = process.env;
+    this.load = this.load.bind(this);
   }
 
-  loadDotEnvFiles(paths: string[]) {
-    if (paths.length === 0) {
-      console.log("No dotEnv paths provided");
-      return;
-    }
-    console.log("Importing custom dotEnv filepaths");
+  load() {
+    console.log("Loading & validating environment vars...");
+    this.loadDotEnvPaths(this.#dotEnvPaths);
+    this.#validate();
+    console.log("Loading & validating environment vars... done.");
+  }
+
+  loadDotEnvPaths(paths: string[]) {
+    if (paths.length === 0) return;
+    console.log("Loading Dotenv files...");
     config({ path: paths });
+    console.log("Loading Dotenv files... done.");
   }
 
-  validate() {
-    const schema = this.#config.schema;
-    const processEnv = process.env;
-    const res = schema.safeParse(processEnv);
-    if (!res.success) {
-      throw new Error(`Invalid configuration format:
-    ${z.prettifyError(res.error)}`);
+  #logError(key: keyof T, message: string) {
+    this.#errors.push([String(key), message]);
+  }
+
+  #getEnvVars() {
+    if (!this.#envVars) {
+      throw new Error(
+        "EnvVars have yet to be validated. Ensure you're calling the 'load' method in order to validate and set the environment vars"
+      );
     }
-    return res.data as T;
+    return this.#envVars;
   }
 
-  getAllEnvVars() {
-    return this.validate();
+  getAll() {
+    const vars = this.#getEnvVars();
+    return vars;
   }
 
-  getEnvVar(key: keyof T) {
-    const vars = this.getAllEnvVars();
+  getOne(key: keyof T) {
+    const vars = this.#getEnvVars();
     return vars[key];
   }
-}
 
-export async function createSupermenv<T extends Record<string, unknown>>({
-  rootDir,
-}: {
-  rootDir: string;
-}) {
-  const dotDir = new DotDir<SupermenvConfig>();
-  const res = await dotDir.find({
-    dirName: "supermenv",
-    cwd: rootDir,
-  });
-  if (!res || !res.config) {
-    throw new Error("Missing .supermenv config");
+  #validate() {
+    // If there aren't any errors and the vars already exist
+    if (this.#errors.length === 0 && this.#envVars) {
+      return this.#envVars;
+    }
+
+    this.#errors = [];
+    let out: SupermenvEnvVars<T> = {} as SupermenvEnvVars<T>;
+
+    for (const [key, def] of Object.entries(this.#varDefs)) {
+      const envKey = key as keyof T;
+      const envValue = this.#source[key];
+      const isNullishOrEmpty = envValue == null || envValue === "";
+
+      if (isNullishOrEmpty && def.optional) {
+        out = Object.assign(out, { [envKey]: undefined });
+        continue;
+      }
+
+      if (isNullishOrEmpty) {
+        this.#logError(envKey, `Missing environment variable`);
+        continue;
+      }
+
+      switch (def.type) {
+        case "string":
+          out = Object.assign(out, { [envKey]: envValue });
+          break;
+
+        case "number": {
+          const num = Number(envValue);
+          if (Number.isNaN(num)) {
+            this.#logError(
+              envKey,
+              `"${envValue}" cannot be coerced to a number`
+            );
+            continue;
+          }
+          out = Object.assign(out, { [envKey]: num });
+          break;
+        }
+
+        case "boolean": {
+          const bool = envValue === "true" || envValue === "1";
+          out = Object.assign(out, { [envKey]: bool });
+          break;
+        }
+
+        case "url":
+          try {
+            new URL(envValue);
+          } catch {
+            this.#logError(envKey, `"${envValue}" is not a valid URL`);
+            continue;
+          }
+          out = Object.assign(out, { [envKey]: envValue });
+          break;
+
+        case "email":
+          if (!/^[^@]+@[^@]+\.[^@]+$/.test(envValue)) {
+            this.#logError(
+              envKey,
+              `"${envValue}" is not a valid email address.`
+            );
+            continue;
+          }
+          out = Object.assign(out, { [envKey]: envValue });
+          break;
+
+        case "literal":
+          if (!def.values.includes(envValue)) {
+            this.#logError(
+              envKey,
+              `"${envValue}" does not match one of the available values "${def.values.join(" | ")}"`
+            );
+            continue;
+          }
+          out = Object.assign(out, { [envKey]: envValue });
+          break;
+
+        default:
+          exhaustiveMatchGuard(def);
+      }
+    }
+
+    if (this.#errors.length > 0) {
+      throw new Error(`Environment Variable validation failed:
+${this.#errors.map(([envKey, error]) => `\n\t - ${envKey}: ${error}`)}
+`);
+    }
+
+    this.#envVars = out;
   }
-  const validated = SupermenvConfigSchema.safeParse(res.config);
-  if (!validated.success) {
-    throw new Error(`Invalid configuration format:
-    ${z.prettifyError(validated.error)}`);
-  }
-  return new Supermenv<T>(res);
 }

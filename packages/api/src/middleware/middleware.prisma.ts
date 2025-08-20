@@ -2,16 +2,17 @@ import { createMiddleware } from "hono/factory";
 import { ENV } from "@nccl/env";
 
 import { createPrismaClient } from "../utils/util.prisma.js";
+import type { PrismaClient } from "../_generated/prisma/client.js";
 
 declare module "hono" {
   interface ContextVariableMap {
-    db: ReturnType<typeof createPrismaClient>;
+    db: PrismaClient;
   }
 }
 
 export const prismaMiddleware = createMiddleware(async (c, next) => {
-  const connectionString = ENV.getEnvVar("DATABASE_URL");
-  const prismaClient = createPrismaClient(connectionString);
+  const connectionString = ENV.getOne("DATABASE_URL");
+  const prismaClient = createPrismaClient(connectionString) as PrismaClient;
   c.set("db", prismaClient);
   await next();
 });

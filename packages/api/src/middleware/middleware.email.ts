@@ -10,7 +10,7 @@ declare module "hono" {
 }
 
 export const emailMiddleware = createMiddleware(async (c, next) => {
-  const resend = createResendClient(ENV.getEnvVar("RESEND_API_KEY"));
+  const resend = createResendClient(ENV.getOne("RESEND_API_KEY"));
   c.set("resend", resend);
 
   await next();
