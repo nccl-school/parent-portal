@@ -6,13 +6,13 @@ import { ServerRouter } from "react-router";
 import { isbot } from "isbot";
 import type { RenderToPipeableStreamOptions } from "react-dom/server";
 import { renderToPipeableStream } from "react-dom/server";
-// import { HandleError } from "@highlight-run/remix/server";
+import { HandleError } from "@highlight-run/remix/server";
 
 export const streamTimeout = 5_000;
 
-// export const handleError = HandleError({
-//   projectID: String(process.env.HIGHLIGHT_PROJECT_ID),
-// });
+export const handleError = HandleError({
+  projectID: String(process.env.HIGHLIGHT_PROJECT_ID),
+});
 
 export default function handleRequest(
   request: Request,

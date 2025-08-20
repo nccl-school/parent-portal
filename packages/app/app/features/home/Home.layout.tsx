@@ -15,11 +15,9 @@ export function getGreetingBanner(): string {
 export default function HomeLayout() {
   const user = useUser();
 
-  if (!user) return;
-
   return (
     <PageContainer dxVariant="scrollable">
-      <PageHeader dxTitle={`${getGreetingBanner()}, ${user.firstName}`} />
+      <PageHeader dxTitle={`${getGreetingBanner()}, ${user?.firstName}`} />
       <Outlet />
     </PageContainer>
   );

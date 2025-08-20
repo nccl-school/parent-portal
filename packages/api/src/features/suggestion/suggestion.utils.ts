@@ -134,12 +134,10 @@ export const GetSuggestionCommentsResponseSchema = z
     ...SuggestionCommentSchema.omit({ createdBy: true }).shape,
     createdBy: UserSchema.pick({
       id: true,
-      authId: true,
       imageUrl: true,
       email: true,
       firstName: true,
       lastName: true,
-      role: true,
     }),
   })
   .transform((comment) => {
