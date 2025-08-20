@@ -6,7 +6,6 @@ import { Outlet, redirect } from "react-router";
 import type { Route } from "./+types/Auth.layout";
 
 import { getAuthClient } from "../../utils/server";
-import { assembleTitle } from "../../utils/util.assemble-title";
 import { backgroundGradient } from "../../utils/isomorphic";
 
 const styles = css`
@@ -42,7 +41,7 @@ const styles = css`
       width: ${makeRem(500)};
     }
 
-    & > img {
+    header > img {
       height: ${makeRem(50)};
       width: auto;
       object-fit: contain;
@@ -75,15 +74,14 @@ export async function loader(args: Route.LoaderArgs) {
 export default function AuthLayout() {
   return (
     <main className={classes(styles, backgroundGradient)}>
-      <title>{assembleTitle("Accept Invite")}</title>
       <article>
-        <img
-          src="/images/ncc-logo-shell-only-500x500-transparent.png"
-          alt="nccl-logo"
-        />
-        <div>
-          <Outlet />
-        </div>
+        <header>
+          <img
+            src="/images/ncc-logo-shell-only-500x500-transparent.png"
+            alt="nccl-logo"
+          />
+        </header>
+        <Outlet />
       </article>
     </main>
   );

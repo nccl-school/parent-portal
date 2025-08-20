@@ -44,10 +44,18 @@ export default [
   // - /auth
   layout("./features/auth/Auth.layout.tsx", [
     route("sign-in", "./features/auth/AuthSignIn.route.tsx"),
-    route("forgot-password", "./features/auth/AuthForgotPassword.route.tsx"),
-    route("reset-password", "./features/auth/AuthResetPassword.route.tsx"),
-    // route("/forgot-password", "features/auth/AuthForgotPassword.route.tsx"),
-    route("accept-invite", "./features/auth/AuthAcceptInvite.route.tsx"),
+    ...prefix("sign-up", [
+      index("./features/auth/AuthAcceptInvite.route.tsx"),
+      route("success", "./features/auth/AuthAcceptInviteSuccess.route.tsx"),
+    ]),
+    ...prefix("forgot-password", [
+      index("./features/auth/AuthForgotPasswordIndex.route.tsx"),
+      route("success", "./features/auth/AuthForgotPasswordSuccess.route.tsx"),
+    ]),
+    ...prefix("reset-password", [
+      index("./features/auth/AuthResetPasswordIndex.route.tsx"),
+      route("success", "./features/auth/AuthResetPasswordSuccess.route.tsx"),
+    ]),
   ]),
 
   // APIs
@@ -86,8 +94,6 @@ export default [
       ]),
     ]),
   ]),
+  // test
+  // route("", "./features/test/Test.route.tsx"),
 ] satisfies RouteConfig;
-
-// export default [
-//   route("", "./features/test/Test.route.tsx"),
-// ] satisfies RouteConfig;

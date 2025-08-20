@@ -20,8 +20,13 @@ import {
   useSearchParams,
 } from "react-router";
 
-import { getValidationErrors } from "../../utils/client";
+import { AuthPage } from "./AuthPage";
+import { AuthPageHeader } from "./AuthPageHeader";
+import { AuthPageBody } from "./AuthPageBody";
+import { AuthPageFooter } from "./AuthPageFooter";
+
 import { PageHeader } from "../../components/page";
+import { getValidationErrors } from "../../utils/client";
 
 const styles = css`
   padding: ${makeRem(16)};
@@ -52,89 +57,90 @@ export function AuthAcceptInviteValid({ email }: { email: string }) {
 
   return (
     <Form method="post">
-      <PageHeader
-        style={{
-          paddingLeft: 0,
-          paddingRight: 0,
-          paddingTop: 0,
-          paddingBottom: makeRem(32),
-        }}
-        dxTitle="Create your account"
-        dxSubtitle="Enter your credentials to access your account"
-      />
-      <InputGroup>
-        <input
-          type="hidden"
-          name="token"
-          value={String(urlSearchParams.get("token"))}
-        />
-        <input type="hidden" name="email" value={email} />
-        <InputText
-          name="email"
-          dxLabel="Email address"
-          disabled
-          value={email}
-        />
-        <InputGroup dxLayout="inline-stretch">
-          <InputText
-            name="firstName"
-            dxLabel="First name"
-            dxError={errors?.firstName?.[0]}
+      <AuthPage>
+        <AuthPageHeader>
+          <PageHeader
+            dxTitle="Create your account"
+            dxSubtitle="Enter your credentials to access your account"
           />
-          <InputText
-            name="lastName"
-            dxLabel="Last name"
-            dxError={errors?.lastName?.[0]}
-          />
-        </InputGroup>
-        <InputPassword
-          name="password"
-          dxLabel="Password"
-          onChange={(e) => setPassword(e.currentTarget.value)}
-          dxError={
-            errors?.password?.[0]
-              ? "Please ensure all of the requirements are checked."
-              : undefined
-          }
-          autoComplete="current-password"
-        />
-        <DescriptionList className={styles}>
-          {passwordRules.map((rule) => {
-            const passed = rule.test(password);
-            return (
-              <Fragment key={rule.label}>
-                <DescriptionListTag key="label">
-                  <div>
-                    <Icon
-                      dxIcon={
-                        passed
-                          ? "checkmark-circle-02-solid-standard"
-                          : "cancel-01-stroke-standard"
-                      }
-                      dxColor={passed ? "success" : "danger"}
-                    />
-                  </div>
-                </DescriptionListTag>
-                <DescriptionListData>{rule.label}</DescriptionListData>
-              </Fragment>
-            );
-          })}
-        </DescriptionList>
-        {/* <InputCheckbox dxLabelOrientation="after">
+        </AuthPageHeader>
+        <AuthPageBody>
+          <InputGroup>
+            <input
+              type="hidden"
+              name="token"
+              value={String(urlSearchParams.get("token"))}
+            />
+            <input type="hidden" name="email" value={email} />
+            <InputText
+              name="email"
+              dxLabel="Email address"
+              disabled
+              value={email}
+            />
+            <InputGroup dxLayout="inline-stretch">
+              <InputText
+                name="firstName"
+                dxLabel="First name"
+                dxError={errors?.firstName?.[0]}
+              />
+              <InputText
+                name="lastName"
+                dxLabel="Last name"
+                dxError={errors?.lastName?.[0]}
+              />
+            </InputGroup>
+            <InputPassword
+              name="password"
+              dxLabel="Password"
+              onChange={(e) => setPassword(e.currentTarget.value)}
+              dxError={
+                errors?.password?.[0]
+                  ? "Please ensure all of the requirements are checked."
+                  : undefined
+              }
+              autoComplete="current-password"
+            />
+            <DescriptionList className={styles}>
+              {passwordRules.map((rule) => {
+                const passed = rule.test(password);
+                return (
+                  <Fragment key={rule.label}>
+                    <DescriptionListTag key="label">
+                      <div>
+                        <Icon
+                          dxIcon={
+                            passed
+                              ? "checkmark-circle-02-solid-standard"
+                              : "cancel-01-stroke-standard"
+                          }
+                          dxColor={passed ? "success" : "danger"}
+                        />
+                      </div>
+                    </DescriptionListTag>
+                    <DescriptionListData>{rule.label}</DescriptionListData>
+                  </Fragment>
+                );
+              })}
+            </DescriptionList>
+            {/* <InputCheckbox dxLabelOrientation="after">
           <InputLabel dxNode="div" dxLabel="I agree to the Terms and Privacy" />
         </InputCheckbox> */}
-        <br />
-        <Button
-          dxSize="md"
-          dxVariant="contained"
-          dxColor="secondary"
-          style={{ justifyContent: "center" }}
-          type="submit"
-          disabled={navigation.state !== "idle"}
-        >
-          {navigation.state !== "idle" ? "Loading..." : "Create Account"}
-        </Button>
-      </InputGroup>
+          </InputGroup>
+        </AuthPageBody>
+        <AuthPageFooter>
+          <Button
+            dxSize="lg"
+            dxVariant="contained"
+            dxColor="secondary"
+            style={{ justifyContent: "center" }}
+            type="submit"
+            disabled={navigation.state !== "idle"}
+          >
+            {navigation.state !== "idle" ? "Loading..." : "Create Account"}
+          </Button>
+        </AuthPageFooter>
+      </AuthPage>
     </Form>
   );
 }

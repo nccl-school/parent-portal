@@ -13,7 +13,6 @@ import { backgroundGradient } from "../../utils/isomorphic";
 import { ensureSession, getNCCLClient } from "../../utils/server";
 
 export async function loader(args: Route.LoaderArgs) {
-  console.log("AppRoot Loader Fired");
   const session = await ensureSession(args);
   const ncclClient = getNCCLClient(args);
   const currentUser = await ncclClient.user.getCurrentUser();

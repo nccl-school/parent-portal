@@ -78,7 +78,7 @@ account.post(
         );
 
         // email user
-        const acceptInviteUrl = `${ENV.getOne("NCCL_APP_URL")}/accept-invite?token=${inviteTokenRaw}`;
+        const acceptInviteUrl = `${ENV.getOne("NCCL_APP_URL")}/sign-up?token=${inviteTokenRaw}`;
         const formattedExpiresAt = format(inviteExpiresAt, "PPPP");
         const emailRes = await resend.emails.send({
           from: "NCCL Parents <no-reply@ncclschool.org>",

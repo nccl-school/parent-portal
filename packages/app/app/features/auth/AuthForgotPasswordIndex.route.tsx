@@ -2,20 +2,26 @@ import z from "zod";
 import {
   InputGroup,
   InputText,
-  InputPassword,
   Button,
   Toast,
   Typography,
 } from "@nccl/components";
-import { Form, href, Link, useNavigation, useSearchParams } from "react-router";
+import {
+  Form,
+  href,
+  Link,
+  redirect,
+  useNavigation,
+  useSearchParams,
+} from "react-router";
 import { useEffect } from "react";
 import { parseError } from "@nccl/api/client";
 
 import type { Route } from "./+types/AuthAcceptInvite.route";
-import { AuthPageFooter } from "./AuthPageFooter";
+import { AuthPage } from "./AuthPage";
 import { AuthPageHeader } from "./AuthPageHeader";
 import { AuthPageBody } from "./AuthPageBody";
-import { AuthPage } from "./AuthPage";
+import { AuthPageFooter } from "./AuthPageFooter";
 
 import { getAuthError, getValidationErrors } from "../../utils/client";
 import { PageHeader } from "../../components/page";
@@ -28,13 +34,8 @@ const schema = z.object({
     .email({ error: "Please enter an email address" })
     .trim()
     .min(1, { error: "Please enter an email address" }),
-  password: z
-    .string({ error: "Please enter a password" })
-    .trim()
-    .min(1, { error: "Please enter a password" }),
-  rememberMe: z.boolean().optional(),
-  redirectURL: z.string().optional(),
 });
+type FormData = z.infer<typeof schema>;
 
 export async function action(args: Route.ActionArgs) {
   const authClient = getAuthClient();
@@ -43,47 +44,40 @@ export async function action(args: Route.ActionArgs) {
     return parseError(formData.error);
   }
 
-  const url = new URL(args.request.url);
-  const redirectURL = url.searchParams.get("redirectURL");
+  const resetPasswordUrl = `${args.context.env.NCCL_APP_URL}${href("/reset-password")}`;
 
-  const callbackURL = redirectURL
-    ? `${args.context.env.NCCL_APP_URL}/${redirectURL}`
-    : args.context.env.NCCL_APP_URL;
-
-  // BA usually clears via its own sign-out endpoint; you can proxy or call it directly:
-  const res = await authClient.signInEmail({
+  await authClient.forgetPassword({
     headers: args.request.headers,
     body: {
       ...formData.data,
-      callbackURL,
+      redirectTo: resetPasswordUrl,
     },
     asResponse: true,
   });
-  return res;
+  return redirect("/forgot-password/success");
 }
 
-export default function AuthAcceptInviteRoute(args: Route.ComponentProps) {
+export default function AuthForgotPassword(args: Route.ComponentProps) {
   const navigation = useNavigation();
   const [urlSearchParams] = useSearchParams();
-  const errors = getValidationErrors<z.infer<typeof schema>>(args.actionData);
+  const validationErrors = getValidationErrors<FormData>(args.actionData);
   const authError = getAuthError(args.actionData);
 
   useEffect(() => {
     if (!authError) return;
     Toast.error("Invalid email or password. Please try again.", {
       title: "Unable to sign in.",
-      duration: 5_000,
     });
   }, [args.actionData, authError]);
 
   return (
     <Form method="post">
-      <title>{assembleTitle("Sign in")}</title>
+      <title>{assembleTitle("Forgot password")}</title>
       <AuthPage>
         <AuthPageHeader>
           <PageHeader
-            dxTitle="Welcome back!"
-            dxSubtitle="Enter your credentials to sign into the parent portal"
+            dxTitle="Request a password reset"
+            dxSubtitle="Type your email address below. If it matches an account, we’ll send a reset link."
           />
         </AuthPageHeader>
         <AuthPageBody>
@@ -97,24 +91,13 @@ export default function AuthAcceptInviteRoute(args: Route.ComponentProps) {
               name="email"
               dxLabel="Email address"
               autoComplete="username"
-              dxError={errors.email?.[0]}
+              dxError={validationErrors.email?.[0]}
             />
-            <InputPassword
-              name="password"
-              dxLabel="Password"
-              autoComplete="current-password"
-              dxError={errors.password?.[0]}
-            />
-            <Link to={href("/forgot-password")}>
+            <Link to={href("/sign-in")}>
               <Typography dxVariant="body3" dxNode="span">
-                Forgot password?
+                Back to sign in
               </Typography>
             </Link>
-
-            {/* <InputCheckbox dxLabelOrientation="after">
-          <InputLabel dxNode="div" dxLabel="I agree to the Terms and Privacy" />
-          </InputCheckbox> */}
-            <br />
           </InputGroup>
         </AuthPageBody>
         <AuthPageFooter>
@@ -126,7 +109,9 @@ export default function AuthAcceptInviteRoute(args: Route.ComponentProps) {
             type="submit"
             disabled={navigation.state !== "idle"}
           >
-            {navigation.state !== "idle" ? "Loading..." : "Sign in"}
+            {navigation.state !== "idle"
+              ? "Loading..."
+              : "Request password reset"}
           </Button>
         </AuthPageFooter>
       </AuthPage>
