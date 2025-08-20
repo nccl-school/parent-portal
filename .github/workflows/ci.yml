@@ -52,8 +52,10 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
-      - name: Validate env vars
-        run: yarn env:validate
+      - name: Validate Environment Variables
+        run: |
+          yarn workspace @nccl/env build
+          yarn env:validate
 
       - name: Generate Prisma client
         working-directory: packages/api
