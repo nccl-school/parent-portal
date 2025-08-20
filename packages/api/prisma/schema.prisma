@@ -89,6 +89,7 @@ model User {
   firstName          String
   lastName           String
   emailVerified      Boolean
+  phone              String?
   imageUrl           String?
   banned             Boolean?                 @default(false)
   banReason          String?

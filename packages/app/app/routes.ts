@@ -17,8 +17,13 @@ export default [
       route("resources/*", "./features/resources/Resources.route.tsx"),
     ]),
     // - /directory
-    layout("./features/directory/Directory.layout.tsx", [
-      route("directory", "./features/directory/Directory.route.tsx"),
+    route("directory", "./features/directory/Directory.route.tsx", [
+      // - /directory
+      route("", "./features/directory-all/DirectoryAll.route.tsx"),
+      route(
+        "students",
+        "./features/directory-students/DirectoryStudents.route.tsx"
+      ),
     ]),
     // - /calendar
     layout("./features/calendar/Calendar.layout.tsx", [
@@ -31,9 +36,13 @@ export default [
     layout("./features/more/More.layout.tsx", [
       route("more", "./features/more/More.route.tsx"),
     ]),
-    // -/profile
-    layout("./features/profile/Profile.layout.tsx", [
-      route("profile/*", "features/profile/Profile.route.tsx"),
+    // - /account
+    route("account", "./features/account/Account.route.tsx", [
+      route("", "./features/account-general/AccountGeneral.route.tsx"),
+      route(
+        "security",
+        "./features/account-security/AccountSecurity.route.tsx"
+      ),
     ]),
     route("admin", "./features/admin/Admin.route.tsx", [
       index("./features/admin-users/AdminUsers.route.tsx"),
@@ -95,5 +104,5 @@ export default [
     ]),
   ]),
   // test
-  // route("", "./features/test/Test.route.tsx"),
+  // route("/", "./features/test/Test.route.tsx"),
 ] satisfies RouteConfig;

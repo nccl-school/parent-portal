@@ -8,7 +8,7 @@ import { AuthAcceptInviteValid } from "./AuthAcceptInviteValid";
 import { AuthAcceptInviteError } from "./AuthAcceptInviteError";
 
 import { validateFormData } from "../../utils/isomorphic";
-import { renderData } from "../../utils/client";
+import { renderLoaderData } from "../../utils/client";
 import { getNCCLClient } from "../../utils/server";
 import { assembleTitle } from "../../utils/util.assemble-title";
 
@@ -49,7 +49,7 @@ export default function AuthAcceptInviteRoute(args: Route.ComponentProps) {
   return (
     <>
       <title>{assembleTitle("Sign up")}</title>
-      {renderData(args.loaderData, {
+      {renderLoaderData(args.loaderData, {
         loading: "Loading...",
         ok: (d) => {
           switch (d.status) {

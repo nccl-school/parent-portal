@@ -15,6 +15,7 @@ import { authentication } from "./features/auth/auth.route.js";
 import { resource } from "./features/resource/resource.route.js";
 import { emailMiddleware } from "./middleware/middleware.email.js";
 import { account } from "./features/account/account.route.js";
+import { directory } from "./features/directory/directory.route.js";
 
 const app = new Hono();
 
@@ -44,6 +45,7 @@ app.route("/api/suggestion", suggestion);
 app.route("/api/role", role);
 app.route("/api/user", user);
 app.route("/api/resource", resource);
+app.route("/api/directory", directory);
 
 // Errors
 app.onError((error, c) => {

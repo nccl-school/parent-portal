@@ -13,6 +13,7 @@ export const UserSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
   emailVerified: z.boolean(),
+  phone: z.string().nullable(),
   imageUrl: z.string().nullable(),
   banned: z.boolean().nullable(),
   banReason: z.string().nullable(),

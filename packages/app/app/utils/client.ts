@@ -154,7 +154,7 @@ export function parseFetcherData<D>(data: D): ParseFetcherResult<D> {
   return { status: "ok", data: data as Exclude<D, ErrorResponse> };
 }
 
-export function getData<D>(loaderData: D) {
+export function parseLoaderData<D>(loaderData: D) {
   const res = parseFetcherData<D>(loaderData);
   switch (res.status) {
     case "ok":
@@ -165,7 +165,7 @@ export function getData<D>(loaderData: D) {
   }
 }
 
-export function renderData<D>(
+export function renderLoaderData<D>(
   data: D,
   callbacks: {
     loading?: ReactNode;

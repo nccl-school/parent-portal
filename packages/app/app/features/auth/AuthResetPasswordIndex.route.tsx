@@ -16,7 +16,7 @@ import { AuthPage } from "./AuthPage";
 import type { Route } from "./+types/AuthResetPasswordIndex.route";
 
 import { PageHeader } from "../../components/page";
-import { getValidationErrors, renderData } from "../../utils/client";
+import { getValidationErrors, renderLoaderData } from "../../utils/client";
 import { getFormData } from "../../utils/isomorphic";
 import { getAuthClient } from "../../utils/server";
 import { assembleTitle } from "../../utils/util.assemble-title";
@@ -99,7 +99,7 @@ export default function AuthResetPassword(args: Route.ComponentProps) {
           />
         </AuthPageHeader>
         <AuthPageBody>
-          {renderData(args.loaderData, {
+          {renderLoaderData(args.loaderData, {
             loading: "Loading...",
             ok: (d) => {
               switch (d.status) {
@@ -146,7 +146,7 @@ export default function AuthResetPassword(args: Route.ComponentProps) {
             },
           })}
         </AuthPageBody>
-        {renderData(args.loaderData, {
+        {renderLoaderData(args.loaderData, {
           loading: null,
           ok: (d) => {
             if (d.status !== "ok") {
