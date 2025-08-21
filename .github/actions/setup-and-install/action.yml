@@ -3,10 +3,10 @@ description: "Set's up node and prepares the repo for CI & CD"
 author: "Drew DeCarme (drew@greenflash.digital)"
 
 inputs:
-  TURBO_TOKEN:
+  token:
     description: The Turborepo token used for remote build caching
     required: true
-  TURBO_TEAM_ID:
+  team:
     description: The Turborepo team used to house the remote build caches
     required: true
 
@@ -35,11 +35,13 @@ runs:
     - name: Validate Environment Variables
       shell: bash
       run: |
+        echo "TOKEN         =  $TURBO_TOKEN."
+        echo "TURBO_TEAM_ID =  $TURBO_TEAM_ID."
         yarn turbo run build --filter @nccl/env
         yarn env:validate
       env:
-        TURBO_TOKEN: ${{ inputs.TURBO_TOKEN }}
-        TURBO_TEAM_ID: ${{ inputs.TURBO_TEAM_ID }}
+        TURBO_TOKEN: ${{ inputs.token }}
+        TURBO_TEAM_ID: ${{ inputs.team }}
 
     - name: Generate Prisma client
       working-directory: packages/api
@@ -50,8 +52,8 @@ runs:
       shell: bash 
       run: yarn build
       env:
-        TURBO_TOKEN: ${{ inputs.TURBO_TOKEN }}
-        TURBO_TEAM_ID: ${{ inputs.TURBO_TEAM_ID }}
+        TURBO_TOKEN: ${{ inputs.token }}
+        TURBO_TEAM_ID: ${{ inputs.team }}
 
     - name: Install production dependencies
       shell: bash 
