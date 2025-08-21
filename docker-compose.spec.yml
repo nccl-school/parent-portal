@@ -6,7 +6,6 @@ services:
       - "11002:5432"
     env_file:
       - ./.env
-      - ./.env.spec
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 10s
@@ -23,7 +22,6 @@ services:
       - "11001:8080"
     env_file:
       - ./.env
-      - ./.env.spec
     depends_on:
       db:
         condition: service_healthy
@@ -38,7 +36,6 @@ services:
       - "11000:8080"
     env_file:
       - ./.env
-      - ./.env.spec
 
     depends_on:
       - api
