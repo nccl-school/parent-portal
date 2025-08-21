@@ -37,6 +37,9 @@ jobs:
 
       - name: Build
         uses: ./.github/actions/setup-and-install
+        with:
+          token: ${{ secrets.TURBO_TOKEN }}
+          team: ${{ secrets.TURBO_TEAM_ID }}
 
       - name: Start containers
         run: docker compose -f=docker-compose.spec.yml --progress plain up -d

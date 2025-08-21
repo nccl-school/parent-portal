@@ -32,8 +32,8 @@ runs:
       shell: bash 
       run: yarn build
       env:
-        TURBO_TOKEN: ${{ env.TURBO_TOKEN }}
-        TURBO_TEAM_ID: ${{ env.TURBO_TEAM_ID }}
+        TURBO_TOKEN: ${{ inputs.token }}
+        TURBO_TEAM_ID: ${{ inputs.team }}
 
     - name: Install production dependencies
       shell: bash 
