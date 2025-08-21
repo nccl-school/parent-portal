@@ -2,6 +2,33 @@
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
     "build": {
+      "env": [
+        "NODE_ENV",
+        "NCCL_ENVIRONMENT",
+        "NCCL_APP_URL",
+        "NCCL_API_URL",
+        "GCP_CLOUD_STORAGE_BUCKET",
+        "DATABASE_URL",
+        "BETTER_AUTH_SECRET",
+        "RESEND_API_KEY",
+        "GOOGLE_API_KEY",
+        "SUPER_USER_EMAIL",
+        "SUPER_USER_PASSWORD",
+        "POSTGRES_DB",
+        "POSTGRES_PORT",
+        "POSTGRES_USER",
+        "POSTGRES_PASSWORD",
+        "APP_PORT",
+        "API_PORT",
+        "GCP_PROJECT_ID",
+        "GCP_REGION",
+        "CLOUD_RUN_APP_SERVICE_NAME",
+        "CLOUD_RUN_API_SERVICE_NAME",
+        "GCP_GAR_REPO_APP",
+        "GCP_GAR_REPO_API",
+        "TURBO_TOKEN",
+        "TURBO_TEAM_ID"
+      ],
       "inputs": ["$TURBO_DEFAULT$", ".env"],
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "dist-client/**", "build/**"]
