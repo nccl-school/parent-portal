@@ -1,12 +1,10 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { ResetPasswordEmail } from "@nccl/emails";
-import { ENV_RUNTIME, loadEnvVars } from "@nccl/env";
+import { ENV_RUNTIME } from "@nccl/env";
 
 import { createResendClient, EMAIL_FIELDS } from "./utils/util.resend.js";
 import { createPrismaClient } from "./utils/util.prisma.js";
-
-loadEnvVars();
 
 const { NCCL_API_URL, NCCL_APP_URL } = ENV_RUNTIME.getAll();
 

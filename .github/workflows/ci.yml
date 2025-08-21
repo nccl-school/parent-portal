@@ -11,46 +11,24 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: test
-    env:
-      # CI
-      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      TURBO_TEAM_ID: ${{ secrets.TURBO_TEAM_ID }}
-      # Runtime
-      NODE_ENV: production
-      NCCL_ENVIRONMENT: ${{ vars.NCCL_ENVIRONMENT }}
-      NCCL_APP_URL: ${{ vars.NCCL_APP_URL }}
-      NCCL_API_URL: ${{ vars.NCCL_API_URL }}
-      GCP_CLOUD_STORAGE_BUCKET: ${{ secrets.GCP_CLOUD_STORAGE_BUCKET }}
-      BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
-      GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-      SUPER_USER_PASSWORD: ${{ secrets.SUPER_USER_PASSWORD }}
-      SUPER_USER_EMAIL: ${{ secrets.SUPER_USER_EMAIL }}
-      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Create .env file
-        run: touch .env
-
       - name: Build
         uses: ./.github/actions/setup-and-install
-        with:
-          token: ${{ secrets.TURBO_TOKEN }}
-          team: ${{ secrets.TURBO_TEAM_ID }}
 
       - name: Start containers
-        run: docker compose -f docker-compose.spec.yml --progress plain up -d
+        run: docker compose -f=docker-compose.spec.yml --env-file=.env --progress plain up -d
 
       - name: Pause for containers
         run: |
-          docker compose ps
+          docker compose wait
 
       - name: Reset and seed DB
         working-directory: packages/api
-        run: yarn prisma migrate reset --force --skip-generate
+        run: docker compose -f=docker-compose.spec.yml --env-file=.env exec -T api yarn prisma migrate reset --force --skip-generate
 
       - name: Run API tests
         run: yarn playwright test

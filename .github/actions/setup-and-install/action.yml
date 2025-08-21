@@ -2,30 +2,39 @@ name: "Setup & Install"
 description: "Set's up node and prepares the repo for CI & CD"
 author: "Drew DeCarme (drew@greenflash.digital)"
 
-inputs:
-  token:
-    description: The Turborepo token used for remote build caching
-    required: true
-  team:
-    description: The Turborepo team used to house the remote build caches
-    required: true
-
 runs:
   using: "composite"
   steps:
-    - name: Set node.js version
-      id: node_version
-      shell: bash 
-      run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
 
     - name: Enable corepack # Ensures the correct version of yarn is used
       shell: bash 
       run: corepack enable
 
+    - name: Create .env file
+      shell: bash
+      run: |
+        cat > .env <<'EOF'
+          NODE_ENV=${NODE_ENV}
+          NCCL_ENVIRONMENT=${NCCL_ENVIRONMENT}
+          NCCL_APP_URL=${NCCL_APP_URL}
+          NCCL_API_URL=${NCCL_API_URL}
+          GCP_CLOUD_STORAGE_BUCKET=${GCP_CLOUD_STORAGE_BUCKET}
+          BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+          GOOGLE_API_KEY=${GOOGLE_API_KEY}
+          RESEND_API_KEY=${RESEND_API_KEY}
+          SUPER_USER_PASSWORD=${SUPER_USER_PASSWORD}
+          SUPER_USER_EMAIL=${SUPER_USER_EMAIL}
+          POSTGRES_USER=${POSTGRES_USER}
+          POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+          POSTGRES_DB=${POSTGRES_DB}
+          DATABASE_URL=${DATABASE_URL}
+        EOF
+
     - name: Set Up node.js
       uses: actions/setup-node@v4
       with:
         node-version: ${{ env.NODE_VERSION }}
+        node-version-file: .nvmrc
         cache: "yarn"
 
     - name: Install dependencies
@@ -35,9 +44,6 @@ runs:
     - name: Build
       shell: bash 
       run: yarn build
-      env:
-        TURBO_TOKEN: ${{ inputs.token }}
-        TURBO_TEAM_ID: ${{ inputs.team }}
 
     - name: Install production dependencies
       shell: bash 
