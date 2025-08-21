@@ -29,6 +29,9 @@ runs:
       run: |
         yarn turbo run build --filter @nccl/env
         yarn env:validate
+      env:
+        TURBO_TOKEN: ${{ env.TURBO_TOKEN }}
+        TURBO_TEAM_ID: ${{ env.TURBO_TEAM_ID }}
 
     - name: Generate Prisma client
       working-directory: packages/api
@@ -38,6 +41,9 @@ runs:
     - name: Build
       shell: bash 
       run: yarn build
+      env:
+        TURBO_TOKEN: ${{ env.TURBO_TOKEN }}
+        TURBO_TEAM_ID: ${{ env.TURBO_TEAM_ID }}
 
     - name: Install production dependencies
       shell: bash 
