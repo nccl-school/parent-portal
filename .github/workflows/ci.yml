@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: test
+
     env:
       # CI
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
@@ -20,7 +21,7 @@ jobs:
       NCCL_ENVIRONMENT: ${{ vars.NCCL_ENVIRONMENT }}
       NCCL_APP_URL: ${{ vars.NCCL_APP_URL }}
       NCCL_API_URL: ${{ vars.NCCL_API_URL }}
-      GCP_CLOUD_STORAGE_BUCKET: ${{ secrets.GCP_CLOUD_STORAGE_BUCKET }}
+      GCP_CLOUD_STORAGE_BUCKET: ${{ vars.GCP_CLOUD_STORAGE_BUCKET }}
       BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
       GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
@@ -36,6 +37,9 @@ jobs:
 
       - name: Build
         run: yarn build
+        env:
+          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+          TURBO_TEAM_ID: ${{ secrets.TURBO_TEAM_ID }}
 
       - name: Install production dependencies
         run: yarn workspaces focus --production --all
