@@ -1,11 +1,12 @@
+import { ENV } from "@nccl/env";
+
 import { seedRoles } from "./seed.roles.js";
 import { seedSuperUser } from "./seed.super-user.js";
 import { seedResource } from "./seed.resource.js";
 
 import { PrismaClient } from "../src/_generated/prisma/client.js";
-import { loadEnv } from "../scripts/load-env.script.js";
 
-loadEnv();
+ENV.load();
 
 const prisma = new PrismaClient();
 async function main() {

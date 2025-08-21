@@ -19,4 +19,4 @@ sleep 3 # or implement healthcheck poll
 # Run migrations and seeding inside the API container
 echo "🛠️ Running migrations and seed..."
 cd packages/api
-NODE_ENV="test:host" yarn prisma migrate reset --force --skip-generate
+yarn prisma migrate reset --force --skip-generate
