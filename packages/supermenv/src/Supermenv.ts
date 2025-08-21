@@ -5,7 +5,7 @@ import { exhaustiveMatchGuard } from "./utils.js";
 type PrimitiveSimple = "string" | "number" | "boolean" | "url" | "email";
 type PrimitiveLiteral = "literal";
 
-export type SupermenvVarValue = { optional?: boolean; description?: string } & (
+export type SupermenvVarValue = { description?: string } & (
   | {
       type: PrimitiveSimple;
     }
@@ -30,84 +30,114 @@ type TypeFor<T extends PrimitiveSimple | PrimitiveLiteral> = T extends "string"
             : never;
 
 export type SupermenvEnvVars<T extends Record<string, SupermenvVarValue>> = {
-  [K in keyof T]: T[K]["optional"] extends true
-    ? TypeFor<T[K]["type"]> | undefined
-    : TypeFor<T[K]["type"]>;
+  [K in keyof T]: TypeFor<T[K]["type"]> | undefined;
+};
+export type ValidatedSupermenvEnvVars<
+  T extends Record<string, SupermenvVarValue>,
+> = {
+  [K in keyof T]: TypeFor<T[K]["type"]>;
 };
 
 export class Supermenv<T extends Record<string, SupermenvVarValue>> {
   #varDefs: T;
   #errors: [string, string][];
-  #source: NodeJS.ProcessEnv;
-  #envVars: SupermenvEnvVars<T> | undefined;
-  #dotEnvPaths: string[];
+  #envVars: SupermenvEnvVars<T>;
+  #name: string;
 
-  constructor(options: { vars: T; dotEnvPaths?: string[] }) {
-    this.#dotEnvPaths = options.dotEnvPaths ?? [];
+  constructor(options: {
+    vars: T;
+    dotEnvPaths?: string[];
+    name: string;
+    description?: string;
+  }) {
+    this.load = this.load.bind(this);
+    this.getAll = this.getAll.bind(this);
+    this.getOne = this.getOne.bind(this);
+
     this.#varDefs = options.vars;
     this.#errors = [];
-    this.#source = process.env;
-    this.load = this.load.bind(this);
+    this.#name = options.name;
+    this.#envVars = Object.keys(options.vars).reduce<SupermenvEnvVars<T>>(
+      (accum, key) => {
+        const envKey = key as keyof T;
+        return Object.assign(accum, { [envKey]: undefined });
+      },
+      {} as SupermenvEnvVars<T>
+    );
   }
 
-  load() {
-    this.loadDotEnvPaths(this.#dotEnvPaths);
-    console.log("Validating environment vars...");
-    this.#validate();
-    console.log("Validating environment vars... done.");
+  #log(message: string, ...args: string[]) {
+    console.log(`[${this.#name}] ${message}`, ...args);
   }
 
-  loadDotEnvPaths(paths: string[]) {
+  loadDotEnvs(paths: string[]) {
     if (paths.length === 0) return;
-    console.log("Loading Dotenv files...", paths);
+    this.#log("Loading Dotenv files...", ...paths);
     config({ path: paths });
-    console.log("Loading Dotenv files... done.");
+    this.#log("Loading Dotenv files... done.");
   }
 
-  #logError(key: keyof T, message: string) {
+  #addError(key: keyof T, message: string) {
     this.#errors.push([String(key), message]);
   }
 
-  #getEnvVars() {
-    if (!this.#envVars) {
-      throw new Error(
-        "EnvVars have yet to be validated. Ensure you're calling the 'load' method in order to validate and set the environment vars"
-      );
-    }
-    return this.#envVars;
+  #printErrors() {
+    return `[${this.#name}] Env validation failed:
+${this.#errors.map(([envKey, error]) => `\n\t - ${envKey}: ${error}`)}
+`;
   }
 
   getAll() {
-    const vars = this.#getEnvVars();
-    return vars;
-  }
-
-  getOne(key: keyof T) {
-    const vars = this.#getEnvVars();
-    return vars[key];
-  }
-
-  #validate() {
-    // If there aren't any errors and the vars already exist
-    if (this.#errors.length === 0 && this.#envVars) {
-      return this.#envVars;
+    this.validate();
+    if (this.#errors.length > 0) {
+      const errorReport = this.#printErrors();
+      throw new Error(errorReport);
     }
+    return this.#envVars as ValidatedSupermenvEnvVars<T>;
+  }
+
+  getOne<K extends keyof T>(key: K) {
+    const envVar = this.#envVars[key];
+    if (!envVar) {
+      throw new Error(`[${this.#name}] "${String(key)}" as not been set.`);
+    }
+    return envVar as TypeFor<T[K]["type"]>;
+  }
+
+  set<K extends keyof T>(key: K, value: TypeFor<T[K]["type"]>) {
+    this.#envVars[key] = value;
+  }
+
+  validate() {
+    if (this.#errors.length > 0) {
+      throw new Error(`Environment Variable validation failed:
+${this.#errors.map(([envKey, error]) => `\n\t - ${envKey}: ${error}`)}
+`);
+    }
+  }
+
+  /**
+   * Reads and then parses environment variables from process.env
+   */
+  load() {
+    this.#log("Loading env vars...");
+    const source = process.env;
 
     this.#errors = [];
     let out: SupermenvEnvVars<T> = {} as SupermenvEnvVars<T>;
 
     for (const [key, def] of Object.entries(this.#varDefs)) {
       const envKey = key as keyof T;
-      const envValue = this.#source[key];
+      const envValue = source[key];
       const isNullishOrEmpty = envValue == null || envValue === "";
 
-      if (isNullishOrEmpty && def.optional) {
+      if (isNullishOrEmpty) {
         out = Object.assign(out, { [envKey]: undefined });
         continue;
       }
 
       if (isNullishOrEmpty) {
-        this.#logError(envKey, `Missing environment variable`);
+        this.#addError(envKey, `Missing environment variable`);
         continue;
       }
 
@@ -119,7 +149,7 @@ export class Supermenv<T extends Record<string, SupermenvVarValue>> {
         case "number": {
           const num = Number(envValue);
           if (Number.isNaN(num)) {
-            this.#logError(
+            this.#addError(
               envKey,
               `"${envValue}" cannot be coerced to a number`
             );
@@ -139,7 +169,7 @@ export class Supermenv<T extends Record<string, SupermenvVarValue>> {
           try {
             new URL(envValue);
           } catch {
-            this.#logError(envKey, `"${envValue}" is not a valid URL`);
+            this.#addError(envKey, `"${envValue}" is not a valid URL`);
             continue;
           }
           out = Object.assign(out, { [envKey]: envValue });
@@ -147,7 +177,7 @@ export class Supermenv<T extends Record<string, SupermenvVarValue>> {
 
         case "email":
           if (!/^[^@]+@[^@]+\.[^@]+$/.test(envValue)) {
-            this.#logError(
+            this.#addError(
               envKey,
               `"${envValue}" is not a valid email address.`
             );
@@ -158,7 +188,7 @@ export class Supermenv<T extends Record<string, SupermenvVarValue>> {
 
         case "literal":
           if (!def.values.includes(envValue)) {
-            this.#logError(
+            this.#addError(
               envKey,
               `"${envValue}" does not match one of the available values "${def.values.join(" | ")}"`
             );
@@ -171,13 +201,9 @@ export class Supermenv<T extends Record<string, SupermenvVarValue>> {
           exhaustiveMatchGuard(def);
       }
     }
-
-    if (this.#errors.length > 0) {
-      throw new Error(`Environment Variable validation failed:
-${this.#errors.map(([envKey, error]) => `\n\t - ${envKey}: ${error}`)}
-`);
-    }
-
+    this.#log("Loading env vars... done.");
     this.#envVars = out;
+    const numOfVars = Object.keys(this.#envVars).length;
+    this.#log(`Loaded ${numOfVars} variables`);
   }
 }

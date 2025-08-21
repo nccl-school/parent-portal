@@ -1,5 +1,5 @@
 import { createMiddleware } from "hono/factory";
-import { ENV } from "@nccl/env";
+import { ENV_RUNTIME } from "@nccl/env";
 
 import { createPrismaClient } from "../utils/util.prisma.js";
 import type { PrismaClient } from "../_generated/prisma/client.js";
@@ -11,7 +11,7 @@ declare module "hono" {
 }
 
 export const prismaMiddleware = createMiddleware(async (c, next) => {
-  const connectionString = ENV.getOne("DATABASE_URL");
+  const connectionString = ENV_RUNTIME.getOne("DATABASE_URL");
   const prismaClient = createPrismaClient(connectionString) as PrismaClient;
   c.set("db", prismaClient);
   await next();

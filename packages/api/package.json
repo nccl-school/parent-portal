@@ -1,16 +1,28 @@
 {
   "name": "@nccl/api",
+  "version": "0.0.1",
+  "description": "The API for the NCCL Parent Portal applications",
   "type": "module",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/nccl-school/parent-portal.git"
+  },
+  "author": "Drew DeCarme (drew@greenflash.digital)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/nccl-school/parent-portal/issues"
+  },
+  "homepage": "https://github.com/nccl-school/parent-portal#readme",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "yarn env:validate && yarn api:build && yarn client:check && yarn client:build",
+    "build": "yarn api:build && yarn client:check && yarn client:build",
     "api:build": "tsc --project ./tsconfig.build.json",
     "auth:dev": "tsc --project ./tsconfig.build.json --watch",
     "start": "node dist/index.js",
     "client:dev": "yarn client:build --watch",
     "client:build": "yarn tsc --project tsconfig.client.json",
-    "client:check": "yarn tsc --project tsconfig.client-check.json",
-    "env:validate": "yarn tsx ./scripts/validate-env.ts"
+    "client:check": "yarn tsc --project tsconfig.client-check.json"
   },
   "exports": {
     ".": "./dist/index.js",
@@ -54,18 +66,5 @@
     "dotenv-cli": "10.0.0",
     "express": "5.1.0",
     "typescript": "5.9.2"
-  },
-  "version": "0.0.1",
-  "description": "The API for the NCCL Parent Portal applications",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/nccl-school/parent-portal.git"
-  },
-  "author": "Drew DeCarme (drew@greenflash.digital)",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/nccl-school/parent-portal/issues"
-  },
-  "homepage": "https://github.com/nccl-school/parent-portal#readme"
+  }
 }

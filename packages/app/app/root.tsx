@@ -7,6 +7,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useRouteLoaderData,
 } from "react-router";
 
 import "@nccl/theme/reset.css";
@@ -30,14 +31,22 @@ export async function loader(args: Route.LoaderArgs) {
   return {
     ENV: {
       ENVIRONMENT: args.context.env.NCCL_ENVIRONMENT,
-      HIGHLIGHT_PROJECT_ID: args.context.env.HIGHLIGHT_PROJECT_ID,
     },
   };
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const loaderData = useRouteLoaderData<typeof loader>("root");
   return (
-    <html lang="en" className={rootStyles}>
+    <html
+      lang="en"
+      className={rootStyles}
+      style={
+        loaderData?.ENV.ENVIRONMENT !== "prod"
+          ? { border: "2px solid brightpink" }
+          : undefined
+      }
+    >
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

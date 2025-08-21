@@ -1,7 +1,7 @@
 import { css } from "@linaria/core";
 import { Tab, Tabs, type IconNames } from "@nccl/components";
 import { NavLink, Outlet, href, type NavLinkProps } from "react-router";
-import { makeCustom } from "@nccl/theme";
+import { makeCustom, makeRem } from "@nccl/theme";
 
 import { PageHeader } from "../../components/page";
 import { PageContainer } from "../../components/page/PageContainer";
@@ -53,9 +53,15 @@ const navStyles = css`
   height: ${makeCustom("admin--tab-height-desktop")};
 `;
 const mainStyles = css`
+  max-width: ${makeCustom("container--max-width")};
   grid-area: main;
-  background: white;
+  margin: 0 auto;
+  width: 100%;
   overflow: hidden;
+  padding-top: ${makeRem(16)};
+  & > * {
+    background: white;
+  }
 `;
 
 export default function DirectoryRoute() {

@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import { Hono } from "hono";
 import { InviteUserEmail } from "@nccl/emails";
-import { ENV } from "@nccl/env";
+import { ENV_RUNTIME } from "@nccl/env";
 
 import {
   AcceptInviteRequestSchema,
@@ -78,7 +78,7 @@ account.post(
         );
 
         // email user
-        const acceptInviteUrl = `${ENV.getOne("NCCL_APP_URL")}/sign-up?token=${inviteTokenRaw}`;
+        const acceptInviteUrl = `${ENV_RUNTIME.getOne("NCCL_APP_URL")}/sign-up?token=${inviteTokenRaw}`;
         const formattedExpiresAt = format(inviteExpiresAt, "PPPP");
         const emailRes = await resend.emails.send({
           from: "NCCL Parents <no-reply@ncclschool.org>",

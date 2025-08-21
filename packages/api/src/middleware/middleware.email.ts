@@ -1,5 +1,5 @@
 import { createMiddleware } from "hono/factory";
-import { ENV } from "@nccl/env";
+import { ENV_RUNTIME } from "@nccl/env";
 
 import { createResendClient } from "../utils/util.resend.js";
 
@@ -10,7 +10,7 @@ declare module "hono" {
 }
 
 export const emailMiddleware = createMiddleware(async (c, next) => {
-  const resend = createResendClient(ENV.getOne("RESEND_API_KEY"));
+  const resend = createResendClient(ENV_RUNTIME.getOne("RESEND_API_KEY"));
   c.set("resend", resend);
 
   await next();

@@ -1,4 +1,4 @@
-import { ENV } from "@nccl/env";
+import { ENV_RUNTIME } from "@nccl/env";
 
 import { PrismaClient } from "../src/_generated/prisma/client.js";
 import { auth } from "../src/auth.js";
@@ -19,9 +19,9 @@ export async function seedSuperUser() {
     } else {
       const { user } = await auth.api.signUpEmail({
         body: {
-          email: ENV.getOne("SUPER_USER_EMAIL"),
-          password: ENV.getOne("SUPER_USER_PASSWORD"),
-          name: `Superman (${ENV.getOne("NCCL_ENVIRONMENT")})`,
+          email: ENV_RUNTIME.getOne("SUPER_USER_EMAIL"),
+          password: ENV_RUNTIME.getOne("SUPER_USER_PASSWORD"),
+          name: `Superman (${ENV_RUNTIME.getOne("NCCL_ENVIRONMENT")})`,
           image:
             "https://yoolk.ninja/wp-content/uploads/2019/07/DC-Comics-Superman-1024x819.png",
           firstName: "Clark",

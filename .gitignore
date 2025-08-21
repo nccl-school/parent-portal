@@ -14,7 +14,6 @@ bin
 storybook-static
 .env
 .env.spec
-.env.test
 .npmrc
 .secrets
 .secrets/*

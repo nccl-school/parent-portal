@@ -3,6 +3,7 @@ import path from "node:path";
 import { Supermenv } from "supermenv";
 
 export const ENV_CI = new Supermenv({
+  name: "CI",
   vars: {
     // repo|secrets
     TURBO_TOKEN: {
@@ -18,6 +19,7 @@ export const ENV_CI = new Supermenv({
 });
 
 export const ENV_CD = new Supermenv({
+  name: "CD",
   vars: {
     // repo|vars
     GCP_PROJECT_ID: {
@@ -38,7 +40,41 @@ export const ENV_CD = new Supermenv({
   },
 });
 
-export const ENV = new Supermenv({
+export const ENV_TEST = new Supermenv({
+  name: "TEST",
+  description:
+    "A set of environment variables needed to run the test environment and adjust some of the runtime variables",
+  vars: {
+    // repo|secrets
+    POSTGRES_PASSWORD: {
+      type: "string",
+      description: "The password for the test postgres user",
+    },
+    POSTGRES_PORT: {
+      type: "number",
+      description: "The port that the DB will run on in the test dockerfile",
+    },
+    POSTGRES_USER: {
+      type: "string",
+      description: "The port that the DB will run on in the test dockerfile",
+    },
+    POSTGRES_DB: {
+      type: "string",
+      description: "The port that the DB will run on in the test dockerfile",
+    },
+    APP_PORT: {
+      type: "number",
+      description: "The port that the app will run on in the test dockerfile",
+    },
+    API_PORT: {
+      type: "number",
+      description: "The port that the API will run on in the test dockerfile",
+    },
+  },
+});
+
+export const ENV_RUNTIME = new Supermenv({
+  name: "RUNTIME",
   dotEnvPaths: [path.resolve(import.meta.dirname, "../../../.env")],
   vars: {
     // Environment Vars
@@ -50,7 +86,7 @@ export const ENV = new Supermenv({
     },
     NCCL_ENVIRONMENT: {
       type: "literal",
-      values: ["local", "ci", "dev", "prod"],
+      values: ["local", "test", "dev", "prod"],
       description:
         "The deployed environment of the app. Used to detect specific services and add labels to give visual indicators of which environment is being worked in.",
     },
@@ -94,3 +130,63 @@ export const ENV = new Supermenv({
     SUPER_USER_PASSWORD: { type: "string" },
   },
 });
+
+/**
+ * Loads and dynamically sets some environment variables
+ * based upon the NCCL_ENVIRONMENT that is being targeted
+ * to either be run or deployed
+ */
+export function loadEnvVars() {
+  // At a bare minimum, the NCCL_ENVIRONMENT needs to be set
+  ENV_CI.load();
+  ENV_RUNTIME.loadDotEnvs([path.resolve(import.meta.dirname, "../../../.env")]);
+  ENV_RUNTIME.load();
+
+  switch (ENV_RUNTIME.getOne("NCCL_ENVIRONMENT")) {
+    case "local": {
+      // We assume that all of the necessary vars are in the .env file
+      ENV_RUNTIME.validate();
+      break;
+    }
+
+    case "test": {
+      // Load the test environment variables
+      ENV_TEST.load();
+
+      // Set some variables based upon known values
+      // and some implicit env vars
+      const db = "nccl-parents-db-test";
+      const dbPort = 11002;
+      const user = "postgres";
+      const pw = ENV_TEST.getOne("POSTGRES_PASSWORD");
+
+      // Set some of them
+      ENV_TEST.set("APP_PORT", 11000);
+      ENV_TEST.set("API_PORT", 11001);
+      ENV_TEST.set("POSTGRES_DB", db);
+      ENV_TEST.set("POSTGRES_USER", user);
+      ENV_TEST.set("POSTGRES_PORT", dbPort);
+
+      // Dynamically set the new DB URL based upon the env vars
+      const DATABASE_URL = `postgresql://${user}:${pw}@db:${dbPort}/${db}`;
+      ENV_RUNTIME.set("DATABASE_URL", DATABASE_URL);
+
+      ENV_RUNTIME.validate();
+      break;
+    }
+
+    case "dev":
+    case "production":
+      // Load some env vars for deployment to the higher environments
+      ENV_CD.load();
+
+      // Validate CD, CI and Runtime
+      ENV_CD.validate();
+      ENV_CI.validate();
+      ENV_RUNTIME.validate();
+      break;
+
+    default:
+      break;
+  }
+}

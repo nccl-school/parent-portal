@@ -2,7 +2,7 @@ import { PrismaNeon } from "@prisma/adapter-neon";
 import { neonConfig } from "@neondatabase/serverless";
 import ws from "ws";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { ENV } from "@nccl/env";
+import { ENV_RUNTIME } from "@nccl/env";
 
 import { ErrorSet } from "./util.errors.js";
 
@@ -41,7 +41,7 @@ export async function tryPrisma<T>(
 }
 
 export function createPrismaClient(databaseUrl?: string): PrismaClient {
-  const { NODE_ENV, DATABASE_URL } = ENV.getAll();
+  const { NODE_ENV, DATABASE_URL } = ENV_RUNTIME.getAll();
   const connectionString = databaseUrl ?? DATABASE_URL;
 
   const adapter =

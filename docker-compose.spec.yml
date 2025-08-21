@@ -5,12 +5,8 @@ services:
     image: postgres:17
     ports:
       - "11002:5432"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: nccl-parents-db-ci
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d nccl-parents-db-ci"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -21,13 +17,10 @@ services:
       dockerfile: packages/api/Dockerfile
     ports:
       - "11001:8080"
+    env_file:
+      - ./.env.test
     environment:
-      NODE_ENV: production
-      NCCL_ENVIRONMENT: ci
-      NCCL_API_URL: http://api:11001
-      NCCL_APP_URL: http://app:11000
-      DATABASE_URL: postgresql://postgres:postgres@db:11002/nccl-parents-db-ci
-      GCP_CLOUD_STORAGE_BUCKET: nccl-parents-resources-test
+      GCP_CLOUD_STORAGE_BUCKET: ${GCP_CLOUD_STORAGE_BUCKET}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
       RESEND_API_KEY: ${RESEND_API_KEY}
       GOOGLE_API_KEY: ${GOOGLE_API_KEY}
@@ -48,13 +41,10 @@ services:
       dockerfile: packages/app/Dockerfile
     ports:
       - "11000:8080"
+    env_file:
+      - ./.env.test
     environment:
-      NODE_ENV: production
-      NCCL_ENVIRONMENT: ci
-      NCCL_API_URL: http://api:11001
-      NCCL_APP_URL: http://app:11000
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/nccl-parents-db-ci
-      GCP_CLOUD_STORAGE_BUCKET: nccl-parents-resources-test
+      GCP_CLOUD_STORAGE_BUCKET: ${GCP_CLOUD_STORAGE_BUCKET}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
       RESEND_API_KEY: ${RESEND_API_KEY}
       GOOGLE_API_KEY: ${GOOGLE_API_KEY}

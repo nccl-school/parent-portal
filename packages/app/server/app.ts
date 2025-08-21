@@ -2,23 +2,24 @@ import "react-router";
 
 import { createRequestHandler } from "@react-router/express";
 import express from "express";
-import { ENV } from "@nccl/env";
+import { ENV_RUNTIME } from "@nccl/env";
 
 declare module "react-router" {
   interface AppLoadContext {
-    env: ReturnType<typeof ENV.getAll>;
+    env: ReturnType<typeof ENV_RUNTIME.getAll>;
   }
 }
 export const app = express();
+
+ENV_RUNTIME.validate();
 
 app.use(
   createRequestHandler({
     // eslint-disable-next-line import/no-unresolved
     build: () => import("virtual:react-router/server-build"),
     getLoadContext() {
-      ENV.load();
       return {
-        env: ENV.getAll(),
+        env: ENV_RUNTIME.getAll(),
       };
     },
   })

@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { ENV } from "@nccl/env";
+import { ENV_RUNTIME } from "@nccl/env";
 
 import {
   CreateFileRequestSchema,
@@ -397,7 +397,7 @@ resource.post(
     const googleDocParsed = parseGoogleDocsURL(url);
     const googleDocMeta = await fetchGoogleDocMetadataFromGoogleDrive(
       googleDocParsed.externalId,
-      ENV.getOne("GOOGLE_API_KEY")
+      ENV_RUNTIME.getOne("GOOGLE_API_KEY")
     );
 
     const createGoogleDoc = db.resource.create({
