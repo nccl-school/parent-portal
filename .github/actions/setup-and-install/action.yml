@@ -24,12 +24,26 @@ runs:
       run: yarn install --immutable
 
     - name: Validate Environment Variables
-      shell: bash 
+      shell: bash
       run: |
         yarn turbo run build --filter @nccl/env
         yarn env:validate
+      env:
+        TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
+        TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
     - name: Generate Prisma client
       working-directory: packages/api
       shell: bash 
       run: npx prisma generate
+
+    - name: Build
+      shell: bash 
+      run: yarn build
+      env:
+        TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
+        TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
+
+    - name: Install production dependencies
+      shell: bash 
+      run: yarn workspaces focus --production --all

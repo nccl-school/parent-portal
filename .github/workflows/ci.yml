@@ -36,14 +36,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup
-        uses: ./.github/actions/setup-and-install
-
       - name: Build
-        run: yarn build
-
-      - name: Install production dependencies
-        run: yarn workspaces focus --production --all
+        uses: ./.github/actions/setup-and-install
 
       - name: Start containers
         run: docker compose -f docker-compose.spec.yml --progress plain up -d
