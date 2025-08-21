@@ -101,9 +101,6 @@ ${this.#errors.map(([envKey, error]) => `\n\t - ${envKey}: ${error}`)}
   }
 
   getOne<K extends keyof T>(key: K) {
-    console.log("getting env var", key);
-    console.log("process.env", process.env);
-    console.log("thisEnvVars", this.#envVars);
     const envVar = this.#envVars[key];
     if (!envVar) {
       throw new Error(`[${this.#name}] "${String(key)}" has not been set.`);
@@ -210,7 +207,9 @@ ${this.#errors.map(([envKey, error]) => `\n\t - ${envKey}: ${error}`)}
     }
     this.#log("Loading env vars... done.");
     this.#envVars = out;
-    const numOfVars = Object.keys(this.#envVars).length;
-    this.#log(`Loaded ${numOfVars} variables`);
+    const loadReport = Object.entries(this.#envVars).map(([key, value]) => {
+      return `${!value ? "🚨" : "✅"} ${key}`;
+    });
+    this.#log(`Load Report:\n\t${loadReport.join(`\n\t`)}`);
   }
 }
