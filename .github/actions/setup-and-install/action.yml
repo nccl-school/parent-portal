@@ -35,8 +35,6 @@ runs:
     - name: Validate Environment Variables
       shell: bash
       run: |
-        echo "TOKEN         =  $TURBO_TOKEN."
-        echo "TURBO_TEAM_ID =  $TURBO_TEAM_ID."
         yarn turbo run build --filter @nccl/env
         yarn env:validate
       env:
