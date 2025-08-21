@@ -98,9 +98,12 @@ ${this.#errors.map(([envKey, error]) => `\n\t - ${envKey}: ${error}`)}
   }
 
   getOne<K extends keyof T>(key: K) {
+    console.log("getting env var", key);
+    console.log("process.env", process.env);
+    console.log("thisEnvVars", this.#envVars);
     const envVar = this.#envVars[key];
     if (!envVar) {
-      throw new Error(`[${this.#name}] "${String(key)}" as not been set.`);
+      throw new Error(`[${this.#name}] "${String(key)}" has not been set.`);
     }
     return envVar as TypeFor<T[K]["type"]>;
   }
