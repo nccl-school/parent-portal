@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "react-router build",
+    "build": "yarn typecheck && react-router build",
     "dev": "NODE_ENV=development PORT=5173 node server.js",
     "start": "node server.js",
     "typecheck": "react-router typegen && tsc -b",
