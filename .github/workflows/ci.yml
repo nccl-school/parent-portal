@@ -41,10 +41,6 @@ jobs:
         shell: bash
         run: corepack enable
 
-      - name: Create .env file
-        shell: bash
-        run: touch .env
-
       - name: Set Up node.js
         uses: actions/setup-node@v4
         with:
