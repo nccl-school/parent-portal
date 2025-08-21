@@ -80,11 +80,6 @@ export const ENV = new Supermenv({
       description:
         "The DB connection string used to migrate and connect to the DB using prisma",
     },
-    GOOGLE_APPLICATION_CREDENTIALS: {
-      type: "string",
-      description:
-        "An absolute file path to a JSON file that has the tokens required needed to interact with the GCP Api.",
-    },
     BETTER_AUTH_SECRET: {
       type: "string",
       description:
