@@ -5,9 +5,6 @@ author: "Drew DeCarme (drew@greenflash.digital)"
 runs:
   using: "composite"
   steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
     - name: Set node.js version
       id: node_version
       run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
