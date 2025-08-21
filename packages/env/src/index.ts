@@ -69,11 +69,6 @@ export const ENV = new Supermenv({
       description:
         "The name of the storage bucket used to store resources, images, documents, etc...",
     },
-    GOOGLE_CALENDAR_ID_NCCL_PUBLIC: {
-      type: "string",
-      description:
-        "The public ID of the calendar that the NCCL school maintains.",
-    },
     // --- Environment Secrets ---
     DATABASE_URL: {
       type: "string",
@@ -97,7 +92,5 @@ export const ENV = new Supermenv({
     },
     SUPER_USER_EMAIL: { type: "email" },
     SUPER_USER_PASSWORD: { type: "string" },
-    SUPER_USER_NAME: { type: "string" },
-    SUPER_USER_IMAGE_URL: { type: "url" },
   },
 });

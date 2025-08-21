@@ -18,6 +18,7 @@ import {
   CalendarHeaderCell,
   CalendarEvent,
 } from "../calendar";
+import { CONSTANTS } from "../../utils/isomorphic";
 
 const styles = css`
   display: grid;
@@ -61,7 +62,7 @@ export async function loader(args: Route.LoaderArgs) {
   const meta = getByWeekMetaData(searchParams);
 
   const events = await calendar.events.list({
-    calendarId: args.context.env.GOOGLE_CALENDAR_ID_NCCL_PUBLIC,
+    calendarId: CONSTANTS.GOOGLE_CALENDAR_ID_NCCL_PUBLIC,
     key: args.context.env.GOOGLE_API_KEY,
     orderBy: "startTime",
     singleEvents: true,

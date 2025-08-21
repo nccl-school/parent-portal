@@ -20,16 +20,12 @@ jobs:
       NCCL_ENVIRONMENT: ${{ vars.NCCL_ENVIRONMENT }}
       NCCL_APP_URL: ${{ vars.NCCL_APP_URL }}
       NCCL_API_URL: ${{ vars.NCCL_API_URL }}
-      GCP_CLOUD_STORAGE_BUCKET: ${{ vars.GCP_CLOUD_STORAGE_BUCKET }}
-      GOOGLE_CALENDAR_ID_NCCL_PUBLIC: ${{ vars.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      GCP_CLOUD_STORAGE_BUCKET: ${{ vars.BETTER_AUTH_SECRET }}
       BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
-      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
       GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-      SUPER_USER_EMAIL: ${{ vars.SUPER_USER_EMAIL }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
       SUPER_USER_PASSWORD: ${{ secrets.SUPER_USER_PASSWORD }}
-      SUPER_USER_NAME: ${{ vars.SUPER_USER_NAME }}
-      SUPER_USER_IMAGE_URL: ${{ vars.SUPER_USER_IMAGE_URL }}
+      SUPER_USER_EMAIL: ${{ secrets.SUPER_USER_EMAIL }}
 
     steps:
       - name: Checkout
@@ -43,6 +39,11 @@ jobs:
         with:
           token: ${{ secrets.TURBO_TOKEN }}
           team: ${{ secrets.TURBO_TEAM_ID }}
+          # the validation is done inside of the docker container
+          # since we need to map the variables into the container
+          # and when the docker container is run, it includes loading
+          # and validation of the environment vars
+          validate: "false"
 
       - name: Start containers
         run: docker compose -f docker-compose.spec.yml --progress plain up -d

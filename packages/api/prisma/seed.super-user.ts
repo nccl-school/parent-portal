@@ -1,3 +1,5 @@
+import { ENV } from "@nccl/env";
+
 import { PrismaClient } from "../src/_generated/prisma/client.js";
 import { auth } from "../src/auth.js";
 
@@ -15,25 +17,13 @@ export async function seedSuperUser() {
     if (existingSuperUser) {
       superUserId = existingSuperUser.id;
     } else {
-      const superUserFields = {
-        email: "SUPER_USER_EMAIL",
-        password: "SUPER_USER_PASSWORD",
-        name: "SUPER_USER_NAME",
-        imgUrl: "SUPER_USER_IMAGE_URL",
-      } as const;
-      const superUserEntries = Object.entries(superUserFields).map(
-        ([key, value]) => {
-          const envVar = process.env[value];
-          if (!envVar) throw new Error(`Missing super user variable: ${value}`);
-          return [key, envVar];
-        }
-      );
-      const body = Object.fromEntries(
-        superUserEntries
-      ) as typeof superUserFields;
       const { user } = await auth.api.signUpEmail({
         body: {
-          ...body,
+          email: ENV.getOne("SUPER_USER_EMAIL"),
+          password: ENV.getOne("SUPER_USER_PASSWORD"),
+          name: `Superman (${ENV.getOne("NCCL_ENVIRONMENT")})`,
+          image:
+            "https://yoolk.ninja/wp-content/uploads/2019/07/DC-Comics-Superman-1024x819.png",
           firstName: "Clark",
           lastName: "Kent",
           roleId: "ADMIN",
@@ -41,7 +31,7 @@ export async function seedSuperUser() {
       });
       await prisma.user.update({
         where: { id: user.id },
-        data: { imageUrl: body.imgUrl },
+        data: { imageUrl: user.image },
       });
       superUserId = user.id;
     }

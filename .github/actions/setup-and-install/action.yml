@@ -3,6 +3,10 @@ description: "Set's up node and prepares the repo for CI & CD"
 author: "Drew DeCarme (drew@greenflash.digital)"
 
 inputs:
+  validate:
+    description: Run validation on the provided environment variables
+    required: false
+    default: 'true'
   token:
     description: The Turborepo token used for remote build caching
     required: true
@@ -34,6 +38,7 @@ runs:
 
     - name: Validate Environment Variables
       shell: bash
+      if: ${{ inputs.shouldValidateEnvVars == 'true' }}
       run: |
         yarn turbo run build --filter @nccl/env
         yarn env:validate
