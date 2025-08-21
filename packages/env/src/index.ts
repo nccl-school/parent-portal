@@ -45,10 +45,9 @@ export const ENV_TEST = new Supermenv({
   description:
     "A set of environment variables needed to run the test environment and adjust some of the runtime variables",
   vars: {
-    // repo|secrets
-    POSTGRES_PASSWORD: {
+    POSTGRES_DB: {
       type: "string",
-      description: "The password for the test postgres user",
+      description: "The port that the DB will run on in the test dockerfile",
     },
     POSTGRES_PORT: {
       type: "number",
@@ -58,9 +57,9 @@ export const ENV_TEST = new Supermenv({
       type: "string",
       description: "The port that the DB will run on in the test dockerfile",
     },
-    POSTGRES_DB: {
+    POSTGRES_PASSWORD: {
       type: "string",
-      description: "The port that the DB will run on in the test dockerfile",
+      description: "The password for the test postgres user",
     },
     APP_PORT: {
       type: "number",
@@ -159,17 +158,22 @@ export function loadEnvVars() {
       const dbPort = 11002;
       const user = "postgres";
       const pw = ENV_TEST.getOne("POSTGRES_PASSWORD");
+      const appPort = 11000;
+      const apiPort = 11001;
 
       // Set some of them
-      ENV_TEST.set("APP_PORT", 11000);
-      ENV_TEST.set("API_PORT", 11001);
+      ENV_TEST.set("APP_PORT", appPort);
+      ENV_TEST.set("API_PORT", apiPort);
       ENV_TEST.set("POSTGRES_DB", db);
-      ENV_TEST.set("POSTGRES_USER", user);
       ENV_TEST.set("POSTGRES_PORT", dbPort);
+      ENV_TEST.set("POSTGRES_USER", user);
 
       // Dynamically set the new DB URL based upon the env vars
       const DATABASE_URL = `postgresql://${user}:${pw}@db:${dbPort}/${db}`;
       ENV_RUNTIME.set("DATABASE_URL", DATABASE_URL);
+      ENV_RUNTIME.set("NODE_ENV", "production");
+      ENV_RUNTIME.set("NCCL_APP_URL", `http://app:${appPort}`);
+      ENV_RUNTIME.set("NCCL_API_URL", `http://app:${apiPort}`);
 
       ENV_RUNTIME.validate();
       break;

@@ -72,6 +72,7 @@ export class Supermenv<T extends Record<string, SupermenvVarValue>> {
 
   loadDotEnvs(paths: string[]) {
     if (paths.length === 0) return;
+    // TODO: Check if path exists
     this.#log("Loading Dotenv files...", ...paths);
     config({ path: paths });
     this.#log("Loading Dotenv files... done.");
