@@ -14,21 +14,26 @@ runs:
       shell: bash
       run: |
         cat > .env <<'EOF'
-          NODE_ENV=${NODE_ENV}
-          NCCL_ENVIRONMENT=${NCCL_ENVIRONMENT}
-          NCCL_APP_URL=${NCCL_APP_URL}
-          NCCL_API_URL=${NCCL_API_URL}
-          GCP_CLOUD_STORAGE_BUCKET=${GCP_CLOUD_STORAGE_BUCKET}
-          BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
-          GOOGLE_API_KEY=${GOOGLE_API_KEY}
-          RESEND_API_KEY=${RESEND_API_KEY}
-          SUPER_USER_PASSWORD=${SUPER_USER_PASSWORD}
-          SUPER_USER_EMAIL=${SUPER_USER_EMAIL}
-          POSTGRES_USER=${POSTGRES_USER}
-          POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-          POSTGRES_DB=${POSTGRES_DB}
-          DATABASE_URL=${DATABASE_URL}
+          
         EOF
+
+    - name: Create .env file
+      shell: bash
+      run: |
+        touch .env
+        echo TURBO_TOKEN=${{ secrets.TURBO_TOKEN }} >> .env
+        echo TURBO_TEAM_ID=${{ secrets.TURBO_TEAM_ID }} >> .env
+        echo NODE_ENV=production >> .env
+        echo NCCL_ENVIRONMENT=${{ vars.NCCL_ENVIRONMENT }} >> .env
+        echo NCCL_APP_URL=${{ vars.NCCL_APP_URL }} >> .env
+        echo NCCL_API_URL=${{ vars.NCCL_API_URL }} >> .env
+        echo GCP_CLOUD_STORAGE_BUCKET=${{ secrets.GCP_CLOUD_STORAGE_BUCKET }} >> .env
+        echo BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }} >> .env
+        echo GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }} >> .env
+        echo RESEND_API_KEY=${{ secrets.RESEND_API_KEY }} >> .env
+        echo SUPER_USER_PASSWORD=${{ secrets.SUPER_USER_PASSWORD }} >> .env
+        echo SUPER_USER_EMAIL=${{ secrets.SUPER_USER_EMAIL }} >> .env
+        echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
 
     - name: Set Up node.js
       uses: actions/setup-node@v4

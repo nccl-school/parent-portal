@@ -142,12 +142,9 @@ export function loadEnvVars() {
   ENV_RUNTIME.load();
 
   switch (ENV_RUNTIME.getOne("NCCL_ENVIRONMENT")) {
-    case "local": {
-      // We assume that all of the necessary vars are in the .env file
-      ENV_RUNTIME.validate();
-      break;
-    }
-
+    // For the test, we're reading off of the process
+    // and then creating some dynamic variables to feed to the
+    // docker compose
     case "test": {
       // Load the test environment variables
       ENV_TEST.load();
@@ -174,20 +171,12 @@ export function loadEnvVars() {
       ENV_RUNTIME.set("NODE_ENV", "production");
       ENV_RUNTIME.set("NCCL_APP_URL", `http://app:${appPort}`);
       ENV_RUNTIME.set("NCCL_API_URL", `http://app:${apiPort}`);
-
-      ENV_RUNTIME.validate();
       break;
     }
 
+    case "local":
     case "dev":
     case "production":
-      // Load some env vars for deployment to the higher environments
-      ENV_CD.load();
-
-      // Validate CD, CI and Runtime
-      ENV_CD.validate();
-      ENV_CI.validate();
-      ENV_RUNTIME.validate();
       break;
 
     default:
