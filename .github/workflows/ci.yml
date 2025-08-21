@@ -27,9 +27,9 @@ jobs:
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
       GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
       SUPER_USER_EMAIL: ${{ vars.SUPER_USER_EMAIL }}
-      SUPER_USER_PASSWORD: ${{ vars.SUPER_USER_PASSWORD }}
+      SUPER_USER_PASSWORD: ${{ secrets.SUPER_USER_PASSWORD }}
       SUPER_USER_NAME: ${{ vars.SUPER_USER_NAME }}
-      SUPER_USER_IMAGE_URL: ${{ secrets.SUPER_USER_IMAGE_URL }}
+      SUPER_USER_IMAGE_URL: ${{ vars.SUPER_USER_IMAGE_URL }}
 
     steps:
       - name: Checkout
