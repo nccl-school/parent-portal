@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: test
-
     env:
       # CI
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
@@ -33,31 +32,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set node.js version
-        id: node_version
-        shell: bash
-        run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
-
-      - name: Enable corepack # Ensures the correct version of yarn is used
-        shell: bash
-        run: corepack enable
-
-      - name: Set Up node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "yarn"
-          cache-dependency-path: yarn.lock
-
-      - name: Install dependencies
-        shell: bash
-        run: yarn install --immutable
+      - name: Create .env file
+        run: touch .env
 
       - name: Build
-        run: yarn build
-
-      - name: Install production dependencies
-        run: yarn workspaces focus --production --all
+        uses: ./.github/actions/setup-and-install
+        with:
+          token: ${{ secrets.TURBO_TOKEN }}
+          team: ${{ secrets.TURBO_TEAM_ID }}
 
       - name: Start containers
         run: docker compose -f docker-compose.spec.yml --progress plain up -d
