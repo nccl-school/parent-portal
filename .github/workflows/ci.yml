@@ -39,11 +39,6 @@ jobs:
         with:
           token: ${{ secrets.TURBO_TOKEN }}
           team: ${{ secrets.TURBO_TEAM_ID }}
-          # the validation is done inside of the docker container
-          # since we need to map the variables into the container
-          # and when the docker container is run, it includes loading
-          # and validation of the environment vars
-          validate: "false"
 
       - name: Start containers
         run: docker compose -f docker-compose.spec.yml --progress plain up -d

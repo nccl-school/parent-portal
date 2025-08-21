@@ -16,7 +16,7 @@
   "homepage": "https://github.com/nccl-school/parent-portal#readme",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "yarn api:build && yarn client:check && yarn client:build",
+    "build": "yarn prisma generate && yarn api:build && yarn client:check && yarn client:build",
     "api:build": "tsc --project ./tsconfig.build.json",
     "auth:dev": "tsc --project ./tsconfig.build.json --watch",
     "start": "node dist/index.js",
