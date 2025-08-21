@@ -14,10 +14,11 @@ runs:
       shell: bash 
       run: corepack enable
 
-    - name: Set up Node.js
+    - name: Set Up node.js
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ inputs.node-version }}
+        node-version: ${{ env.NODE_VERSION }}
+        cache: "yarn"
 
     - name: Install dependencies
       shell: bash 
@@ -28,9 +29,6 @@ runs:
       run: |
         yarn turbo run build --filter @nccl/env
         yarn env:validate
-      env:
-        TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
-        TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
     - name: Generate Prisma client
       working-directory: packages/api
