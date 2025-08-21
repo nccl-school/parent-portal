@@ -13,8 +13,7 @@
     ]
   },
   "scripts": {
-    "env:validate": "yarn node ./scripts/validate-env.js",
-    "build": "yarn turbo build",
+    "build": "yarn turbo build --env-mode=loose",
     "release": "npx changeset publish",
     "test": "yarn vitest --run",
     "lint": "eslint packages/*/src/**/* --fix",
