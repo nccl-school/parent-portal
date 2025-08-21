@@ -2314,15 +2314,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@highlight-run/hono@npm:^1.0.24":
-  version: 1.0.24
-  resolution: "@highlight-run/hono@npm:1.0.24"
-  dependencies:
-    "@highlight-run/node": "npm:3.12.21"
-  checksum: 10c0/2c08555e5593cc2ddf2cba0368905dadd4605b7661b6036c74f2586a97f0e9fb9377d0db2b1720d306d8d62e5362453e4f11179f4f73fd12de0670560f137a7c
-  languageName: node
-  linkType: hard
-
 "@highlight-run/node@npm:3.12.21":
   version: 3.12.21
   resolution: "@highlight-run/node@npm:3.12.21"
@@ -3333,7 +3324,6 @@ __metadata:
   dependencies:
     "@gfdigital/tsconfig": "npm:0.3.1"
     "@google-cloud/storage": "npm:7.17.0"
-    "@highlight-run/hono": "npm:^1.0.24"
     "@hono/node-server": "npm:1.19.0"
     "@hono/zod-validator": "npm:0.7.2"
     "@nccl/emails": "workspace:^"

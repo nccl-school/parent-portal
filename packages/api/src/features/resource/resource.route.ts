@@ -397,7 +397,7 @@ resource.post(
     const googleDocParsed = parseGoogleDocsURL(url);
     const googleDocMeta = await fetchGoogleDocMetadataFromGoogleDrive(
       googleDocParsed.externalId,
-      ENV.getOne("GOOGLE_CALENDAR_API_KEY")
+      ENV.getOne("GOOGLE_API_KEY")
     );
 
     const createGoogleDoc = db.resource.create({
