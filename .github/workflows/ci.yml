@@ -32,8 +32,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup
-        uses: ./.github/actions/setup-and-install
+      - name: Set node.js version
+        id: node_version
+        shell: bash
+        run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
+
+      - name: Enable corepack # Ensures the correct version of yarn is used
+        shell: bash
+        run: corepack enable
+
+      - name: Create .env file
+        shell: bash
+        run: touch .env
+
+      - name: Set Up node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "yarn"
+          cache-dependency-path: yarn.lock
+
+      - name: Install dependencies
+        shell: bash
+        run: yarn install --immutable
 
       - name: Build
         run: yarn build
