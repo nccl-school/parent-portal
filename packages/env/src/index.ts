@@ -50,7 +50,7 @@ export const ENV = new Supermenv({
     },
     NCCL_ENVIRONMENT: {
       type: "literal",
-      values: ["local", "dev", "prod"],
+      values: ["local", "ci", "dev", "prod"],
       description:
         "The deployed environment of the app. Used to detect specific services and add labels to give visual indicators of which environment is being worked in.",
     },
