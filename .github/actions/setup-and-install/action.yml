@@ -13,16 +13,15 @@ inputs:
 runs:
   using: "composite"
   steps:
-
-    - name: Enable corepack # Ensures the correct version of yarn is used
-      shell: bash 
-      run: corepack enable
-
     - name: Set Up node.js
       uses: actions/setup-node@v4
       with:
         node-version-file: .nvmrc
         cache: "yarn"
+
+    - name: Enable corepack # Ensures the correct version of yarn is used
+      shell: bash 
+      run: corepack enable
 
     - name: Install dependencies
       shell: bash 

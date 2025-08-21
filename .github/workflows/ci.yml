@@ -35,11 +35,24 @@ jobs:
 
       # Validates that all of necessary env vars have been loaded into the environment
 
-      - name: Build
-        uses: ./.github/actions/setup-and-install
+      - name: Set Up node.js
+        uses: actions/setup-node@v4
         with:
-          token: ${{ secrets.TURBO_TOKEN }}
-          team: ${{ secrets.TURBO_TEAM_ID }}
+          node-version-file: .nvmrc
+          cache: "yarn"
+
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build
+        run: yarn build
+
+      - name: Install production dependencies
+        shell: bash
+        run: yarn workspaces focus --production --all
 
       - name: Start containers
         run: docker compose -f=docker-compose.spec.yml --progress plain up -d
