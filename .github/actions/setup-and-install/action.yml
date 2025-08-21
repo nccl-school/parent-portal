@@ -22,23 +22,19 @@ runs:
       shell: bash 
       run: corepack enable
 
+    - name: Create .env file
+      shell: bash 
+      run: touch .env
+
     - name: Set Up node.js
       uses: actions/setup-node@v4
       with:
         node-version: ${{ env.NODE_VERSION }}
-        cache: "yarn"
+        cache: 'yarn'
+        cache-dependency-path: yarn.lock
 
     - name: Install dependencies
       shell: bash 
       run: yarn install --immutable
 
-    - name: Build
-      shell: bash 
-      run: yarn build
-      env:
-        TURBO_TOKEN: ${{ inputs.token }}
-        TURBO_TEAM_ID: ${{ inputs.team }}
-
-    - name: Install production dependencies
-      shell: bash 
-      run: yarn workspaces focus --production --all
+    

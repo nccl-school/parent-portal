@@ -31,14 +31,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Create .env file
-        run: touch .env
+      - name: Setup
+        uses: ./.github/actions/setup-and-install
 
       - name: Build
-        uses: ./.github/actions/setup-and-install
-        with:
-          token: ${{ secrets.TURBO_TOKEN }}
-          team: ${{ secrets.TURBO_TEAM_ID }}
+        run: yarn build
+
+      - name: Install production dependencies
+        run: yarn workspaces focus --production --all
 
       - name: Start containers
         run: docker compose -f docker-compose.spec.yml --progress plain up -d
