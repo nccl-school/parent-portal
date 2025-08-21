@@ -33,7 +33,10 @@ jobs:
           echo SUPER_USER_EMAIL=${{ secrets.SUPER_USER_EMAIL }} >> .env
           echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
 
-      # Validates that all of necessary env vars have been loaded into the environment
+      # Validates that all of necessary env vars have been loaded into the environment\
+
+      - name: Enable corepack
+        run: corepack enable
 
       - name: Set Up node.js
         uses: actions/setup-node@v4
@@ -41,14 +44,14 @@ jobs:
           node-version-file: .nvmrc
           cache: "yarn"
 
-      - name: Enable corepack
-        run: corepack enable
-
       - name: Install dependencies
         run: yarn install --immutable
 
       - name: Build
         run: yarn build
+        env:
+          TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
+          TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
       - name: Install production dependencies
         shell: bash
