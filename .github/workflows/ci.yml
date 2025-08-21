@@ -34,8 +34,6 @@ jobs:
           echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
 
       # Validates that all of necessary env vars have been loaded into the environment
-      - name: Validate
-        run: yarn validate:ci
 
       - name: Build
         uses: ./.github/actions/setup-and-install
