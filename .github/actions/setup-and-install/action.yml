@@ -2,6 +2,14 @@ name: "Setup & Install"
 description: "Set's up node and prepares the repo for CI & CD"
 author: "Drew DeCarme (drew@greenflash.digital)"
 
+inputs:
+  token:
+    description: The Turborepo token used for remote build caching
+    required: true
+  team:
+    description: The Turborepo team used to house the remote build caches
+    required: true
+
 runs:
   using: "composite"
   steps:
@@ -23,6 +31,9 @@ runs:
     - name: Build
       shell: bash 
       run: yarn build
+      env:
+        TURBO_TOKEN: ${{ env.TURBO_TOKEN }}
+        TURBO_TEAM_ID: ${{ env.TURBO_TEAM_ID }}
 
     - name: Install production dependencies
       shell: bash 

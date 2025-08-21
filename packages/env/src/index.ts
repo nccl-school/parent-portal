@@ -134,12 +134,19 @@ export const ENV_RUNTIME = new Supermenv({
  * Loads and dynamically sets some environment variables
  * based upon the NCCL_ENVIRONMENT that is being targeted
  * to either be run or deployed
+ *
+ * NOTE: At a bare minimum, the NCCL_ENVIRONMENT needs to be set
  */
 export function loadEnvVars() {
-  // At a bare minimum, the NCCL_ENVIRONMENT needs to be set
-  ENV_CI.load();
-  ENV_RUNTIME.loadDotEnvs([path.resolve(import.meta.dirname, "../../../.env")]);
+  const envFilePath = path.resolve(import.meta.dirname, "../../../.env");
+
+  ENV_RUNTIME.loadDotEnvs([envFilePath]);
   ENV_RUNTIME.load();
+
+  if (process.env.CI) {
+    ENV_CI.loadDotEnvs([envFilePath]);
+    ENV_CI.load();
+  }
 
   switch (ENV_RUNTIME.getOne("NCCL_ENVIRONMENT")) {
     // For the test, we're reading off of the process

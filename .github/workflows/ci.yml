@@ -41,7 +41,7 @@ jobs:
         uses: ./.github/actions/setup-and-install
 
       - name: Start containers
-        run: docker compose -f=docker-compose.spec.yml --env-file=.env --progress plain up -d
+        run: docker compose -f=docker-compose.spec.yml --progress plain up -d
 
       - name: Pause for containers
         run: |
@@ -49,7 +49,7 @@ jobs:
 
       - name: Reset and seed DB
         working-directory: packages/api
-        run: docker compose -f=docker-compose.spec.yml --env-file=.env exec -T api yarn prisma migrate reset --force --skip-generate
+        run: docker compose -f=docker-compose.spec.yml exec -T api yarn prisma migrate reset --force --skip-generate
 
       - name: Run API tests
         run: yarn playwright test

@@ -118,6 +118,12 @@ ${this.#errors.map(([envKey, error]) => `\n\t - ${envKey}: ${error}`)}
 ${this.#errors.map(([envKey, error]) => `\n\t - ${envKey}: ${error}`)}
 `);
     }
+    const valReport = Object.entries(this.#envVars).map(([key, value]) => ({
+      var: key,
+      value,
+    }));
+    this.#log(`Validation Report:`);
+    console.table(valReport);
   }
 
   /**

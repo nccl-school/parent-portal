@@ -6,7 +6,7 @@ ROOT_DIR=$(dirname "$(realpath "$0")")
 
 # Build the monorepo (adjust this for Turbo or your setup)
 echo "📦 Building monorepo..."
-npm run build
+yarn run build
 
 # Start containers in the background
 echo "🚀 Starting Docker services..."

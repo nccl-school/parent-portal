@@ -31,8 +31,7 @@ export async function tryPrisma<T>(
     if (!(error instanceof PrismaClientKnownRequestError)) {
       throw new ErrorSet.serverError(messages.fallback);
     }
-
-    console.log(error);
+    console.error(error);
 
     const key = prismaErrorCodeMap[error.code];
     const message = messages?.[key] ?? messages.fallback;
@@ -41,12 +40,12 @@ export async function tryPrisma<T>(
 }
 
 export function createPrismaClient(databaseUrl?: string): PrismaClient {
-  const { NODE_ENV, DATABASE_URL } = ENV_RUNTIME.getAll();
+  const { NCCL_ENVIRONMENT, DATABASE_URL } = ENV_RUNTIME.getAll();
   const connectionString = databaseUrl ?? DATABASE_URL;
 
   const adapter =
-    NODE_ENV !== "production"
-      ? new PrismaPg({ connectionString }) // local env = docker-compose
+    NCCL_ENVIRONMENT === "local" || NCCL_ENVIRONMENT === "test"
+      ? new PrismaPg({ connectionString }) // local  & test env = docker-compose
       : new PrismaNeon({ connectionString }); // higher env = neon
 
   const prisma = new PrismaClient({ adapter });
