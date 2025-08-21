@@ -20,7 +20,7 @@ jobs:
       NCCL_ENVIRONMENT: ${{ vars.NCCL_ENVIRONMENT }}
       NCCL_APP_URL: ${{ vars.NCCL_APP_URL }}
       NCCL_API_URL: ${{ vars.NCCL_API_URL }}
-      GCP_CLOUD_STORAGE_BUCKET: ${{ vars.BETTER_AUTH_SECRET }}
+      GCP_CLOUD_STORAGE_BUCKET: ${{ secrets.GCP_CLOUD_STORAGE_BUCKET }}
       BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
       GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}

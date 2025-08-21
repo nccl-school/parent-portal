@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+
 import { config } from "dotenv";
 
 import { exhaustiveMatchGuard } from "./utils.js";
@@ -72,9 +74,10 @@ export class Supermenv<T extends Record<string, SupermenvVarValue>> {
 
   loadDotEnvs(paths: string[]) {
     if (paths.length === 0) return;
-    // TODO: Check if path exists
+    const loadPaths = paths.filter((path) => existsSync(path));
+    if (loadPaths.length === 0) return;
     this.#log("Loading Dotenv files...", ...paths);
-    config({ path: paths });
+    config({ path: loadPaths, override: false });
     this.#log("Loading Dotenv files... done.");
   }
 
