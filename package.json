@@ -13,7 +13,7 @@
     ]
   },
   "scripts": {
-    "build": "yarn turbo build --env-mode=loose",
+    "build": "yarn turbo build",
     "release": "npx changeset publish",
     "test": "yarn vitest --run",
     "lint": "eslint packages/*/src/**/* --fix",
