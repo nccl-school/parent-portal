@@ -2,7 +2,22 @@ import path from "node:path";
 
 import { Supermenv } from "supermenv";
 
-export const ENV_CI_CD = new Supermenv({
+export const ENV_CI = new Supermenv({
+  vars: {
+    // repo|secrets
+    TURBO_TOKEN: {
+      type: "string",
+      description: "The Turborepo token used to speed up builds in CI",
+    },
+    TURBO_TEAM_ID: {
+      type: "string",
+      description:
+        "The Vercel Team ID used to house the Turborepo cache for this project",
+    },
+  },
+});
+
+export const ENV_CD = new Supermenv({
   vars: {
     // repo|vars
     GCP_PROJECT_ID: {
@@ -15,21 +30,6 @@ export const ENV_CI_CD = new Supermenv({
       description:
         "The region the API and the App containers are deployed to within GCP",
     },
-    NEON_PROJECT_ID: {
-      type: "string",
-      description:
-        "The Neon DB project that the DEV and PROD databases are deployed to. We're using managed databases in higher environments to avoid a lot of the upkeep.",
-    },
-    // repo|secrets
-    TURBO_TOKEN: {
-      type: "string",
-      description: "The Turborepo token used to speed up builds in CI",
-    },
-    TURBO_TEAM_ID: {
-      type: "string",
-      description:
-        "The Vercel Team ID used to house the Turborepo cache for this project",
-    },
     // env|vars
     CLOUD_RUN_APP_SERVICE_NAME: { type: "string" },
     CLOUD_RUN_API_SERVICE_NAME: { type: "string" },
@@ -41,11 +41,6 @@ export const ENV_CI_CD = new Supermenv({
 export const ENV = new Supermenv({
   dotEnvPaths: [path.resolve(import.meta.dirname, "../../../.env")],
   vars: {
-    GOOGLE_CALENDAR_ID_NCCL_PUBLIC: {
-      type: "string",
-      description:
-        "The public ID of the calendar that the NCCL school maintains.",
-    },
     // Environment Vars
     NODE_ENV: {
       type: "literal",
@@ -73,6 +68,11 @@ export const ENV = new Supermenv({
       type: "string",
       description:
         "The name of the storage bucket used to store resources, images, documents, etc...",
+    },
+    GOOGLE_CALENDAR_ID_NCCL_PUBLIC: {
+      type: "string",
+      description:
+        "The public ID of the calendar that the NCCL school maintains.",
     },
     // --- Environment Secrets ---
     DATABASE_URL: {

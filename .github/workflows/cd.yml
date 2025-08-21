@@ -22,6 +22,42 @@ jobs:
         id: node_version
         run: echo "node_version=$(cat .nvmrc)" >> $GITHUB_ENV
 
+      - name: Set Up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ needs.setup.outputs.node_version }}
+          cache: "yarn"
+
+      - name: Verify environment variables & secrets
+        run: node scripts/validate-env.js
+        env:
+          # CI
+          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+          TURBO_TEAM_ID: ${{ secrets.TURBO_TEAM_ID }}
+          # CD
+          GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+          GCP_REGION: ${{ vars.GCP_REGION }}
+          CLOUD_RUN_APP_SERVICE_NAME: ${{ vars.CLOUD_RUN_APP_SERVICE_NAME }}
+          CLOUD_RUN_API_SERVICE_NAME: ${{ vars.CLOUD_RUN_API_SERVICE_NAME }}
+          GCP_GAR_REPO_APP: ${{ vars.GCP_GAR_REPO_APP }}
+          GCP_GAR_REPO_API: ${{ vars.GCP_GAR_REPO_API }}
+          # Runtime
+          GOOGLE_CALENDAR_ID_NCCL_PUBLIC: ${{ vars.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }}
+          NODE_ENV: ${{ vars.NODE_ENV }}
+          NCCL_ENVIRONMENT: ${{ vars.NCCL_ENVIRONMENT }}
+          NCCL_APP_URL: ${{ vars.NCCL_APP_URL }}
+          NCCL_API_URL: ${{ vars.NCCL_API_URL }}
+          GCP_CLOUD_STORAGE_BUCKET: ${{ vars.GCP_CLOUD_STORAGE_BUCKET }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          SUPER_USER_EMAIL: ${{ secrets.SUPER_USER_EMAIL }}
+          SUPER_USER_PASSWORD: ${{ secrets.SUPER_USER_PASSWORD }}
+          SUPER_USER_NAME: ${{ secrets.SUPER_USER_NAME }}
+          SUPER_USER_IMAGE_URL: ${{ secrets.SUPER_USER_IMAGE_URL }}
+
   db_check:
     name: Check DB
     runs-on: ubuntu-latest
@@ -107,8 +143,6 @@ jobs:
       name: ${{ needs.setup.outputs.environment }}
     env:
       NODE_ENV: production
-      VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
-      VITE_NCCL_API_URL: ${{ vars.NCCL_API_URL }}
       TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
       TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
     steps:
