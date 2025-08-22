@@ -49,7 +49,7 @@ jobs:
 
       - name: Validate env
         run: |
-          yarn turbo run build --scope @nccl/env
+          yarn turbo run build --filter @nccl/env
           yarn validate:ci
 
       - name: Build
