@@ -47,10 +47,16 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
-      - name: Build
+      - name: Validate env
         run: |
           yarn turbo run build --filter @nccl/env
-          yarn validate:ci && yarn build
+          yarn validate:ci
+        env:
+          TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
+          TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
+
+      - name: Build
+        run: yarn build
         env:
           TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
           TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
