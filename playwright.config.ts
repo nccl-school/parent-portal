@@ -1,14 +1,10 @@
 import path from "path";
 
 import { defineConfig } from "@playwright/test";
-import dotenv from "dotenv";
 
-dotenv.config({
-  path: [
-    path.resolve(import.meta.dirname, "./.env.spec"),
-    path.resolve(import.meta.dirname, "./.env"),
-  ],
-});
+import { ENV_RUNTIME } from "@nccl/env";
+
+ENV_RUNTIME.load({ paths: [path.resolve(import.meta.dirname, "./.env.spec")] });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -40,7 +36,7 @@ export default defineConfig({
       name: "api",
       testMatch: "packages/api/**/*.spec.ts",
       use: {
-        baseURL: "http://localhost:11001",
+        baseURL: ENV_RUNTIME.getOne("NCCL_APP_URL"),
         extraHTTPHeaders: {
           Authorization: `Bearer ${process.env.AUTH_TOKEN}`,
         },

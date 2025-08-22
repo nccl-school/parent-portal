@@ -58,12 +58,14 @@ export class Supermenv<T extends Record<string, SupermenvVarValue>> {
   #envVars: SupermenvEnvVars<T> = {} as SupermenvEnvVars<T>;
   #name: string;
   #logPrefix: string;
+  #debug: boolean;
 
   constructor(options: {
     vars: T;
     dotEnvPaths?: string[];
     name: string;
     description?: string;
+    debug?: boolean;
   }) {
     this.load = this.load.bind(this);
     this.getAll = this.getAll.bind(this);
@@ -72,12 +74,16 @@ export class Supermenv<T extends Record<string, SupermenvVarValue>> {
     this.#varDefs = options.vars;
     this.#name = options.name;
     this.#logPrefix = `[${this.#name}]`;
+    this.#debug =
+      options.debug ??
+      Boolean(process.env.CI || process.env.NODE_ENV === "development");
 
     // hydrate immediately
     this.load({ paths: options.dotEnvPaths });
   }
 
   #log(message: string, ...args: string[]) {
+    if (!this.#debug) return;
     console.log(`${this.#logPrefix} ${message}`, ...args);
   }
 

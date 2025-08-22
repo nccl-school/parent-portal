@@ -6,18 +6,19 @@ import { ENV_RUNTIME } from "@nccl/env";
 import { createResendClient, EMAIL_FIELDS } from "./utils/util.resend.js";
 import { createPrismaClient } from "./utils/util.prisma.js";
 
-const { NCCL_API_URL, NCCL_APP_URL } = ENV_RUNTIME.getAll();
-
 const prisma = createPrismaClient();
 const resend = createResendClient();
 
 export const auth = betterAuth({
   telemetry: { enabled: false },
-  trustedOrigins: [NCCL_API_URL, NCCL_APP_URL],
+  trustedOrigins: [
+    ENV_RUNTIME.getOne("NCCL_API_URL"),
+    ENV_RUNTIME.getOne("NCCL_APP_URL"),
+  ],
   emailAndPassword: {
     enabled: true,
     async sendResetPassword(data) {
-      const resetLink = `${NCCL_API_URL}/api/auth${data.url}`;
+      const resetLink = `${ENV_RUNTIME.getOne("NCCL_APP_URL")}/api/auth${data.url}`;
       await resend.emails.send({
         from: EMAIL_FIELDS.from,
         subject: "Reset your password",
