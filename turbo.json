@@ -18,7 +18,6 @@
         "POSTGRES_PORT",
         "POSTGRES_USER",
         "POSTGRES_PASSWORD",
-        "E2E_POSTGRES_PASSWORD",
         "APP_PORT",
         "API_PORT",
         "GCP_PROJECT_ID",

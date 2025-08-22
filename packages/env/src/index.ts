@@ -62,7 +62,7 @@ export const ENV_TEST = new Supermenv({
       type: "string",
       description: "The port that the DB will run on in the test dockerfile",
     },
-    E2E_POSTGRES_PASSWORD: {
+    POSTGRES_PASSWORD: {
       type: "string",
       description: "The password for the test postgres user",
     },
