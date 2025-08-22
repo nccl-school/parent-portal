@@ -264,6 +264,13 @@ export class Supermenv<T extends Record<string, SupermenvVarValue>> {
     this.#envVars[key] = value as TypeFor<T[K]["type"]>;
   }
 
+  print() {
+    return Object.entries(this.#envVars).reduce<string>(
+      (accum, [key, value]) => accum.concat(`\n${key}=${value}`),
+      ""
+    );
+  }
+
   /**
    * Reads and then parses environment variables from process.env
    */

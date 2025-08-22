@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "description": "A collection of packages and libraries that comprise the NCCL parent portal",
   "type": "module",
-  "packageManager": "yarn@4.9.2",
+  "packageManager": "yarn@4.9.3",
   "author": "Drew DeCarme (drew@greenflash.digital)",
   "license": "MIT",
   "workspaces": {
@@ -59,7 +59,7 @@
     "vitest": "3.2.4"
   },
   "dependencies": {
-    "@nccl/env": "workspace:^",
+    "@nccl/env": "0.0.1",
     "@playwright/test": "1.55.0",
     "dotenv": "17.2.1"
   }

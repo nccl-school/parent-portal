@@ -32,7 +32,7 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
-    "@nccl/theme": "workspace:^",
+    "@nccl/theme": "0.0.1",
     "@react-email/components": "0.5.1",
     "react": "19.1.1",
     "react-dom": "19.1.1"

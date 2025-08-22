@@ -3,21 +3,19 @@
 set -euo pipefail
 ROOT_DIR=$(dirname "$(realpath "$0")")
 
+echo "⏳ Loading Environment..."
+node ./scripts/load-e2e-env.js
 
-# Build the monorepo (adjust this for Turbo or your setup)
-echo "📦 Building monorepo..."
-yarn run build
-
-# Start containers in the background
+# # Start containers in the background
 echo "🚀 Starting Docker services..."
-docker compose -f docker-compose.spec.yml --progress plain up -d --build
+pwd
+docker compose -f docker-compose.spec.yml --env-file ./.env.spec --progress plain up -d --build
 
 # Wait for DB and API to become healthy
 echo "⏳ Waiting for DB and API to be healthy..."
 docker compose wait # or implement healthcheck poll
 
-# Run migrations and seeding inside the API container
-echo "🛠️ Running migrations and seed..."
-cd packages/api
-yarn prisma migrate reset --force --skip-generate
-🦸🏽‍♂️
+# # Run migrations and seeding inside the API container
+# echo "🛠️ Running migrations and seed..."
+# cd packages/api
+# yarn prisma migrate reset --force --skip-generate
