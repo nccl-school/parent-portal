@@ -38,3 +38,5 @@ ENV_RUNTIME.set("DATABASE_URL", DATABASE_URL);
 ENV_RUNTIME.set("NODE_ENV", "production");
 ENV_RUNTIME.set("NCCL_APP_URL", `http://app:${appPort}`);
 ENV_RUNTIME.set("NCCL_API_URL", `http://app:${apiPort}`);
+
+ENV_TEST.validate();

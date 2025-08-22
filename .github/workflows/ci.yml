@@ -51,6 +51,9 @@ jobs:
         run: |
           yarn turbo run build --filter @nccl/env
           yarn validate:ci
+        env:
+          TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
+          TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
       - name: Build
         run: yarn build
