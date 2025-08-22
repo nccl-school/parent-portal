@@ -1,14 +1,8 @@
-import path from "node:path";
+// import path from "node:path";
 
 import { ENV_CI, ENV_RUNTIME, ENV_TEST } from "@nccl/env";
 
-const envFilePath = path.resolve(import.meta.dirname, "../.env");
-
-ENV_CI.load();
-ENV_CI.loadDotEnvs([envFilePath]);
-
-ENV_RUNTIME.load();
-ENV_RUNTIME.loadDotEnvs([envFilePath]);
+// const envFilePath = path.resolve(import.meta.dirname, "../.env");
 
 ENV_CI.validate();
 ENV_RUNTIME.validate();
@@ -39,4 +33,6 @@ ENV_RUNTIME.set("NODE_ENV", "production");
 ENV_RUNTIME.set("NCCL_APP_URL", `http://app:${appPort}`);
 ENV_RUNTIME.set("NCCL_API_URL", `http://app:${apiPort}`);
 
+// Validate that the dynamically composed TEST vars
+// have successfully been set and loaded
 ENV_TEST.validate();

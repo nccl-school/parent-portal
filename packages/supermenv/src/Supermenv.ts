@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 
 import { config } from "dotenv";
+import pc from "picocolors";
 
 import { exhaustiveMatchGuard } from "./utils.js";
 
@@ -39,13 +40,24 @@ export type ValidatedSupermenvEnvVars<
 > = {
   [K in keyof T]: TypeFor<T[K]["type"]>;
 };
+type ErrorReport<T extends Record<string, SupermenvVarValue>> = {
+  [key in keyof T]: string;
+};
+type LoadOptions = {
+  paths?: string[];
+  /**
+   * A boolean value that when truthy
+   * will log out a
+   */
+  logLoadReport?: boolean;
+};
 
 export class Supermenv<T extends Record<string, SupermenvVarValue>> {
   #varDefs: T;
-  #errors: [string, string][];
-  #envVars: SupermenvEnvVars<T>;
+  #errors: ErrorReport<T> = {} as ErrorReport<T>;
+  #envVars: SupermenvEnvVars<T> = {} as SupermenvEnvVars<T>;
   #name: string;
-  #reportLine: any;
+  #logPrefix: string;
 
   constructor(options: {
     vars: T;
@@ -58,104 +70,129 @@ export class Supermenv<T extends Record<string, SupermenvVarValue>> {
     this.getOne = this.getOne.bind(this);
 
     this.#varDefs = options.vars;
-    this.#errors = [];
     this.#name = options.name;
-    this.#envVars = Object.keys(options.vars).reduce<SupermenvEnvVars<T>>(
-      (accum, key) => {
-        const envKey = key as keyof T;
-        return Object.assign(accum, { [envKey]: undefined });
-      },
-      {} as SupermenvEnvVars<T>
-    );
-    this.#reportLine = `\n  - `;
+    this.#logPrefix = `[${this.#name}]`;
+
+    // hydrate immediately
+    this.load({ paths: options.dotEnvPaths });
   }
 
   #log(message: string, ...args: string[]) {
-    console.log(`[${this.#name}] ${message}`, ...args);
-  }
-
-  loadDotEnvs(paths: string[]) {
-    if (paths.length === 0) return;
-    const loadPaths = paths.filter((path) => existsSync(path));
-    if (loadPaths.length === 0) return;
-    this.#log("Loading Dotenv files...", ...paths);
-    config({ path: loadPaths, override: false });
-    this.#log("Loading Dotenv files... done.");
+    console.log(`${this.#logPrefix} ${message}`, ...args);
   }
 
   #addError(key: keyof T, message: string) {
-    this.#errors.push([String(key), message]);
+    this.#errors = Object.assign(this.#errors ?? {}, {
+      [key]: message,
+    } as ErrorReport<T>);
   }
 
-  #printErrors() {
-    return `[${this.#name}] Env validation failed:
-${this.#errors.map(([envKey, error]) => `\n\t - ${envKey}: ${error}`)}
-`;
+  #hasErrors() {
+    return Object.keys(this.#errors ?? {}).length > 0;
   }
 
   getAll() {
     this.validate();
-    if (this.#errors.length > 0) {
-      const errorReport = this.#printErrors();
+    if (this.#hasErrors()) {
+      const errorReport = this.#printReport();
       throw new Error(errorReport);
     }
     return this.#envVars as ValidatedSupermenvEnvVars<T>;
   }
 
   getOne<K extends keyof T>(key: K) {
+    this.#log(`Getting envVar "${String(key)}"`);
     const envVar = this.#envVars[key];
     if (!envVar) {
-      throw new Error(`[${this.#name}] "${String(key)}" has not been set.`);
+      throw new Error(
+        pc.red(`[${this.#name}] "${String(key)}" has not been set.`)
+      );
     }
     return envVar as TypeFor<T[K]["type"]>;
   }
 
   set<K extends keyof T>(key: K, value: TypeFor<T[K]["type"]>) {
+    process.env[String(key)] = String(value);
     this.#envVars[key] = value;
   }
 
-  validate() {
-    if (this.#errors.length > 0) {
-      throw new Error(`Environment Variable validation failed:
-${this.#errors.map(([envKey, error]) => `\n\t - ${envKey}: ${error}`)}
-`);
+  #printReport(): string {
+    const report: string[] = [];
+
+    function addReportLine(envKey: keyof T, value: unknown) {
+      report.push(`\n  - ${String(envKey)}: ${value}`);
     }
-    const valReport = Object.entries(this.#envVars).map(([key, value]) => ({
-      var: key,
-      value,
-    }));
-    this.#log(`Validation Report:`);
-    console.table(valReport);
+
+    for (const [envKey, envValue] of Object.entries(this.#envVars)) {
+      const envVar = envKey as keyof T;
+      const error = this.#errors[envVar];
+      addReportLine(
+        error ? pc.bgRed(String(envVar)) : envVar,
+        error ? pc.red(error) : envValue
+      );
+    }
+
+    return report.join("");
+  }
+
+  validate() {
+    const report = this.#printReport();
+    if (this.#hasErrors()) {
+      throw new Error(
+        `${this.#logPrefix} Validating... 🚨 Failure:${report}\n`
+      );
+    }
+    this.#log(`Validating... 🎉 Successful!${report}\n`);
+  }
+
+  /**
+   * Loads environment variables from the process.env
+   * and then validates then against the definitions that
+   * were provided in the vars key in the constructor
+   */
+  loadAndValidate(options?: LoadOptions) {
+    this.load(options);
+    this.validate();
+  }
+
+  #setEnvVar<K extends keyof T>(
+    key: K,
+    value: string | number | boolean | undefined
+  ) {
+    this.#envVars[key] = value as TypeFor<T[K]["type"]>;
   }
 
   /**
    * Reads and then parses environment variables from process.env
    */
-  load() {
-    this.#log("Loading env vars...");
+  load(options?: LoadOptions) {
+    // Load the envVars using dotenv if they exist
+    const paths = (options?.paths ?? []).filter((path) => existsSync(path));
+    if (paths.length !== 0) {
+      this.#log("Loading vars from...", ...paths);
+      config({ path: paths, override: false });
+      this.#log("Loading vars from... done.");
+    }
+
     const source = process.env;
 
-    this.#errors = [];
-    let out: SupermenvEnvVars<T> = {} as SupermenvEnvVars<T>;
+    this.#errors = {} as ErrorReport<T>;
 
+    this.#log("Parsing envVars...");
     for (const [key, def] of Object.entries(this.#varDefs)) {
       const envKey = key as keyof T;
       const envValue = source[key];
       const isNullishOrEmpty = envValue == null || envValue === "";
 
       if (isNullishOrEmpty) {
-        out = Object.assign(out, { [envKey]: undefined });
-        continue;
-      }
-
-      if (isNullishOrEmpty) {
+        this.#setEnvVar(envKey, undefined);
         this.#addError(envKey, `Missing environment variable`);
         continue;
       }
 
       switch (def.type) {
         case "string":
-          out = Object.assign(out, { [envKey]: envValue });
+          this.#setEnvVar(envKey, envValue);
           break;
 
         case "number": {
@@ -167,13 +204,13 @@ ${this.#errors.map(([envKey, error]) => `\n\t - ${envKey}: ${error}`)}
             );
             continue;
           }
-          out = Object.assign(out, { [envKey]: num });
+          this.#setEnvVar(envKey, num);
           break;
         }
 
         case "boolean": {
           const bool = envValue === "true" || envValue === "1";
-          out = Object.assign(out, { [envKey]: bool });
+          this.#setEnvVar(envKey, bool);
           break;
         }
 
@@ -184,7 +221,7 @@ ${this.#errors.map(([envKey, error]) => `\n\t - ${envKey}: ${error}`)}
             this.#addError(envKey, `"${envValue}" is not a valid URL`);
             continue;
           }
-          out = Object.assign(out, { [envKey]: envValue });
+          this.#setEnvVar(envKey, envValue);
           break;
 
         case "email":
@@ -195,7 +232,7 @@ ${this.#errors.map(([envKey, error]) => `\n\t - ${envKey}: ${error}`)}
             );
             continue;
           }
-          out = Object.assign(out, { [envKey]: envValue });
+          this.#setEnvVar(envKey, envValue);
           break;
 
         case "literal":
@@ -206,20 +243,13 @@ ${this.#errors.map(([envKey, error]) => `\n\t - ${envKey}: ${error}`)}
             );
             continue;
           }
-          out = Object.assign(out, { [envKey]: envValue });
+          this.#setEnvVar(envKey, envValue);
           break;
 
         default:
           exhaustiveMatchGuard(def);
       }
     }
-    this.#log("Loading env vars... done.");
-    this.#envVars = out;
-    const loadReport = Object.entries(this.#envVars).map(([key, value]) => {
-      return `${!value ? "🚨" : "✅"} ${key}`;
-    });
-    this.#log(
-      `Load Report:${this.#reportLine}${loadReport.join(this.#reportLine)}`
-    );
+    this.#log("Parsing envVars... done.");
   }
 }

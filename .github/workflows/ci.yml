@@ -31,7 +31,7 @@ jobs:
           echo RESEND_API_KEY=${{ secrets.RESEND_API_KEY }} >> .env
           echo SUPER_USER_PASSWORD=${{ secrets.SUPER_USER_PASSWORD }} >> .env
           echo SUPER_USER_EMAIL=${{ secrets.SUPER_USER_EMAIL }} >> .env
-          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+          echo E2E_POSTGRES_PASSWORD=${{ secrets.E2E_POSTGRES_PASSWORD }} >> .env
 
       # Validates that all of necessary env vars have been loaded into the environment\
 

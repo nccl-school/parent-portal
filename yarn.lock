@@ -16518,6 +16518,7 @@ __metadata:
   dependencies:
     "@gfdigital/tsconfig": "npm:0.3.1"
     dotenv: "npm:^17.2.1"
+    picocolors: "npm:^1.1.1"
     tsx: "npm:4.20.4"
     typescript: "npm:5.9.2"
     zod: "npm:^4.0.17"

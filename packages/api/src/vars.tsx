@@ -1,4 +1,3 @@
-import { ENV_RUNTIME, loadEnvVars } from "@nccl/env";
+import { ENV_RUNTIME } from "@nccl/env";
 
-loadEnvVars();
-ENV_RUNTIME.validate();
+ENV_RUNTIME.loadAndValidate();

@@ -14,9 +14,10 @@ docker compose -f docker-compose.spec.yml --progress plain up -d --build
 
 # Wait for DB and API to become healthy
 echo "⏳ Waiting for DB and API to be healthy..."
-sleep 3 # or implement healthcheck poll
+docker compose wait # or implement healthcheck poll
 
 # Run migrations and seeding inside the API container
 echo "🛠️ Running migrations and seed..."
 cd packages/api
 yarn prisma migrate reset --force --skip-generate
+🦸🏽‍♂️

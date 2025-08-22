@@ -2,8 +2,11 @@ import path from "node:path";
 
 import { Supermenv } from "supermenv";
 
+const dotEnvPaths = [path.resolve(import.meta.dirname, "../../../.env")];
+
 export const ENV_CI = new Supermenv({
   name: "CI",
+  dotEnvPaths,
   vars: {
     // repo|secrets
     TURBO_TOKEN: {
@@ -20,6 +23,7 @@ export const ENV_CI = new Supermenv({
 
 export const ENV_CD = new Supermenv({
   name: "CD",
+  dotEnvPaths,
   vars: {
     // repo|vars
     GCP_PROJECT_ID: {
@@ -42,6 +46,7 @@ export const ENV_CD = new Supermenv({
 
 export const ENV_TEST = new Supermenv({
   name: "TEST",
+  dotEnvPaths,
   description:
     "A set of environment variables needed to run the test environment and adjust some of the runtime variables",
   vars: {
@@ -57,7 +62,7 @@ export const ENV_TEST = new Supermenv({
       type: "string",
       description: "The port that the DB will run on in the test dockerfile",
     },
-    POSTGRES_PASSWORD: {
+    E2E_POSTGRES_PASSWORD: {
       type: "string",
       description: "The password for the test postgres user",
     },
@@ -74,7 +79,7 @@ export const ENV_TEST = new Supermenv({
 
 export const ENV_RUNTIME = new Supermenv({
   name: "RUNTIME",
-  dotEnvPaths: [path.resolve(import.meta.dirname, "../../../.env")],
+  dotEnvPaths,
   vars: {
     // Environment Vars
     NODE_ENV: {
@@ -130,63 +135,6 @@ export const ENV_RUNTIME = new Supermenv({
   },
 });
 
-/**
- * Loads and dynamically sets some environment variables
- * based upon the NCCL_ENVIRONMENT that is being targeted
- * to either be run or deployed
- *
- * NOTE: At a bare minimum, the NCCL_ENVIRONMENT needs to be set
- */
-export function loadEnvVars() {
-  const envFilePath = path.resolve(import.meta.dirname, "../../../.env");
-
-  ENV_RUNTIME.loadDotEnvs([envFilePath]);
-  ENV_RUNTIME.load();
-
-  if (process.env.CI) {
-    ENV_CI.loadDotEnvs([envFilePath]);
-    ENV_CI.load();
-  }
-
-  switch (ENV_RUNTIME.getOne("NCCL_ENVIRONMENT")) {
-    // For the test, we're reading off of the process
-    // and then creating some dynamic variables to feed to the
-    // docker compose
-    case "test": {
-      // Load the test environment variables
-      ENV_TEST.load();
-
-      // Set some variables based upon known values
-      // and some implicit env vars
-      const db = "nccl-parents-db-test";
-      const dbPort = 11002;
-      const user = "postgres";
-      const pw = ENV_TEST.getOne("POSTGRES_PASSWORD");
-      const appPort = 11000;
-      const apiPort = 11001;
-
-      // Set some of them
-      ENV_TEST.set("APP_PORT", appPort);
-      ENV_TEST.set("API_PORT", apiPort);
-      ENV_TEST.set("POSTGRES_DB", db);
-      ENV_TEST.set("POSTGRES_PORT", dbPort);
-      ENV_TEST.set("POSTGRES_USER", user);
-
-      // Dynamically set the new DB URL based upon the env vars
-      const DATABASE_URL = `postgresql://${user}:${pw}@db:${dbPort}/${db}`;
-      ENV_RUNTIME.set("DATABASE_URL", DATABASE_URL);
-      ENV_RUNTIME.set("NODE_ENV", "production");
-      ENV_RUNTIME.set("NCCL_APP_URL", `http://app:${appPort}`);
-      ENV_RUNTIME.set("NCCL_API_URL", `http://app:${apiPort}`);
-      break;
-    }
-
-    case "local":
-    case "dev":
-    case "production":
-      break;
-
-    default:
-      break;
-  }
-}
+// TODO: Update e2e setup script (match with CI / make CI call the shell script (the latter))
+// TODO: Get tests working locally
+// TODO: Cleanup scripts to test

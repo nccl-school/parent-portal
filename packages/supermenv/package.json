@@ -25,6 +25,7 @@
   "homepage": "https://github.com/nccl-school/parent-portal#readme",
   "dependencies": {
     "dotenv": "^17.2.1",
+    "picocolors": "^1.1.1",
     "zod": "^4.0.17"
   },
   "devDependencies": {
