@@ -138,3 +138,4 @@ export const ENV_RUNTIME = new Supermenv({
 // TODO: Update e2e setup script (match with CI / make CI call the shell script (the latter))
 // TODO: Get tests working locally
 // TODO: Cleanup scripts to test
+// TODO: Separate out the scripts into their own directories
