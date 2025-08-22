@@ -1,4 +1,4 @@
-import { loadEnvVars } from "@nccl/env";
+import { ENV_RUNTIME } from "@nccl/env";
 
 import { seedRoles } from "./seed.roles.js";
 import { seedSuperUser } from "./seed.super-user.js";
@@ -6,7 +6,7 @@ import { seedResource } from "./seed.resource.js";
 
 import { PrismaClient } from "../src/_generated/prisma/client.js";
 
-loadEnvVars();
+ENV_RUNTIME.load();
 
 const prisma = new PrismaClient();
 async function main() {

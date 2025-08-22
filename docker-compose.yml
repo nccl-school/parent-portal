@@ -1,9 +1,9 @@
-name: nccl-parents-test
+name: nccl-parents-local
 
 services:
   db:
     image: postgres:17
-    container_name: db
+    container_name: db-local
     restart: unless-stopped
     ports:
       - "6543:5432"
