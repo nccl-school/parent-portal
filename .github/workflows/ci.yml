@@ -47,6 +47,11 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
+      - name: Validate env
+        run: |
+          yarn turbo run build --scope @nccl/env
+          yarn validate:ci
+
       - name: Build
         run: yarn build
         env:
