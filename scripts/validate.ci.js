@@ -4,11 +4,11 @@ import { ENV_CI, ENV_RUNTIME, ENV_TEST } from "@nccl/env";
 
 const envFilePath = path.resolve(import.meta.dirname, "../.env");
 
-ENV_RUNTIME.loadDotEnvs([envFilePath]);
+ENV_CI.load();
 ENV_CI.loadDotEnvs([envFilePath]);
 
 ENV_RUNTIME.load();
-ENV_CI.load();
+ENV_RUNTIME.loadDotEnvs([envFilePath]);
 
 ENV_CI.validate();
 ENV_RUNTIME.validate();

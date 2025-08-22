@@ -216,6 +216,6 @@ ${this.#errors.map(([envKey, error]) => `\n\t - ${envKey}: ${error}`)}
     const loadReport = Object.entries(this.#envVars).map(([key, value]) => {
       return `${!value ? "🚨" : "✅"} ${key}`;
     });
-    this.#log(`Load Report:\n\t${loadReport.join(`\n\t`)}`);
+    this.#log(`Load Report:\n\t${loadReport.join(`\n  - `)}`);
   }
 }
