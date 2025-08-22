@@ -138,7 +138,6 @@ export const ENV_RUNTIME = new Supermenv({
 // TODO: Update e2e setup script (match with CI / make CI call the shell script (the latter))
 // TODO: Get tests working locally
 // TODO: Cleanup scripts to test
-// TODO: Separate out the scripts into their own directories
 
 export function validateCI() {
   // Validate CI right out of the gate for caching purposes
@@ -162,10 +161,11 @@ export function validateCI() {
 
   // Dynamically set some runtime URLs based upon
   // the derived env vars
-  const DATABASE_URL = `postgresql://${user}:${pw}@db:${dbPort}/${db}`;
+  const DATABASE_URL = `postgresql://${user}:${pw}@db:5432/${db}`;
+  ENV_RUNTIME.set("NODE_ENV", "production");
   ENV_RUNTIME.set("DATABASE_URL", DATABASE_URL);
-  ENV_RUNTIME.set("NCCL_APP_URL", `http://app:${appPort}`);
-  ENV_RUNTIME.set("NCCL_API_URL", `http://app:${apiPort}`);
+  ENV_RUNTIME.set("NCCL_APP_URL", `http://localhost:${appPort}`);
+  ENV_RUNTIME.set("NCCL_API_URL", `http://localhost:${apiPort}`);
 
   // Validate that the dynamically composed TEST vars
   // have successfully been set and loaded

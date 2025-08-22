@@ -1,5 +1,3 @@
-import "./vars.js";
-
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { logger } from "hono/logger";
@@ -8,7 +6,6 @@ import { cors } from "hono/cors";
 
 import { prismaMiddleware } from "./middleware/middleware.prisma.js";
 import { sessionMiddleware } from "./middleware/middleware.session.js";
-import { highlightIOMiddleware } from "./middleware/middleware.highlight-io.js";
 import { suggestion } from "./features/suggestion/suggestion.route.js";
 import { user } from "./features/user/user.route.js";
 import { serializeError } from "./utils/util.errors.js";
@@ -18,12 +15,12 @@ import { resource } from "./features/resource/resource.route.js";
 import { emailMiddleware } from "./middleware/middleware.email.js";
 import { account } from "./features/account/account.route.js";
 import { directory } from "./features/directory/directory.route.js";
+import { health } from "./features/health/health.route.js";
 
 const app = new Hono();
 
 // Middleware - CORS, logging, transactional email
 app.use(logger());
-app.use(highlightIOMiddleware);
 app.use(emailMiddleware);
 app.use(prismaMiddleware);
 app.use(
@@ -36,6 +33,9 @@ app.use(
     credentials: true,
   })
 );
+
+// Health check
+app.route("/health", health);
 
 // Authentication routes
 app.route("/api/auth", authentication);
@@ -59,6 +59,7 @@ serve(
   {
     fetch: app.fetch,
     port: 8080,
+    hostname: "0.0.0.0",
   },
   (info) => {
     console.log(`Server is running on http://localhost:${info.port}`);
