@@ -8,7 +8,7 @@ ENV_CI.validate();
 const db = "nccl-parents-db-test";
 const dbPort = 11002;
 const user = "postgres";
-const pw = ENV_TEST.getOne("POSTGRES_PASSWORD");
+const pw = ENV_TEST.getOne("E2E_POSTGRES_PASSWORD");
 const appPort = 11000;
 const apiPort = 11001;
 
