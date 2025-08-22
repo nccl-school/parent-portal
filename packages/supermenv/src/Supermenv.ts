@@ -81,10 +81,14 @@ export class Supermenv<T extends Record<string, SupermenvVarValue>> {
     console.log(`${this.#logPrefix} ${message}`, ...args);
   }
 
-  #addError(key: keyof T, message: string) {
+  #setError(key: keyof T, message: string) {
     this.#errors = Object.assign(this.#errors ?? {}, {
       [key]: message,
     } as ErrorReport<T>);
+  }
+
+  #deleteError(key: keyof T) {
+    delete this.#errors[key];
   }
 
   #hasErrors() {
@@ -112,8 +116,106 @@ export class Supermenv<T extends Record<string, SupermenvVarValue>> {
   }
 
   set<K extends keyof T>(key: K, value: TypeFor<T[K]["type"]>) {
-    process.env[String(key)] = String(value);
+    this.#log(`Setting envVar "${String(key)}": ${value}`);
+    // parse value
+    const res = this.#parseEnvVar(key, value);
+    if (!res.isValid) {
+      return this.#setError(key, res.reason);
+    }
+    this.#deleteError(key);
+    process.env[String(key)] = String(value); // Not sure if needed but here to keep the process in sync
     this.#envVars[key] = value;
+  }
+
+  /**
+   * Provided a key and value, this method will try to obtain a definition
+   * for the key. If it doesn't find a registered key, it will throw. If it does
+   * find a key, it will attempt to parse it based upon it's definition and
+   * then return a status
+   */
+  #parseEnvVar<K extends keyof T>(
+    envKey: K,
+    // RATIONALE: We use any so the parser can determine the value
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    envValue: any
+  ):
+    | { isValid: false; reason: string }
+    | { isValid: true; value: string | number | boolean } {
+    const def = this.#varDefs[envKey];
+    if (!def) {
+      throw new Error(
+        `${this.#logPrefix} Unknown Environment Variable: "${String(envKey)}" has not been registered as a possible environment variable. This most likely means you're trying to mutate the process incorrectly. Please add this variable to the "vars" key of the "${this.#name}" constructor.`
+      );
+    }
+    this.#setEnvVar(envKey, undefined);
+
+    const isNullishOrEmpty = envValue == null || envValue === "";
+
+    if (isNullishOrEmpty) {
+      return {
+        isValid: false,
+        reason: `Missing environment variable`,
+      };
+    }
+
+    switch (def.type) {
+      case "string":
+        return { isValid: true, value: envValue };
+
+      case "number": {
+        const num = Number(envValue);
+        if (Number.isNaN(num)) {
+          return {
+            isValid: false,
+            reason: `"${envValue}" cannot be coerced to a number`,
+          };
+        }
+        return { isValid: true, value: num };
+      }
+
+      case "boolean": {
+        const bool = envValue === "true" || envValue === "1";
+        return { isValid: true, value: bool };
+      }
+
+      case "url":
+        try {
+          new URL(envValue);
+        } catch {
+          return {
+            isValid: false,
+            reason: `"${envValue}" is not a valid URL`,
+          };
+        }
+        return {
+          isValid: true,
+          value: envValue,
+        };
+
+      case "email":
+        if (!/^[^@]+@[^@]+\.[^@]+$/.test(envValue)) {
+          return {
+            isValid: false,
+            reason: `"${envValue}" is not a valid email address.`,
+          };
+        }
+        return {
+          isValid: true,
+          value: envValue,
+        };
+
+      case "literal":
+        if (!def.values.includes(envValue)) {
+          return {
+            isValid: false,
+            reason: `"${envValue}" does not match one of the available values "${def.values.join(" | ")}"`,
+          };
+        }
+        return { isValid: true, value: envValue };
+
+      default:
+        return exhaustiveMatchGuard(def);
+    }
   }
 
   #printReport(): string {
@@ -179,76 +281,16 @@ export class Supermenv<T extends Record<string, SupermenvVarValue>> {
     this.#errors = {} as ErrorReport<T>;
 
     this.#log("Parsing envVars...");
-    for (const [key, def] of Object.entries(this.#varDefs)) {
+    for (const key of Object.keys(this.#varDefs)) {
       const envKey = key as keyof T;
       const envValue = source[key];
-      const isNullishOrEmpty = envValue == null || envValue === "";
 
-      if (isNullishOrEmpty) {
-        this.#setEnvVar(envKey, undefined);
-        this.#addError(envKey, `Missing environment variable`);
+      const res = this.#parseEnvVar(envKey, envValue);
+      if (!res.isValid) {
+        this.#setError(envKey, res.reason);
         continue;
       }
-
-      switch (def.type) {
-        case "string":
-          this.#setEnvVar(envKey, envValue);
-          break;
-
-        case "number": {
-          const num = Number(envValue);
-          if (Number.isNaN(num)) {
-            this.#addError(
-              envKey,
-              `"${envValue}" cannot be coerced to a number`
-            );
-            continue;
-          }
-          this.#setEnvVar(envKey, num);
-          break;
-        }
-
-        case "boolean": {
-          const bool = envValue === "true" || envValue === "1";
-          this.#setEnvVar(envKey, bool);
-          break;
-        }
-
-        case "url":
-          try {
-            new URL(envValue);
-          } catch {
-            this.#addError(envKey, `"${envValue}" is not a valid URL`);
-            continue;
-          }
-          this.#setEnvVar(envKey, envValue);
-          break;
-
-        case "email":
-          if (!/^[^@]+@[^@]+\.[^@]+$/.test(envValue)) {
-            this.#addError(
-              envKey,
-              `"${envValue}" is not a valid email address.`
-            );
-            continue;
-          }
-          this.#setEnvVar(envKey, envValue);
-          break;
-
-        case "literal":
-          if (!def.values.includes(envValue)) {
-            this.#addError(
-              envKey,
-              `"${envValue}" does not match one of the available values "${def.values.join(" | ")}"`
-            );
-            continue;
-          }
-          this.#setEnvVar(envKey, envValue);
-          break;
-
-        default:
-          exhaustiveMatchGuard(def);
-      }
+      this.#setEnvVar(envKey, res.value);
     }
     this.#log("Parsing envVars... done.");
   }
