@@ -45,6 +45,7 @@ export class Supermenv<T extends Record<string, SupermenvVarValue>> {
   #errors: [string, string][];
   #envVars: SupermenvEnvVars<T>;
   #name: string;
+  #reportLine: any;
 
   constructor(options: {
     vars: T;
@@ -66,6 +67,7 @@ export class Supermenv<T extends Record<string, SupermenvVarValue>> {
       },
       {} as SupermenvEnvVars<T>
     );
+    this.#reportLine = `\n  - `;
   }
 
   #log(message: string, ...args: string[]) {
@@ -216,6 +218,8 @@ ${this.#errors.map(([envKey, error]) => `\n\t - ${envKey}: ${error}`)}
     const loadReport = Object.entries(this.#envVars).map(([key, value]) => {
       return `${!value ? "🚨" : "✅"} ${key}`;
     });
-    this.#log(`Load Report:\n\t${loadReport.join(`\n  - `)}`);
+    this.#log(
+      `Load Report:${this.#reportLine}${loadReport.join(this.#reportLine)}`
+    );
   }
 }
