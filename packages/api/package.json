@@ -18,7 +18,6 @@
     "dev": "tsx watch src/index.ts",
     "build": "yarn prisma generate && yarn api:build && yarn client:check && yarn client:build",
     "api:build": "yarn node ./scripts/build.js",
-    "auth:dev": "tsc --project ./tsconfig.build.json --watch",
     "start": "node dist/index.js",
     "client:dev": "yarn client:build --watch",
     "client:build": "yarn tsc --project tsconfig.client.json",
@@ -29,8 +28,7 @@
   },
   "exports": {
     ".": "./dist/index.js",
-    "./client": "./dist-client/client.js",
-    "./auth.server": "./dist/auth.js"
+    "./client": "./dist-client/client.js"
   },
   "dependencies": {
     "@google-cloud/storage": "7.17.0",

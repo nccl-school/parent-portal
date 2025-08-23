@@ -1,9 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "declarationDir": "dist",
-    "declaration": true,
-    "declarationMap": true
-  },
-  "include": ["./src/index.ts", "./src/auth.ts", "./src/_generated"]
-}

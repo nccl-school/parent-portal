@@ -19,7 +19,7 @@ import { AuthPage } from "./AuthPage";
 
 import { getAuthError, getValidationErrors } from "../../utils/client";
 import { PageHeader } from "../../components/page";
-import { getAuthClient, getNCCLClient } from "../../utils/server";
+import { getNCCLClient } from "../../utils/server";
 import { getFormData } from "../../utils/isomorphic";
 import { assembleTitle } from "../../utils/util.assemble-title";
 
@@ -48,13 +48,11 @@ export async function action(args: Route.ActionArgs) {
     url.searchParams.get("redirect_url") ?? args.context.env.NCCL_APP_URL;
 
   // BA usually clears via its own sign-out endpoint; you can proxy or call it directly:
-  const res = await ncclClient.auth.signInEmail({
+  return await ncclClient.auth.signInEmail({
     email: formData.data.email,
     password: formData.data.password,
     callbackUrl: redirect_url,
   });
-  console.log(res);
-  return res;
 }
 
 export default function AuthAcceptInviteRoute(args: Route.ComponentProps) {

@@ -7,6 +7,7 @@ import {
   ApiClient,
   type ApiClientOptions,
 } from "../../api-client/ApiClient.js";
+import type { auth as betterAuth } from "../../auth.js";
 
 export class AuthClient extends ApiClient {
   constructor(options: ApiClientOptions) {
@@ -18,6 +19,19 @@ export class AuthClient extends ApiClient {
       path: "/sign-in/email",
       method: "POST",
       body: [AuthSignInEmailRequestSchema, body],
+    });
+  }
+
+  async signOut() {
+    return this._request({
+      method: "POST",
+      path: "/sign-out",
+    });
+  }
+
+  async getSession() {
+    return this._get<ReturnType<typeof betterAuth.api.getSession>>({
+      path: "/session",
     });
   }
 }

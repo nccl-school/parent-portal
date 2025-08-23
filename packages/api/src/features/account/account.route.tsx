@@ -22,22 +22,6 @@ import { ErrorSet } from "../../utils/util.errors.js";
 
 export const account = new Hono();
 
-account.post("/sign-out", sessionMiddleware, async (c) => {
-  try {
-    const res = await auth.api.signOut({ headers: c.req.raw.headers });
-    return c.json(res);
-  } catch {
-    throw new ErrorSet.serverError(
-      "There was an error when trying to sign out"
-    );
-  }
-});
-
-account.get("/session", async (c) => {
-  const session = await auth.api.getSession({ headers: c.req.raw.headers });
-  return c.json(session);
-});
-
 // POST /api/user/invite | Invite 1 or many users
 account.post(
   "/invite",
