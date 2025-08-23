@@ -7,6 +7,7 @@ import { serializeError } from "./utils/util.errors.js";
 import "./_generated/prisma/models.js";
 import { AccountClient } from "./features/account/account.api-client.js";
 import { DirectoryClient } from "./features/directory/directory.api-client.js";
+import { AuthClient } from "./features/auth/auth.api-client.js";
 
 export * from "./features/role/role.utils.js";
 export * from "./features/suggestion/suggestion.utils.js";
@@ -23,13 +24,14 @@ export { ErrorSet } from "./utils/util.errors.js";
 export const parseError = serializeError;
 
 export class NCCLClient {
+  serializeError: typeof serializeError;
   suggestion: SuggestionClient;
   user: UserClient;
   role: RoleClient;
   resource: ResourceClient;
   account: AccountClient;
   directory: DirectoryClient;
-  serializeError: typeof serializeError;
+  auth: AuthClient;
 
   constructor(options: ApiClientOptions) {
     this.serializeError = serializeError;
@@ -39,5 +41,6 @@ export class NCCLClient {
     this.resource = new ResourceClient(options);
     this.account = new AccountClient(options);
     this.directory = new DirectoryClient(options);
+    this.auth = new AuthClient(options);
   }
 }

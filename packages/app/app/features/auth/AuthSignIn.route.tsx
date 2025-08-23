@@ -19,7 +19,7 @@ import { AuthPage } from "./AuthPage";
 
 import { getAuthError, getValidationErrors } from "../../utils/client";
 import { PageHeader } from "../../components/page";
-import { getAuthClient } from "../../utils/server";
+import { getAuthClient, getNCCLClient } from "../../utils/server";
 import { getFormData } from "../../utils/isomorphic";
 import { assembleTitle } from "../../utils/util.assemble-title";
 
@@ -33,32 +33,27 @@ const schema = z.object({
     .trim()
     .min(1, { error: "Please enter a password" }),
   rememberMe: z.boolean().optional(),
-  redirectURL: z.string().optional(),
+  redirect_url: z.string().optional(),
 });
 
 export async function action(args: Route.ActionArgs) {
-  const authClient = getAuthClient();
+  const ncclClient = getNCCLClient(args);
   const formData = await getFormData(args, schema);
   if (formData.error) {
     return parseError(formData.error);
   }
 
   const url = new URL(args.request.url);
-  const redirectURL = url.searchParams.get("redirectURL");
-
-  const callbackURL = redirectURL
-    ? `${args.context.env.NCCL_APP_URL}/${redirectURL}`
-    : args.context.env.NCCL_APP_URL;
+  const redirect_url =
+    url.searchParams.get("redirect_url") ?? args.context.env.NCCL_APP_URL;
 
   // BA usually clears via its own sign-out endpoint; you can proxy or call it directly:
-  const res = await authClient.signInEmail({
-    headers: args.request.headers,
-    body: {
-      ...formData.data,
-      callbackURL,
-    },
-    asResponse: true,
+  const res = await ncclClient.auth.signInEmail({
+    email: formData.data.email,
+    password: formData.data.password,
+    callbackUrl: redirect_url,
   });
+  console.log(res);
   return res;
 }
 
@@ -90,8 +85,8 @@ export default function AuthAcceptInviteRoute(args: Route.ComponentProps) {
           <InputGroup>
             <input
               type="hidden"
-              name="redirectURL"
-              value={urlSearchParams.get("redirectURL") ?? undefined}
+              name="redirect_url"
+              value={urlSearchParams.get("redirect_url") ?? undefined}
             />
             <InputText
               name="email"

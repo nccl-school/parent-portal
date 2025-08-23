@@ -207,7 +207,7 @@ export function serializeError(error: unknown): ErrorResponse {
  * @param errorJson - The parsed JSON body from a failed fetch response
  * @returns A structured `ServerError` instance that can be re-thrown or inspected
  */
-export function deserializeError(err: any, request: Request): ServerError {
+export function deserializeError(err: any, method: string): ServerError {
   // The error happened in the library first before the request
   // reached the API so we just re-throw the error. This could happen
   // when validating or parsing the attributes that make up the things
@@ -237,7 +237,7 @@ export function deserializeError(err: any, request: Request): ServerError {
     case "not_found":
       return new ErrorSet.notFound(err.message);
     case "method_not_allowed":
-      return new ErrorSet.methodNotAllowed(request.method);
+      return new ErrorSet.methodNotAllowed(method);
     default:
       return new ErrorSet.serverError(err.message);
   }

@@ -1,8 +1,10 @@
 import type { LoaderFunctionArgs, AppLoadContext } from "react-router";
 import { ErrorSet, type Roles } from "@nccl/api/client";
-import { redirect } from "react-router";
+import { href, redirect } from "react-router";
 import { NCCLClient } from "@nccl/api/client";
-import { auth } from "@nccl/api/auth.server";
+import type { auth } from "@nccl/api/auth.server";
+import { createAuthClient } from "better-auth/client";
+import { inferAdditionalFields } from "better-auth/client/plugins";
 
 export async function getRole<T extends LoaderFunctionArgs>(loaderArgs: T) {
   const session = await ensureSession(loaderArgs);
@@ -50,18 +52,22 @@ export async function isAuthorized(
  * Throws a redirect to /sign-in if not authenticated.
  */
 export async function ensureSession<T extends LoaderFunctionArgs>(args: T) {
-  const authClient = getAuthClient();
-  const session = await authClient.getSession({
-    headers: args.request.headers,
-  });
-  if (!session) {
-    // preserve the originally requested URL
+  const authClient = getAuthClient(args);
+
+  console.log("cookie header", args.request.headers.get("cookie"));
+
+  const res = await authClient.getSession();
+
+  console.log("ensuringSession", res);
+
+  // no session and no error, user needs to sign in
+  if (!res.data?.session && !res.error) {
+    console.log("No session and no error. The user needs to sign in");
     const url = new URL(args.request.url);
-    throw redirect(
-      `/sign-in?callback_url=${encodeURIComponent(url.toString())}`
-    );
+    throw redirect(href(`/sign-in`).concat(`?redirect_url=${url.toString()}`));
   }
-  return session;
+
+  console.log(res.data);
 }
 
 function getHeadersFromRequest(request: Request) {
@@ -73,8 +79,21 @@ function getHeadersFromRequest(request: Request) {
   return headers;
 }
 
-export function getAuthClient() {
-  return auth.api;
+export function getAuthClient<A extends LoaderFunctionArgs<AppLoadContext>>(
+  args: A
+) {
+  const headers = getHeadersFromRequest(args.request);
+
+  console.log(headers);
+
+  return createAuthClient({
+    baseURL: args.context.env.NCCL_API_URL.concat("/api/auth"),
+    plugins: [inferAdditionalFields<typeof auth>()],
+    fetchOptions: {
+      credentials: "include",
+      headers: headers,
+    },
+  });
 }
 
 export function getNCCLClient<A extends LoaderFunctionArgs<AppLoadContext>>(
@@ -91,20 +110,52 @@ export function getNCCLClient<A extends LoaderFunctionArgs<AppLoadContext>>(
   return client;
 }
 
-export function withSetCookie(from: Response, to: Response) {
-  // Node 20+ (undici) sometimes exposes getSetCookie()
-  const anyHeaders = from.headers as Headers;
+/**
+ * Proxies a Better Auth upstream response back to the browser.
+ *
+ * - Forwards all Set-Cookie headers (even when coalesced by undici/Node).
+ * - Preserves redirect status + Location header.
+ * - Copies Content-Type and body for non-redirects.
+ */
+export async function proxyAuthResponse(upstream: Response): Promise<Response> {
+  const headers = new Headers();
+
+  // --- Handle cookies (works in Node 18/20/undici) ---
+  const anyHeaders = upstream.headers as Headers & {
+    getSetCookie?: () => string[];
+  };
+
   const cookies: string[] =
     typeof anyHeaders.getSetCookie === "function"
       ? anyHeaders.getSetCookie()
       : (() => {
-          const v = from.headers.get("set-cookie");
-          // If multiple cookies were coalesced, split on comma that starts a new cookie (", " followed by token=)
+          const v = upstream.headers.get("set-cookie");
+          // If multiple cookies were coalesced, split on commas that start a new cookie
           return v ? v.split(/,(?=\s*[^\s=]+?=)/g) : [];
         })();
 
   for (const c of cookies) {
-    to.headers.append("set-cookie", c);
+    headers.append("set-cookie", c);
   }
-  return to;
+
+  // --- Preserve redirect Location if present ---
+  const location = upstream.headers.get("location");
+  if (location) {
+    headers.set("Location", location);
+  }
+
+  // --- Preserve content-type if body is forwarded ---
+  const contentType = upstream.headers.get("content-type");
+  if (contentType) {
+    headers.set("Content-Type", contentType);
+  }
+
+  // --- Decide body ---
+  const status = upstream.status;
+  const body =
+    status >= 300 && status < 400
+      ? null // don't forward body for redirects
+      : await upstream.text();
+
+  return new Response(body, { status, headers });
 }

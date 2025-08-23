@@ -74,9 +74,7 @@ export class Supermenv<T extends Record<string, SupermenvVarValue>> {
     this.#varDefs = options.vars;
     this.#name = options.name;
     this.#logPrefix = `[${this.#name}]`;
-    this.#debug =
-      options.debug ??
-      Boolean(process.env.CI || process.env.NODE_ENV === "development");
+    this.#debug = options.debug ?? !!process.env.CI;
 
     // hydrate immediately
     this.load({ paths: options.dotEnvPaths });

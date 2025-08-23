@@ -61,7 +61,7 @@ export class ApiClient {
 
     const data = this.#validateSchema<T>(schema, raw, {
       message:
-        "Error when attempting to validate the query parameters of the request",
+        "Error when attempting to validate the query string of the request",
     });
 
     const urlSearchParams = new URLSearchParams();
@@ -109,8 +109,7 @@ export class ApiClient {
     return `${this.#rootUrl}/${this.#rootUrlSegments.join("/")}${pathname}${queryString}`;
   }
 
-  protected async _mutateJSON<
-    T,
+  protected async _request<
     P extends ZodType = ZodType,
     B extends ZodType = ZodType,
   >({
@@ -120,10 +119,10 @@ export class ApiClient {
     method,
   }: {
     path: string;
+    method: "POST" | "PUT" | "POST" | "GET" | "PATCH";
     params?: [schema: P, data: z.infer<P>];
     body?: [schema: B, data: z.infer<B>];
-    method: "POST" | "PUT";
-  }): Promise<T> {
+  }): Promise<Response> {
     // Assemble the request
     const headers = this.#requestHeaders;
     headers.set("content-type", "application/json");
@@ -148,12 +147,27 @@ export class ApiClient {
     // Fetch the data
     const req = new Request(url, reqInit);
     const res = await fetch(req);
+    return res;
+  }
+
+  protected async _mutateJSON<
+    T,
+    P extends ZodType = ZodType,
+    B extends ZodType = ZodType,
+  >({
+    path,
+    params,
+    body,
+    method,
+  }: {
+    path: string;
+    params?: [schema: P, data: z.infer<P>];
+    body?: [schema: B, data: z.infer<B>];
+    method: "POST" | "PUT";
+  }): Promise<T> {
+    const res = await this._request({ path, params, body, method });
     const json = (await res.json()) as T;
-
-    if (!res.ok) {
-      throw deserializeError(json, req);
-    }
-
+    if (!res.ok) throw deserializeError(json, method);
     return json;
   }
 
@@ -185,7 +199,7 @@ export class ApiClient {
     const json = (await res.json()) as T;
 
     if (!res.ok) {
-      throw deserializeError(json, req);
+      throw deserializeError(json, "GET");
     }
 
     return json;
@@ -218,7 +232,7 @@ export class ApiClient {
     const json = (await res.json()) as T;
 
     if (!res.ok) {
-      throw deserializeError(json, req);
+      throw deserializeError(json, "DELETE");
     }
 
     return json;

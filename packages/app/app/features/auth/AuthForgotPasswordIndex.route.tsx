@@ -15,7 +15,7 @@ import {
   useSearchParams,
 } from "react-router";
 import { useEffect } from "react";
-import { parseError } from "@nccl/api/client";
+import { ErrorSet, parseError } from "@nccl/api/client";
 
 import type { Route } from "./+types/AuthAcceptInvite.route";
 import { AuthPage } from "./AuthPage";
@@ -38,7 +38,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export async function action(args: Route.ActionArgs) {
-  const authClient = getAuthClient();
+  const authClient = getAuthClient(args);
   const formData = await getFormData(args, schema);
   if (formData.error) {
     return parseError(formData.error);
@@ -46,14 +46,17 @@ export async function action(args: Route.ActionArgs) {
 
   const resetPasswordUrl = `${args.context.env.NCCL_APP_URL}${href("/reset-password")}`;
 
-  await authClient.forgetPassword({
-    headers: args.request.headers,
-    body: {
-      ...formData.data,
-      redirectTo: resetPasswordUrl,
-    },
-    asResponse: true,
+  const res = await authClient.forgetPassword({
+    ...formData.data,
+    redirectTo: resetPasswordUrl,
   });
+  if (res.error) {
+    console.error(res.error);
+    const err = new ErrorSet.serverError(
+      res.error.message ?? "Error when trying to send a password reset email."
+    );
+    return parseError(err);
+  }
   return redirect("/forgot-password/success");
 }
 

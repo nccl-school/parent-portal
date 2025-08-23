@@ -10,7 +10,7 @@ import { suggestion } from "./features/suggestion/suggestion.route.js";
 import { user } from "./features/user/user.route.js";
 import { serializeError } from "./utils/util.errors.js";
 import { role } from "./features/role/role.route.js";
-import { authentication } from "./features/auth/auth.route.js";
+import { auth } from "./features/auth/auth.route.js";
 import { resource } from "./features/resource/resource.route.js";
 import { emailMiddleware } from "./middleware/middleware.email.js";
 import { account } from "./features/account/account.route.js";
@@ -25,7 +25,7 @@ app.use(emailMiddleware);
 app.use(prismaMiddleware);
 app.use(
   cors({
-    origin: "*", // or specific domains: ["https://yourapp.com"]
+    origin: "*",
     allowHeaders: ["Content-Type", "Authorization"],
     allowMethods: ["*"],
     exposeHeaders: ["Content-Length"],
@@ -38,7 +38,7 @@ app.use(
 app.route("/health", health);
 
 // Authentication routes
-app.route("/api/auth", authentication);
+app.route("/api/auth", auth);
 app.route("/api/account", account);
 
 // Session aware routes

@@ -60,26 +60,24 @@ const schema = z
   });
 
 export async function action(args: Route.ActionArgs) {
-  const authClient = getAuthClient();
+  const authClient = getAuthClient(args);
   const formData = await getFormData(args, schema);
   if (formData.error) {
     return parseError(formData.error);
   }
 
-  try {
-    await authClient.resetPassword({
-      headers: args.request.headers,
-      body: {
-        newPassword: formData.data.password,
-        token: formData.data.token,
-      },
-      asResponse: true,
-    });
-    return redirect("/reset-password/success");
-  } catch (error) {
-    const err = new ErrorSet.serverError(String(error));
+  const res = await authClient.resetPassword({
+    newPassword: formData.data.password,
+    token: formData.data.token,
+  });
+  if (res.error) {
+    console.error(res.error);
+    const err = new ErrorSet.serverError(
+      res.error.message ?? "Unable to reset password."
+    );
     return parseError(err);
   }
+  return redirect("/reset-password/success");
 }
 
 export default function AuthResetPassword(args: Route.ComponentProps) {

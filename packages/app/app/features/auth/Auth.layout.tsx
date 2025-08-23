@@ -60,12 +60,9 @@ const styles = css`
 `;
 
 export async function loader(args: Route.LoaderArgs) {
-  const authClient = getAuthClient();
-  const session = await authClient.getSession({
-    headers: args.request.headers,
-  });
-
-  if (session) {
+  const authClient = getAuthClient(args);
+  const res = await authClient.getSession();
+  if (res.data?.session) {
     console.log("User is already signed in. Redirecting to home");
     throw redirect("/");
   }
