@@ -23,6 +23,9 @@ jobs:
       environment: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
       node_version: ${{ steps.db.outputs.node_version }}
     steps:
+      - name: Enable corepack
+        run: corepack enable
+
       - name: Set Up node.js
         uses: actions/setup-node@v4
         with:
