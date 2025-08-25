@@ -22,6 +22,7 @@ ENV_TEST.set("API_PORT", apiPort);
 ENV_TEST.set("POSTGRES_DB", db);
 ENV_TEST.set("POSTGRES_PORT", dbPort);
 ENV_TEST.set("POSTGRES_USER", user);
+ENV_TEST.set("NCCL_API_URL_PUBLIC", `http://localhost:${apiPort}`); // this is so the app can call the API on the docker container network
 
 // Dynamically set some runtime URLs based upon
 // the derived env vars

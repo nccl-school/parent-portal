@@ -74,6 +74,11 @@ export const ENV_TEST = new Supermenv({
       type: "number",
       description: "The port that the API will run on in the test dockerfile",
     },
+    NCCL_API_URL_PUBLIC: {
+      type: "url",
+      description:
+        "The publicly accessible location of the API. This is used to distinguish between the private URL of the docker test environment that the app uses and the URL that can be publicly accessed for testing in the browser or inside of playwright.",
+    },
   },
 });
 

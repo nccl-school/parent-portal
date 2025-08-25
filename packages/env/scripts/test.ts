@@ -1,6 +1,6 @@
-import { ENV } from "../src/index.js";
+import { ENV_RUNTIME } from "../src/index.js";
 
-ENV.getAllEnvVars();
+ENV_RUNTIME.getAll();
 
-const envVar = ENV.getEnvVar("NCCL_API_URL");
+const envVar = ENV_RUNTIME.getOne("NCCL_API_URL");
 console.log(envVar);

@@ -1,16 +1,16 @@
-import path from "path";
+import path from "node:path";
 
 import { defineConfig } from "@playwright/test";
 
-import { ENV_RUNTIME } from "@nccl/env";
+import { ENV_TEST } from "@nccl/env";
 
-ENV_RUNTIME.load({ paths: [path.resolve(import.meta.dirname, "./.env.spec")] });
+ENV_TEST.load({ paths: [path.resolve(import.meta.dirname, "./.env.spec")] });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  // testDir: "./e2e",
+  testDir: "./e2e",
   /* Run tests in files in parallel */
   // fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -33,13 +33,17 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
+      name: "api:setup",
+      testDir: "playwright-utils/api",
+      testMatch: "setup.ts",
+    },
+    {
       name: "api",
-      testMatch: "packages/api/**/*.spec.ts",
+      testDir: "packages/api/src",
+      testMatch: "**/*.spec.ts",
+      dependencies: ["api:setup"],
       use: {
-        baseURL: ENV_RUNTIME.getOne("NCCL_APP_URL"),
-        extraHTTPHeaders: {
-          Authorization: `Bearer ${process.env.AUTH_TOKEN}`,
-        },
+        baseURL: ENV_TEST.getOne("NCCL_API_URL_PUBLIC"),
       },
     },
     // {
