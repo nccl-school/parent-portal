@@ -23,6 +23,7 @@ build
 
 # packages/api
 dist-client
+dist-seed
 _generated
 
 # Playwright

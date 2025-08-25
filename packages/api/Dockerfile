@@ -8,8 +8,6 @@ ENV NODE_ENV=$NODE_ENV
 
 COPY . .
 RUN node ./scripts/validate.runtime.js
-RUN cd packages/api && npx prisma generate
-
 
 FROM base AS runner
 WORKDIR /app

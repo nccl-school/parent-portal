@@ -8,6 +8,7 @@ console.log("Building API...");
 await build({
   entryPoints: [
     path.resolve(import.meta.dirname, "../src/index.ts"),
+    path.resolve(import.meta.dirname, "../src/seed.ts"),
     path.resolve(import.meta.dirname, "../src/auth.tsx"),
   ],
   outdir: "dist",
