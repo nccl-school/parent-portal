@@ -7,6 +7,14 @@ export async function seedResource() {
     console.log("Seeding resources...");
     // Creates a fake relation to preserve the FK constraints and unique-ness values at the root
     // of the folder structure
+    const rootResource = await prisma.resource.findUnique({
+      where: { id: "__ROOT__" },
+    });
+    if (rootResource) {
+      console.log("Root resource already exists... skipping resource seeding.");
+      console.log("Seeding resources... complete.");
+      return;
+    }
     await prisma.resource.create({
       data: {
         id: "__ROOT__",

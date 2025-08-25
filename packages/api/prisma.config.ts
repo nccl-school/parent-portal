@@ -2,6 +2,6 @@ import type { PrismaConfig } from "prisma";
 
 export default {
   migrations: {
-    seed: "tsx ./prisma/seed.ts",
+    seed: "npx tsx ./seed/seed.ts",
   },
 } satisfies PrismaConfig;
