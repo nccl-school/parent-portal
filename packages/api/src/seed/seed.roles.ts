@@ -1,5 +1,5 @@
-import { PrismaClient } from "../src/_generated/prisma/client.js";
-import type { Role } from "../src/features/role/role.utils.js";
+import { PrismaClient } from "../_generated/prisma/client.js";
+import type { Role } from "../features/role/role.utils.js";
 
 const prisma = new PrismaClient();
 

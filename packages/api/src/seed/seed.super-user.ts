@@ -1,7 +1,7 @@
 import { ENV_RUNTIME } from "@nccl/env";
 
-import { PrismaClient } from "../src/_generated/prisma/client.js";
-import { auth } from "../src/auth.js";
+import { PrismaClient } from "../_generated/prisma/client.js";
+import { auth } from "../auth.js";
 
 const prisma = new PrismaClient();
 
