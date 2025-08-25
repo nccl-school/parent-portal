@@ -18,12 +18,11 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     async sendResetPassword(data) {
-      const resetLink = `${ENV_RUNTIME.getOne("NCCL_APP_URL")}/api/auth${data.url}`;
       await resend.emails.send({
         from: EMAIL_FIELDS.from,
         subject: "Reset your password",
         to: data.user.email,
-        react: <ResetPasswordEmail resetLink={resetLink} />,
+        react: <ResetPasswordEmail resetLink={data.url} />,
       });
     },
     async onPasswordReset({ user }) {

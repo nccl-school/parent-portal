@@ -1,5 +1,9 @@
 import {
+  AuthForgotPasswordRequestSchema,
+  AuthResetPasswordSchema,
   AuthSignInEmailRequestSchema,
+  type AuthForgotPasswordRequest,
+  type AuthResetPassword,
   type AuthSignInEmailRequest,
 } from "./auth.schema.js";
 
@@ -19,6 +23,28 @@ export class AuthClient extends ApiClient {
       path: "/sign-in/email",
       method: "POST",
       body: [AuthSignInEmailRequestSchema, body],
+      options: {
+        contentType: "application/json",
+      },
+    });
+  }
+
+  async requestPasswordReset(body: AuthForgotPasswordRequest) {
+    return this._request({
+      path: "/request-password-reset",
+      method: "POST",
+      body: [AuthForgotPasswordRequestSchema, body],
+      options: {
+        contentType: "application/json",
+      },
+    });
+  }
+
+  async resetPassword(body: AuthResetPassword) {
+    return this._request({
+      path: "/reset-password",
+      method: "POST",
+      body: [AuthResetPasswordSchema, body],
       options: {
         contentType: "application/json",
       },

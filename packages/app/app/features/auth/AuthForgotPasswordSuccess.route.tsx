@@ -10,7 +10,7 @@ import { assembleTitle } from "../../utils/util.assemble-title";
 export default function AuthResetPasswordSuccess() {
   return (
     <>
-      <title>{assembleTitle("Forgot password")}</title>
+      <title>{assembleTitle("Password reset email sent")}</title>
       <AuthPage>
         <AuthPageHeader>
           <PageHeader dxTitle="Password reset email successfully sent!" />

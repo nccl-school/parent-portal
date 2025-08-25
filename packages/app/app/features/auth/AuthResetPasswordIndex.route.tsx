@@ -6,19 +6,21 @@ import {
   Typography,
 } from "@nccl/components";
 import { Form, href, Link, redirect, useNavigation } from "react-router";
-import { ErrorSet, parseError } from "@nccl/api/client";
+import { ErrorSet, parseError, zPasswordSchema } from "@nccl/api/client";
 import { z } from "zod/v4";
+import { useState } from "react";
 
 import { AuthPageHeader } from "./AuthPageHeader";
 import { AuthPageBody } from "./AuthPageBody";
 import { AuthPageFooter } from "./AuthPageFooter";
 import { AuthPage } from "./AuthPage";
 import type { Route } from "./+types/AuthResetPasswordIndex.route";
+import { AuthPasswordMeter } from "./AuthFieldPassword";
 
 import { PageHeader } from "../../components/page";
 import { getValidationErrors, renderLoaderData } from "../../utils/client";
 import { getFormData } from "../../utils/isomorphic";
-import { getAuthClient } from "../../utils/server";
+import { getNCCLClient } from "../../utils/server";
 import { assembleTitle } from "../../utils/util.assemble-title";
 
 export async function loader(args: Route.LoaderArgs) {
@@ -48,7 +50,7 @@ export async function loader(args: Route.LoaderArgs) {
 
 const schema = z
   .object({
-    password: z.string().min(1, { error: "Please enter a password" }),
+    password: zPasswordSchema,
     confirmPassword: z
       .string()
       .min(1, { error: "Please confirm your password" }),
@@ -60,20 +62,21 @@ const schema = z
   });
 
 export async function action(args: Route.ActionArgs) {
-  const authClient = getAuthClient(args);
+  const nccClient = getNCCLClient(args);
   const formData = await getFormData(args, schema);
   if (formData.error) {
     return parseError(formData.error);
   }
 
-  const res = await authClient.resetPassword({
+  const res = await nccClient.auth.resetPassword({
     newPassword: formData.data.password,
     token: formData.data.token,
   });
-  if (res.error) {
-    console.error(res.error);
+  if (!res.ok) {
+    const json = await res.json();
+    console.error(json);
     const err = new ErrorSet.serverError(
-      res.error.message ?? "Unable to reset password."
+      json.error?.message ?? "Unable to reset password."
     );
     return parseError(err);
   }
@@ -82,6 +85,7 @@ export async function action(args: Route.ActionArgs) {
 
 export default function AuthResetPassword(args: Route.ComponentProps) {
   const navigation = useNavigation();
+  const [password, setPassword] = useState<string>("");
   const validationErrors = getValidationErrors<z.infer<typeof schema>>(
     args.actionData
   );
@@ -124,11 +128,13 @@ export default function AuthResetPassword(args: Route.ComponentProps) {
                     <InputGroup>
                       <input type="hidden" value={d.token} name="token" />
                       <InputPassword
+                        onChange={(e) => setPassword(e.currentTarget.value)}
                         name="password"
                         dxLabel="Password"
                         autoComplete="password"
                         dxError={validationErrors.password?.[0]}
                       />
+                      <AuthPasswordMeter password={password} />
                       <InputPassword
                         name="confirmPassword"
                         dxLabel="Confirm password"

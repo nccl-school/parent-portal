@@ -25,7 +25,7 @@ import { AuthPageFooter } from "./AuthPageFooter";
 
 import { getAuthError, getValidationErrors } from "../../utils/client";
 import { PageHeader } from "../../components/page";
-import { getAuthClient } from "../../utils/server";
+import { getNCCLClient } from "../../utils/server";
 import { getFormData } from "../../utils/isomorphic";
 import { assembleTitle } from "../../utils/util.assemble-title";
 
@@ -38,7 +38,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export async function action(args: Route.ActionArgs) {
-  const authClient = getAuthClient(args);
+  const authClient = getNCCLClient(args);
   const formData = await getFormData(args, schema);
   if (formData.error) {
     return parseError(formData.error);
@@ -46,14 +46,16 @@ export async function action(args: Route.ActionArgs) {
 
   const resetPasswordUrl = `${args.context.env.NCCL_APP_URL}${href("/reset-password")}`;
 
-  const res = await authClient.forgetPassword({
+  const res = await authClient.auth.requestPasswordReset({
     ...formData.data,
     redirectTo: resetPasswordUrl,
   });
-  if (res.error) {
-    console.error(res.error);
+  if (!res.ok) {
+    console.log(res.text());
+    const json = await res.json();
+    console.error(json);
     const err = new ErrorSet.serverError(
-      res.error.message ?? "Error when trying to send a password reset email."
+      json?.message ?? "Error when trying to send a password reset email."
     );
     return parseError(err);
   }
@@ -75,7 +77,7 @@ export default function AuthForgotPassword(args: Route.ComponentProps) {
 
   return (
     <Form method="post">
-      <title>{assembleTitle("Forgot password")}</title>
+      <title>{assembleTitle("Request a password reset")}</title>
       <AuthPage>
         <AuthPageHeader>
           <PageHeader

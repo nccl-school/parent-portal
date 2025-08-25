@@ -137,6 +137,7 @@ const wrapperStyles = css`
   }
 
   .adornment {
+    pointer-events: all;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -145,6 +146,7 @@ const wrapperStyles = css`
     width: 2.5em;
     --icon-size: 1.5em;
     pointer-events: none;
+    z-index: 10;
 
     &.start {
       left: 0;
@@ -195,7 +197,7 @@ export const InputContainer = forwardRef<HTMLDivElement, InputContainerProps>(
               ),
             [DXAdornmentStart]
           )}
-          {children}
+
           {useMemo(
             () =>
               DXAdornmentEnd && (
@@ -205,6 +207,7 @@ export const InputContainer = forwardRef<HTMLDivElement, InputContainerProps>(
               ),
             [DXAdornmentEnd]
           )}
+          {children}
         </div>
         {dxError && <div className="error">{dxError}</div>}
       </div>

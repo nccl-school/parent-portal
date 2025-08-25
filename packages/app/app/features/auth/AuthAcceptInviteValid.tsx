@@ -1,18 +1,6 @@
-import {
-  Button,
-  DescriptionList,
-  DescriptionListData,
-  DescriptionListTag,
-  Icon,
-  InputGroup,
-  InputPassword,
-  InputText,
-} from "@nccl/components";
-import { makeColor, makeRem } from "@nccl/theme";
-import { Fragment, useState } from "react";
+import { Button, InputGroup, InputPassword, InputText } from "@nccl/components";
+import { useState } from "react";
 import type { AcceptInviteRequest } from "@nccl/api/client";
-import { passwordRules } from "@nccl/api/client";
-import { css } from "@linaria/core";
 import {
   Form,
   useActionData,
@@ -24,29 +12,10 @@ import { AuthPage } from "./AuthPage";
 import { AuthPageHeader } from "./AuthPageHeader";
 import { AuthPageBody } from "./AuthPageBody";
 import { AuthPageFooter } from "./AuthPageFooter";
+import { AuthPasswordMeter } from "./AuthFieldPassword";
 
 import { PageHeader } from "../../components/page";
 import { getValidationErrors } from "../../utils/client";
-
-const styles = css`
-  padding: ${makeRem(16)};
-  border-radius: ${makeRem(8)};
-  gap: ${makeRem(4)};
-  border: 1px solid ${makeColor("light-500")};
-
-  dt {
-    & > div {
-      display: grid;
-      place-content: center;
-      height: 100%;
-      width: 100%;
-    }
-  }
-
-  dd {
-    margin-left: ${makeRem(16)};
-  }
-`;
 
 export function AuthAcceptInviteValid({ email }: { email: string }) {
   const [password, setPassword] = useState("");
@@ -101,28 +70,7 @@ export function AuthAcceptInviteValid({ email }: { email: string }) {
               }
               autoComplete="current-password"
             />
-            <DescriptionList className={styles}>
-              {passwordRules.map((rule) => {
-                const passed = rule.test(password);
-                return (
-                  <Fragment key={rule.label}>
-                    <DescriptionListTag key="label">
-                      <div>
-                        <Icon
-                          dxIcon={
-                            passed
-                              ? "checkmark-circle-02-solid-standard"
-                              : "cancel-01-stroke-standard"
-                          }
-                          dxColor={passed ? "success" : "danger"}
-                        />
-                      </div>
-                    </DescriptionListTag>
-                    <DescriptionListData>{rule.label}</DescriptionListData>
-                  </Fragment>
-                );
-              })}
-            </DescriptionList>
+            <AuthPasswordMeter password={password} />
             {/* <InputCheckbox dxLabelOrientation="after">
           <InputLabel dxNode="div" dxLabel="I agree to the Terms and Privacy" />
         </InputCheckbox> */}
