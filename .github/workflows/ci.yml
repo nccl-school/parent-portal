@@ -33,8 +33,6 @@ jobs:
           echo SUPER_USER_EMAIL=${{ secrets.SUPER_USER_EMAIL }} >> .env
           echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
 
-      # Validates that all of necessary env vars have been loaded into the environment\
-
       - name: Enable corepack
         run: corepack enable
 
@@ -47,14 +45,6 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
-      - name: Validate env
-        run: |
-          yarn turbo run build --filter @nccl/env
-          yarn validate:ci
-        env:
-          TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
-          TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
-
       - name: Build
         run: yarn build
         env:
@@ -65,16 +55,8 @@ jobs:
         shell: bash
         run: yarn workspaces focus --production --all
 
-      - name: Start containers
-        run: docker compose -f=docker-compose.spec.yml --progress plain up -d
-
-      - name: Pause for containers
-        run: |
-          docker compose wait
-
-      - name: Reset and seed DB
-        working-directory: packages/api
-        run: docker compose -f=docker-compose.spec.yml exec -T api yarn prisma migrate reset --force --skip-generate
+      - name: Setup e2e environment
+        run: yarn e2e:up
 
       - name: Run API tests
         run: yarn playwright test
