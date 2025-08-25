@@ -23,14 +23,10 @@ jobs:
       environment: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
       node_version: ${{ steps.db.outputs.node_version }}
     steps:
-      - name: Read Node.js Version
-        id: node_version
-        run: echo "node_version=$(cat .nvmrc)" >> $GITHUB_ENV
-
-      - name: Set Up Node.js
+      - name: Set Up node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ needs.setup.outputs.node_version }}
+          node-version-file: .nvmrc
           cache: "yarn"
 
       - name: Verify environment variables & secrets
@@ -155,7 +151,7 @@ jobs:
       - name: Set Up node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ needs.setup.outputs.node_version }}
+          node-version-file: .nvmrc
           cache: "yarn"
 
       - name: Install dependencies

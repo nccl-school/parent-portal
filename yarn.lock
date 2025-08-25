@@ -3527,7 +3527,7 @@ __metadata:
     better-auth: "npm:^1.3.7"
     bufferutil: "npm:4.0.9"
     date-fns: "npm:^4.1.0"
-    dotenv: "npm:^17.2.1"
+    dotenv: "npm:17.2.1"
     dotenv-cli: "npm:10.0.0"
     esbuild: "npm:0.25.9"
     esbuild-node-externals: "npm:1.18.0"
