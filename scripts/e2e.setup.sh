@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT_DIR=$(dirname "$(realpath "$0")")
 
 echo "⏳ Loading Environment..."
-node ./scripts/load-e2e-env.js
+node ./scripts/e2e.setup-environment.js
 
 # # Start containers in the background
 echo "🚀 Starting Docker services..."
@@ -16,6 +16,3 @@ echo "⏳ Waiting for DB and API to be healthy..."
 docker compose wait # or implement healthcheck poll
 
 # # Run migrations and seeding inside the API container
-# echo "🛠️ Running migrations and seed..."
-# cd packages/api
-# yarn prisma migrate reset --force --skip-generate
