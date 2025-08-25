@@ -1,10 +1,9 @@
 import { ENV_RUNTIME } from "@nccl/env";
 
 import { PrismaClient } from "./_generated/prisma/client.js";
-
-import { seedRoles } from "../seed/seed.roles.js";
-import { seedSuperUser } from "../seed/seed.super-user.js";
-import { seedResource } from "../seed/seed.resource.js";
+import { seedRoles } from "./seed/seed.roles.js";
+import { seedSuperUser } from "./seed/seed.super-user.js";
+import { seedResource } from "./seed/seed.resource.js";
 
 ENV_RUNTIME.load();
 
