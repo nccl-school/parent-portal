@@ -52,11 +52,12 @@ export async function ensureSession<T extends LoaderFunctionArgs>(args: T) {
   const ncclClient = getNCCLClient(args);
 
   const session = await ncclClient.auth.getSession();
-  if (!session) {
-    console.log("No session and no error. The user needs to sign in");
+  if (!session?.session) {
+    console.log("The user needs to sign in");
     const url = new URL(args.request.url);
     throw redirect(href(`/sign-in`).concat(`?redirect_url=${url.toString()}`));
   }
+
   console.log("User has session and is signed in");
 
   return session;

@@ -42,7 +42,7 @@ export default function DirectoryAll({ loaderData }: Route.ComponentProps) {
           ),
           ok: (d) => {
             return d.map((user) => (
-              <TableRow>
+              <TableRow key={user.id}>
                 <TableBodyCol>
                   <DirectoryAllCellPerson {...user} />
                 </TableBodyCol>

@@ -117,15 +117,27 @@ export class ApiClient {
     params,
     body,
     method,
+    options,
   }: {
     path: string;
     method: "POST" | "PUT" | "POST" | "GET" | "PATCH";
     params?: [schema: P, data: z.infer<P>];
     body?: [schema: B, data: z.infer<B>];
+    options?: {
+      contentType?: "application/json";
+      headers?: Headers;
+    };
   }): Promise<Response> {
     // Assemble the request
     const headers = this.#requestHeaders;
-    headers.set("content-type", "application/json");
+    if (options?.contentType) {
+      headers.set("content-type", options.contentType);
+    }
+    if (options?.headers) {
+      for (const [headerKey, headerValue] of headers) {
+        headers.set(headerKey, headerValue);
+      }
+    }
 
     // Assemble the URL
     const pathname = this.#makePathname(path, params);
@@ -165,7 +177,13 @@ export class ApiClient {
     body?: [schema: B, data: z.infer<B>];
     method: "POST" | "PUT";
   }): Promise<T> {
-    const res = await this._request({ path, params, body, method });
+    const res = await this._request({
+      path,
+      params,
+      body,
+      method,
+      options: { contentType: "application/json" },
+    });
     const json = (await res.json()) as T;
     if (!res.ok) throw deserializeError(json, method);
     return json;

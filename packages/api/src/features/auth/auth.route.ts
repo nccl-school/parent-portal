@@ -4,7 +4,7 @@ import { auth as betterAuth } from "../../auth.js";
 
 export const auth = new Hono();
 
-// const res = await betterAuth.api.getSession({
+// const res = await betterAuth.api.signOut({
 
 // })
 auth.get("/session", async (c) => {

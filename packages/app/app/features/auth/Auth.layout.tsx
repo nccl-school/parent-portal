@@ -5,7 +5,7 @@ import { Outlet, redirect } from "react-router";
 
 import type { Route } from "./+types/Auth.layout";
 
-import { getAuthClient } from "../../utils/server";
+import { getNCCLClient } from "../../utils/server";
 import { backgroundGradient } from "../../utils/isomorphic";
 
 const styles = css`
@@ -60,9 +60,10 @@ const styles = css`
 `;
 
 export async function loader(args: Route.LoaderArgs) {
-  const authClient = getAuthClient(args);
-  const res = await authClient.getSession();
-  if (res.data?.session) {
+  const ncclClient = getNCCLClient(args);
+  const res = await ncclClient.auth.getSession();
+  console.log(res);
+  if (res?.session) {
     console.log("User is already signed in. Redirecting to home");
     throw redirect("/");
   }

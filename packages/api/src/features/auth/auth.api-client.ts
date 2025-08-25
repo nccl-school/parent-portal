@@ -19,6 +19,9 @@ export class AuthClient extends ApiClient {
       path: "/sign-in/email",
       method: "POST",
       body: [AuthSignInEmailRequestSchema, body],
+      options: {
+        contentType: "application/json",
+      },
     });
   }
 
