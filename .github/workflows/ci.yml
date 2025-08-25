@@ -16,6 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Create the base env file for the build
       - name: Create .env file
         run: |
           touch .env
@@ -53,6 +54,9 @@ jobs:
         shell: bash
         run: yarn workspaces focus --production --all
 
+      # Part of the setup script is to read values off
+      # of the base env file to create a new .env.spec
+      # to be able to create the test environment
       - name: Setup e2e environment
         run: yarn e2e:up
 

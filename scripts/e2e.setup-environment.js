@@ -1,11 +1,9 @@
 import path from "node:path";
 import { writeFile } from "node:fs/promises";
 
-import { ENV_RUNTIME, ENV_TEST, ENV_CI } from "@nccl/env";
+import { ENV_RUNTIME, ENV_TEST } from "@nccl/env";
 
 console.log("Validating env vars");
-// Validate CI right out of the gate for caching purposes
-ENV_CI.validate();
 
 // Set some variables based upon known values
 // and some implicit env vars
