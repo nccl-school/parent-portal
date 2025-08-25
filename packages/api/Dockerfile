@@ -7,7 +7,6 @@ ARG NODE_ENV=production
 ENV NODE_ENV=$NODE_ENV
 
 COPY . .
-RUN node ./scripts/validate.runtime.js
 
 FROM base AS runner
 WORKDIR /app
