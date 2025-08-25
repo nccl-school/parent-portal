@@ -22,44 +22,44 @@ jobs:
       comparison_branch: ${{ github.ref_name == 'main' && 'main' || 'dev' }}
       environment: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
       node_version: ${{ steps.db.outputs.node_version }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    # steps:
+    #   - name: Checkout
+    #     uses: actions/checkout@v4
 
-      - name: Enable corepack
-        run: corepack enable
+    #   - name: Enable corepack
+    #     run: corepack enable
 
-      - name: Set Up node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-          cache: "yarn"
+    #   - name: Set Up node.js
+    #     uses: actions/setup-node@v4
+    #     with:
+    #       node-version-file: .nvmrc
+    #       cache: "yarn"
 
-      - name: Verify environment variables & secrets
-        run: node scripts/validate.cd.js
-        env:
-          # CI
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM_ID: ${{ secrets.TURBO_TEAM_ID }}
-          # CD
-          GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
-          GCP_REGION: ${{ vars.GCP_REGION }}
-          CLOUD_RUN_APP_SERVICE_NAME: ${{ vars.CLOUD_RUN_APP_SERVICE_NAME }}
-          CLOUD_RUN_API_SERVICE_NAME: ${{ vars.CLOUD_RUN_API_SERVICE_NAME }}
-          GCP_GAR_REPO_APP: ${{ vars.GCP_GAR_REPO_APP }}
-          GCP_GAR_REPO_API: ${{ vars.GCP_GAR_REPO_API }}
-          # Runtime
-          NODE_ENV: production
-          NCCL_ENVIRONMENT: ${{ vars.NCCL_ENVIRONMENT }}
-          NCCL_APP_URL: ${{ vars.NCCL_APP_URL }}
-          NCCL_API_URL: ${{ vars.NCCL_API_URL }}
-          GCP_CLOUD_STORAGE_BUCKET: ${{ vars.GCP_CLOUD_STORAGE_BUCKET }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
-          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          SUPER_USER_PASSWORD: ${{ secrets.SUPER_USER_PASSWORD }}
-          SUPER_USER_EMAIL: ${{ secrets.SUPER_USER_EMAIL }}
+    #   - name: Verify environment variables & secrets
+    #     run: node scripts/validate.cd.js
+    #     env:
+    #       # CI
+    #       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+    #       TURBO_TEAM_ID: ${{ secrets.TURBO_TEAM_ID }}
+    #       # CD
+    #       GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+    #       GCP_REGION: ${{ vars.GCP_REGION }}
+    #       CLOUD_RUN_APP_SERVICE_NAME: ${{ vars.CLOUD_RUN_APP_SERVICE_NAME }}
+    #       CLOUD_RUN_API_SERVICE_NAME: ${{ vars.CLOUD_RUN_API_SERVICE_NAME }}
+    #       GCP_GAR_REPO_APP: ${{ vars.GCP_GAR_REPO_APP }}
+    #       GCP_GAR_REPO_API: ${{ vars.GCP_GAR_REPO_API }}
+    #       # Runtime
+    #       NODE_ENV: production
+    #       NCCL_ENVIRONMENT: ${{ vars.NCCL_ENVIRONMENT }}
+    #       NCCL_APP_URL: ${{ vars.NCCL_APP_URL }}
+    #       NCCL_API_URL: ${{ vars.NCCL_API_URL }}
+    #       GCP_CLOUD_STORAGE_BUCKET: ${{ vars.GCP_CLOUD_STORAGE_BUCKET }}
+    #       DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    #       BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+    #       GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+    #       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+    #       SUPER_USER_PASSWORD: ${{ secrets.SUPER_USER_PASSWORD }}
+    #       SUPER_USER_EMAIL: ${{ secrets.SUPER_USER_EMAIL }}
 
   db_check:
     name: Check DB

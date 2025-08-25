@@ -3599,7 +3599,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@nccl/env@npm:0.0.1, @nccl/env@workspace:*, @nccl/env@workspace:packages/env":
+"@nccl/env@npm:0.0.1, @nccl/env@workspace:*, @nccl/env@workspace:^, @nccl/env@workspace:packages/env":
   version: 0.0.0-use.local
   resolution: "@nccl/env@workspace:packages/env"
   dependencies:
@@ -13416,7 +13416,7 @@ __metadata:
   dependencies:
     "@gfdigital/eslint-config": "npm:0.4.3"
     "@gfdigital/tsconfig": "npm:0.3.1"
-    "@nccl/env": "npm:0.0.1"
+    "@nccl/env": "workspace:^"
     "@playwright/test": "npm:1.55.0"
     "@types/node": "npm:24.3.0"
     dotenv: "npm:17.2.1"
