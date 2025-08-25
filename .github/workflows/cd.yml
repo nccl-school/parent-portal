@@ -1,14 +1,14 @@
 name: CD
 
-on:
-  push:
-    branches:
-      - dev
-
 # on:
-#   pull_request:
+#   push:
 #     branches:
 #       - dev
+
+on:
+  pull_request:
+    branches:
+      - dev
 
 jobs:
   setup:
@@ -17,8 +17,8 @@ jobs:
     environment:
       name: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
     outputs:
-      api_image_name: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_GAR_REPO_API }}/${{ vars.GCP_CLOUDRUN_SERVICE_API }}
-      app_image_name: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_GAR_REPO_APP }}/${{ vars.GCP_CLOUDRUN_SERVICE_APP }}
+      api_image_name: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_GAR_REPO_API }}/${{ vars.CLOUD_RUN_API_SERVICE_NAME }}
+      app_image_name: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_GAR_REPO_APP }}/${{ vars.CLOUD_RUN_APP_SERVICE_NAME }}
       comparison_branch: ${{ github.ref_name == 'main' && 'main' || 'dev' }}
       environment: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
       node_version: ${{ steps.db.outputs.node_version }}
@@ -30,7 +30,7 @@ jobs:
           cache: "yarn"
 
       - name: Verify environment variables & secrets
-        run: node scripts/validate-env.js
+        run: node scripts/validate.cd.js
         env:
           # CI
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
@@ -43,20 +43,17 @@ jobs:
           GCP_GAR_REPO_APP: ${{ vars.GCP_GAR_REPO_APP }}
           GCP_GAR_REPO_API: ${{ vars.GCP_GAR_REPO_API }}
           # Runtime
-          NODE_ENV: ${{ vars.NODE_ENV }}
+          NODE_ENV: production
           NCCL_ENVIRONMENT: ${{ vars.NCCL_ENVIRONMENT }}
           NCCL_APP_URL: ${{ vars.NCCL_APP_URL }}
           NCCL_API_URL: ${{ vars.NCCL_API_URL }}
           GCP_CLOUD_STORAGE_BUCKET: ${{ vars.GCP_CLOUD_STORAGE_BUCKET }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
           BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-          SUPER_USER_EMAIL: ${{ secrets.SUPER_USER_EMAIL }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           SUPER_USER_PASSWORD: ${{ secrets.SUPER_USER_PASSWORD }}
-          SUPER_USER_NAME: ${{ secrets.SUPER_USER_NAME }}
-          SUPER_USER_IMAGE_URL: ${{ secrets.SUPER_USER_IMAGE_URL }}
+          SUPER_USER_EMAIL: ${{ secrets.SUPER_USER_EMAIL }}
 
   db_check:
     name: Check DB
@@ -266,26 +263,32 @@ jobs:
         uses: "google-github-actions/deploy-cloudrun@v2"
         with:
           project_id: ${{ vars.GCP_PROJECT_ID }}
-          service: ${{ vars.GCP_CLOUDRUN_SERVICE_API }}
+          service: ${{ vars.CLOUD_RUN_APP_SERVICE_NAME }}
           image: ${{ needs.setup.outputs.api_image_name }}
           region: ${{ vars.GCP_REGION }}
           env_vars: |-
-            NODE_ENV=production
-            NCCL_APP_URL=${{ vars.NCCL_APP_URL }}
-            NCCL_API_URL=${{ vars.NCCL_API_URL }}
-            DATABASE_URL=${{ secrets.DATABASE_URL }}
-            GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}
+            NCCL_ENVIRONMENT: ${{ vars.NCCL_ENVIRONMENT }}
+            NCCL_APP_URL: ${{ vars.NCCL_APP_URL }}
+            NCCL_API_URL: ${{ vars.NCCL_API_URL }}
+            GCP_CLOUD_STORAGE_BUCKET: ${{ vars.GCP_CLOUD_STORAGE_BUCKET }}
+            DATABASE_URL: ${{ secrets.DATABASE_URL }}
+            BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+            GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+            RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
       - name: Deploy App to Cloudrun
         uses: "google-github-actions/deploy-cloudrun@v2"
         with:
           project_id: ${{ vars.GCP_PROJECT_ID }}
-          service: ${{ vars.GCP_CLOUDRUN_SERVICE_APP }}
+          service: ${{ vars.CLOUD_RUN_APP_SERVICE_NAME }}
           image: ${{ needs.setup.outputs.app_image_name }}
           region: ${{ vars.GCP_REGION }}
           env_vars: |-
-            NODE_ENV=production
-            NCCL_APP_URL=${{ vars.NCCL_APP_URL }}
-            NCCL_API_URL=${{ vars.NCCL_API_URL }}
-            DATABASE_URL=${{ secrets.DATABASE_URL }}
-            GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}
+            NCCL_ENVIRONMENT: ${{ vars.NCCL_ENVIRONMENT }}
+            NCCL_APP_URL: ${{ vars.NCCL_APP_URL }}
+            NCCL_API_URL: ${{ vars.NCCL_API_URL }}
+            GCP_CLOUD_STORAGE_BUCKET: ${{ vars.GCP_CLOUD_STORAGE_BUCKET }}
+            DATABASE_URL: ${{ secrets.DATABASE_URL }}
+            BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+            GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+            RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
