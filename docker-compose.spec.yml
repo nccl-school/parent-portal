@@ -13,6 +13,16 @@ services:
       timeout: 5s
       retries: 5
 
+  migrate:
+    build:
+      context: .
+      dockerfile: packages/api/Dockerfile.spec-migrate
+    env_file:
+      - ./.env.spec
+    depends_on:
+      db:
+        condition: service_healthy
+
   api:
     build:
       context: .
@@ -22,8 +32,8 @@ services:
     env_file:
       - ./.env.spec
     depends_on:
-      db:
-        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     healthcheck:
       test:
         ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/health/ready || exit 1"]

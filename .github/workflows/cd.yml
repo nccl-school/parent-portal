@@ -5,6 +5,11 @@ on:
     branches:
       - dev
 
+# on:
+#   pull_request:
+#     branches:
+#       - dev
+
 jobs:
   setup:
     name: Setup
@@ -110,18 +115,14 @@ jobs:
       - name: Enable Corepack # Ensures the correct version of yarn is used
         run: corepack enable
 
-      - name: Set Up Node.js
+      - name: Set Up node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ needs.setup.outputs.node_version }}
+          node-version-file: .nvmrc
           cache: "yarn"
 
       - name: Install dependencies
         run: yarn install --immutable
-
-      - name: Generate Prisma client
-        working-directory: packages/api
-        run: npx prisma generate
 
       - name: Migrate DB
         working-directory: packages/api
