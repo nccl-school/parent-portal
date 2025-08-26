@@ -31,6 +31,12 @@ env:
   BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
   GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
   RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+  # TODO: New
+  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+  VITE_SENTRY_DSN_APP: ${{ secrets.VITE_SENTRY_DSN_APP }}
+  VITE_NCCL_ENVIRONMENT: ${{ secrets.VITE_NCCL_ENVIRONMENT }}
   # Seed
   SUPER_USER_PASSWORD: ${{ secrets.SUPER_USER_PASSWORD }}
   SUPER_USER_EMAIL: ${{ secrets.SUPER_USER_EMAIL }}
@@ -237,7 +243,7 @@ jobs:
         uses: "google-github-actions/deploy-cloudrun@v2"
         with:
           project_id: ${{ vars.GCP_PROJECT_ID }}
-          service: ${{ vars.GCP_CLOUDRUN_SERVICE_APP }}
+          service: ${{ vars.GCP_CLOUDRUN_SERVICE_API }}
           image: ${{ needs.setup.outputs.api_image_name }}
           region: ${{ vars.GCP_REGION }}
           env_vars: |-

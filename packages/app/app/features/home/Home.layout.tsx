@@ -16,7 +16,7 @@ export function getGreetingBanner(): string {
 }
 
 export async function loader(args: Route.LoaderArgs) {
-  return await ensureSession(args);
+  await ensureSession(args);
 }
 
 export default function HomeLayout() {

@@ -3,8 +3,8 @@ name: CI - Build & Test
 on:
   pull_request:
     branches:
-      # - dev
-      - N_A
+      - dev
+      # - N_A
 
 jobs:
   ci:
@@ -32,6 +32,11 @@ jobs:
           echo SUPER_USER_EMAIL=${{ secrets.SUPER_USER_EMAIL }} >> .env
           echo SUPER_USER_PASSWORD=${{ secrets.SUPER_USER_PASSWORD }} >> .env
           echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+          echo SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} >> .env
+          echo SENTRY_ORG=${{ secrets.SENTRY_ORG }} >> .env
+          echo SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }} >> .env
+          echo VITE_SENTRY_DSN_APP=${{ secrets.VITE_SENTRY_DSN_APP }} >> .env
+          echo VITE_NCCL_ENVIRONMENT=${{ secrets.VITE_NCCL_ENVIRONMENT }} >> .env
 
       - name: Enable corepack
         run: corepack enable

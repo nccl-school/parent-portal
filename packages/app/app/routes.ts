@@ -105,4 +105,5 @@ export default [
   ]),
   // test
   // route("/", "./features/test/Test.route.tsx"),
+  route("/test-error", "./features/test/TestError.route.tsx"),
 ] satisfies RouteConfig;

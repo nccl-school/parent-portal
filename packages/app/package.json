@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "yarn typecheck && react-router build",
-    "dev": "NODE_ENV=development PORT=5173 node server.js",
+    "dev": "NODE_ENV=development PORT=5173 NODE_OPTIONS='--import ./server.instrumentation.js' node server.js",
     "start": "node server.js",
     "typecheck": "react-router typegen && tsc -b",
     "clean": "rm -rf .react-router .vite dist node_modules/.cache;"
@@ -17,6 +17,7 @@
     "@nccl/theme": "0.0.1",
     "@react-router/express": "7.8.1",
     "@react-router/node": "7.8.1",
+    "@sentry/react-router": "^10.5.0",
     "@stratum-ui/core": "0.2.0",
     "better-auth": "^1.3.7",
     "compression": "1.8.1",

@@ -55,6 +55,7 @@ export async function ensureSession<T extends LoaderFunctionArgs>(args: T) {
   if (!session?.session) {
     console.log("The user needs to sign in");
     const url = new URL(args.request.url);
+    console.log("Redirecting to sign in");
     throw redirect(href(`/sign-in`).concat(`?redirect_url=${url.toString()}`));
   }
 
