@@ -24,7 +24,7 @@ COPY --from=builder --chown=app-user:nodejs /app/packages/app/build             
 COPY --from=builder --chown=app-user:nodejs /app/packages/app/server.js                     /app/server.js
 COPY --from=builder --chown=app-user:nodejs /app/packages/app/server.instrumentation.js     /app/server.instrumentation.js
 COPY --from=builder --chown=app-user:nodejs /app/packages/app/package.json                  /app/package.json
-COPY --from=builder --chown=app-user:nodejs /app/package.json                               /app/package.json
+# COPY --from=builder --chown=app-user:nodejs /app/package.json                               /app/package.json
 COPY --from=builder --chown=app-user:nodejs /app/yarn.lock                                  /app/yarn.lock
 
 USER app-user
