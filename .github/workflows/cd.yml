@@ -142,7 +142,7 @@ jobs:
             SENTRY_DSN_API=${{ vars.SENTRY_DSN_API }}
             SENTRY_ENABLED=${{ vars.SENTRY_ENABLED }}
 
-      - name: Deploy [App] to Cloudrun
+      - name: Deploy [APP] to Cloudrun
         uses: "google-github-actions/deploy-cloudrun@v2"
         with:
           project_id: ${{ vars.GCP_PROJECT_ID }}

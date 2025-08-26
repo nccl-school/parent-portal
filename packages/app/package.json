@@ -10,7 +10,6 @@
     "clean": "rm -rf .react-router .vite dist node_modules/.cache;"
   },
   "dependencies": {
-    "@highlight-run/remix": "^2.0.120",
     "@nccl/api": "0.0.1",
     "@nccl/components": "0.0.1",
     "@nccl/env": "0.0.1",
