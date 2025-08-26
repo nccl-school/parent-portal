@@ -257,7 +257,7 @@ jobs:
             BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }}
             GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}
             RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
-            SENTRY_AUTH_TOKEN=${{ vars.SENTRY_AUTH_TOKEN }}
+            SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
             SENTRY_ORG=${{ vars.SENTRY_ORG }}
             SENTRY_PROJECT_APP=${{ vars.SENTRY_PROJECT_APP }}
             SENTRY_PROJECT_API=${{ vars.SENTRY_PROJECT_API }}
@@ -281,7 +281,7 @@ jobs:
             BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }}
             GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}
             RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
-            SENTRY_AUTH_TOKEN=${{ vars.SENTRY_AUTH_TOKEN }}
+            SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
             SENTRY_ORG=${{ vars.SENTRY_ORG }}
             SENTRY_PROJECT_APP=${{ vars.SENTRY_PROJECT_APP }}
             SENTRY_PROJECT_API=${{ vars.SENTRY_PROJECT_API }}
