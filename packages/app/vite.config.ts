@@ -9,9 +9,11 @@ import {
 } from "@sentry/react-router";
 import { ENV_RUNTIME } from "@nccl/env";
 
+console.log("VITE", process.env);
+
 const SENTRY_ORG = ENV_RUNTIME.getOne("SENTRY_ORG");
-const SENTRY_PROJECT_APP = ENV_RUNTIME.getOne("SENTRY_PROJECT_APP");
 const SENTRY_AUTH_TOKEN = ENV_RUNTIME.getOne("SENTRY_AUTH_TOKEN");
+const SENTRY_PROJECT_APP = ENV_RUNTIME.getOne("SENTRY_PROJECT_APP");
 
 const sentryConfig: SentryReactRouterBuildOptions = {
   org: SENTRY_ORG,

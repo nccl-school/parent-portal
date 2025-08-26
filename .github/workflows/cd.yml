@@ -72,6 +72,10 @@ jobs:
 
       - name: Build monorepo
         run: yarn build
+        env:
+          TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
+          TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
+          SENTRY_PROJECT_APP: ${{ vars.SENTRY_PROJECT_APP }}
 
       - name: Validate environment
         run: node scripts/validate.cd.js
