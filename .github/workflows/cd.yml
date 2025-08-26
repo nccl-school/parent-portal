@@ -66,8 +66,8 @@ jobs:
       - name: Build monorepo
         run: yarn build
         env:
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM_ID: ${{ secrets.TURBO_TEAM_ID }}
+          TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
+          TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
       - name: Validate environment
         run: node scripts/validate.cd.js
@@ -92,6 +92,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Fetch comparison branch
         run: git fetch origin ${{ needs.setup.outputs.comparison_branch }}
@@ -115,6 +117,7 @@ jobs:
             echo "ℹ️ No changes to 'prisma/migrations/' — skipping DB migration."
             echo "should_migrate=false" >> $GITHUB_OUTPUT
           fi
+
   db_migrate:
     name: Migrate DB
     runs-on: ubuntu-latest
