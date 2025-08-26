@@ -30,7 +30,11 @@
         "TURBO_TEAM_ID",
         "SENTRY_AUTH_TOKEN",
         "SENTRY_ORG",
-        "SENTRY_PROJECT",
+        "SENTRY_PROJECT_APP",
+        "SENTRY_PROJECT_API",
+        "SENTRY_DSN_APP",
+        "SENTRY_DSN_API",
+        "SENTRY_ENABLED",
         "VITE_SENTRY_DSN_APP",
         "VITE_NCCL_ENVIRONMENT"
       ],
