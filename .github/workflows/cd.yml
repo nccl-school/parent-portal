@@ -17,8 +17,8 @@ jobs:
     environment:
       name: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
     outputs:
-      api_image_name: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_GAR_REPO_API }}/${{ vars.CLOUD_RUN_API_SERVICE_NAME }}
-      app_image_name: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_GAR_REPO_APP }}/${{ vars.CLOUD_RUN_APP_SERVICE_NAME }}
+      api_image_name: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_ARTIFACT_REGISTRY_API }}/${{ vars.GCP_CLOUDRUN_SERVICE_API }}
+      app_image_name: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_ARTIFACT_REGISTRY_APP }}/${{ vars.GCP_CLOUDRUN_SERVICE_APP }}
       comparison_branch: ${{ github.ref_name == 'main' && 'main' || 'dev' }}
       environment: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
       # node_version: ${{ steps.db.outputs.node_version }}
@@ -37,9 +37,6 @@ jobs:
 
       - name: "Install dependencies"
         run: yarn install --immutable
-        env:
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM_ID: ${{ secrets.TURBO_TEAM_ID }}
 
       - name: Validate environment
         run: |
@@ -52,10 +49,10 @@ jobs:
           # CD
           GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
           GCP_REGION: ${{ vars.GCP_REGION }}
-          CLOUD_RUN_APP_SERVICE_NAME: ${{ vars.CLOUD_RUN_APP_SERVICE_NAME }}
-          CLOUD_RUN_API_SERVICE_NAME: ${{ vars.CLOUD_RUN_API_SERVICE_NAME }}
-          GCP_GAR_REPO_APP: ${{ vars.GCP_GAR_REPO_APP }}
-          GCP_GAR_REPO_API: ${{ vars.GCP_GAR_REPO_API }}
+          GCP_CLOUDRUN_SERVICE_APP: ${{ vars.GCP_CLOUDRUN_SERVICE_APP }}
+          GCP_CLOUDRUN_SERVICE_API: ${{ vars.GCP_CLOUDRUN_SERVICE_API }}
+          GCP_ARTIFACT_REGISTRY_APP: ${{ vars.GCP_ARTIFACT_REGISTRY_APP }}
+          GCP_ARTIFACT_REGISTRY_API: ${{ vars.GCP_ARTIFACT_REGISTRY_API }}
           # Runtime
           NODE_ENV: production
           NCCL_ENVIRONMENT: ${{ vars.NCCL_ENVIRONMENT }}
@@ -277,7 +274,7 @@ jobs:
         uses: "google-github-actions/deploy-cloudrun@v2"
         with:
           project_id: ${{ vars.GCP_PROJECT_ID }}
-          service: ${{ vars.CLOUD_RUN_APP_SERVICE_NAME }}
+          service: ${{ vars.GCP_CLOUDRUN_SERVICE_APP }}
           image: ${{ needs.setup.outputs.api_image_name }}
           region: ${{ vars.GCP_REGION }}
           env_vars: |-
@@ -294,7 +291,7 @@ jobs:
         uses: "google-github-actions/deploy-cloudrun@v2"
         with:
           project_id: ${{ vars.GCP_PROJECT_ID }}
-          service: ${{ vars.CLOUD_RUN_APP_SERVICE_NAME }}
+          service: ${{ vars.GCP_CLOUDRUN_SERVICE_APP }}
           image: ${{ needs.setup.outputs.app_image_name }}
           region: ${{ vars.GCP_REGION }}
           env_vars: |-

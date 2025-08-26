@@ -37,10 +37,10 @@ export const ENV_CD = new Supermenv({
         "The region the API and the App containers are deployed to within GCP",
     },
     // env|vars
-    CLOUD_RUN_APP_SERVICE_NAME: { type: "string" },
-    CLOUD_RUN_API_SERVICE_NAME: { type: "string" },
-    GCP_GAR_REPO_APP: { type: "string" },
-    GCP_GAR_REPO_API: { type: "string" },
+    GCP_CLOUDRUN_SERVICE_APP: { type: "string" },
+    GCP_CLOUDRUN_SERVICE_API: { type: "string" },
+    GCP_ARTIFACT_REGISTRY_APP: { type: "string" },
+    GCP_ARTIFACT_REGISTRY_API: { type: "string" },
   },
 });
 
