@@ -148,9 +148,13 @@ export const ENV_RUNTIME = new Supermenv({
       type: "string",
       description: "The sentry org that houses the project",
     },
-    SENTRY_PROJECT: {
+    SENTRY_PROJECT_APP: {
       type: "string",
-      description: "The sentry project in which to log errors",
+      description: "The sentry project for the web app in which to log errors",
+    },
+    SENTRY_PROJECT_API: {
+      type: "string",
+      description: "The sentry project for the hono api in which to log errors",
     },
     SENTRY_AUTH_TOKEN: {
       type: "string",
@@ -161,6 +165,11 @@ export const ENV_RUNTIME = new Supermenv({
       type: "string",
       description:
         "The Sentry DSN required to init the client and instrumentation for the react router app.",
+    },
+    SENTRY_DSN_API: {
+      type: "string",
+      description:
+        "The Sentry DSN required to init the client and instrumentation for the hono api.",
     },
     SENTRY_ENABLED: {
       type: "boolean",

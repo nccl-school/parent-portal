@@ -10,12 +10,12 @@ import {
 import { ENV_RUNTIME } from "@nccl/env";
 
 const SENTRY_ORG = ENV_RUNTIME.getOne("SENTRY_ORG");
-const SENTRY_PROJECT = ENV_RUNTIME.getOne("SENTRY_PROJECT");
+const SENTRY_PROJECT_APP = ENV_RUNTIME.getOne("SENTRY_PROJECT_APP");
 const SENTRY_AUTH_TOKEN = ENV_RUNTIME.getOne("SENTRY_AUTH_TOKEN");
 
 const sentryConfig: SentryReactRouterBuildOptions = {
   org: SENTRY_ORG,
-  project: SENTRY_PROJECT,
+  project: SENTRY_PROJECT_APP,
   authToken: SENTRY_AUTH_TOKEN,
 };
 

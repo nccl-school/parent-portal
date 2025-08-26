@@ -1,11 +1,15 @@
 import type { Config } from "@react-router/dev/config";
-import { sentryOnBuildEnd } from "@sentry/react-router";
+import { ENV_RUNTIME } from "@nccl/env";
 
 export default {
   ssr: true,
   buildEnd: async ({ viteConfig, reactRouterConfig, buildManifest }) => {
-    // ...
-    // Call this at the end of the hook
-    await sentryOnBuildEnd({ viteConfig, reactRouterConfig, buildManifest });
+    if (!ENV_RUNTIME.getOne("SENTRY_ENABLED")) return;
+    const Sentry = await import("@sentry/react-router");
+    await Sentry.sentryOnBuildEnd({
+      viteConfig,
+      reactRouterConfig,
+      buildManifest,
+    });
   },
 } satisfies Config;

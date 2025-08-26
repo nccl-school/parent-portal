@@ -111,7 +111,7 @@ export class Supermenv<T extends Record<string, SupermenvVarValue>> {
   getOne<K extends keyof T>(key: K) {
     this.#log(`Getting envVar "${String(key)}"`);
     const envVar = this.#envVars[key];
-    if (!envVar) {
+    if (envVar == null || envVar === "") {
       throw new Error(
         pc.red(`[${this.#name}] "${String(key)}" has not been set.`)
       );
@@ -153,7 +153,8 @@ export class Supermenv<T extends Record<string, SupermenvVarValue>> {
     }
     this.#setEnvVar(envKey, undefined);
 
-    const isNullishOrEmpty = envValue == null || envValue === "";
+    const isNullishOrEmpty =
+      typeof envValue === "undefined" || envValue === null || envValue === "";
 
     if (isNullishOrEmpty) {
       return {
