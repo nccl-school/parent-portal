@@ -2496,43 +2496,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@highlight-run/node@npm:3.12.21":
-  version: 3.12.21
-  resolution: "@highlight-run/node@npm:3.12.21"
-  dependencies:
-    "@prisma/instrumentation": "npm:>=5.0.0"
-    highlight.run: "npm:9.19.1"
-    require-in-the-middle: "npm:^7.4.0"
-  checksum: 10c0/d5dcc4ec38cd78b8112b7ef03bdb3cea3d1efe8c6fd5fe7225ab8615a0c42daad110b25d450d13931b5c89b900251fcc743695cecc911ec9d2c81510cfe3781b
-  languageName: node
-  linkType: hard
-
-"@highlight-run/react@npm:20.0.1":
-  version: 20.0.1
-  resolution: "@highlight-run/react@npm:20.0.1"
-  peerDependencies:
-    highlight.run: 9.19.1
-    react: ">=16"
-    react-dom: ">=16"
-  checksum: 10c0/6dd8c62b97652fa37989de5cf74a1ad395480d6b61c6cca6350f4e295fe1d641479e20410204669c56d33f18d358f6734d7f2e6b4b6f43799888c3abbd704590
-  languageName: node
-  linkType: hard
-
-"@highlight-run/remix@npm:^2.0.120":
-  version: 2.0.120
-  resolution: "@highlight-run/remix@npm:2.0.120"
-  dependencies:
-    "@highlight-run/node": "npm:3.12.21"
-    "@highlight-run/react": "npm:20.0.1"
-    "@opentelemetry/instrumentation": "npm:>=0.53.0"
-    highlight.run: "npm:9.19.1"
-    js-cookie: "npm:^3.0.5"
-  peerDependencies:
-    react: ">=18"
-  checksum: 10c0/aab7ccc5b3f998a046f1a16562d476c91531fe4c01cf04ce2780b3c47042882bcf01888bff53648766ddf432e4ee61f1fd6d4851714d956c0712360e5961034b
-  languageName: node
-  linkType: hard
-
 "@hono/node-server@npm:1.19.0":
   version: 1.19.0
   resolution: "@hono/node-server@npm:1.19.0"
@@ -3366,31 +3329,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@launchdarkly/js-client-sdk-common@npm:1.13.0":
-  version: 1.13.0
-  resolution: "@launchdarkly/js-client-sdk-common@npm:1.13.0"
-  dependencies:
-    "@launchdarkly/js-sdk-common": "npm:2.17.0"
-  checksum: 10c0/3ef0c4f753a485802010b3406ec49316a43eca1770101caf8f2ee698c1b17323ad76f193007993345f96c1da82b2acf1705e7c8739fef42a25cf0ef268953b07
-  languageName: node
-  linkType: hard
-
-"@launchdarkly/js-client-sdk@npm:^0.6.0":
-  version: 0.6.0
-  resolution: "@launchdarkly/js-client-sdk@npm:0.6.0"
-  dependencies:
-    "@launchdarkly/js-client-sdk-common": "npm:1.13.0"
-  checksum: 10c0/047fc59dc6f5090667ed1c904a7cc62c09febb7ae1371a36ad5a9d26beeb5133868ea148ed2ac18280b76de90fcdc1987754b0cd64e9d428489dd2845cf46156
-  languageName: node
-  linkType: hard
-
-"@launchdarkly/js-sdk-common@npm:2.17.0":
-  version: 2.17.0
-  resolution: "@launchdarkly/js-sdk-common@npm:2.17.0"
-  checksum: 10c0/5e85edf847d7cf6ee62af79dd9f11019e0a58070355a3fac576e5c7e5051f4c7f313ba9d64f3b6659a5ca175a7ee55307ddda43dabb8a670e0647c6acdb1cc6f
-  languageName: node
-  linkType: hard
-
 "@levischuck/tiny-cbor@npm:^0.2.2":
   version: 0.2.11
   resolution: "@levischuck/tiny-cbor@npm:0.2.11"
@@ -3625,7 +3563,6 @@ __metadata:
     "@babel/preset-react": "npm:7.27.1"
     "@babel/preset-typescript": "npm:7.27.1"
     "@gfdigital/tsconfig": "npm:0.3.1"
-    "@highlight-run/remix": "npm:^2.0.120"
     "@linaria/core": "npm:6.3.0"
     "@nccl/api": "npm:0.0.1"
     "@nccl/components": "npm:0.0.1"
@@ -4213,7 +4150,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/instrumentation@npm:0.203.0, @opentelemetry/instrumentation@npm:>=0.53.0, @opentelemetry/instrumentation@npm:^0.203.0":
+"@opentelemetry/instrumentation@npm:0.203.0, @opentelemetry/instrumentation@npm:^0.203.0":
   version: 0.203.0
   resolution: "@opentelemetry/instrumentation@npm:0.203.0"
   dependencies:
@@ -4633,17 +4570,6 @@ __metadata:
   peerDependencies:
     "@opentelemetry/api": ^1.8
   checksum: 10c0/d79a0bcad5180ccf48f3388cf4c8e30aff83d152555207233639e46ae5862859f1cb012851abdaddfb18113d06018d33783b3f07523f4420e9207d1bc013356e
-  languageName: node
-  linkType: hard
-
-"@prisma/instrumentation@npm:>=5.0.0":
-  version: 6.14.0
-  resolution: "@prisma/instrumentation@npm:6.14.0"
-  dependencies:
-    "@opentelemetry/instrumentation": "npm:^0.52.0 || ^0.53.0 || ^0.54.0 || ^0.55.0 || ^0.56.0 || ^0.57.0"
-  peerDependencies:
-    "@opentelemetry/api": ^1.8
-  checksum: 10c0/aaf49b8ab48b780f697cee97d79345cff5d3a245a8d786ca6b29b1318e79bc7b26b26c3d2084f793afc939ea3af12ea2ac8bfaef6cd3163817d010b3b04d20ea
   languageName: node
   linkType: hard
 
@@ -12433,16 +12359,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"highlight.run@npm:9.19.1":
-  version: 9.19.1
-  resolution: "highlight.run@npm:9.19.1"
-  dependencies:
-    "@launchdarkly/js-client-sdk": "npm:^0.6.0"
-    imurmurhash: "npm:^0.1.4"
-  checksum: 10c0/1c78f2b99f154c76dd57edcbf49fcc3f49770307784554828029508638c8a878f8c9e8776c5cec28ae052b5d60a6f10c1a54399c5efeb0fc8ceb45e01bb8adee
-  languageName: node
-  linkType: hard
-
 "hoist-non-react-statics@npm:^3.3.2":
   version: 3.3.2
   resolution: "hoist-non-react-statics@npm:3.3.2"
@@ -13220,13 +13136,6 @@ __metadata:
   version: 1.1.4
   resolution: "jpeg-exif@npm:1.1.4"
   checksum: 10c0/0f9225b2423184d60c66b3d7361176801c17ede92fc9b3c044fcf00f379a5a1d424b360ecf0027dda47d405d253c7b62bf5b353fb08b2589e3650f38cc575e82
-  languageName: node
-  linkType: hard
-
-"js-cookie@npm:^3.0.5":
-  version: 3.0.5
-  resolution: "js-cookie@npm:3.0.5"
-  checksum: 10c0/04a0e560407b4489daac3a63e231d35f4e86f78bff9d792011391b49c59f721b513411cd75714c418049c8dc9750b20fcddad1ca5a2ca616c3aca4874cce5b3a
   languageName: node
   linkType: hard
 
@@ -16136,7 +16045,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"require-in-the-middle@npm:^7.1.1, require-in-the-middle@npm:^7.4.0":
+"require-in-the-middle@npm:^7.1.1":
   version: 7.5.2
   resolution: "require-in-the-middle@npm:7.5.2"
   dependencies:

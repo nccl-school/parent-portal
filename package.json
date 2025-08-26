@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "description": "A collection of packages and libraries that comprise the NCCL parent portal",
   "type": "module",
-  "packageManager": "yarn@4.9.3",
+  "packageManager": "yarn@4.9.4",
   "author": "Drew DeCarme (drew@greenflash.digital)",
   "license": "MIT",
   "workspaces": {
