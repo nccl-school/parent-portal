@@ -1,7 +1,7 @@
 import path from "node:path";
 import { writeFile } from "node:fs/promises";
 
-import { ENV_RUNTIME, ENV_TEST } from "@nccl/env";
+import { ENV_RUNTIME, ENV_TEST, ENV_SEED } from "@nccl/env";
 
 console.log("Validating env vars");
 
@@ -34,12 +34,14 @@ ENV_RUNTIME.set("NCCL_API_URL", "http://api:8080"); // this is so the app can ca
 // have successfully been set and loaded
 ENV_RUNTIME.validate();
 ENV_TEST.validate();
+ENV_SEED.validate();
 
 const test = ENV_TEST.print();
 const run = ENV_RUNTIME.print();
+const seed = ENV_SEED.print();
 
 console.log(`Creating ".env.spec" file...`);
 const filePath = path.resolve(import.meta.dirname, "../.env.spec");
-const contents = `${test}\n${run}`;
+const contents = `${test}\n${run}\n${seed}`;
 await writeFile(filePath, contents, { encoding: "utf-8" });
 console.log(`Creating ".env.spec" file... done.`);

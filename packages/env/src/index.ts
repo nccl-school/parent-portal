@@ -4,6 +4,14 @@ import { Supermenv } from "supermenv";
 
 const dotEnvPaths = [path.resolve(import.meta.dirname, "../../../.env")];
 
+export const ENV_SEED = new Supermenv({
+  name: "SEED",
+  vars: {
+    SUPER_USER_EMAIL: { type: "email" },
+    SUPER_USER_PASSWORD: { type: "string" },
+  },
+});
+
 export const ENV_CI = new Supermenv({
   name: "CI",
   dotEnvPaths,
@@ -135,11 +143,5 @@ export const ENV_RUNTIME = new Supermenv({
       description:
         "The API key used to query various google services like Drive, Calendar, etc...",
     },
-    SUPER_USER_EMAIL: { type: "email" },
-    SUPER_USER_PASSWORD: { type: "string" },
   },
 });
-
-// TODO: Update e2e setup script (match with CI / make CI call the shell script (the latter))
-// TODO: Get tests working locally
-// TODO: Cleanup scripts to test

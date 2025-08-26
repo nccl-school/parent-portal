@@ -31,6 +31,7 @@ env:
   BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
   GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
   RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+  # Seed
   SUPER_USER_PASSWORD: ${{ secrets.SUPER_USER_PASSWORD }}
   SUPER_USER_EMAIL: ${{ secrets.SUPER_USER_EMAIL }}
 
@@ -97,12 +98,12 @@ jobs:
           echo "$CHANGED_FILES"
           echo
 
-          if echo "$CHANGED_FILES" | grep '^prisma/migrations/'; then
+          if printf '%s\n' "$CHANGED_FILES" | grep -q '^packages/api/prisma/migrations/'; then
             echo "✅ Detected changes in 'prisma/migrations/' — running DB migration."
-            echo "should_migrate=true" >> $GITHUB_OUTPUT
+            echo "should_migrate='true'" >> $GITHUB_OUTPUT
           else
             echo "ℹ️ No changes to 'prisma/migrations/' — skipping DB migration."
-            echo "should_migrate=false" >> $GITHUB_OUTPUT
+            echo "should_migrate='false'" >> $GITHUB_OUTPUT
           fi
   db_migrate:
     name: Migrate DB
@@ -169,10 +170,6 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --immutable
-
-      - name: Generate Prisma client
-        working-directory: packages/api
-        run: npx prisma generate
 
       - name: Build monorepo
         run: yarn build
@@ -283,14 +280,14 @@ jobs:
           image: ${{ needs.setup.outputs.api_image_name }}
           region: ${{ vars.GCP_REGION }}
           env_vars: |-
-            NCCL_ENVIRONMENT: ${{ vars.NCCL_ENVIRONMENT }}
-            NCCL_APP_URL: ${{ vars.NCCL_APP_URL }}
-            NCCL_API_URL: ${{ vars.NCCL_API_URL }}
-            GCP_CLOUD_STORAGE_BUCKET: ${{ vars.GCP_CLOUD_STORAGE_BUCKET }}
-            DATABASE_URL: ${{ secrets.DATABASE_URL }}
-            BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
-            GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-            RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+            NCCL_ENVIRONMENT=${{ vars.NCCL_ENVIRONMENT }}
+            NCCL_APP_URL=${{ vars.NCCL_APP_URL }}
+            NCCL_API_URL=${{ vars.NCCL_API_URL }}
+            GCP_CLOUD_STORAGE_BUCKET=${{ vars.GCP_CLOUD_STORAGE_BUCKET }}
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }}
+            GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}
+            RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
 
       - name: Deploy App to Cloudrun
         uses: "google-github-actions/deploy-cloudrun@v2"
@@ -300,11 +297,11 @@ jobs:
           image: ${{ needs.setup.outputs.app_image_name }}
           region: ${{ vars.GCP_REGION }}
           env_vars: |-
-            NCCL_ENVIRONMENT: ${{ vars.NCCL_ENVIRONMENT }}
-            NCCL_APP_URL: ${{ vars.NCCL_APP_URL }}
-            NCCL_API_URL: ${{ vars.NCCL_API_URL }}
-            GCP_CLOUD_STORAGE_BUCKET: ${{ vars.GCP_CLOUD_STORAGE_BUCKET }}
-            DATABASE_URL: ${{ secrets.DATABASE_URL }}
-            BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
-            GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-            RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+            NCCL_ENVIRONMENT=${{ vars.NCCL_ENVIRONMENT }}
+            NCCL_APP_URL=${{ vars.NCCL_APP_URL }}
+            NCCL_API_URL=${{ vars.NCCL_API_URL }}
+            GCP_CLOUD_STORAGE_BUCKET=${{ vars.GCP_CLOUD_STORAGE_BUCKET }}
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }}
+            GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}
+            RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}

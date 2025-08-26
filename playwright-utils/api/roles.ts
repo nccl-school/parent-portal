@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import { ENV_RUNTIME } from "@nccl/env";
+import { ENV_SEED } from "@nccl/env";
 
 const relativeToRoot = (pathname: string) =>
   path.join(path.resolve(import.meta.dirname, "../../"), pathname);
@@ -8,8 +8,8 @@ const relativeToRoot = (pathname: string) =>
 export const ROLE_CONFIG = {
   super: {
     statePath: relativeToRoot("playwright/api/.auth/super.json"),
-    email: ENV_RUNTIME.getOne("SUPER_USER_EMAIL"),
-    password: ENV_RUNTIME.getOne("SUPER_USER_PASSWORD"),
+    email: ENV_SEED.getOne("SUPER_USER_EMAIL"),
+    password: ENV_SEED.getOne("SUPER_USER_PASSWORD"),
   },
   // admin: "playwright/api/.auth/admin.json",
   // staff: "playwright/api/.auth/staff.json",

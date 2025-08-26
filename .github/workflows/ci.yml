@@ -3,8 +3,7 @@ name: CI - Build & Test
 on:
   pull_request:
     branches:
-      - N_A
-      # - dev
+      - dev
 
 jobs:
   ci:
@@ -29,8 +28,8 @@ jobs:
           echo BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }} >> .env
           echo GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }} >> .env
           echo RESEND_API_KEY=${{ secrets.RESEND_API_KEY }} >> .env
-          echo SUPER_USER_PASSWORD=${{ secrets.SUPER_USER_PASSWORD }} >> .env
           echo SUPER_USER_EMAIL=${{ secrets.SUPER_USER_EMAIL }} >> .env
+          echo SUPER_USER_PASSWORD=${{ secrets.SUPER_USER_PASSWORD }} >> .env
           echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
 
       - name: Enable corepack
