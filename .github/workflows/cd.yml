@@ -10,6 +10,30 @@ on:
     branches:
       - dev
 
+env:
+  # CI
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM_ID: ${{ secrets.TURBO_TEAM_ID }}
+  # CD
+  GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+  GCP_REGION: ${{ vars.GCP_REGION }}
+  GCP_CLOUDRUN_SERVICE_APP: ${{ vars.GCP_CLOUDRUN_SERVICE_APP }}
+  GCP_CLOUDRUN_SERVICE_API: ${{ vars.GCP_CLOUDRUN_SERVICE_API }}
+  GCP_ARTIFACT_REGISTRY_APP: ${{ vars.GCP_ARTIFACT_REGISTRY_APP }}
+  GCP_ARTIFACT_REGISTRY_API: ${{ vars.GCP_ARTIFACT_REGISTRY_API }}
+  # Runtime
+  NODE_ENV: production
+  NCCL_ENVIRONMENT: ${{ vars.NCCL_ENVIRONMENT }}
+  NCCL_APP_URL: ${{ vars.NCCL_APP_URL }}
+  NCCL_API_URL: ${{ vars.NCCL_API_URL }}
+  GCP_CLOUD_STORAGE_BUCKET: ${{ vars.GCP_CLOUD_STORAGE_BUCKET }}
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+  GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+  RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+  SUPER_USER_PASSWORD: ${{ secrets.SUPER_USER_PASSWORD }}
+  SUPER_USER_EMAIL: ${{ secrets.SUPER_USER_EMAIL }}
+
 jobs:
   setup:
     name: Setup
@@ -46,25 +70,6 @@ jobs:
           # CI
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
           TURBO_TEAM_ID: ${{ secrets.TURBO_TEAM_ID }}
-          # CD
-          GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
-          GCP_REGION: ${{ vars.GCP_REGION }}
-          GCP_CLOUDRUN_SERVICE_APP: ${{ vars.GCP_CLOUDRUN_SERVICE_APP }}
-          GCP_CLOUDRUN_SERVICE_API: ${{ vars.GCP_CLOUDRUN_SERVICE_API }}
-          GCP_ARTIFACT_REGISTRY_APP: ${{ vars.GCP_ARTIFACT_REGISTRY_APP }}
-          GCP_ARTIFACT_REGISTRY_API: ${{ vars.GCP_ARTIFACT_REGISTRY_API }}
-          # Runtime
-          NODE_ENV: production
-          NCCL_ENVIRONMENT: ${{ vars.NCCL_ENVIRONMENT }}
-          NCCL_APP_URL: ${{ vars.NCCL_APP_URL }}
-          NCCL_API_URL: ${{ vars.NCCL_API_URL }}
-          GCP_CLOUD_STORAGE_BUCKET: ${{ vars.GCP_CLOUD_STORAGE_BUCKET }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
-          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          SUPER_USER_PASSWORD: ${{ secrets.SUPER_USER_PASSWORD }}
-          SUPER_USER_EMAIL: ${{ secrets.SUPER_USER_EMAIL }}
 
   db_check:
     name: Check DB
