@@ -20,12 +20,6 @@
         "POSTGRES_PASSWORD",
         "APP_PORT",
         "API_PORT",
-        "GCP_PROJECT_ID",
-        "GCP_REGION",
-        "GCP_CLOUDRUN_SERVICE_APP",
-        "GCP_CLOUDRUN_SERVICE_API",
-        "GCP_ARTIFACT_REGISTRY_APP",
-        "GCP_ARTIFACT_REGISTRY_API",
         "TURBO_TOKEN",
         "TURBO_TEAM_ID",
         "SENTRY_AUTH_TOKEN",
@@ -34,9 +28,7 @@
         "SENTRY_PROJECT_API",
         "SENTRY_DSN_APP",
         "SENTRY_DSN_API",
-        "SENTRY_ENABLED",
-        "VITE_SENTRY_DSN_APP",
-        "VITE_NCCL_ENVIRONMENT"
+        "SENTRY_ENABLED"
       ],
       "inputs": ["$TURBO_DEFAULT$", ".env"],
       "dependsOn": ["^build"],

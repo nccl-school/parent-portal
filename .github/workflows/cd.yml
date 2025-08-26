@@ -150,11 +150,11 @@ jobs:
 
       - name: Migrate DB
         working-directory: packages/api
-        run: npx prisma migrate deploy
+        run: yarn dlx prisma migrate deploy
 
       - name: Seed DB
         working-directory: packages/api
-        run: npx prisma db seed
+        run: yarn dlx prisma db seed
 
   build_api_image:
     name: Build API Image
