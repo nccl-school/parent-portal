@@ -89,73 +89,6 @@ jobs:
           name: monorepo-build
           path: .
 
-  db_check:
-    name: Check DB
-    runs-on: ubuntu-latest
-    needs: [setup]
-    outputs:
-      should_migrate: ${{ steps.db.outputs.should_migrate }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Fetch comparison branch
-        run: git fetch origin ${{ needs.setup.outputs.comparison_branch }}
-
-      - id: db
-        name: Check if Prisma Migrations Have Changed
-        working-directory: packages/api
-        run: |
-          echo "🔍 Checking for changes to 'prisma/migrations/' between this commit and origin/${{ needs.setup.outputs.comparison_branch }}"
-          CHANGED_FILES=$(git diff --name-only origin/${{ needs.setup.outputs.comparison_branch }}...HEAD)
-          echo
-
-          echo "📄 Files changed in commit range:"
-          echo "$CHANGED_FILES"
-          echo
-
-          if printf '%s\n' "$CHANGED_FILES" | grep -q '^packages/api/prisma/migrations/'; then
-            echo "✅ Detected changes in 'prisma/migrations/' — running DB migration."
-            echo "should_migrate=true" >> $GITHUB_OUTPUT
-          else
-            echo "ℹ️ No changes to 'prisma/migrations/' — skipping DB migration."
-            echo "should_migrate=false" >> $GITHUB_OUTPUT
-          fi
-
-  db_migrate:
-    name: Migrate DB
-    runs-on: ubuntu-latest
-    environment:
-      name: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
-    needs: [setup, db_check]
-    if: needs.db_check.outputs.should_migrate == 'true'
-    outputs:
-      ran: "true"
-
-    steps:
-      - name: Download build output
-        uses: actions/download-artifact@v4
-        with:
-          name: monorepo-build
-
-      - name: Enable corepack
-        run: corepack enable
-
-      - name: Set Up node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Migrate DB
-        working-directory: packages/api
-        run: yarn dlx prisma migrate deploy
-
-      - name: Seed DB
-        working-directory: packages/api
-        run: yarn dlx prisma db seed
-
   build_api_image:
     name: Build API Image
     runs-on: ubuntu-latest
@@ -220,11 +153,43 @@ jobs:
           echo "${{ steps.google_auth.outputs.access_token }}" | docker login -u oauth2accesstoken --password-stdin https://${{ vars.GCP_REGION }}-docker.pkg.dev
           docker push ${{ needs.setup.outputs.app_image_name }}
 
+  db_migrate:
+    name: Migrate DB
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
+    needs: [setup, build_app_image, build_api_image]
+    if: always() && needs.build_app_image.result == 'success' && needs.build_api_image.result == 'success'
+    outputs:
+      ran: "true"
+
+    steps:
+      - name: Download build output
+        uses: actions/download-artifact@v4
+        with:
+          name: monorepo-build
+
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Set Up node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Migrate DB
+        working-directory: packages/api
+        run: yarn dlx prisma migrate deploy
+
+      - name: Seed DB
+        working-directory: packages/api
+        run: yarn dlx prisma db seed
+
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    needs: [setup, build_api_image, build_app_image, db_check, db_migrate]
-    if: always() && needs.build_api_image.result == 'success' && needs.build_app_image.result == 'success' && needs.db_check.result == 'success' && (needs.db_migrate.result == 'success' || needs.db_migrate.result == 'skipped')
+    needs: [setup, build_api_image, build_app_image, db_migrate]
+    if: always() && needs.build_api_image.result == 'success' && needs.build_app_image.result == 'success' && needs.db_migrate.result == 'success'
     environment:
       name: ${{ needs.setup.outputs.environment }}
     steps:
