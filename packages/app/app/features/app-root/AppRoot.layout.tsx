@@ -2,8 +2,6 @@ import { Outlet } from "react-router";
 import { css } from "@linaria/core";
 import { makeColor, makeCustom, makeResponsive } from "@nccl/theme";
 import { classes } from "@stratum-ui/core/utils";
-import { H } from "@highlight-run/remix/client";
-import { useEffect } from "react";
 
 import type { Route } from "./+types/AppRoot.layout";
 import { RootNavbar } from "./AppRootNavbar";
@@ -83,18 +81,10 @@ const styles = css`
   }
 `;
 
-export default function AppRootLayout(args: Route.ComponentProps) {
-  const { firstName, lastName, email } = args.loaderData.currentUser;
+export default function AppRootLayout(_args: Route.ComponentProps) {
+  // const { firstName, lastName, email } = args.loaderData.currentUser;
 
-  const fullName = `${firstName} ${lastName}`;
-
-  // Track the user's session
-  useEffect(() => {
-    if (!email) return;
-    H.identify(email, {
-      name: fullName,
-    });
-  }, [email, fullName]);
+  // const fullName = `${firstName} ${lastName}`;
 
   return (
     <div className={classes(styles, backgroundGradient)}>
