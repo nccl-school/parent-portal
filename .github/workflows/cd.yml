@@ -135,6 +135,15 @@ jobs:
           name: monorepo-build
           path: packages/api
 
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Set Up node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: "yarn"
+
       - name: Migrate DB
         working-directory: packages/api
         run: npx prisma migrate deploy
