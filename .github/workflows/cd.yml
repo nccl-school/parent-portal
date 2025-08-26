@@ -79,9 +79,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: monorepo-build
-          path: |
-            node_modules/
-            packages/
+          path: .
 
   db_check:
     name: Check DB
