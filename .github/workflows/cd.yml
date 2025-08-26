@@ -63,14 +63,23 @@ jobs:
       - name: "Install dependencies"
         run: yarn install --immutable
 
-      - name: Validate environment
-        run: |
-          npx turbo run build --filter @nccl/env
-          node scripts/validate.cd.js
+      - name: Build monorepo
+        run: yarn build
         env:
           # CI
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
           TURBO_TEAM_ID: ${{ secrets.TURBO_TEAM_ID }}
+
+      - name: Validate environment
+        run: node scripts/validate.cd.js
+
+      - name: Upload build output
+        uses: actions/upload-artifact@v4
+        with:
+          name: monorepo-build-all
+          path: |
+            node_modules/
+            packages/
 
   db_check:
     name: Check DB
@@ -79,9 +88,11 @@ jobs:
     outputs:
       should_migrate: ${{ steps.db.outputs.should_migrate }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Download build output
+        uses: actions/download-artifact@v4
         with:
-          fetch-depth: 0
+          name: monorepo-build-all
+          path: .
 
       - name: Fetch comparison branch
         run: git fetch origin ${{ needs.setup.outputs.comparison_branch }}
@@ -114,25 +125,13 @@ jobs:
     if: needs.db_check.outputs.should_migrate == 'true'
     outputs:
       ran: "true"
-    env:
-      NODE_ENV: production
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Enable Corepack # Ensures the correct version of yarn is used
-        run: corepack enable
-
-      - name: Set Up node.js
-        uses: actions/setup-node@v4
+      - name: Download build output
+        uses: actions/download-artifact@v4
         with:
-          node-version-file: .nvmrc
-          cache: "yarn"
-
-      - name: Install dependencies
-        run: yarn install --immutable
+          name: monorepo-build-all
+          path: .
 
       - name: Migrate DB
         working-directory: packages/api
@@ -151,36 +150,20 @@ jobs:
       (needs.db_check.outputs.should_migrate == 'false' || needs.db_migrate.result == 'success')
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    env:
-      NODE_ENV: production
-      TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
-      TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Enable corepack # Ensures the correct version of yarn is used
-        run: corepack enable
-
-      - name: Set Up node.js
-        uses: actions/setup-node@v4
+      - name: Download build output
+        uses: actions/download-artifact@v4
         with:
-          node-version-file: .nvmrc
-          cache: "yarn"
-
-      - name: Install dependencies
-        run: yarn install --immutable
-
-      - name: Build monorepo
-        run: yarn build
+          name: monorepo-build-all
+          path: .
 
       - name: Install production dependencies
         run: yarn workspaces focus --production --all
 
-      - name: Upload build output
+      - name: Upload production build output
         uses: actions/upload-artifact@v4
         with:
-          name: monorepo-build
+          name: monorepo-build-prod
           path: |
             node_modules/
             packages/
@@ -196,7 +179,7 @@ jobs:
       - name: Download build output
         uses: actions/download-artifact@v4
         with:
-          name: monorepo-build
+          name: monorepo-build-prod
           path: .
 
       - name: Authenticate GCP
