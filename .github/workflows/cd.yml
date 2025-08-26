@@ -123,7 +123,7 @@ jobs:
         with:
           project_id: ${{ vars.GCP_PROJECT_ID }}
           service: ${{ vars.GCP_CLOUDRUN_SERVICE_API }}
-          image: "$API_IMAGE_NAME"
+          image: ${{ env.API_IMAGE_NAME }}
           region: ${{ vars.GCP_REGION }}
           env_vars: |-
             NCCL_ENVIRONMENT=${{ vars.NCCL_ENVIRONMENT }}
@@ -147,7 +147,7 @@ jobs:
         with:
           project_id: ${{ vars.GCP_PROJECT_ID }}
           service: ${{ vars.GCP_CLOUDRUN_SERVICE_APP }}
-          image: "$APP_IMAGE_NAME"
+          image: ${{ env.APP_IMAGE_NAME }}
           region: ${{ vars.GCP_REGION }}
           env_vars: |-
             NCCL_ENVIRONMENT=${{ vars.NCCL_ENVIRONMENT }}
