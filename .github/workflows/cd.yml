@@ -40,7 +40,7 @@ jobs:
 
       - name: Validate environment
         run: |
-          yarn turbo --filter @nccl/env
+          npx turbo run build --filter @nccl/env
           node scripts/validate.cd.js
         env:
           # CI
