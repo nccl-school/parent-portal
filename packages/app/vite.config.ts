@@ -29,7 +29,7 @@ export default defineConfig((config) => ({
         presets: ["@babel/preset-typescript", "@babel/preset-react"],
       },
     }),
-  ],
+  ].filter(Boolean),
 
   build: {
     rollupOptions: config.isSsrBuild

@@ -10,10 +10,12 @@ import { RootNavbar } from "./AppRootNavbar";
 import { RootHeader } from "./AppRootHeader";
 
 import { backgroundGradient } from "../../utils/isomorphic";
-import { ensureSession } from "../../utils/server";
+import { ensureSession, getNCCLClient } from "../../utils/server";
 
 export async function loader(args: Route.LoaderArgs) {
-  const { session, user: currentUser } = await ensureSession(args);
+  const { session } = await ensureSession(args);
+  const ncclClient = getNCCLClient(args);
+  const currentUser = await ncclClient.user.getCurrentUser();
   return { session, currentUser };
 }
 
