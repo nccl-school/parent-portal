@@ -27,7 +27,12 @@
         "GCP_ARTIFACT_REGISTRY_APP",
         "GCP_ARTIFACT_REGISTRY_API",
         "TURBO_TOKEN",
-        "TURBO_TEAM_ID"
+        "TURBO_TEAM_ID",
+        "SENTRY_AUTH_TOKEN",
+        "SENTRY_ORG",
+        "SENTRY_PROJECT",
+        "VITE_SENTRY_DSN_APP",
+        "VITE_NCCL_ENVIRONMENT"
       ],
       "inputs": ["$TURBO_DEFAULT$", ".env"],
       "dependsOn": ["^build"],
