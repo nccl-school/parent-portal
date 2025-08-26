@@ -1,12 +1,7 @@
-name: CD
-
-# on:
-#   push:
-#     branches:
-#       - dev
+name: CD - Build, Migrate & Deploy
 
 on:
-  pull_request:
+  push:
     branches:
       - dev
 
@@ -45,7 +40,7 @@ env:
 
 jobs:
   setup:
-    name: Validate -> Build -> Migrate -> Deploy
+    name: Build, Migrate & Deploy
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
