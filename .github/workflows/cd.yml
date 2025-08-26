@@ -82,6 +82,7 @@ jobs:
           path: |
             node_modules/
             packages/
+            .nvmrc
 
   db_check:
     name: Check DB
