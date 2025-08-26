@@ -18,11 +18,12 @@ RUN adduser --system --uid 1001 app-user
 # Copy in prebuilt files
 # - /env is copied in so we can run the sentry instrumentation
 COPY --from=builder --chown=api-user:nodejs /app/node_modules                               /app/node_modules
-COPY --from=builder --chown=api-user:nodejs /app/packages/env                               /app/packages/env 
+COPY --from=builder --chown=app-user:nodejs /app/packages/app/packages                      /app/packages
 COPY --from=builder --chown=app-user:nodejs /app/packages/app/build                         /app/build
 COPY --from=builder --chown=app-user:nodejs /app/packages/app/server.js                     /app/server.js
 COPY --from=builder --chown=app-user:nodejs /app/packages/app/server.instrumentation.js     /app/server.instrumentation.js
 COPY --from=builder --chown=app-user:nodejs /app/packages/app/package.json                  /app/package.json
+COPY --from=builder --chown=app-user:nodejs /app/packages/app/yarn.lock                     /app/yarn.lock
 
 USER app-user
 ENV PORT=8080
