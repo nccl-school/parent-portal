@@ -7,7 +7,7 @@
     "app/**/.client/**/*",
     "database/**/*",
     "server/**/*",
-    "instrument.server.js"
+    "server.instrumentation.js"
   ],
   "compilerOptions": {
     "composite": true,

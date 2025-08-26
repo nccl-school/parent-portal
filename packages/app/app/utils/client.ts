@@ -5,6 +5,8 @@ import z from "zod";
 
 import { placeholder } from "./isomorphic";
 
+import type { Route as RootRoute } from "../+types/root";
+
 export class DateFactory {
   private static instance: DateFactory;
 
@@ -193,4 +195,11 @@ export function slugify(input: string): string {
     .replace(/\s+/g, "-") // replace spaces with hyphens
     .replace(/--+/g, "-") // collapse multiple hyphens
     .replace(/^-+|-+$/g, ""); // trim leading/trailing hyphens
+}
+
+export function getClientVar(
+  envVar: keyof RootRoute.ComponentProps["loaderData"]["ENV"]
+) {
+  // @ts-expect-error We're setting this manually
+  return window.__ENV__[envVar];
 }

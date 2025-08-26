@@ -144,7 +144,6 @@ export const ENV_RUNTIME = new Supermenv({
       description:
         "The API key used to query various google services like Drive, Calendar, etc...",
     },
-    // TODO: Work on client side env vars
     SENTRY_ORG: {
       type: "string",
       description: "The sentry org that houses the project",
@@ -158,14 +157,14 @@ export const ENV_RUNTIME = new Supermenv({
       description:
         "The sentry auth token used to upload source maps to the platform",
     },
-    VITE_SENTRY_DSN_APP: {
+    SENTRY_DSN_APP: {
       type: "string",
       description:
         "The Sentry DSN required to init the client and instrumentation for the react router app.",
     },
-    VITE_NCCL_ENVIRONMENT: {
-      type: "string",
-      description: "A placeholder shim",
+    SENTRY_ENABLED: {
+      type: "boolean",
+      description: "Determines whether sentry is enabled or disabled",
     },
   },
 });

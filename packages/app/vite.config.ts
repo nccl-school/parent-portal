@@ -7,14 +7,16 @@ import {
   sentryReactRouter,
   type SentryReactRouterBuildOptions,
 } from "@sentry/react-router";
+import { ENV_RUNTIME } from "@nccl/env";
+
+const SENTRY_ORG = ENV_RUNTIME.getOne("SENTRY_ORG");
+const SENTRY_PROJECT = ENV_RUNTIME.getOne("SENTRY_PROJECT");
+const SENTRY_AUTH_TOKEN = ENV_RUNTIME.getOne("SENTRY_AUTH_TOKEN");
 
 const sentryConfig: SentryReactRouterBuildOptions = {
-  org: process.env.SENTRY_ORG,
-  project: process.env.SENTRY_PROJECT,
-  // An auth token is required for uploading source maps;
-  // store it in an environment variable to keep it secure.
-  authToken: process.env.SENTRY_AUTH_TOKEN,
-  // ...
+  org: SENTRY_ORG,
+  project: SENTRY_PROJECT,
+  authToken: SENTRY_AUTH_TOKEN,
 };
 
 export default defineConfig((config) => ({

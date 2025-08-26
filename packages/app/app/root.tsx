@@ -31,7 +31,9 @@ const rootStyles = css`
 export async function loader(args: Route.LoaderArgs) {
   return {
     ENV: {
-      ENVIRONMENT: args.context.env.NCCL_ENVIRONMENT,
+      SENTRY_ENABLED: args.context.env.SENTRY_ENABLED,
+      SENTRY_DSN_APP: args.context.env.SENTRY_DSN_APP,
+      NCCL_ENVIRONMENT: args.context.env.NCCL_ENVIRONMENT,
     },
   };
 }
@@ -43,7 +45,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       lang="en"
       className={rootStyles}
       style={
-        loaderData?.ENV.ENVIRONMENT !== "prod"
+        loaderData?.ENV.NCCL_ENVIRONMENT !== "prod"
           ? { border: "2px solid brightpink" }
           : undefined
       }
@@ -82,6 +84,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <link
           href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
           rel="stylesheet"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.__ENV__ = ${JSON.stringify(loaderData?.ENV ?? {})};`,
+          }}
         />
         <Meta />
         <Links />
