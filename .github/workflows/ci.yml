@@ -36,7 +36,6 @@ jobs:
           echo SENTRY_ORG=${{ vars.SENTRY_ORG }} >> .env
           echo SENTRY_PROJECT_APP=${{ vars.SENTRY_PROJECT_APP }} >> .env
           echo SENTRY_PROJECT_API=${{ vars.SENTRY_PROJECT_API }} >> .env
-          echo SENTRY_AUTH_TOKEN=${{ vars.SENTRY_AUTH_TOKEN }} >> .env
           echo SENTRY_DSN_APP=${{ vars.SENTRY_DSN_APP }} >> .env
           echo SENTRY_DSN_API=${{ vars.SENTRY_DSN_API }} >> .env
           echo SENTRY_ENABLED=0 >> .env
