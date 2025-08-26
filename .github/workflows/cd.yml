@@ -132,7 +132,7 @@ jobs:
       - name: Download build output
         uses: actions/download-artifact@v4
         with:
-          name: monorepo-build-all
+          name: monorepo-build
           path: packages/api
 
       - name: Migrate DB
