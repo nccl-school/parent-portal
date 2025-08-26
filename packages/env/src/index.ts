@@ -6,6 +6,7 @@ const dotEnvPaths = [path.resolve(import.meta.dirname, "../../../.env")];
 
 export const ENV_SEED = new Supermenv({
   name: "SEED",
+  dotEnvPaths,
   vars: {
     SUPER_USER_EMAIL: { type: "email" },
     SUPER_USER_PASSWORD: { type: "string" },
