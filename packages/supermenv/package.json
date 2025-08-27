@@ -1,0 +1,36 @@
+{
+  "name": "supermenv",
+  "version": "0.0.1",
+  "description": "A package to easily manage, validate, document and use environment variables",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "yarn tsc --project tsconfig.build.json",
+    "dev": "yarn build --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/nccl-school/parent-portal.git"
+  },
+  "author": "Drew DeCarme (drew@greenflash.digital)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/nccl-school/parent-portal/issues"
+  },
+  "homepage": "https://github.com/nccl-school/parent-portal#readme",
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "picocolors": "^1.1.1",
+    "zod": "^4.0.17"
+  },
+  "devDependencies": {
+    "@gfdigital/tsconfig": "0.3.1",
+    "tsx": "4.20.4",
+    "typescript": "5.9.2"
+  }
+}

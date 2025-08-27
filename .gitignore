@@ -14,7 +14,6 @@ bin
 storybook-static
 .env
 .env.spec
-.env.test
 .npmrc
 .secrets
 .secrets/*
@@ -24,10 +23,12 @@ build
 
 # packages/api
 dist-client
+dist-seed
 _generated
 
 # Playwright
 /test-results/
 /playwright-report/
+/playwright
 /blob-report/
 /playwright/.cache/

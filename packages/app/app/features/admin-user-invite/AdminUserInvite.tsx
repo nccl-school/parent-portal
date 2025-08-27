@@ -20,7 +20,7 @@ import type { InviteUsersRequest } from "@nccl/api/client";
 import { useAdminUserInviteModalContext } from "./admin-user-invite.useModalContext";
 
 import { RoleRadioGroup } from "../user";
-import type { action as inviteUserAction } from "../../api/api.user.inviteUsers";
+import type { action as inviteUserAction } from "../../api/api.account.inviteUsers";
 import { getValidationErrors } from "../../utils/client";
 
 const className = css`
@@ -45,11 +45,11 @@ export const AdminUserInvite = new ModalController({
 function ModalContent() {
   const { close: closeModal } = useAdminUserInviteModalContext();
   const fetcher = useFetcher<typeof inviteUserAction>();
-  const errors = getValidationErrors<keyof InviteUsersRequest>(fetcher.data);
+  const errors = getValidationErrors<InviteUsersRequest>(fetcher.data);
 
   return (
     <fetcher.Form
-      action={href("/api/user/invite")}
+      action={href("/api/account/invite")}
       method="POST"
       className={className}
     >

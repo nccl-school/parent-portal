@@ -7,7 +7,7 @@ import { AdminNavbar } from "./AdminNavbar";
 
 import { PageContainer } from "../..//components/page/PageContainer";
 import { PageHeader } from "../../components/page";
-import { isAdmin } from "../../utils/server/utils.server.auth";
+import { isAdmin } from "../../utils/server";
 import { Unauthorized } from "../auth/Unauthorized";
 
 const styles = css`

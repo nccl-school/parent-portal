@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import type { z } from "zod/v4";
+import type { z } from "zod";
 
 import {
   SuggestionIDParamsSchema,
@@ -32,7 +32,7 @@ suggestion.get(
   async (c) => {
     const db = c.get("db");
     const query = c.req.valid("query");
-    const currentUser = c.get("currentUser");
+    const currentUser = c.get("user");
 
     const suggestions = await db.suggestion.findMany({
       ...(query.search
@@ -108,7 +108,7 @@ suggestion.post(
   validate("json", CreateSuggestionRequestSchema),
   async (c) => {
     const body = c.req.valid("json");
-    const currentUser = c.get("currentUser");
+    const currentUser = c.get("user");
     const db = c.get("db");
 
     console.log("Creating a new suggestion");
@@ -203,7 +203,7 @@ suggestion.post(
     const params = c.req.valid("param");
     const body = c.req.valid("json");
     const db = c.get("db");
-    const currentUser = c.get("currentUser");
+    const currentUser = c.get("user");
 
     const record = await db.suggestionVote.findUnique({
       where: {
@@ -262,7 +262,6 @@ suggestion.get(
         createdBy: {
           select: {
             id: true,
-            authId: true,
             imageUrl: true,
             email: true,
             firstName: true,
@@ -288,7 +287,7 @@ suggestion.post(
   async (c) => {
     const params = c.req.valid("param");
     const body = c.req.valid("json");
-    const user = c.get("currentUser");
+    const user = c.get("user");
     const db = c.get("db");
     const record = await db.suggestionComment.create({
       data: {
@@ -312,7 +311,7 @@ suggestion.delete(
   validate("param", CommentIDParamsSchema),
   async (c) => {
     const params = c.req.valid("param");
-    const currentUser = c.get("currentUser");
+    const currentUser = c.get("user");
     const db = c.get("db");
 
     const record = await db.suggestionComment.findUnique({

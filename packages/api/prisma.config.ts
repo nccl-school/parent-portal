@@ -1,12 +1,10 @@
 import type { PrismaConfig } from "prisma";
 
-import { loadEnv } from "./scripts/load-env.script.js";
-
-loadEnv();
-
 export default {
   migrations: {
-    seed: "tsx ./prisma/seed.ts",
+    seed:
+      process.env.NODE_ENV === "development"
+        ? "npx tsx ./src/seed.ts"
+        : "node ./dist/seed.js",
   },
-  // now you can use process.env variables
 } satisfies PrismaConfig;

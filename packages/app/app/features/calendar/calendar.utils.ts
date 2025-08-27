@@ -1,5 +1,5 @@
 import type { calendar_v3 } from "googleapis";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 export type GoogleCalendarEvents = calendar_v3.Schema$Events;
 export type GoogleCalendarEvent = calendar_v3.Schema$Event;

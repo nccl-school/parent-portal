@@ -2,8 +2,35 @@
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
     "build": {
-      "env": ["VITE_CLERK_PUBLISHABLE_KEY"],
-      "inputs": ["$TURBO_DEFAULT$", ".env.local", ".env"],
+      "env": [
+        "NODE_ENV",
+        "NCCL_ENVIRONMENT",
+        "NCCL_APP_URL",
+        "NCCL_API_URL",
+        "GCP_CLOUD_STORAGE_BUCKET",
+        "DATABASE_URL",
+        "BETTER_AUTH_SECRET",
+        "RESEND_API_KEY",
+        "GOOGLE_API_KEY",
+        "SUPER_USER_EMAIL",
+        "SUPER_USER_PASSWORD",
+        "POSTGRES_DB",
+        "POSTGRES_PORT",
+        "POSTGRES_USER",
+        "POSTGRES_PASSWORD",
+        "APP_PORT",
+        "API_PORT",
+        "TURBO_TOKEN",
+        "TURBO_TEAM_ID",
+        "SENTRY_AUTH_TOKEN",
+        "SENTRY_ORG",
+        "SENTRY_PROJECT_APP",
+        "SENTRY_PROJECT_API",
+        "SENTRY_DSN_APP",
+        "SENTRY_DSN_API",
+        "SENTRY_ENABLED"
+      ],
+      "inputs": ["$TURBO_DEFAULT$", ".env"],
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "dist-client/**", "build/**"]
     }

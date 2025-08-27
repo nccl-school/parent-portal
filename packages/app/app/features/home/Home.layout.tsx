@@ -1,8 +1,11 @@
 import { Outlet } from "react-router";
-import { useUser } from "@clerk/react-router";
 
+import type { Route } from "./+types/Home.layout";
+
+import { ensureSession } from "../../utils/server";
 import { PageContainer } from "../..//components/page/PageContainer";
 import { PageHeader } from "../../components/page";
+import { useUser } from "../../hooks/hook.useUser";
 
 export function getGreetingBanner(): string {
   const hour = new Date().getHours();
@@ -12,8 +15,12 @@ export function getGreetingBanner(): string {
   return "Good evening";
 }
 
+export async function loader(args: Route.LoaderArgs) {
+  await ensureSession(args);
+}
+
 export default function HomeLayout() {
-  const { user } = useUser();
+  const user = useUser();
 
   if (!user) return;
 

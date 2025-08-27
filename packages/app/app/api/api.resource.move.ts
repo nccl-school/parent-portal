@@ -1,5 +1,5 @@
 import { MoveResourceRequestSchema } from "@nccl/api/client";
-import z from "zod/v4";
+import z from "zod";
 
 import type { Route } from "./+types/api.resource.move";
 
@@ -15,11 +15,9 @@ export async function action(args: Route.LoaderArgs) {
         const formData = await args.request.formData();
         const body = await validateFormData(
           MoveResourceRequestSchema.extend({
-            parentResourceId: z
-              .string()
-              .min(1, {
-                message: "Please select a new destination for the resource",
-              }),
+            parentResourceId: z.string().min(1, {
+              message: "Please select a new destination for the resource",
+            }),
           }),
           formData
         );

@@ -9,7 +9,7 @@ import { useSuggestionViewModalContext } from "./suggestion-view.useSuggestionVi
 import type { loader } from "../../api/api.suggestion.comments.getManyOrCreateUnique";
 import { LoadingState } from "../../components/states/LoadingState";
 import { MessageState } from "../../components/states/MessageState";
-import { renderData } from "../../utils/client";
+import { renderLoaderData } from "../../utils/client";
 import { SuggestionCommentDelete } from "../suggestion-comment-delete/SuggestionCommentDelete";
 
 const styles = css`
@@ -30,7 +30,7 @@ export function SuggestionViewCommentList() {
     <>
       <SuggestionCommentDelete.Component />
       <ul className={styles}>
-        {renderData(data, {
+        {renderLoaderData(data, {
           loading: <LoadingState>Loading comments...</LoadingState>,
           ok: (data) => {
             if (data.length === 0) {

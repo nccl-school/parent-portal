@@ -1,3 +1,5 @@
+import { css } from "@linaria/core";
+import { Toaster } from "@nccl/components";
 import {
   isRouteErrorResponse,
   Links,
@@ -5,21 +7,14 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useRouteLoaderData,
 } from "react-router";
-import { rootAuthLoader } from "@clerk/react-router/ssr.server";
-import { ClerkProvider } from "@clerk/react-router";
-import { css } from "@linaria/core";
+import * as Sentry from "@sentry/react-router";
+
 import "@nccl/theme/reset.css";
 import "@nccl/theme/root.css";
 import "@nccl/components/css";
-
-import { Toaster } from "@nccl/components";
-
 import type { Route } from "./+types/root";
-
-export async function loader(args: Route.LoaderArgs) {
-  return rootAuthLoader(args);
-}
 
 const rootStyles = css`
   :global() {
@@ -33,9 +28,28 @@ const rootStyles = css`
   }
 `;
 
+export async function loader(args: Route.LoaderArgs) {
+  return {
+    ENV: {
+      SENTRY_ENABLED: args.context.env.SENTRY_ENABLED,
+      SENTRY_DSN_APP: args.context.env.SENTRY_DSN_APP,
+      NCCL_ENVIRONMENT: args.context.env.NCCL_ENVIRONMENT,
+    },
+  };
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
+  const loaderData = useRouteLoaderData<typeof loader>("root");
   return (
-    <html lang="en" className={rootStyles}>
+    <html
+      lang="en"
+      className={rootStyles}
+      style={
+        loaderData?.ENV.NCCL_ENVIRONMENT !== "prod"
+          ? { border: "2px solid brightpink" }
+          : undefined
+      }
+    >
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -71,6 +85,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
           href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
           rel="stylesheet"
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.__ENV__ = ${JSON.stringify(loaderData?.ENV ?? {})};`,
+          }}
+        />
         <Meta />
         <Links />
       </head>
@@ -84,12 +103,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App({ loaderData }: Route.ComponentProps) {
-  return (
-    <ClerkProvider loaderData={loaderData}>
-      <Outlet />
-    </ClerkProvider>
-  );
+export default function App() {
+  return <Outlet />;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
@@ -103,11 +118,15 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
       error.status === 404
         ? "The requested page could not be found."
         : error.statusText || details;
-  } else if (import.meta.env.DEV && error && error instanceof Error) {
-    details = error.message;
-    stack = error.stack;
-  }
+  } else if (error && error instanceof Error) {
+    // you only want to capture non 404-errors that reach the boundary
+    Sentry.captureException(error);
 
+    if (import.meta.env.DEV) {
+      details = error.message;
+      stack = error.stack;
+    }
+  }
   return (
     <main className="pt-16 p-4 container mx-auto">
       <h1>{message}</h1>

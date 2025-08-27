@@ -24,7 +24,6 @@ import { AdminUserProfile } from "../admin-user-profile";
 import { dates } from "../../utils/client";
 import { placeholder } from "../../utils/isomorphic";
 import { AdminUserInvite } from "../admin-user-invite";
-import { UserStatusBadge } from "../user/UserStatusBadge";
 
 const styles = css`
   display: grid;
@@ -131,9 +130,7 @@ export function AdminUsersTable({ data }: { data: GetUserListResponse }) {
               <TableBodyCol>
                 {/* {dates.format(user.lastActiveAt, "Relative")} */}
               </TableBodyCol>
-              <TableBodyCol>
-                <UserStatusBadge status={user.status} />
-              </TableBodyCol>
+              <TableBodyCol>{user.banned ? "BANNED" : "ACTIVE"}</TableBodyCol>
               <TableBodyCol style={{ width: makeRem(24) }}>
                 <AdminUsersTableCellMenu {...user} />
               </TableBodyCol>

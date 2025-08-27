@@ -1,5 +1,5 @@
 import { CreateSuggestionCommentsRequestSchema } from "@nccl/api/client";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import type { Route } from "./+types/api.suggestion.comments.getManyOrCreateUnique";
 

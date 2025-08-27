@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { ENV_RUNTIME } from "@nccl/env";
 
 import {
   CreateFileRequestSchema,
@@ -43,7 +44,6 @@ import { authorize } from "../../middleware/middleware.authorize.js";
 import type { Resource } from "../../_generated/prisma/client.js";
 import { tryPrisma } from "../../utils/util.prisma.js";
 import { exhaustiveMatchGuard } from "../../utils/util.exhaustiveMatchGuard.js";
-import { getEnvVar } from "../../utils/util.envVar.js";
 
 export const resource = new Hono();
 
@@ -71,7 +71,7 @@ resource.delete("/:id", validate("param", ParamsIDSchema), async (c) => {
     case "FILE": {
       const transaction = db.$transaction(async (tx) => {
         await tx.resource.delete({ where: { id } });
-        const bucket = getBucket(c);
+        const bucket = getBucket();
         if (!resource.fileUrl) {
           throw new ErrorSet.serverError(
             "This resource is missing a pointer to bucket storage. This should not have happened. Please contact support."
@@ -267,7 +267,7 @@ resource.get("/tree/:path{.+}", async (c) => {
 // GET /api/resource/file/current | Get a list of files owned by the current user
 resource.get("/file/current", async (c) => {
   const db = c.get("db");
-  const currentUser = c.get("currentUser");
+  const currentUser = c.get("user");
   const records = await db.resource.findMany({
     where: {
       type: "FILE",
@@ -373,7 +373,7 @@ resource.post("/file", validate("form", CreateFileRequestSchema), async (c) => {
     );
   }
 
-  const bucket = getBucket(c);
+  const bucket = getBucket();
   const buffer = await file.arrayBuffer();
   const blob = bucket.file(resource.fileUrl);
   await blob.save(Buffer.from(buffer), {
@@ -393,12 +393,11 @@ resource.post(
   async (c) => {
     const { url, ...json } = c.req.valid("json");
     const db = c.get("db");
-    const { GOOGLE_CALENDAR_API_KEY } = getEnvVar(c);
     const parentResourceId = json.parentResourceId ?? "__ROOT__";
     const googleDocParsed = parseGoogleDocsURL(url);
     const googleDocMeta = await fetchGoogleDocMetadataFromGoogleDrive(
       googleDocParsed.externalId,
-      GOOGLE_CALENDAR_API_KEY
+      ENV_RUNTIME.getOne("GOOGLE_API_KEY")
     );
 
     const createGoogleDoc = db.resource.create({
@@ -503,15 +502,31 @@ resource.get(
             "A user rule was located without a userId. This should not have happened. Please contact support."
           );
         }
-        const user = await db.user.findUnique({ where: { id: rule.userId } });
+        const user = await db.user.findUnique({
+          where: { id: rule.userId },
+          include: {
+            role: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        });
         if (!user) {
           throw new ErrorSet.notFound(
             "The user who is granted access to this rule cannot be found. This should not have happened. Please contact support."
           );
         }
+        const {
+          role: { id: roleId },
+          ...restUser
+        } = user;
         return {
           ...rule,
-          user,
+          user: {
+            ...restUser,
+            roleId,
+          },
         };
       })
     );

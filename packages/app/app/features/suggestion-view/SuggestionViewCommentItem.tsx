@@ -4,11 +4,11 @@ import { classes } from "@stratum-ui/core/utils";
 import { css } from "@linaria/core";
 import { Avatar, Button, Typography } from "@nccl/components";
 import { makeColor, makeFontWeight, makeRem } from "@nccl/theme";
-import { useUser } from "@clerk/react-router";
 
 import { getUserName } from "../user";
 import { dates } from "../../utils/client";
 import { SuggestionCommentDelete } from "../suggestion-comment-delete/SuggestionCommentDelete";
+import { useUser } from "../../hooks/hook.useUser";
 
 export type SuggestionViewCommentItemPropsNative = JSX.IntrinsicElements["div"];
 export type SuggestionViewCommentItemPropsCustom = {
@@ -74,7 +74,7 @@ export const SuggestionViewCommentItem = forwardRef<
   { children, className, comment, ...restProps },
   ref
 ) {
-  const { user } = useUser();
+  const user = useUser();
   return (
     <div {...restProps} className={classes(styles, className)} ref={ref}>
       <div className="avatar">
@@ -99,7 +99,7 @@ export const SuggestionViewCommentItem = forwardRef<
         </Typography>
       </div>
       <div className="edit">
-        {comment.createdBy.authId === user?.id && (
+        {comment.createdBy.id === user?.id && (
           <Button
             onClick={(e) =>
               SuggestionCommentDelete.launch(e, { commentId: comment.id })

@@ -16,7 +16,7 @@ import { ResourceItem } from "./ResourceItem";
 
 import { EmptyState } from "../../components/states/EmptyState";
 import { LoadingState } from "../../components/states/LoadingState";
-import { getData, renderData } from "../../utils/client";
+import { parseLoaderData, renderLoaderData } from "../../utils/client";
 import { getNCCLClient } from "../../utils/server";
 import { ResourcesCreateFolder } from "../resources-create-folder";
 import { ResourcesAdd } from "../resources-add/ResourcesAdd";
@@ -58,7 +58,7 @@ export default function ResourcesRoute({
   loaderData,
   params,
 }: Route.ComponentProps) {
-  const title = renderData(loaderData, {
+  const title = renderLoaderData(loaderData, {
     loading: "Loading...",
     ok: (d) => (d.id === "__ROOT__" ? "All Files" : d.name),
   }) as string;
@@ -71,7 +71,7 @@ export default function ResourcesRoute({
           dxSize="md"
           dxStartIcon="resources-add-stroke-standard"
           onClick={(e) => {
-            const resource = getData(loaderData);
+            const resource = parseLoaderData(loaderData);
             if (!resource) return; // TODO: Throw a toast
 
             ResourcesAdd.launch(e, {
@@ -87,7 +87,7 @@ export default function ResourcesRoute({
           dxSize="md"
           dxStartIcon="folder-add-stroke-standard"
           onClick={(e) => {
-            const resource = getData(loaderData);
+            const resource = parseLoaderData(loaderData);
             if (!resource) return; // TODO: Throw a toast
 
             ResourcesCreateFolder.launch(e, {
@@ -114,7 +114,7 @@ export default function ResourcesRoute({
       <ResourceActionMove.Component />
       <ResourceActionAccess.Component />
 
-      {renderData(loaderData, {
+      {renderLoaderData(loaderData, {
         loading: (
           <TableRow>
             <TableBodyCol colSpan={4}>

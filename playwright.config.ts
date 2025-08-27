@@ -1,20 +1,16 @@
-import path from "path";
+import path from "node:path";
 
 import { defineConfig } from "@playwright/test";
-import dotenv from "dotenv";
 
-dotenv.config({
-  path: [
-    path.resolve(import.meta.dirname, "./.env.spec"),
-    path.resolve(import.meta.dirname, "./.env"),
-  ],
-});
+import { ENV_TEST } from "@nccl/env";
+
+ENV_TEST.load({ paths: [path.resolve(import.meta.dirname, "./.env.spec")] });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  // testDir: "./e2e",
+  testDir: "./e2e",
   /* Run tests in files in parallel */
   // fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -37,13 +33,17 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
+      name: "api:setup",
+      testDir: "playwright-utils/api",
+      testMatch: "setup.ts",
+    },
+    {
       name: "api",
-      testMatch: "packages/api/**/*.spec.ts",
+      testDir: "packages/api/src",
+      testMatch: "**/*.spec.ts",
+      dependencies: ["api:setup"],
       use: {
-        baseURL: "http://localhost:11001",
-        extraHTTPHeaders: {
-          Authorization: `Bearer ${process.env.AUTH_TOKEN}`,
-        },
+        baseURL: ENV_TEST.getOne("NCCL_API_URL_PUBLIC"),
       },
     },
     // {

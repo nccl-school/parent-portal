@@ -34,5 +34,6 @@ export * from "./input-label/index.js";
 export * from "./input-tags/index.js";
 export * from "./input-select/index.js";
 export * from "./input-textarea/index.js";
+export * from "./input-password/index.js";
 export * from "./input-combobox/index.js";
 export * from "./form-group/FormGroup.js";

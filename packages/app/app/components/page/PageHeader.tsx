@@ -14,9 +14,13 @@ export type PageHeaderProps = PageHeaderPropsNative & PageHeaderPropsCustom;
 const styles = css`
   ${makeResponsive({ to: "laptop" })} {
     padding: ${makeCustom("page--gutter-mobile")};
+
+    h2 {
+      font-size: ${makeRem(24)} !important;
+    }
   }
   ${makeResponsive({ from: "laptop" })} {
-    padding: ${makeCustom("page--gutter-desktop")};
+    padding: ${makeCustom("page--gutter-desktop")} 0;
     padding-bottom: ${makeRem(48)};
     max-width: ${makeCustom("container--max-width")};
     margin: 0 auto;
@@ -24,8 +28,8 @@ const styles = css`
     width: 100%;
   }
 
-  & > .subtitle {
-    margin-top: ${makeRem(8)};
+  .subtitle {
+    margin-top: ${makeRem(8)} !important;
   }
 `;
 

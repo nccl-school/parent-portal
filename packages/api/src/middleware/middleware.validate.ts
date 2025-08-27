@@ -1,6 +1,6 @@
 import type { ValidationTargets } from "hono";
-import type { ZodType } from "zod/v4";
-import { z } from "zod/v4";
+import type { ZodType } from "zod";
+import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 
 import { ErrorSet } from "../utils/util.errors.js";

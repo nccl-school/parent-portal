@@ -6,85 +6,66 @@ on:
       - dev
 
 jobs:
-  test-and-build:
+  ci:
     name: CI - Build & test
     runs-on: ubuntu-latest
     environment:
       name: test
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      # The .env and .env.spec needs to be created for docker compose
-      # so that it can load to the proper variables when it creates the
-      # docker services
+      # Create the base env file for the build
       - name: Create .env file
         run: |
           touch .env
-          touch .env.spec 
-          echo POSTGRES_DB=${{ vars.POSTGRES_DB }} >> .env
-          echo POSTGRES_USER=${{ vars.POSTGRES_USER }} >> .env
-          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
-          echo POSTGRES_HOST=${{ vars.POSTGRES_HOST }} >> .env
-          echo POSTGRES_PORT=${{ vars.POSTGRES_PORT }} >> .env
-          echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
-          echo AUTH_TOKEN=${{ secrets.AUTH_TOKEN }} >> .env
-          echo NCCL_API_URL=${{ vars.NCCL_API_URL }} >> .env
-          echo VITE_NCCL_API_URL=${{ vars.NCCL_API_URL }} >> .env
+          echo NODE_ENV=production >> .env
+          echo NCCL_ENVIRONMENT=${{ vars.NCCL_ENVIRONMENT }} >> .env
           echo NCCL_APP_URL=${{ vars.NCCL_APP_URL }} >> .env
-          echo CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }} >> .env
-          echo CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }} >> .env
-          echo CLERK_WEBHOOK_SIGNING_SECRET=${{ secrets.CLERK_WEBHOOK_SIGNING_SECRET }} >> .env
-          echo GOOGLE_CALENDAR_API_KEY=${{ secrets.GOOGLE_CALENDAR_API_KEY }} >> .env
-          echo GOOGLE_CALENDAR_ID_NCCL_PUBLIC=${{ secrets.GOOGLE_CALENDAR_ID_NCCL_PUBLIC }} >> .env
+          echo NCCL_API_URL=${{ vars.NCCL_API_URL }} >> .env
+          echo GCP_CLOUD_STORAGE_BUCKET=${{ secrets.GCP_CLOUD_STORAGE_BUCKET }} >> .env
+          echo BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }} >> .env
+          echo GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }} >> .env
+          echo RESEND_API_KEY=${{ secrets.RESEND_API_KEY }} >> .env
+          echo SUPER_USER_EMAIL=${{ secrets.SUPER_USER_EMAIL }} >> .env
+          echo SUPER_USER_PASSWORD=${{ secrets.SUPER_USER_PASSWORD }} >> .env
+          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+          echo SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} >> .env
+          echo SENTRY_ORG=${{ vars.SENTRY_ORG }} >> .env
+          echo SENTRY_PROJECT_APP=${{ vars.SENTRY_PROJECT_APP }} >> .env
+          echo SENTRY_PROJECT_API=${{ vars.SENTRY_PROJECT_API }} >> .env
+          echo SENTRY_DSN_APP=${{ vars.SENTRY_DSN_APP }} >> .env
+          echo SENTRY_DSN_API=${{ vars.SENTRY_DSN_API }} >> .env
+          echo SENTRY_ENABLED=0 >> .env
 
-      - name: Set node.js version
-        id: node_version
-        run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
-
-      - name: Enable corepack # Ensures the correct version of yarn is used
+      - name: Enable corepack
         run: corepack enable
 
       - name: Set Up node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version-file: .nvmrc
           cache: "yarn"
 
       - name: Install dependencies
         run: yarn install --immutable
 
-      - name: Generate Prisma client
-        working-directory: packages/api
-        env:
-          NODE_ENV: test
-        run: npx prisma generate
-
-      - name: Build project
+      - name: Build
         run: yarn build
         env:
-          VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
-          VITE_NCCL_API_URL: ${{ vars.NCCL_API_URL }}
           TURBO_TOKEN: ${{secrets.TURBO_TOKEN}}
           TURBO_TEAM: ${{secrets.TURBO_TEAM_ID}}
 
       - name: Install production dependencies
+        shell: bash
         run: yarn workspaces focus --production --all
 
-      - name: Start containers
-        run: docker compose -f docker-compose.spec.yml --progress plain up -d
-
-      - name: Pause for containers
-        run: |
-          docker compose ps
-
-      - name: Reset and seed DB
-        working-directory: packages/api
-        env:
-          NODE_ENV: test:host
-        run: |
-          npx prisma migrate reset --force --skip-generate
+      # Part of the setup script is to read values off
+      # of the base env file to create a new .env.spec
+      # to be able to create the test environment
+      - name: Setup e2e environment
+        run: yarn e2e:up
 
       - name: Run API tests
-        run: npx playwright test
+        run: yarn playwright test

@@ -1,54 +1,53 @@
-import path from "path";
-
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { logger } from "hono/logger";
-import dotenv from "dotenv";
-import { clerkMiddleware } from "@hono/clerk-auth";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
 import { cors } from "hono/cors";
 
 import { prismaMiddleware } from "./middleware/middleware.prisma.js";
-import { currentUserMiddleware } from "./middleware/middleware.current-user.js";
+import { sessionMiddleware } from "./middleware/middleware.session.js";
 import { suggestion } from "./features/suggestion/suggestion.route.js";
 import { user } from "./features/user/user.route.js";
 import { serializeError } from "./utils/util.errors.js";
-import { webhooks } from "./features/webhooks/webhooks.route.js";
 import { role } from "./features/role/role.route.js";
-import { task } from "./features/task/task.route.js";
+import { auth } from "./features/auth/auth.route.js";
 import { resource } from "./features/resource/resource.route.js";
-
-// Environment Vars
-const envPath = path.resolve(import.meta.dirname, "../../../.env");
-dotenv.config({ path: envPath });
+import { emailMiddleware } from "./middleware/middleware.email.js";
+import { account } from "./features/account/account.route.js";
+import { directory } from "./features/directory/directory.route.js";
+import { health } from "./features/health/health.route.js";
 
 const app = new Hono();
 
-// Middleware - Log and add the db to the context
+// Middleware - CORS, logging, transactional email
 app.use(logger());
+app.use(emailMiddleware);
+app.use(prismaMiddleware);
 app.use(
-  "/api/*",
   cors({
-    origin: "*", // or specific domains: ["https://yourapp.com"]
-    allowHeaders: ["Authorization", "Content-Type"],
+    origin: "*",
+    allowHeaders: ["Content-Type", "Authorization"],
     allowMethods: ["*"],
+    exposeHeaders: ["Content-Length"],
+    maxAge: 600,
+    credentials: true,
   })
 );
-app.use("/api/*", prismaMiddleware);
 
-// Webhooks
-app.route("/api/webhooks", webhooks);
+// Health check
+app.route("/health", health);
 
-// Middleware - Authenticate and add the current user to the context
-app.use("/api/*", clerkMiddleware());
-app.use("/api/*", currentUserMiddleware);
+// Authentication routes
+app.route("/api/auth", auth);
+app.route("/api/account", account);
 
-// Authenticated routes
+// Session aware routes
+app.use(sessionMiddleware);
 app.route("/api/suggestion", suggestion);
-app.route("/api/task", task);
 app.route("/api/role", role);
 app.route("/api/user", user);
 app.route("/api/resource", resource);
+app.route("/api/directory", directory);
 
 // Errors
 app.onError((error, c) => {
@@ -60,6 +59,7 @@ serve(
   {
     fetch: app.fetch,
     port: 8080,
+    hostname: "0.0.0.0",
   },
   (info) => {
     console.log(`Server is running on http://localhost:${info.port}`);

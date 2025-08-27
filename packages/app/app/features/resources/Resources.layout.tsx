@@ -15,7 +15,7 @@ import { ResourceMainBreadcrumbs } from "./ResourceMainBreadcrumbs";
 import { ResourcePreview } from "./ResourcePreview";
 
 import { getNCCLClient } from "../../utils/server";
-import { renderData } from "../../utils/client";
+import { renderLoaderData } from "../../utils/client";
 import { ResourcesCreateFolder } from "../resources-create-folder";
 import { ResourcesAdd } from "../resources-add/ResourcesAdd";
 
@@ -61,7 +61,7 @@ export default function ResourcesLayout({ loaderData }: Route.ComponentProps) {
         <ResourceMainSearch />
         {/* <ResourceMainRecentlyViewed /> */}
         <ResourceMainBreadcrumbs>
-          {renderData(loaderData, {
+          {renderLoaderData(loaderData, {
             loading: "Loading...",
             ok: (data) =>
               data.breadcrumbs.map((breadcrumb, i, origArr) => {

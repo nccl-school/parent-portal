@@ -1,15 +1,12 @@
-import type z from "zod/v4";
+import type z from "zod";
 
 import {
   GetUserParamsSchema,
-  InviteUsersRequestSchema,
-  ResendInviteUserParamsSchema,
   UpdateUserRoleParamsSchema,
   UpdateUserRoleRequestSchema,
+  type GetCurrentUserResponse,
   type GetUserListResponse,
   type GetUserResponse,
-  type InviteUsersResponse,
-  type ResendInviteUserResponse,
   type UpdateUserRoleResponse,
 } from "./user.utils.js";
 
@@ -21,6 +18,15 @@ import {
 export class UserClient extends ApiClient {
   constructor(options: ApiClientOptions) {
     super({ basePath: "/user", ...options });
+  }
+
+  /**
+   * Get the current user
+   */
+  public async getCurrentUser() {
+    return this._get<GetCurrentUserResponse>({
+      path: `/current`,
+    });
   }
 
   /**
@@ -55,28 +61,6 @@ export class UserClient extends ApiClient {
       path: "/:id/role",
       params: [UpdateUserRoleParamsSchema, { id: userId }],
       body: [UpdateUserRoleRequestSchema, body],
-    });
-  }
-
-  /**
-   * Invite a group of users by email that share
-   * the same role
-   */
-  public async inviteUsers(body: z.infer<typeof InviteUsersRequestSchema>) {
-    return this._mutateJSON<InviteUsersResponse>({
-      method: "POST",
-      path: "/invite",
-      body: [InviteUsersRequestSchema, body],
-    });
-  }
-
-  /**
-   * Resend an invitation to a user
-   */
-  public async resendInvitation(userId: string) {
-    return this._get<ResendInviteUserResponse>({
-      path: "/resend-invite/:id",
-      params: [ResendInviteUserParamsSchema, { id: userId }],
     });
   }
 }

@@ -1,0 +1,39 @@
+name: "Setup & Install"
+description: "Set's up node and prepares the repo for CI & CD"
+author: "Drew DeCarme (drew@greenflash.digital)"
+
+inputs:
+  token:
+    description: The Turborepo token used for remote build caching
+    required: true
+  team:
+    description: The Turborepo team used to house the remote build caches
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set Up node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: .nvmrc
+        cache: "yarn"
+
+    - name: Enable corepack # Ensures the correct version of yarn is used
+      shell: bash 
+      run: corepack enable
+
+    - name: Install dependencies
+      shell: bash 
+      run: yarn install --immutable
+
+    - name: Build
+      shell: bash 
+      run: yarn build
+      env:
+        TURBO_TOKEN: ${{ inputs.token }}
+        TURBO_TEAM_ID: ${{ inputs.team }}
+
+    - name: Install production dependencies
+      shell: bash 
+      run: yarn workspaces focus --production --all

@@ -45,9 +45,7 @@ function ModalContent() {
   const { close: closeModal } = useModalContext();
 
   const fetcher = useFetcher<typeof createUserAction>();
-  const errors = getValidationErrors<keyof CreateSuggestionResponse>(
-    fetcher.data
-  );
+  const errors = getValidationErrors<CreateSuggestionResponse>(fetcher.data);
 
   useEffect(() => {
     if (!fetcher.data) return;

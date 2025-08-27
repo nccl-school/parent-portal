@@ -1,4 +1,4 @@
-import z from "zod/v4";
+import z from "zod";
 
 import {
   createQuerySchema,
@@ -164,6 +164,9 @@ export type GetSuggestionCommentsResponse = z.infer<
 // Create a comment on a suggestion
 export const CreateSuggestionCommentsRequestSchema =
   SuggestionCommentSchema.pick({ isAnonymous: true, comment: true });
+export type CreateSuggestionCommentsRequest = z.infer<
+  typeof CreateSuggestionCommentsRequestSchema
+>;
 export const CreateSuggestionCommentsResponseSchema =
   SuggestionCommentSchema.omit({
     createdBy: true,

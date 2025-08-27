@@ -25,7 +25,7 @@ import {
   SuggestionViewCommentsTitle,
 } from "./SuggestionViewCommentsTitle";
 
-import { dates, renderData } from "../../utils/client";
+import { dates, renderLoaderData } from "../../utils/client";
 import type { loader } from "../../api/api.suggestion.getOrUpdateUnique";
 import { getUserName } from "../user";
 
@@ -89,20 +89,20 @@ function ModalContent() {
     <>
       <ModalHeader ref={modalHeaderRef}>
         <ModalHeaderTitle>
-          {renderData(data, { ok: (d) => d.title })}
+          {renderLoaderData(data, { ok: (d) => d.title })}
         </ModalHeaderTitle>
       </ModalHeader>
       <ModalBody>
         <DescriptionList>
           <DescriptionListTag>Created on</DescriptionListTag>
           <DescriptionListData>
-            {renderData(data, {
+            {renderLoaderData(data, {
               ok: (d) => dates.format(d.createdAt, "Relative"),
             })}
           </DescriptionListData>
           <DescriptionListTag>Author</DescriptionListTag>
           <DescriptionListData>
-            {renderData(data, {
+            {renderLoaderData(data, {
               ok: (d) => (
                 <div
                   style={{
@@ -136,7 +136,7 @@ function ModalContent() {
           Description
         </Typography>
         <Typography dxVariant="body3" dxNode="div" className={descStyles}>
-          {renderData(data, {
+          {renderLoaderData(data, {
             ok: (d) => d.description,
           })}
         </Typography>
@@ -146,7 +146,7 @@ function ModalContent() {
         <SuggestionViewCommentsTitle
           ref={commentTitleRef}
           numOfComments={
-            renderData(data, {
+            renderLoaderData(data, {
               loading: 0,
               ok: (d) => d.numOfComments,
             }) as number

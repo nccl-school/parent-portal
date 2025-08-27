@@ -53,7 +53,7 @@ export function ResourcesAddContentGoogleDoc() {
         Toaster.launch({
           variant: "error",
           message: res.error.message,
-          dismissal: "manual",
+          dismiss: "manual",
         });
         break;
 

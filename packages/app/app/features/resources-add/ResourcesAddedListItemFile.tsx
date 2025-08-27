@@ -8,9 +8,9 @@ import { Callout, Icon, Progress, Typography } from "@nccl/components";
 import { makeColor, makeRem } from "@nccl/theme";
 import { classes, exhaustiveMatchGuard } from "@stratum-ui/core/utils";
 import { memo, useEffect, useRef, useState } from "react";
-import { useAuth } from "@clerk/react-router";
 import { match } from "ts-pattern";
 
+import { useSession } from "../../hooks/hook.useSession";
 import {
   getResourceIcon,
   getResourceIconColor,
@@ -83,13 +83,13 @@ export const ResourcesAddedListItemFile = memo(
       | { status: "ok"; data: CreateResourceResponse }
       | { status: "error"; error: ErrorResponse }
     >({ status: "loading" });
-    const { getToken } = useAuth();
+    const session = useSession();
 
     useEffect(() => {
       async function uploadWithProgress() {
         if (hasStartedRef.current) return;
         hasStartedRef.current = true;
-        const token = await getToken();
+        const token = session?.token;
         if (!token) throw new Error("Missing auth token");
 
         const xhr = new XMLHttpRequest();
@@ -160,13 +160,13 @@ export const ResourcesAddedListItemFile = memo(
 
       uploadWithProgress();
     }, [
-      getToken,
       props.file,
       props.name,
       props.owner,
       props.parentResourceId,
       props.slug,
       props.type,
+      session?.token,
     ]);
 
     switch (props.type) {

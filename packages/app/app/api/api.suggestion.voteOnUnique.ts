@@ -1,7 +1,7 @@
-import z from "zod/v4";
+import z from "zod";
 import { SuggestionVoteTypeSchema } from "@nccl/api/client";
 
-import type { Route } from "./+types/api.user.inviteUsers";
+import type { Route } from "./+types/api.suggestion.voteOnUnique";
 
 import { validateFormData } from "../utils/isomorphic";
 import { getNCCLClient } from "../utils/server";

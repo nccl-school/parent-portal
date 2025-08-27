@@ -1,6 +1,6 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 
-import { zDateStringSchema, zMessageSchema } from "../../utils/util.schema.js";
+import { zDateStringSchema } from "../../utils/util.schema.js";
 import { RoleSchema, RolesSchema } from "../role/role.utils.js";
 
 export const UserStatusSchema = z.literal(["INVITED", "ACTIVE", "DISABLED"]);
@@ -9,26 +9,42 @@ export type UserStatus = z.infer<typeof UserStatusSchema>;
 export const UserSchema = z.object({
   id: z.string(),
   email: z.email(),
-  authId: z.string().nullable(),
+  name: z.string(),
+  firstName: z.string(),
+  lastName: z.string(),
+  emailVerified: z.boolean(),
+  phone: z.string().nullable(),
   imageUrl: z.string().nullable(),
-  firstName: z.string().nullable(),
-  lastName: z.string().nullable(),
+  banned: z.boolean().nullable(),
+  banReason: z.string().nullable(),
+  isSuper: z.boolean().nullable(),
   createdAt: zDateStringSchema,
   updatedAt: zDateStringSchema,
-  status: UserStatusSchema,
-  invitationId: z.string().nullable(),
-  role: RoleSchema,
 });
 export type User = z.infer<typeof UserSchema>;
+export const UserWithRoleSchema = z.object({
+  ...UserSchema.shape,
+  role: RoleSchema,
+});
+export type UserWithRole = z.infer<typeof UserWithRoleSchema>;
+
+// Get Current user
+export const GetCurrentUserResponseSchema = z.object({
+  ...UserSchema.shape,
+  role: RoleSchema,
+});
+export type GetCurrentUserResponse = z.infer<
+  typeof GetCurrentUserResponseSchema
+>;
 
 // Get a list of users
-export const GetUserListResponseSchema = UserSchema.array();
+export const GetUserListResponseSchema = UserWithRoleSchema.array();
 export type GetUserListResponse = z.infer<typeof GetUserListResponseSchema>;
 
 // Get a user
 export const GetUserParamsSchema = UserSchema.pick({ id: true });
 export const GetUserResponseSchema = z.object({
-  ...UserSchema.omit({ role: true }).shape,
+  ...UserSchema.shape,
   roleId: RolesSchema,
 });
 export type GetUserResponse = z.infer<typeof GetUserResponseSchema>;
@@ -47,26 +63,7 @@ export const UpdateUserRoleParamsSchema = z.object({
 export const UpdateUserRoleRequestSchema = z.object({
   role: RolesSchema,
 });
-export const UpdateUserRoleResponseSchema = UserSchema;
+export const UpdateUserRoleResponseSchema = UserWithRoleSchema;
 export type UpdateUserRoleResponse = z.infer<
   typeof UpdateUserRoleResponseSchema
->;
-
-// Invite Users
-export const InviteUsersRequestSchema = z.object({
-  email_addresses: z.array(z.email({ pattern: z.regexes.html5Email })),
-  role: RolesSchema,
-});
-export type InviteUsersRequest = z.infer<typeof InviteUsersRequestSchema>;
-export const InviteUsersResponseSchema = z.object({
-  message: z.string(),
-  userCount: z.number(),
-});
-export type InviteUsersResponse = z.infer<typeof InviteUsersResponseSchema>;
-
-// ReInvite User
-export const ResendInviteUserParamsSchema = z.object({ id: z.string() });
-export const ResendInviteUserResponseSchema = zMessageSchema;
-export type ResendInviteUserResponse = z.infer<
-  typeof ResendInviteUserResponseSchema
 >;

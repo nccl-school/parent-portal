@@ -9,7 +9,7 @@ import { css } from "@linaria/core";
 import { makeColor, makeRem } from "@nccl/theme";
 import { useEffect, useRef, useState } from "react";
 import { href, useFetcher } from "react-router";
-import type { CreateSuggestionCommentsResponse } from "@nccl/api/client";
+import type { CreateSuggestionCommentsRequest } from "@nccl/api/client";
 
 import { useSuggestionViewModalContext } from "./suggestion-view.useSuggestionViewModalContext";
 
@@ -55,8 +55,7 @@ function CommentBox({ onCancel }: { onCancel: () => void }) {
   const formRef = useRef<HTMLFormElement | null>(null);
 
   const { Form, data } = useFetcher<typeof action>();
-  const errors =
-    getValidationErrors<keyof CreateSuggestionCommentsResponse>(data);
+  const errors = getValidationErrors<CreateSuggestionCommentsRequest>(data);
 
   useEffect(() => {
     if (!data || isError(data)) return;

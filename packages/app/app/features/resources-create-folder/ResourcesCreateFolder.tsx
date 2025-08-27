@@ -67,8 +67,6 @@ export function ResourcesCreateFolderContent() {
   });
 
   const fetcher = useFetcher<typeof action>();
-  console.log(fetcher.data);
-
   const handleSubmit = useCallback(async () => {
     const stateWithOwner: CreateFolderRequest = {
       ...state,
@@ -87,7 +85,7 @@ export function ResourcesCreateFolderContent() {
     closeModal();
   }, [closeModal, fetcher.data]);
 
-  const errors = getValidationErrors<keyof CreateFolderRequest>(fetcher.data);
+  const errors = getValidationErrors<CreateFolderRequest>(fetcher.data);
 
   return (
     <>

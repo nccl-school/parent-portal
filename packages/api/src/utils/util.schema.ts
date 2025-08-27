@@ -1,6 +1,6 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 import leoProfanity from "leo-profanity";
-import type { ZodRawShape, ZodString } from "zod/v4";
+import type { ZodRawShape, ZodString } from "zod";
 
 export const zDateStringSchema = z.preprocess(
   (val) => {
@@ -37,6 +37,18 @@ export function checkProfanity<T extends ZodString>(s: T) {
   });
 }
 
+/**
+ * Adds a profanity check to any Zod string schema.
+ */
+function withProfanityCheck<T extends ZodString>(schema: T): T {
+  return schema.refine((val) => !leoProfanity.check(val), {
+    message: "Please remove inappropriate language.",
+  }) as T;
+}
+
+/**
+ * @deprecated Please use the zStringRequired or zStringOptional
+ */
 export function zString(options?: { required?: string }) {
   const baseSchema = z.string().refine(
     (value) => {
@@ -45,7 +57,27 @@ export function zString(options?: { required?: string }) {
     { error: options?.required }
   );
   return checkProfanity(baseSchema);
-  return baseSchema;
+}
+
+/**
+ * Required string with profanity check.
+ * - Enforces presence (`required_error`).
+ * - Trims whitespace.
+ * - Must be at least 1 non-space character.
+ */
+export function zStringRequired(message = "A value is required") {
+  return withProfanityCheck(
+    z.string({ error: message }).trim().min(1, { message }) // empty string check
+  );
+}
+
+/**
+ * Optional string with profanity check.
+ * - Trims whitespace.
+ * - Profanity check only runs if value is provided.
+ */
+export function zStringOptional() {
+  return withProfanityCheck(z.string().trim()).optional();
 }
 
 export const zMessageSchema = z.object({ message: z.string() });

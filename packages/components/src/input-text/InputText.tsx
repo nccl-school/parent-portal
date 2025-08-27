@@ -41,6 +41,11 @@ const styles = css`
     border: 1px solid transparent;
     background: ${makeColor("neutral-light-100", { opacity: 0.4 })};
   }
+
+  &:disabled {
+    background: ${makeColor("light-300")} !important;
+    color: ${makeColor("neutral-light-500")} !important;
+  }
 `;
 
 export function getInputStyles({

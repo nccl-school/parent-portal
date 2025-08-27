@@ -1,6 +1,7 @@
 import { css } from "@linaria/core";
-import type { ZodObject, ZodType } from "zod/v4";
-import { z } from "zod/v4";
+import type { ActionFunctionArgs } from "react-router";
+import type { ZodObject, ZodType } from "zod";
+import { z } from "zod";
 
 export function capitalizeFirstLetter(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -15,10 +16,19 @@ export const placeholder = "-- --";
 export async function validateFormData<T extends ZodType>(
   schema: T,
   formData: FormData
-) {
+): Promise<z.core.output<T>> {
   const formDataObj = Object.fromEntries(formData.entries());
-  console.log(formDataObj);
-  return z.parse(schema, formDataObj);
+  return z.parse(schema, formDataObj) as z.core.output<T>;
+}
+
+export async function getFormData<
+  A extends ActionFunctionArgs,
+  T extends ZodObject,
+>(args: A, schema: T) {
+  const formData = await args.request.formData();
+  const formDataObj = Object.fromEntries(formData.entries());
+  const res = await schema.safeParseAsync(formDataObj);
+  return res;
 }
 
 export function createValidator<T extends ZodObject>(schema: T) {
@@ -37,3 +47,8 @@ export const backgroundGradient = css`
     hsla(300deg, 100%, 94%, 0.4) 100%
   );
 `;
+
+export const CONSTANTS = {
+  GOOGLE_CALENDAR_ID_NCCL_PUBLIC:
+    "ja90kh5sm2d9tnmku5s59fs83s@group.calendar.google.com",
+};

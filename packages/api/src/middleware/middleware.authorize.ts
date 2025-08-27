@@ -5,7 +5,7 @@ import { ErrorSet } from "../utils/util.errors.js";
 
 export const authorize = (roleOrRoles: Roles | Roles[]) =>
   createMiddleware(async (c, next) => {
-    const currentUser = c.get("currentUser");
+    const currentUser = c.get("user");
     console.log(
       "Checking users role against required role",
       currentUser.roleId,
@@ -14,7 +14,7 @@ export const authorize = (roleOrRoles: Roles | Roles[]) =>
     if (typeof roleOrRoles === "string" && currentUser.roleId !== roleOrRoles) {
       throw new ErrorSet.unauthorized();
     }
-    if (!roleOrRoles.includes(currentUser.roleId)) {
+    if (!roleOrRoles.includes(currentUser.roleId as Roles)) {
       throw new ErrorSet.unauthorized();
     }
     await next();

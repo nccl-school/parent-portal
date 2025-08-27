@@ -1,9 +1,11 @@
-import type { ErrorResponse } from "@nccl/api/client";
+import { ErrorResponseSchema, type ErrorResponse } from "@nccl/api/client";
 import type { ReactNode } from "react";
 import { match } from "ts-pattern";
+import z from "zod";
 
-import type { ErrorPayloadValidation } from "./server";
 import { placeholder } from "./isomorphic";
+
+import type { Route as RootRoute } from "../+types/root";
 
 export class DateFactory {
   private static instance: DateFactory;
@@ -86,25 +88,56 @@ export class DateFactory {
 
 export const dates = DateFactory.getInstance();
 
-function isValidationError<T extends string>(
-  data: unknown
-): data is ErrorPayloadValidation<T> {
-  return (
-    typeof data === "object" &&
-    data !== null &&
-    "error_type" in data &&
-    (data as ErrorResponse).error_type === "validation"
-  );
-}
-
 export function isError(data: unknown): data is ErrorResponse {
   return typeof data === "object" && data !== null && "error_type" in data;
 }
 
-export function getValidationErrors<K extends string>(
+export type ObjectKeys<T> = Extract<keyof T, string>;
+
+export function getValidationErrors<K extends Record<string, unknown>>(
   data: unknown
-): ErrorPayloadValidation<K>["errors"] {
-  return isValidationError<K>(data) ? data.errors : {};
+): Partial<Record<ObjectKeys<K>, string[]>> {
+  const parsed = ErrorResponseSchema.safeParse(data);
+  if (!parsed.success) return {};
+  if (parsed.data.error_type !== "validation") return {};
+  return parsed.data.errors as Partial<Record<ObjectKeys<K>, string[]>>;
+}
+
+const authErrorCodes = [
+  "USER_NOT_FOUND",
+  "FAILED_TO_CREATE_USER",
+  "FAILED_TO_CREATE_SESSION",
+  "FAILED_TO_UPDATE_USER",
+  "FAILED_TO_GET_SESSION",
+  "INVALID_PASSWORD",
+  "INVALID_EMAIL",
+  "INVALID_EMAIL_OR_PASSWORD",
+  "SOCIAL_ACCOUNT_ALREADY_LINKED",
+  "PROVIDER_NOT_FOUND",
+  "INVALID_TOKEN",
+  "ID_TOKEN_NOT_SUPPORTED",
+  "FAILED_TO_GET_USER_INFO",
+  "USER_EMAIL_NOT_FOUND",
+  "EMAIL_NOT_VERIFIED",
+  "PASSWORD_TOO_SHORT",
+  "PASSWORD_TOO_LONG",
+  "USER_ALREADY_EXISTS",
+  "EMAIL_CAN_NOT_BE_UPDATED",
+  "CREDENTIAL_ACCOUNT_NOT_FOUND",
+  "SESSION_EXPIRED",
+  "FAILED_TO_UNLINK_LAST_ACCOUNT",
+  "ACCOUNT_NOT_FOUND",
+  "USER_ALREADY_HAS_PASSWORD",
+];
+
+export function getAuthError(data: unknown) {
+  const parsed = z
+    .object({ message: z.string(), code: z.string() })
+    .safeParse(data);
+  if (!parsed.success) return undefined;
+  const { code, message } = parsed.data;
+  if (!authErrorCodes.includes(code)) return undefined;
+  return message;
 }
 
 type ParseFetcherResult<D> =
@@ -123,7 +156,7 @@ export function parseFetcherData<D>(data: D): ParseFetcherResult<D> {
   return { status: "ok", data: data as Exclude<D, ErrorResponse> };
 }
 
-export function getData<D>(loaderData: D) {
+export function parseLoaderData<D>(loaderData: D) {
   const res = parseFetcherData<D>(loaderData);
   switch (res.status) {
     case "ok":
@@ -134,7 +167,7 @@ export function getData<D>(loaderData: D) {
   }
 }
 
-export function renderData<D>(
+export function renderLoaderData<D>(
   data: D,
   callbacks: {
     loading?: ReactNode;
@@ -162,4 +195,11 @@ export function slugify(input: string): string {
     .replace(/\s+/g, "-") // replace spaces with hyphens
     .replace(/--+/g, "-") // collapse multiple hyphens
     .replace(/^-+|-+$/g, ""); // trim leading/trailing hyphens
+}
+
+export function getClientVar(
+  envVar: keyof RootRoute.ComponentProps["loaderData"]["ENV"]
+) {
+  // @ts-expect-error We're setting this manually
+  return window.__ENV__[envVar];
 }
