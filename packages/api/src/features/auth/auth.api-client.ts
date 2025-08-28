@@ -34,7 +34,7 @@ export class AuthClient extends ApiClient {
   }
 
   async signInGoogle() {
-    return this._request({
+    return this._mutateJSON<{ url: string; redirect: true }>({
       path: "/sign-in/social",
       method: "POST",
       body: [AuthSignInSocialRequestSchema, { provider: "google" }],

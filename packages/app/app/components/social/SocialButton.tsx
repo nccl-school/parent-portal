@@ -42,8 +42,13 @@ const socialIcons = {
   ),
 } as const;
 
-export function SocialButton(
-  props: { dxType: keyof typeof socialIcons } & JSX.IntrinsicElements["button"]
-) {
-  return <button className={socialStyles}>{socialIcons[props.dxType]}</button>;
+export function SocialButton({
+  dxType,
+  ...restProps
+}: { dxType: keyof typeof socialIcons } & JSX.IntrinsicElements["button"]) {
+  return (
+    <button className={socialStyles} {...restProps}>
+      {socialIcons[dxType]}
+    </button>
+  );
 }

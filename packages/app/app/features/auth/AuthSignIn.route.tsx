@@ -155,7 +155,15 @@ export default function AuthAcceptInviteRoute(args: Route.ComponentProps) {
           <div>or continue with</div>
         </Typography>
         <SocialButtonGroup>
-          <SocialButton dxType="google" />
+          <Form
+            method="POST"
+            navigate={false}
+            action={href("/api/auth/sign-in/social/:provider", {
+              provider: "google",
+            })}
+          >
+            <SocialButton dxType="google" type="submit" />
+          </Form>
         </SocialButtonGroup>
       </AuthPageFooter>
     </AuthPage>
