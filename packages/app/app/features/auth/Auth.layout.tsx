@@ -13,11 +13,11 @@ const styles = css`
   display: grid;
   place-content: center;
 
-  ${makeResponsive({ to: "laptop" })} {
+  ${makeResponsive({ to: "mobile" })} {
     min-height: 100vh;
     padding: 0;
   }
-  ${makeResponsive({ from: "laptop" })} {
+  ${makeResponsive({ from: "mobile" })} {
     display: grid;
     place-content: center;
     height: 100vh;
@@ -31,11 +31,12 @@ const styles = css`
       0 0 50px rgba(173, 216, 230, 0.35),
       0 0 70px rgba(255, 182, 193, 0.25);
 
-    ${makeResponsive({ to: "laptop" })} {
+    ${makeResponsive({ to: "mobile" })} {
       padding: ${makeRem(16)} ${makeRem(32)};
       min-height: 100vh;
+      width: 100vw;
     }
-    ${makeResponsive({ from: "laptop" })} {
+    ${makeResponsive({ from: "mobile" })} {
       border-radius: ${makeRem(16)};
       padding: ${makeRem(32)} ${makeRem(32)} ${makeRem(44)} ${makeRem(32)};
       width: ${makeRem(500)};
@@ -62,7 +63,6 @@ const styles = css`
 export async function loader(args: Route.LoaderArgs) {
   const ncclClient = getNCCLClient(args);
   const res = await ncclClient.auth.getSession();
-  console.log(res);
   if (res?.session) {
     console.log("User is already signed in. Redirecting to home");
     throw redirect("/");

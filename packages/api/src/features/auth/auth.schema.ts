@@ -11,6 +11,13 @@ export type AuthSignInEmailRequest = z.infer<
   typeof AuthSignInEmailRequestSchema
 >;
 
+export const AuthSignInSocialRequestSchema = z.discriminatedUnion("provider", [
+  z.object({ provider: z.literal("google") }),
+]);
+export type AuthSignInSocialRequest = z.infer<
+  typeof AuthSignInSocialRequestSchema
+>;
+
 export const AuthForgotPasswordRequestSchema = z.object({
   email: z.string(),
   redirectTo: z.string(),

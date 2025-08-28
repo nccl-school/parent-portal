@@ -2,6 +2,7 @@ import {
   AuthForgotPasswordRequestSchema,
   AuthResetPasswordSchema,
   AuthSignInEmailRequestSchema,
+  AuthSignInSocialRequestSchema,
   type AuthForgotPasswordRequest,
   type AuthResetPassword,
   type AuthSignInEmailRequest,
@@ -12,6 +13,9 @@ import {
   type ApiClientOptions,
 } from "../../api-client/ApiClient.js";
 import type { auth as betterAuth } from "../../auth.js";
+
+// Better Auth Routes
+// https://github.com/better-auth/better-auth/tree/canary/packages/better-auth/src/api/routes
 
 export class AuthClient extends ApiClient {
   constructor(options: ApiClientOptions) {
@@ -26,6 +30,14 @@ export class AuthClient extends ApiClient {
       options: {
         contentType: "application/json",
       },
+    });
+  }
+
+  async signInGoogle() {
+    return this._request({
+      path: "/sign-in/social",
+      method: "POST",
+      body: [AuthSignInSocialRequestSchema, { provider: "google" }],
     });
   }
 

@@ -44,11 +44,16 @@ export const auth = betterAuth({
   //     // implement your logic here to send email verification
   //   },
   // },
-  // socialProviders: {
-  //   google: {
-  //     clientId:
-  //   }
-  // },  // TODO: social providers,
+  socialProviders: {
+    google: {
+      clientId: ENV_RUNTIME.getOne("BETTER_AUTH_PROVIDER_GOOGLE_CLIENT_ID"),
+      clientSecret: ENV_RUNTIME.getOne(
+        "BETTER_AUTH_PROVIDER_GOOGLE_CLIENT_SECRET"
+      ),
+      accessType: "offline",
+      prompt: "select_account consent",
+    },
+  },
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
