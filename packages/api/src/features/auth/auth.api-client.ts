@@ -6,6 +6,7 @@ import {
   type AuthForgotPasswordRequest,
   type AuthResetPassword,
   type AuthSignInEmailRequest,
+  type AuthSignInSocialRequest,
 } from "./auth.schema.js";
 
 import {
@@ -33,11 +34,27 @@ export class AuthClient extends ApiClient {
     });
   }
 
-  async signInGoogle() {
+  /**
+   * This client method signs the user in using google. It also
+   * will sign the user up using google as well since the logic
+   * to determine if the user is allowed into the platform is handled
+   * server side. In order to sign the user up, you must send
+   * the `inviteToken` into the params of the function otherwise
+   * the application will think that you're trying to sign in.
+   *
+   * NOTE: The request URL params are to ensure that we can use some
+   * values of the body without actually using the body so we can proxy
+   * the raw request onto the hono handler
+   */
+  async signInGoogle(options: Omit<AuthSignInSocialRequest, "provider">) {
+    let path = `/sign-in/social?errorCallbackURL=${options.errorCallbackURL}`;
+    if (options?.inviteToken) {
+      path = path.concat(`&inviteToken=${options.inviteToken}`);
+    }
     return this._mutateJSON<{ url: string; redirect: true }>({
-      path: "/sign-in/social",
+      path,
       method: "POST",
-      body: [AuthSignInSocialRequestSchema, { provider: "google" }],
+      body: [AuthSignInSocialRequestSchema, { provider: "google", ...options }],
     });
   }
 

@@ -65,6 +65,7 @@ export default [
       index("./features/auth/AuthResetPasswordIndex.route.tsx"),
       route("success", "./features/auth/AuthResetPasswordSuccess.route.tsx"),
     ]),
+    route("oauth-error", "./features/auth/AuthOAuthError.route.tsx"),
   ]),
 
   // APIs

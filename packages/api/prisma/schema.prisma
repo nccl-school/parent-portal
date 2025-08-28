@@ -86,8 +86,8 @@ model User {
   id                 String                   @id @default(cuid())
   email              String                   @unique
   name               String
-  firstName          String
-  lastName           String
+  firstName          String                   @default("")
+  lastName           String                   @default("")
   emailVerified      Boolean
   phone              String?
   imageUrl           String?

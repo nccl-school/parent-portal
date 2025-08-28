@@ -10,8 +10,6 @@ import {
 import { Form, href, Link, useSearchParams } from "react-router";
 import { useEffect } from "react";
 import { parseError } from "@nccl/api/client";
-import { css } from "@linaria/core";
-import { makeColor, makeRem, makeResponsive } from "@nccl/theme";
 
 import type { Route } from "./+types/AuthAcceptInvite.route";
 import { AuthPageFooter } from "./AuthPageFooter";
@@ -27,6 +25,7 @@ import { getFormData } from "../../utils/isomorphic";
 import { assembleTitle } from "../../utils/util.assemble-title";
 import { useIsSubmitting } from "../../hooks/hook.useIsSubmitting";
 import { SocialButtonGroup } from "../../components/social/SocialButtonGroup";
+import { SocialOr } from "../../components/social/SocialOr";
 
 const schema = z.object({
   email: z
@@ -59,35 +58,6 @@ export async function action(args: Route.ActionArgs) {
     callbackUrl: redirect_url,
   });
 }
-
-const styles = css`
-  height: ${makeRem(48)};
-  display: grid;
-  place-content: center;
-  position: relative;
-  line-height: ${makeRem(48)};
-
-  ${makeResponsive({ from: "laptop" })} {
-    margin-bottom: ${makeRem(16)};
-  }
-
-  & > div {
-    padding: 0 ${makeRem(16)};
-    background: ${makeColor("white")};
-    z-index: 10;
-    color: ${makeColor("neutral-dark-200")};
-  }
-
-  &::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 50%;
-    height: 1px;
-    background-color: ${makeColor("light-500")};
-    width: 100%;
-  }
-`;
 
 export default function AuthAcceptInviteRoute(args: Route.ComponentProps) {
   const isSubmitting = useIsSubmitting();
@@ -151,9 +121,7 @@ export default function AuthAcceptInviteRoute(args: Route.ComponentProps) {
         </Form>
       </AuthPageBody>
       <AuthPageFooter>
-        <Typography dxVariant="body3" dxNode="div" className={styles}>
-          <div>or continue with</div>
-        </Typography>
+        <SocialOr />
         <SocialButtonGroup>
           <Form
             method="POST"

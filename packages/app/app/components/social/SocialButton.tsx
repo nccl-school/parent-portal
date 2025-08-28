@@ -11,6 +11,12 @@ const socialStyles = css`
   border-radius: 50%;
   border: 2px solid ${makeColor("light-500")};
   width: unset;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+
+  &:hover {
+    background: ${makeColor("light-300")};
+  }
 `;
 
 const socialIcons = {

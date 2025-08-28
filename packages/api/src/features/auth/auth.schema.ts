@@ -11,9 +11,16 @@ export type AuthSignInEmailRequest = z.infer<
   typeof AuthSignInEmailRequestSchema
 >;
 
-export const AuthSignInSocialRequestSchema = z.discriminatedUnion("provider", [
-  z.object({ provider: z.literal("google") }),
-]);
+export const AuthSignInSocialRequestSchema = z
+  .discriminatedUnion("provider", [z.object({ provider: z.literal("google") })])
+  .and(
+    z.object({
+      inviteToken: z.string().optional(),
+      newUserCallbackURL: z.string(),
+      callbackURL: z.string(),
+      errorCallbackURL: z.string(),
+    })
+  );
 export type AuthSignInSocialRequest = z.infer<
   typeof AuthSignInSocialRequestSchema
 >;

@@ -54,6 +54,28 @@ export const auth = betterAuth({
       prompt: "select_account consent",
     },
   },
+  databaseHooks: {
+    user: {
+      create: {
+        async before(user) {
+          const userHasAnExistingInvite = await prisma.accountToken.findFirst({
+            where: {
+              email: user.email,
+              type: "INVITE",
+              acceptedAt: { not: null },
+            },
+          });
+
+          if (!userHasAnExistingInvite) {
+            // stop Better Auth from creating this user
+            throw "user_not_invited";
+          }
+
+          return { data: user };
+        },
+      },
+    },
+  },
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
