@@ -55,6 +55,12 @@ export const auth = betterAuth({
       prompt: "select_account consent",
     },
   },
+  account: {
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["google"],
+    },
+  },
   databaseHooks: {
     user: {
       create: {

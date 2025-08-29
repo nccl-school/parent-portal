@@ -19,3 +19,7 @@ e2e
 - should send an invite token to the sign in social endpoint in the sign up page
 - it should throw if the token is invalid
 - it should mark the token as used when they sign up
+
+### Signing in after signing up with PW
+
+- TBD
