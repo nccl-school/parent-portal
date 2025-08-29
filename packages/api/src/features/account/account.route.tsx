@@ -148,7 +148,12 @@ account.post(
       throw new ErrorSet.badRequest("User already exists.");
     }
 
-    const newUser = await auth.api.signUpEmail({
+    await acceptInviteAndMarkTokenUsed(db.accountToken, {
+      tokenId: invite.id,
+      acceptedBy: "username-password-signup-flow",
+    });
+
+    await auth.api.signUpEmail({
       body: {
         email: invite.email,
         firstName: body.firstName,
@@ -159,10 +164,6 @@ account.post(
       },
     });
 
-    await acceptInviteAndMarkTokenUsed(db.accountToken, {
-      tokenId: invite.id,
-      acceptedBy: newUser.user.id,
-    });
     const data = await serialize(AcceptInviteResponseSchema, {
       message: "Successfully accepted invite",
     });
