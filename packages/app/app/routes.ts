@@ -65,6 +65,7 @@ export default [
       index("./features/auth/AuthResetPasswordIndex.route.tsx"),
       route("success", "./features/auth/AuthResetPasswordSuccess.route.tsx"),
     ]),
+    route("oauth-error", "./features/auth/AuthOAuthError.route.tsx"),
   ]),
 
   // APIs
@@ -91,7 +92,10 @@ export default [
         ),
       ]),
     ]),
-    ...prefix("auth", [route("/sign-out", "./api/api.auth.signOut.ts")]),
+    ...prefix("auth", [
+      route("/sign-out", "./api/api.auth.signOut.ts"),
+      route("/sign-in/social/:provider", "./api/api.auth.signInSocial.ts"),
+    ]),
     ...prefix("account", [
       route("/invite", "./api/api.account.inviteUsers.ts"),
     ]),

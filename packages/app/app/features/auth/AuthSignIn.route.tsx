@@ -7,7 +7,7 @@ import {
   Toast,
   Typography,
 } from "@nccl/components";
-import { Form, href, Link, useNavigation, useSearchParams } from "react-router";
+import { Form, href, Link, useSearchParams } from "react-router";
 import { useEffect } from "react";
 import { parseError } from "@nccl/api/client";
 
@@ -17,11 +17,15 @@ import { AuthPageHeader } from "./AuthPageHeader";
 import { AuthPageBody } from "./AuthPageBody";
 import { AuthPage } from "./AuthPage";
 
+import { SocialButton } from "../../components/social/SocialButton";
 import { getAuthError, getValidationErrors } from "../../utils/client";
 import { PageHeader } from "../../components/page";
 import { getNCCLClient } from "../../utils/server";
 import { getFormData } from "../../utils/isomorphic";
 import { assembleTitle } from "../../utils/util.assemble-title";
+import { useIsSubmitting } from "../../hooks/hook.useIsSubmitting";
+import { SocialButtonGroup } from "../../components/social/SocialButtonGroup";
+import { SocialOr } from "../../components/social/SocialOr";
 
 const schema = z.object({
   email: z
@@ -56,7 +60,7 @@ export async function action(args: Route.ActionArgs) {
 }
 
 export default function AuthAcceptInviteRoute(args: Route.ComponentProps) {
-  const navigation = useNavigation();
+  const isSubmitting = useIsSubmitting();
   const [urlSearchParams] = useSearchParams();
   const errors = getValidationErrors<z.infer<typeof schema>>(args.actionData);
   const authError = getAuthError(args.actionData);
@@ -70,16 +74,16 @@ export default function AuthAcceptInviteRoute(args: Route.ComponentProps) {
   }, [args.actionData, authError]);
 
   return (
-    <Form method="post">
+    <AuthPage>
       <title>{assembleTitle("Sign in")}</title>
-      <AuthPage>
-        <AuthPageHeader>
-          <PageHeader
-            dxTitle="Welcome back!"
-            dxSubtitle="Enter your credentials to sign into the parent portal"
-          />
-        </AuthPageHeader>
-        <AuthPageBody>
+      <AuthPageHeader>
+        <PageHeader
+          dxTitle="Welcome back!"
+          dxSubtitle="Enter your credentials to sign into the parent portal"
+        />
+      </AuthPageHeader>
+      <AuthPageBody>
+        <Form method="post">
           <InputGroup>
             <input
               type="hidden"
@@ -103,26 +107,33 @@ export default function AuthAcceptInviteRoute(args: Route.ComponentProps) {
                 Forgot password?
               </Typography>
             </Link>
-
-            {/* <InputCheckbox dxLabelOrientation="after">
-          <InputLabel dxNode="div" dxLabel="I agree to the Terms and Privacy" />
-          </InputCheckbox> */}
-            <br />
+            <Button
+              dxSize="lg"
+              dxVariant="contained"
+              dxColor="secondary"
+              style={{ justifyContent: "center" }}
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Loading..." : "Sign in"}
+            </Button>
           </InputGroup>
-        </AuthPageBody>
-        <AuthPageFooter>
-          <Button
-            dxSize="lg"
-            dxVariant="contained"
-            dxColor="secondary"
-            style={{ justifyContent: "center" }}
-            type="submit"
-            disabled={navigation.state !== "idle"}
+        </Form>
+      </AuthPageBody>
+      <AuthPageFooter>
+        <SocialOr />
+        <SocialButtonGroup>
+          <Form
+            method="POST"
+            navigate={false}
+            action={href("/api/auth/sign-in/social/:provider", {
+              provider: "google",
+            })}
           >
-            {navigation.state !== "idle" ? "Loading..." : "Sign in"}
-          </Button>
-        </AuthPageFooter>
-      </AuthPage>
-    </Form>
+            <SocialButton dxType="google" type="submit" />
+          </Form>
+        </SocialButtonGroup>
+      </AuthPageFooter>
+    </AuthPage>
   );
 }

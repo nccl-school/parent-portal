@@ -3,6 +3,7 @@ import { useState } from "react";
 import type { AcceptInviteRequest } from "@nccl/api/client";
 import {
   Form,
+  href,
   useActionData,
   useNavigation,
   useSearchParams,
@@ -14,8 +15,11 @@ import { AuthPageBody } from "./AuthPageBody";
 import { AuthPageFooter } from "./AuthPageFooter";
 import { AuthPasswordMeter } from "./AuthFieldPassword";
 
+import { SocialOr } from "../../components/social/SocialOr";
+import { SocialButton } from "../../components/social/SocialButton";
 import { PageHeader } from "../../components/page";
 import { getValidationErrors } from "../../utils/client";
+import { SocialButtonGroup } from "../../components/social/SocialButtonGroup";
 
 export function AuthAcceptInviteValid({ email }: { email: string }) {
   const [password, setPassword] = useState("");
@@ -25,15 +29,15 @@ export function AuthAcceptInviteValid({ email }: { email: string }) {
   const errors = getValidationErrors<AcceptInviteRequest>(data);
 
   return (
-    <Form method="post">
-      <AuthPage>
-        <AuthPageHeader>
-          <PageHeader
-            dxTitle="Create your account"
-            dxSubtitle="Enter your credentials to access your account"
-          />
-        </AuthPageHeader>
-        <AuthPageBody>
+    <AuthPage>
+      <AuthPageHeader>
+        <PageHeader
+          dxTitle="Create your account"
+          dxSubtitle="Enter your credentials to access your account"
+        />
+      </AuthPageHeader>
+      <AuthPageBody>
+        <Form method="post">
           <InputGroup>
             <input
               type="hidden"
@@ -74,21 +78,38 @@ export function AuthAcceptInviteValid({ email }: { email: string }) {
             {/* <InputCheckbox dxLabelOrientation="after">
           <InputLabel dxNode="div" dxLabel="I agree to the Terms and Privacy" />
         </InputCheckbox> */}
+            <Button
+              dxSize="lg"
+              dxVariant="contained"
+              dxColor="secondary"
+              style={{ justifyContent: "center" }}
+              type="submit"
+              disabled={navigation.state !== "idle"}
+            >
+              {navigation.state !== "idle" ? "Loading..." : "Create Account"}
+            </Button>
           </InputGroup>
-        </AuthPageBody>
-        <AuthPageFooter>
-          <Button
-            dxSize="lg"
-            dxVariant="contained"
-            dxColor="secondary"
-            style={{ justifyContent: "center" }}
-            type="submit"
-            disabled={navigation.state !== "idle"}
-          >
-            {navigation.state !== "idle" ? "Loading..." : "Create Account"}
-          </Button>
-        </AuthPageFooter>
-      </AuthPage>
-    </Form>
+        </Form>
+      </AuthPageBody>
+      <AuthPageFooter>
+        <SocialOr />
+        <Form
+          method="POST"
+          navigate={false}
+          action={href("/api/auth/sign-in/social/:provider", {
+            provider: "google",
+          })}
+        >
+          <input
+            type="hidden"
+            name="inviteToken"
+            value={String(urlSearchParams.get("token"))}
+          />
+          <SocialButtonGroup>
+            <SocialButton dxType="google" type="submit" />
+          </SocialButtonGroup>
+        </Form>
+      </AuthPageFooter>
+    </AuthPage>
   );
 }

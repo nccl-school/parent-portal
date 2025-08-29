@@ -30,7 +30,14 @@ export type ButtonContainedPropsCustom = {
    * The color of the button
    * @default primary
    */
-  dxColor?: "primary" | "secondary" | "tertiary" | "alt" | "danger" | "success";
+  dxColor?:
+    | "primary"
+    | "secondary"
+    | "tertiary"
+    | "alt"
+    | "danger"
+    | "success"
+    | "transparent";
   /**
    * An icon to add the start of the button
    */
@@ -188,6 +195,26 @@ const styles = css`
     }
     &:focus {
       outline-color: ${makeColor("success-900")};
+    }
+  }
+
+  &.transparent {
+    color: ${makeColor("neutral-dark-200")};
+
+    &:focus {
+      outline-color: ${makeColor("light-900")};
+    }
+
+    &.contained {
+      &:hover {
+        background: ${makeColor("light-400")};
+      }
+    }
+    &.outlined {
+      border: 2px solid ${makeColor("light-500")};
+      &:hover {
+        border-color: ${makeColor("light-600")};
+      }
     }
   }
 `;

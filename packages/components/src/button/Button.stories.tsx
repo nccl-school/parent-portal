@@ -278,6 +278,41 @@ export function Contained() {
           Primary
         </Button>
       </Container>
+      <Container>
+        <Button dxVariant="contained" dxColor="transparent" dxSize="sm">
+          Primary
+        </Button>
+        <Button dxVariant="contained" dxColor="transparent" dxSize="md">
+          Primary
+        </Button>
+        <Button dxVariant="contained" dxColor="transparent" dxSize="lg">
+          Primary
+        </Button>
+        <Button
+          dxVariant="contained"
+          dxStartIcon="smile-stroke-standard"
+          dxColor="transparent"
+          dxSize="sm"
+        >
+          Primary
+        </Button>
+        <Button
+          dxVariant="contained"
+          dxStartIcon="smile-stroke-standard"
+          dxColor="transparent"
+          dxSize="md"
+        >
+          Primary
+        </Button>
+        <Button
+          dxVariant="contained"
+          dxStartIcon="smile-stroke-standard"
+          dxColor="transparent"
+          dxSize="lg"
+        >
+          Primary
+        </Button>
+      </Container>
     </>
   );
 }
@@ -490,6 +525,41 @@ export function Outlined() {
           dxSize="lg"
         >
           Primary
+        </Button>
+      </Container>
+      <Container>
+        <Button dxVariant="outlined" dxColor="transparent" dxSize="sm">
+          Transparent
+        </Button>
+        <Button dxVariant="outlined" dxColor="transparent" dxSize="md">
+          Transparent
+        </Button>
+        <Button dxVariant="outlined" dxColor="transparent" dxSize="lg">
+          Transparent
+        </Button>
+        <Button
+          dxVariant="outlined"
+          dxStartIcon="smile-stroke-standard"
+          dxColor="transparent"
+          dxSize="sm"
+        >
+          Transparent
+        </Button>
+        <Button
+          dxVariant="outlined"
+          dxStartIcon="smile-stroke-standard"
+          dxColor="transparent"
+          dxSize="md"
+        >
+          Transparent
+        </Button>
+        <Button
+          dxVariant="outlined"
+          dxStartIcon="smile-stroke-standard"
+          dxColor="transparent"
+          dxSize="lg"
+        >
+          Transparent
         </Button>
       </Container>
     </>

@@ -11,7 +11,11 @@ import {
   ValidateTokenParamsSchema,
   ValidateTokenResponseSchema,
 } from "./account.schema.js";
-import { createToken, findValidToken, markTokenUsed } from "./account.utils.js";
+import {
+  createToken,
+  findValidToken,
+  acceptInviteAndMarkTokenUsed,
+} from "./account.utils.js";
 
 import { authorize } from "../../middleware/middleware.authorize.js";
 import { validate } from "../../middleware/middleware.validate.js";
@@ -144,7 +148,12 @@ account.post(
       throw new ErrorSet.badRequest("User already exists.");
     }
 
-    const newUser = await auth.api.signUpEmail({
+    await acceptInviteAndMarkTokenUsed(db.accountToken, {
+      tokenId: invite.id,
+      acceptedBy: "username-password-signup-flow",
+    });
+
+    await auth.api.signUpEmail({
       body: {
         email: invite.email,
         firstName: body.firstName,
@@ -155,10 +164,6 @@ account.post(
       },
     });
 
-    await markTokenUsed(db.accountToken, {
-      tokenId: invite.id,
-      acceptedById: newUser.user.id,
-    });
     const data = await serialize(AcceptInviteResponseSchema, {
       message: "Successfully accepted invite",
     });

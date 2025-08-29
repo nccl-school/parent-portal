@@ -17,6 +17,8 @@ for (const [role, roleDef] of Object.entries(ROLE_CONFIG)) {
     );
 
     if (!res.ok()) {
+      const text = await res.text();
+      console.error(text);
       throw new Error(`${role} login failed: ${res.status()}`);
     }
 

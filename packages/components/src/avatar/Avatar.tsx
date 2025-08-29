@@ -1,6 +1,5 @@
 import { css } from "@linaria/core";
 import {
-  colorAndVariants,
   makeColor,
   makeFontFamily,
   makeRem,
@@ -9,8 +8,6 @@ import {
 import { classes } from "@stratum-ui/core/utils";
 import type { JSX } from "react";
 import { forwardRef, useMemo } from "react";
-
-import { getRandomItem } from "../utils/util.getRandomItem.js";
 
 export type AvatarPropsNative = Omit<JSX.IntrinsicElements["div"], "children">;
 export type AvatarPropsCustom = {
@@ -78,19 +75,6 @@ const styles = css`
   }
 `;
 
-const getRandomBg = () => {
-  return colorAndVariants[
-    getRandomItem<ColorAndVariants>([
-      "primary-100",
-      "secondary-100",
-      "tertiary-100",
-      "alt-100",
-      "neutral-dark-100",
-      "neutral-light-100",
-    ])
-  ];
-};
-
 export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(function Avatar(
   {
     className,
@@ -126,10 +110,7 @@ export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(function Avatar(
         // @ts-expect-error Custom properties are OK
         ["--avatar-size"]:
           typeof dxSize === "number" ? makeRem(dxSize) : undefined,
-        ["--avatar-bg-color"]:
-          typeof dxBgColor !== "undefined"
-            ? makeColor(dxBgColor)
-            : getRandomBg(),
+        ["--avatar-bg-color"]: makeColor(dxBgColor ?? "primary-100"),
       }}
       ref={ref}
     >

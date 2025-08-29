@@ -134,6 +134,16 @@ export const ENV_RUNTIME = new Supermenv({
       description:
         "The authentication secret key needed to encrypt and code JWT & sessions",
     },
+    BETTER_AUTH_PROVIDER_GOOGLE_CLIENT_ID: {
+      type: "string",
+      description:
+        "The google oauth provider client ID for signing in with google",
+    },
+    BETTER_AUTH_PROVIDER_GOOGLE_CLIENT_SECRET: {
+      type: "string",
+      description:
+        "The google oauth provider client secret key for signing in with google",
+    },
     RESEND_API_KEY: {
       type: "string",
       description:
