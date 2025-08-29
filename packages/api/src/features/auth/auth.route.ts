@@ -1,7 +1,10 @@
 import { Hono } from "hono";
 
 import { auth as betterAuth } from "../../auth.js";
-import { findValidToken } from "../account/account.utils.js";
+import {
+  acceptInviteAndMarkTokenUsed,
+  findValidToken,
+} from "../account/account.utils.js";
 
 export const auth = new Hono();
 
@@ -27,10 +30,15 @@ auth.post("/sign-in/social", async (c) => {
 
     if (!invite) {
       return c.json({
-        url: `${errorCallbackURL}?error=invalid_invite_token`,
+        url: `${errorCallbackURL}?error=INVALID_INVITE`,
         redirect: true,
       });
     }
+
+    await acceptInviteAndMarkTokenUsed(db.accountToken, {
+      tokenId: invite.id,
+      acceptedById: "social-sign-up",
+    });
   }
 
   // There is no token in the state so we can assume
@@ -47,7 +55,7 @@ auth.get("/callback/google", async (c) => {
   if (res.status === 302 && location?.includes("error=unable_to_create_user")) {
     const newLocation = location.replace(
       "error=unable_to_create_user",
-      "error=INVALID_INVITE"
+      "error=INVITE_NOT_ACCEPTED"
     );
     res.headers.set("Location", newLocation);
   }

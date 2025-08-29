@@ -14,7 +14,7 @@ import {
 import {
   createToken,
   findValidToken,
-  acceptAndMarkTokenUsed,
+  acceptInviteAndMarkTokenUsed,
 } from "./account.utils.js";
 
 import { authorize } from "../../middleware/middleware.authorize.js";
@@ -159,7 +159,7 @@ account.post(
       },
     });
 
-    await acceptAndMarkTokenUsed(db.accountToken, {
+    await acceptInviteAndMarkTokenUsed(db.accountToken, {
       tokenId: invite.id,
       acceptedById: newUser.user.id,
     });

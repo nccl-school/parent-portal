@@ -5,7 +5,6 @@ import { ENV_RUNTIME } from "@nccl/env";
 
 import { createResendClient, EMAIL_FIELDS } from "./utils/util.resend.js";
 import { createPrismaClient } from "./utils/util.prisma.js";
-import { acceptAndMarkTokenUsed } from "./features/account/account.utils.js";
 import { ErrorSet } from "./utils/util.errors.js";
 
 const prisma = createPrismaClient();
@@ -69,45 +68,20 @@ export const auth = betterAuth({
           });
           if (dbUser) return { data: user };
 
-          // Check the validity of the invites of the user
-          const invites = await prisma.accountToken.findMany({
+          // Check to see if the user has an accepted invite
+          // and find the latest invite that was accepted
+          const acceptedInvite = await prisma.accountToken.findFirst({
             where: {
               email: user.email,
               type: "INVITE",
+              acceptedAt: { not: null },
             },
-            orderBy: { createdAt: "desc" },
+            orderBy: { acceptedAt: "desc" },
           });
 
-          if (invites.length === 0) {
-            throw new ErrorSet.unauthorized("INVITE_REQUIRED");
+          if (!acceptedInvite) {
+            throw new ErrorSet.unauthorized("INVITE_NOT_ACCEPTED");
           }
-
-          const now = new Date().getTime();
-
-          const [latestInvite] = invites;
-          const [validInvite] = invites.filter(
-            (i) => !i.revokedAt && !i.acceptedAt && i.expiresAt.getTime() > now
-          );
-
-          if (!validInvite) {
-            throw new ErrorSet.unauthorized("INVITE_INVALID");
-          }
-          if (!validInvite && latestInvite.revokedAt) {
-            throw new ErrorSet.unauthorized("INVITE_REVOKED");
-          }
-
-          if (!validInvite && latestInvite.expiresAt.getTime() <= now) {
-            throw new ErrorSet.unauthorized("INVITE_EXPIRED");
-          }
-          if (!validInvite && latestInvite.acceptedAt) {
-            throw new ErrorSet.unauthorized("INVITE_ALREADY_USED");
-          }
-
-          // Delete all of the tokens with the user
-          await acceptAndMarkTokenUsed(prisma.accountToken, {
-            tokenId: validInvite.id,
-            acceptedById: user.id,
-          });
 
           const [firstName, lastName] = user.name.split(" ");
 
@@ -116,7 +90,7 @@ export const auth = betterAuth({
               user,
               firstName,
               lastName,
-              roleId: validInvite.roleId,
+              roleId: acceptedInvite.roleId,
             },
           };
         },
