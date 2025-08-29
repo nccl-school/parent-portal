@@ -41,6 +41,19 @@ auth.post("/sign-in/social", async (c) => {
   return betterAuth.handler(c.req.raw);
 });
 
+auth.get("/callback/google", async (c) => {
+  const res = await betterAuth.handler(c.req.raw);
+  const location = res.headers.get("Location");
+  if (res.status === 302 && location?.includes("error=unable_to_create_user")) {
+    const newLocation = location.replace(
+      "error=unable_to_create_user",
+      "error=INVALID_INVITE"
+    );
+    res.headers.set("Location", newLocation);
+  }
+  return res;
+});
+
 auth.all("*", async (c) => {
   return await betterAuth.handler(c.req.raw);
 });

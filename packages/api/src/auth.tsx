@@ -5,6 +5,8 @@ import { ENV_RUNTIME } from "@nccl/env";
 
 import { createResendClient, EMAIL_FIELDS } from "./utils/util.resend.js";
 import { createPrismaClient } from "./utils/util.prisma.js";
+import { acceptAndMarkTokenUsed } from "./features/account/account.utils.js";
+import { ErrorSet } from "./utils/util.errors.js";
 
 const prisma = createPrismaClient();
 const resend = createResendClient();
@@ -58,20 +60,65 @@ export const auth = betterAuth({
     user: {
       create: {
         async before(user) {
-          const userHasAnExistingInvite = await prisma.accountToken.findFirst({
+          // Check to see if the user already exists
+          // and if it does let BA handle the upsert
+          const dbUser = await prisma.user.findUnique({
+            where: {
+              email: user.email,
+            },
+          });
+          if (dbUser) return { data: user };
+
+          // Check the validity of the invites of the user
+          const invites = await prisma.accountToken.findMany({
             where: {
               email: user.email,
               type: "INVITE",
-              acceptedAt: { not: null },
             },
+            orderBy: { createdAt: "desc" },
           });
 
-          if (!userHasAnExistingInvite) {
-            // stop Better Auth from creating this user
-            throw "user_not_invited";
+          if (invites.length === 0) {
+            throw new ErrorSet.unauthorized("INVITE_REQUIRED");
           }
 
-          return { data: user };
+          const now = new Date().getTime();
+
+          const [latestInvite] = invites;
+          const [validInvite] = invites.filter(
+            (i) => !i.revokedAt && !i.acceptedAt && i.expiresAt.getTime() > now
+          );
+
+          if (!validInvite) {
+            throw new ErrorSet.unauthorized("INVITE_INVALID");
+          }
+          if (!validInvite && latestInvite.revokedAt) {
+            throw new ErrorSet.unauthorized("INVITE_REVOKED");
+          }
+
+          if (!validInvite && latestInvite.expiresAt.getTime() <= now) {
+            throw new ErrorSet.unauthorized("INVITE_EXPIRED");
+          }
+          if (!validInvite && latestInvite.acceptedAt) {
+            throw new ErrorSet.unauthorized("INVITE_ALREADY_USED");
+          }
+
+          // Delete all of the tokens with the user
+          await acceptAndMarkTokenUsed(prisma.accountToken, {
+            tokenId: validInvite.id,
+            acceptedById: user.id,
+          });
+
+          const [firstName, lastName] = user.name.split(" ");
+
+          return {
+            data: {
+              user,
+              firstName,
+              lastName,
+              roleId: validInvite.roleId,
+            },
+          };
         },
       },
     },

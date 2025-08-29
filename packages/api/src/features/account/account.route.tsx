@@ -11,7 +11,11 @@ import {
   ValidateTokenParamsSchema,
   ValidateTokenResponseSchema,
 } from "./account.schema.js";
-import { createToken, findValidToken, markTokenUsed } from "./account.utils.js";
+import {
+  createToken,
+  findValidToken,
+  acceptAndMarkTokenUsed,
+} from "./account.utils.js";
 
 import { authorize } from "../../middleware/middleware.authorize.js";
 import { validate } from "../../middleware/middleware.validate.js";
@@ -155,7 +159,7 @@ account.post(
       },
     });
 
-    await markTokenUsed(db.accountToken, {
+    await acceptAndMarkTokenUsed(db.accountToken, {
       tokenId: invite.id,
       acceptedById: newUser.user.id,
     });

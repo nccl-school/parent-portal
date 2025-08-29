@@ -8,6 +8,7 @@ import { AuthPageFooter } from "./AuthPageFooter";
 
 import { PageHeader } from "../../components/page";
 import { assembleTitle } from "../../utils/util.assemble-title";
+import { EmptyState } from "../../components/states/EmptyState";
 
 export default function AuthResetPasswordSuccess() {
   const [urlSearchParams] = useSearchParams();
@@ -23,14 +24,29 @@ export default function AuthResetPasswordSuccess() {
           />
         </AuthPageHeader>
         <AuthPageBody>
-          <Callout
-            variant="danger"
-            omitIcon
-            description={urlSearchParams.get("error") ?? "Unknown error"}
+          <EmptyState
+            imgSrc="/images/image-icon-do-not-enter.png"
+            imgAlt="alert"
+            borderless
+            title={urlSearchParams.get("error") ?? "Unknown error"}
           />
-          <br />
-          <Typography dxNode="p" dxVariant="body1">
-            Try signing in again. If the issue continues contact support.
+          <Typography dxNode="div" dxVariant="body1">
+            This could be for one of many reasons
+            <ul>
+              <li>You have not been invited to the platform</li>
+              <li>
+                You have been invited but you have not accepted your invite
+                which was sent to your inbox
+              </li>
+              <li>
+                You're attempting to accept your invite but it has expired
+              </li>
+              <li>
+                You tried to sign in with an using an email that wasn't
+                explicitly invited.
+              </li>
+            </ul>
+            Either way, click on the button below and try again.
           </Typography>
         </AuthPageBody>
         <AuthPageFooter>

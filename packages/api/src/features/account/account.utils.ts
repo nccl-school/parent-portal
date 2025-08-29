@@ -75,7 +75,7 @@ export async function findValidToken(
  * Mark a specific account token as used by supplying
  * the id of the account token
  */
-export async function markTokenUsed(
+export async function acceptAndMarkTokenUsed(
   prismaAccountToken: PrismaAccountTokenDelegate,
   { tokenId, acceptedById }: { tokenId: string; acceptedById: string }
 ) {
