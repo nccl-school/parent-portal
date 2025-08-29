@@ -49,7 +49,7 @@ export async function createToken(
       roleId,
       tokenHash: inviteTokenHash,
       expiresAt: inviteExpiresAt,
-      createdById: createdByUserId,
+      createdBy: createdByUserId,
     },
   });
   return { inviteTokenRaw, inviteExpiresAt };
@@ -77,13 +77,13 @@ export async function findValidToken(
  */
 export async function acceptInviteAndMarkTokenUsed(
   prismaAccountToken: PrismaAccountTokenDelegate,
-  { tokenId, acceptedById }: { tokenId: string; acceptedById: string }
+  { tokenId, acceptedBy }: { tokenId: string; acceptedBy: string }
 ) {
   await prismaAccountToken.update({
     where: { id: tokenId },
     data: {
       acceptedAt: new Date(),
-      acceptedById,
+      acceptedBy,
       tokenHash: hashToken(crypto.randomUUID()), // rotate to kill link
     },
   });

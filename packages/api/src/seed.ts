@@ -14,8 +14,8 @@ async function main() {
   for (const seedScript of seedScripts) {
     try {
       await seedScript();
-    } catch {
-      break;
+    } catch (error) {
+      throw new Error(String(error));
     }
   }
 }

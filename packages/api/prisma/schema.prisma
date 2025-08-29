@@ -109,7 +109,6 @@ model User {
   sessions           Session[]
   accounts           Account[]
   image              String?
-  AccountToken       AccountToken[]
 
   @@map("user")
 }
@@ -317,17 +316,16 @@ enum AccountTokenType {
 }
 
 model AccountToken {
-  id           String           @id @default(cuid())
-  type         AccountTokenType // "INVITE" | "PASSWORD_RESET" | ...
-  email        String
-  tokenHash    String           @unique
-  expiresAt    DateTime
-  acceptedAt   DateTime?
-  acceptedById String?
-  revokedAt    DateTime?
-  roleId       RoleName
-  role         Role             @relation(fields: [roleId], references: [id])
-  createdById  String
-  createdBy    User             @relation(fields: [createdById], references: [id])
-  createdAt    DateTime         @default(now())
+  id         String           @id @default(cuid())
+  type       AccountTokenType // "INVITE" | "PASSWORD_RESET" | ...
+  email      String
+  tokenHash  String           @unique
+  expiresAt  DateTime
+  acceptedAt DateTime?
+  acceptedBy String?
+  revokedAt  DateTime?
+  roleId     RoleName
+  role       Role             @relation(fields: [roleId], references: [id])
+  createdBy  String?
+  createdAt  DateTime         @default(now())
 }

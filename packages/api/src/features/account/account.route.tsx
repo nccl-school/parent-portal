@@ -161,7 +161,7 @@ account.post(
 
     await acceptInviteAndMarkTokenUsed(db.accountToken, {
       tokenId: invite.id,
-      acceptedById: newUser.user.id,
+      acceptedBy: newUser.user.id,
     });
     const data = await serialize(AcceptInviteResponseSchema, {
       message: "Successfully accepted invite",

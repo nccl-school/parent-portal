@@ -37,7 +37,7 @@ auth.post("/sign-in/social", async (c) => {
 
     await acceptInviteAndMarkTokenUsed(db.accountToken, {
       tokenId: invite.id,
-      acceptedById: "social-sign-up",
+      acceptedBy: "social-sign-up",
     });
   }
 
