@@ -70,6 +70,7 @@ export default [
 
   // APIs
   ...prefix("api", [
+    route("health", "./api/api.health.ts"),
     ...prefix("role", [route("/", "./api/api.role.getRoles.ts")]),
     ...prefix("resource", [
       route(":id", "./api/api.resource.ts"),
