@@ -37,13 +37,22 @@ export default [
       route("more", "./features/more/More.route.tsx"),
     ]),
     // - /account
-    route("account", "./features/account/Account.route.tsx", [
-      route("", "./features/account-general/AccountGeneral.route.tsx"),
-      route(
-        "security",
-        "./features/account-security/AccountSecurity.route.tsx"
-      ),
+    layout("./features/account/Account.layout.tsx", [
+      ...prefix("account", [
+        index("./features/account/Account.index.tsx"),
+        layout("./features/account/AccountPages.layout.tsx", [
+          route(
+            "general",
+            "./features/account-general/AccountGeneral.route.tsx"
+          ),
+          route(
+            "security",
+            "./features/account-security/AccountSecurity.route.tsx"
+          ),
+        ]),
+      ]),
     ]),
+
     route("admin", "./features/admin/Admin.route.tsx", [
       index("./features/admin-users/AdminUsers.route.tsx"),
       route("resources", "./features/admin-resources/AdminResources.route.tsx"),

@@ -1,4 +1,9 @@
+import { createRouteHandle } from "../../utils/isomorphic";
 import { InnerPageHeader, PageSection } from "../../components/page";
+
+export const handle = createRouteHandle({
+  mobileTitle: "Security",
+});
 
 export default function AccountSecurity() {
   return (

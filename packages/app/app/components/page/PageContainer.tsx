@@ -19,6 +19,10 @@ const styles = css`
   }
 
   &.static {
+    ${makeResponsive({ to: "tablet" })} {
+      width: 100%;
+    }
+
     ${makeResponsive({ from: "tablet" })} {
       height: 100%;
       overflow: hidden;

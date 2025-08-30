@@ -41,15 +41,7 @@ export async function loader(args: Route.LoaderArgs) {
 export function Layout({ children }: { children: React.ReactNode }) {
   const loaderData = useRouteLoaderData<typeof loader>("root");
   return (
-    <html
-      lang="en"
-      className={rootStyles}
-      style={
-        loaderData?.ENV.NCCL_ENVIRONMENT !== "prod"
-          ? { border: "2px solid brightpink" }
-          : undefined
-      }
-    >
+    <html lang="en" className={rootStyles}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

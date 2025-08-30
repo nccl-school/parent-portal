@@ -2,6 +2,7 @@ import { css } from "@linaria/core";
 import {
   makeColor,
   makeFontFamily,
+  makeFontWeight,
   makeRem,
   type ColorAndVariants,
 } from "@nccl/theme";
@@ -42,12 +43,12 @@ const styles = css`
   border-radius: 50%;
   line-height: 100%;
   overflow: hidden;
-  font-size: calc(var(--avatar-size) - 8px);
+  font-size: calc(var(--avatar-size) - 12px);
+  font-weight: ${makeFontWeight("body-bold")};
   height: var(--avatar-size);
   aspect-ratio: 1 / 1;
   display: grid;
   place-content: center;
-  border: 1px solid ${makeColor("tertiary-900")};
   position: relative;
 
   & > * {

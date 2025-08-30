@@ -1,5 +1,6 @@
 import { css } from "@linaria/core";
-import type { ActionFunctionArgs } from "react-router";
+import { makeResponsive } from "@nccl/theme";
+import type { ActionFunctionArgs, UIMatch } from "react-router";
 import type { ZodObject, ZodType } from "zod";
 import { z } from "zod";
 
@@ -51,4 +52,31 @@ export const backgroundGradient = css`
 export const CONSTANTS = {
   GOOGLE_CALENDAR_ID_NCCL_PUBLIC:
     "ja90kh5sm2d9tnmku5s59fs83s@group.calendar.google.com",
+};
+
+type RouteHandle = { mobileTitle: string };
+export function createRouteHandle({ mobileTitle }: RouteHandle) {
+  return {
+    mobileTitle,
+  };
+}
+
+export function getMobileTitle<T extends (UIMatch | undefined)[]>(matches: T) {
+  return matches.reduce<string | null>((accum, match) => {
+    const mobileTitle = (match?.handle as RouteHandle | undefined)?.mobileTitle;
+    return mobileTitle ?? accum;
+  }, null);
+}
+
+export const CLASSES = {
+  mobileOnly: css`
+    ${makeResponsive({ from: "laptop" })} {
+      display: none;
+    }
+  `,
+  desktopOnly: css`
+    ${makeResponsive({ to: "laptop" })} {
+      display: none;
+    }
+  `,
 };
