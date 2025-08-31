@@ -7,7 +7,6 @@ import {
 } from "react-router";
 import { css } from "@linaria/core";
 import { makeColor, makeCustom, makeRem, makeResponsive } from "@nccl/theme";
-import { classes } from "@stratum-ui/core/utils";
 import {
   Button,
   Header,
@@ -26,41 +25,48 @@ import type { ReactNode } from "react";
 import type { Route } from "./+types/AppRoot.layout";
 import { AppRootHeaderUser } from "./AppRootHeaderUser";
 
-import {
-  backgroundGradient,
-  CLASSES,
-  getMobileTitle,
-} from "../../utils/isomorphic";
+import { CLASSES, getMobileTitle } from "../../utils/isomorphic";
 import { ensureSession, getNCCLClient } from "../../utils/server";
 import { AuthSignOutButton } from "../auth/AuthSignOutButton";
 import { Restrict } from "../auth/Restrict";
 
-const styles = css`
-  width: 100vw;
-  display: grid;
-
-  ${makeResponsive({ to: "laptop" })} {
-    height: 100dvh;
-    width: 100dvw;
-    overflow: hidden;
-    grid-template-rows: auto 1fr auto;
-    grid-template-areas:
-      "head"
-      "main"
-      "nav";
-  }
-
-  ${makeResponsive({ from: "laptop" })} {
-    height: 100vh;
-    grid-template-rows: auto 1fr;
-    grid-template-columns: auto 1fr;
-    grid-template-areas:
-      "nav head"
-      "nav main";
-  }
-`;
-
 const stylesHead = css`
+  :global() {
+    body {
+      display: grid;
+      background-image: linear-gradient(
+        75deg,
+        hsla(0deg, 0%, 100%, 0.4) 0%,
+        hsla(180deg, 100%, 97%, 0.4) 26%,
+        hsla(180deg, 100%, 95%, 0.4) 39%,
+        hsla(181deg, 100%, 94%, 0.4) 50%,
+        hsla(182deg, 100%, 94%, 0.4) 61%,
+        hsla(202deg, 100%, 94%, 0.4) 74%,
+        hsla(300deg, 100%, 94%, 0.4) 100%
+      );
+
+      ${makeResponsive({ to: "laptop" })} {
+        height: 100dvh;
+        width: 100dvw;
+        overflow: hidden;
+        grid-template-rows: auto 1fr auto;
+        grid-template-areas:
+          "head"
+          "main"
+          "nav";
+      }
+
+      ${makeResponsive({ from: "laptop" })} {
+        height: 100vh;
+        grid-template-rows: auto 1fr;
+        grid-template-columns: auto 1fr;
+        grid-template-areas:
+          "nav head"
+          "nav main";
+      }
+    }
+  }
+
   grid-area: head;
   width: inherit;
 
@@ -93,7 +99,12 @@ const stylesMain = css`
   width: inherit;
 
   ${makeResponsive({ to: "laptop" })} {
+    padding: 0 ${makeCustom("page--gutter-mobile")};
     overflow: auto;
+  }
+
+  ${makeResponsive({ from: "laptop" })} {
+    width: 100%;
   }
 `;
 
@@ -132,7 +143,7 @@ export default function AppRootLayout(args: Route.ComponentProps) {
   const pathname = lastMatch ? lastMatch.pathname : "/";
 
   return (
-    <div className={classes(styles, backgroundGradient)}>
+    <>
       <Header className={stylesHead}>
         <HeaderActions className={CLASSES.mobileOnly}>
           <HeaderActionsItem>
@@ -167,9 +178,9 @@ export default function AppRootLayout(args: Route.ComponentProps) {
           </HeaderActionsItem>
         </HeaderActions>
       </Header>
-      <div className={stylesMain}>
+      <main className={stylesMain}>
         <Outlet />
-      </div>
+      </main>
       <Navbar className={stylesNav}>
         <NavbarGroup>
           <NavbarLogo
@@ -240,7 +251,7 @@ export default function AppRootLayout(args: Route.ComponentProps) {
           </AuthSignOutButton>
         </NavbarGroup>
       </Navbar>
-    </div>
+    </>
   );
 }
 

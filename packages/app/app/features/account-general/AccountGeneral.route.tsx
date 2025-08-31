@@ -1,5 +1,5 @@
 import { createRouteHandle } from "../../utils/isomorphic";
-import { InnerPageHeader, PageSection } from "../../components/page";
+import { PageHeader, PageSection } from "../../components/page";
 
 export const handle = createRouteHandle({
   mobileTitle: "General",
@@ -8,7 +8,7 @@ export const handle = createRouteHandle({
 export default function AccountGeneral() {
   return (
     <>
-      <InnerPageHeader
+      <PageHeader
         dxTitle="General"
         dxSubtitle="Change your picture, update your bio, etc.."
       />

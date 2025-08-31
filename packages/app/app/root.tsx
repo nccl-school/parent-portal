@@ -1,4 +1,3 @@
-import { css } from "@linaria/core";
 import { Toaster } from "@nccl/components";
 import {
   isRouteErrorResponse,
@@ -16,18 +15,6 @@ import "@nccl/theme/root.css";
 import "@nccl/components/css";
 import type { Route } from "./+types/root";
 
-const rootStyles = css`
-  :global() {
-    padding: 0;
-    margin: 0;
-
-    body {
-      padding: 0;
-      margin: 0;
-    }
-  }
-`;
-
 export async function loader(args: Route.LoaderArgs) {
   return {
     ENV: {
@@ -41,7 +28,7 @@ export async function loader(args: Route.LoaderArgs) {
 export function Layout({ children }: { children: React.ReactNode }) {
   const loaderData = useRouteLoaderData<typeof loader>("root");
   return (
-    <html lang="en" className={rootStyles}>
+    <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

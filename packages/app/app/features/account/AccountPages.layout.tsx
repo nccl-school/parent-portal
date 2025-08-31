@@ -1,5 +1,6 @@
 import { css } from "@linaria/core";
 import { Outlet } from "react-router";
+import { makeCustom, makeRem, makeResponsive } from "@nccl/theme";
 
 import { AccountNav } from "./AccountNav";
 
@@ -7,8 +8,15 @@ import { CLASSES } from "../../utils/isomorphic";
 
 const mainStyles = css`
   grid-area: main;
-  background: white;
   overflow: hidden;
+
+  ${makeResponsive({ from: "tablet" })} {
+    & > * {
+      padding-left: ${makeRem(32)} !important;
+      padding-right: ${makeRem(32)} !important;
+      max-width: ${makeCustom("container--max-width")};
+    }
+  }
 `;
 
 export default function AccountPagesLayout() {

@@ -36,19 +36,6 @@ export function createValidator<T extends ZodObject>(schema: T) {
   return (formData: FormData) => validateFormData(schema, formData);
 }
 
-export const backgroundGradient = css`
-  background-image: linear-gradient(
-    75deg,
-    hsla(0deg, 0%, 100%, 0.4) 0%,
-    hsla(180deg, 100%, 97%, 0.4) 26%,
-    hsla(180deg, 100%, 95%, 0.4) 39%,
-    hsla(181deg, 100%, 94%, 0.4) 50%,
-    hsla(182deg, 100%, 94%, 0.4) 61%,
-    hsla(202deg, 100%, 94%, 0.4) 74%,
-    hsla(300deg, 100%, 94%, 0.4) 100%
-  );
-`;
-
 export const CONSTANTS = {
   GOOGLE_CALENDAR_ID_NCCL_PUBLIC:
     "ja90kh5sm2d9tnmku5s59fs83s@group.calendar.google.com",

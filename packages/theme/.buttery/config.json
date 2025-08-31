@@ -152,7 +152,7 @@
     },
     "page--gutter-mobile": {
       "type": "rem",
-      "value": 24,
+      "value": 16,
       "description": "The padding on the side of each page"
     },
     "table--cell-padding": {
