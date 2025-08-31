@@ -16,6 +16,7 @@ const styles = css`
     h2 {
       font-size: ${makeRem(24)} !important;
     }
+    margin-bottom: ${makeRem(24)};
   }
 
   ${makeResponsive({ from: "laptop" })} {
@@ -25,10 +26,10 @@ const styles = css`
     margin: 0 auto;
     text-align: left;
     width: 100%;
-  }
 
-  .subtitle {
-    margin-top: ${makeRem(8)} !important;
+    .subtitle {
+      margin-top: ${makeRem(4)} !important;
+    }
   }
 `;
 

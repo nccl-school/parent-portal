@@ -7,10 +7,10 @@ export const tabsGeneral: (NavItemPropsCustom &
   Omit<NavLinkProps, "children">)[] = [
   {
     to: href("/account/general"),
-    children: "General",
+    children: "Profile",
     end: true,
-    dxBaseIcon: "contact-01-stroke-standard",
-    dxActiveIcon: "contact-01-solid-standard",
+    dxBaseIcon: "user-square-stroke-standard",
+    dxActiveIcon: "user-square-solid-standard",
   },
   {
     to: href("/account/security"),

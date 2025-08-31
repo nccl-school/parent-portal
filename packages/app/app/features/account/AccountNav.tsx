@@ -18,7 +18,7 @@ const navStyles = css`
     background: white;
   }
 
-  h2 {
+  .nav-title {
     margin-bottom: ${makeRem(16)};
     width: ${makeRem(280)};
   }
@@ -27,17 +27,16 @@ const navStyles = css`
 export function AccountNav({ className }: { className?: string }) {
   return (
     <nav className={classes(className, navStyles)}>
-      <Typography dxVariant="heading4" dxNode="h2">
+      <Typography dxVariant="heading4" dxNode="div" className="nav-title">
         Account Settings
       </Typography>
       <NavGroup dxTitle="Basic">
         {tabsGeneral.map(
           ({ children, dxBaseIcon, dxActiveIcon, ...restNavLinkProps }) => (
-            <li>
+            <li key={children}>
               <NavLink {...restNavLinkProps}>
                 {({ isActive }) => (
                   <NavItem
-                    key={children}
                     dxActiveIcon={dxActiveIcon}
                     dxBaseIcon={dxBaseIcon}
                     isActive={isActive}
@@ -53,11 +52,10 @@ export function AccountNav({ className }: { className?: string }) {
       <NavGroup dxTitle="Preferences">
         {tabsPreferences.map(
           ({ children, dxBaseIcon, dxActiveIcon, ...restNavLinkProps }) => (
-            <li>
+            <li key={children}>
               <NavLink {...restNavLinkProps}>
                 {({ isActive }) => (
                   <NavItem
-                    key={children}
                     dxActiveIcon={dxActiveIcon}
                     dxBaseIcon={dxBaseIcon}
                     isActive={isActive}

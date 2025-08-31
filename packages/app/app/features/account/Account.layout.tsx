@@ -12,7 +12,7 @@ const styles = css`
     grid-template-areas: "nav main";
     height: 100%;
     width: 100%;
-    column-gap: ${makeRem(16)};
+    column-gap: ${makeRem(32)};
   }
 `;
 

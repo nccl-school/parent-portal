@@ -1,5 +1,7 @@
 import { createRouteHandle } from "../../utils/isomorphic";
-import { InnerPageHeader, PageSection } from "../../components/page";
+import { PageHeader } from "../../components/page";
+import { AccountPageSection } from "../account/AccountPageSection";
+import { AccountPageSectionHeader } from "../account/AccountPageSectionHeader";
 
 export const handle = createRouteHandle({
   mobileTitle: "Security",
@@ -8,11 +10,16 @@ export const handle = createRouteHandle({
 export default function AccountSecurity() {
   return (
     <>
-      <InnerPageHeader
+      <PageHeader
         dxTitle="Security"
-        dxSubtitle="Change your password, manage connected accounts, etc..."
+        dxSubtitle="Manage your login, password, and other personal settings."
       />
-      <PageSection>stuff here</PageSection>
+      <AccountPageSection>
+        <AccountPageSectionHeader
+          dxTitle="Security"
+          dxSubtitle="Manage your login, password, and other personal settings."
+        />
+      </AccountPageSection>
     </>
   );
 }

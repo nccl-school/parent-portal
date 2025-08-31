@@ -10,10 +10,10 @@ const mainStyles = css`
   grid-area: main;
   overflow: hidden;
 
-  ${makeResponsive({ from: "tablet" })} {
+  ${makeResponsive({ from: "laptop" })} {
+    margin-right: ${makeRem(32)};
+
     & > * {
-      padding-left: ${makeRem(32)} !important;
-      padding-right: ${makeRem(32)} !important;
       max-width: ${makeCustom("container--max-width")};
     }
   }
