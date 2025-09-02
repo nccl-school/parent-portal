@@ -12,7 +12,7 @@ const styles = css`
 export const ResourceActionMove =
   new ModalController<ResourceActionMoveModalState>({
     props: {
-      dxVariant: "basic",
+      dxVariant: "modal",
       className: styles,
     },
     ModalContent: ResourceActionMoveContent,

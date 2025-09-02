@@ -16,7 +16,7 @@ const styles = css`
 export const ResourcesCreateFolder =
   new ModalController<ResourcesCreateFolderModalState>({
     props: {
-      dxVariant: "basic",
+      dxVariant: "modal",
       className: styles,
     },
     ModalContent: ResourcesCreateFolderContent,

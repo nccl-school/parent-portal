@@ -24,7 +24,7 @@ import type { action as createUserAction } from "../../api/api.suggestion.getMan
 
 export const SuggestionCreateDrawer = new ModalController({
   props: {
-    dxVariant: "basic",
+    dxVariant: "modal",
   },
   ModalContent,
 });

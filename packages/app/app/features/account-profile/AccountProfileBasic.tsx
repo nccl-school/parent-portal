@@ -12,7 +12,7 @@ const styles = css`
 
 export const ResourceActionEdit = new ModalController({
   props: {
-    dxVariant: "basic",
+    dxVariant: "modal",
     className: styles,
   },
   ModalContent: AccountProfileBasicContent,

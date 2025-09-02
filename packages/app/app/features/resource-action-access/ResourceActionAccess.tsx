@@ -15,7 +15,7 @@ const styles = css`
 export const ResourceActionAccess =
   new ModalController<ResourceActionAccessModalState>({
     props: {
-      dxVariant: "basic",
+      dxVariant: "modal",
       className: styles,
     },
     ModalContent: ResourceActionAccessContent,

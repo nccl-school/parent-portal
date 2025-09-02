@@ -1,12 +1,10 @@
 import { css } from "@linaria/core";
 import { makeColor, makeRem, makeResponsive } from "@nccl/theme";
-import { classes } from "@stratum-ui/core/utils";
 import { Outlet, redirect } from "react-router";
 
 import type { Route } from "./+types/Auth.layout";
 
 import { getNCCLClient } from "../../utils/server";
-import { backgroundGradient } from "../../utils/isomorphic";
 
 const styles = css`
   width: 100vw;
@@ -71,7 +69,7 @@ export async function loader(args: Route.LoaderArgs) {
 
 export default function AuthLayout() {
   return (
-    <main className={classes(styles, backgroundGradient)}>
+    <main className={styles}>
       <article>
         <header>
           <img

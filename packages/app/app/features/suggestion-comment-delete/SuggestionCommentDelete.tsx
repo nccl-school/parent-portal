@@ -17,7 +17,7 @@ import { isError } from "../../utils/client";
 export const SuggestionCommentDelete = new ModalController<{
   commentId: string;
 }>({
-  props: { dxVariant: "basic" },
+  props: { dxVariant: "modal" },
   ModalContent,
 });
 

@@ -58,7 +58,7 @@ export const SuggestionViewDialog = new ModalController<{
   suggestion_id: string;
 }>({
   props: {
-    dxVariant: "drawer-rtl",
+    dxVariant: "drawer-right",
     className: styles,
   },
   ModalContent,

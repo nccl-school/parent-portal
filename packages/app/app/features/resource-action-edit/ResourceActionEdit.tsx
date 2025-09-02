@@ -13,7 +13,7 @@ export const ResourceActionEdit = new ModalController<
   GetResourceResponse["childResources"][0]
 >({
   props: {
-    dxVariant: "basic",
+    dxVariant: "modal",
     className: styles,
   },
   ModalContent: ResourceActionEditContent,

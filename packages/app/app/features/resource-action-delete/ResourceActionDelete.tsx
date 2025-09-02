@@ -6,7 +6,7 @@ import type { ResourceActionDeleteModalState } from "./resources-delete.utils";
 export const ResourceActionDelete =
   new ModalController<ResourceActionDeleteModalState>({
     props: {
-      dxVariant: "basic",
+      dxVariant: "modal",
     },
     ModalContent: ResourceActionDeleteContent,
   });

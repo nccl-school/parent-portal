@@ -37,7 +37,7 @@ const styles = css`
 
 export const AdminUserInvite = new ModalController({
   props: {
-    dxVariant: "drawer-rtl",
+    dxVariant: "drawer-right",
   },
   ModalContent,
 });
