@@ -10,7 +10,7 @@ const styles = css`
   }
 `;
 
-export const ResourceActionEdit = new ModalController({
+export const AccountProfileBasic = new ModalController({
   props: {
     dxVariant: "modal",
     className: styles,

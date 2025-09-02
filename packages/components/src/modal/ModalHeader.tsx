@@ -2,7 +2,7 @@ import type { JSX } from "react";
 import { forwardRef } from "react";
 import { classes } from "@stratum-ui/core/utils";
 import { css } from "@linaria/core";
-import { makeColor, makeCustom, makeRem } from "@nccl/theme";
+import { makeColor, makeRem } from "@nccl/theme";
 
 import { ModalHeaderClose } from "./ModalHeaderClose.js";
 
@@ -10,7 +10,7 @@ export type ModalHeaderPropsNative = JSX.IntrinsicElements["header"];
 export type ModalHeaderProps = ModalHeaderPropsNative;
 
 const styles = css`
-  padding: ${makeRem(32)} ${makeCustom("modal--gutters")};
+  padding: ${makeRem(32)} var(--modal-gutters);
   background: ${makeColor("white")};
   padding-bottom: ${makeRem(16)};
   display: flex;

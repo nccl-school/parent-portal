@@ -562,7 +562,8 @@
   --nccl-custom-page--gutter-mobile: 1rem;
   --nccl-custom-table--cell-padding: 1rem;
   --nccl-custom-table--body-cell-padding-v: 0.75rem;
-  --nccl-custom-modal--gutters: 2rem;
+  --nccl-custom-modal--gutters-desktop: 2rem;
+  --nccl-custom-modal--gutters-mobile: 1.5rem;
   --nccl-custom-container--max-width: 70.5rem;
   --nccl-custom-admin--tab-height-desktop: 2.5rem;
   --nccl-font-base: 16;

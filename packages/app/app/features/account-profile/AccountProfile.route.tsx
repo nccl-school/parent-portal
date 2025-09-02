@@ -5,6 +5,7 @@ import {
 } from "@nccl/components";
 
 import type { Route } from "./+types/AccountProfile.route";
+import { AccountProfileBasic } from "./AccountProfileBasic";
 
 import { getNCCLClient } from "../../utils/server";
 import { dates } from "../../utils/client";
@@ -28,6 +29,7 @@ export default function AccountProfile({
 }: Route.ComponentProps) {
   return (
     <>
+      <AccountProfileBasic.Component />
       <PageHeader
         dxTitle="Profile"
         dxSubtitle="Share a little about yourself so other families and staff can get to know you better."
@@ -42,6 +44,7 @@ export default function AccountProfile({
         <AccountPageSectionHeader
           dxTitle="Basic information"
           dxSubtitle="Keep your name, contact info, and other details up to date to stay connected."
+          dxOnClick={AccountProfileBasic.launch}
         />
         <DescriptionList>
           <DescriptionListTag>First name</DescriptionListTag>

@@ -12,6 +12,7 @@ const mainStyles = css`
 
   ${makeResponsive({ from: "laptop" })} {
     padding-right: ${makeRem(32)};
+    padding-bottom: ${makeRem(32)};
     overflow-y: auto;
 
     & > * {

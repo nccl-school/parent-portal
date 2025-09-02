@@ -165,10 +165,15 @@
       "value": 12,
       "description": "The vertical padding on each body cell"
     },
-    "modal--gutters": {
+    "modal--gutters-desktop": {
       "type": "rem",
       "value": 32,
-      "description": "The size of the gutters for the modal header footer and body"
+      "description": "The size of the gutters for the modal header footer and body on desktop"
+    },
+    "modal--gutters-mobile": {
+      "type": "rem",
+      "value": 24,
+      "description": "The size of the gutters for the modal header footer and body on mobile"
     },
     "container--max-width": {
       "type": "rem",

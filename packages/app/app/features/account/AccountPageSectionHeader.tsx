@@ -36,7 +36,12 @@ export function AccountPageSectionHeader({
         </Typography>
       </div>
       {dxOnClick ? (
-        <Button dxVariant="outlined" dxColor="alt" dxSize="sm">
+        <Button
+          dxVariant="outlined"
+          dxColor="alt"
+          dxSize="sm"
+          onClick={dxOnClick}
+        >
           Edit
         </Button>
       ) : (
