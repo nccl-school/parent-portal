@@ -1,33 +1,48 @@
 import { css } from "@linaria/core";
-import { Typography } from "@nccl/components";
+import { Button, Typography } from "@nccl/components";
 import { makeRem } from "@nccl/theme";
 import { classes } from "@stratum-ui/core/utils";
-import type { JSX } from "react";
+import type { JSX, MouseEventHandler } from "react";
 
 const stylesBase = css`
   margin-bottom: ${makeRem(24)};
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: ${makeRem(16)};
 `;
 
 export type AccountPageSectionHeaderProps = JSX.IntrinsicElements["h3"] & {
   dxTitle: string;
   dxSubtitle: string;
+  dxOnClick?: MouseEventHandler<HTMLButtonElement>;
+  children: string;
 };
 
 export function AccountPageSectionHeader({
-  children,
   className,
   dxTitle,
   dxSubtitle,
+  dxOnClick,
   ...restProps
 }: AccountPageSectionHeaderProps) {
   return (
     <header className={classes(stylesBase, className)}>
-      <Typography dxVariant="heading5" dxNode="h3" {...restProps}>
-        {dxTitle}
-      </Typography>
-      <Typography dxVariant="body3" dxNode="div">
-        {dxSubtitle}
-      </Typography>
+      <div>
+        <Typography dxVariant="heading4" dxNode="h3" {...restProps}>
+          {dxTitle}
+        </Typography>
+        <Typography dxVariant="body3" dxNode="div">
+          {dxSubtitle}
+        </Typography>
+      </div>
+      {dxOnClick ? (
+        <Button dxVariant="outlined" dxColor="alt" dxSize="sm">
+          Edit
+        </Button>
+      ) : (
+        <div />
+      )}
     </header>
   );
 }

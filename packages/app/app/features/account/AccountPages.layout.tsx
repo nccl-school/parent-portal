@@ -11,7 +11,8 @@ const mainStyles = css`
   overflow: hidden;
 
   ${makeResponsive({ from: "laptop" })} {
-    margin-right: ${makeRem(32)};
+    padding-right: ${makeRem(32)};
+    overflow-y: auto;
 
     & > * {
       max-width: ${makeCustom("container--max-width")};

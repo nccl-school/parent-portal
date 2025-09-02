@@ -60,6 +60,12 @@ export default function AccountGeneral({
       </AccountPageSection>
       <AccountPageSection>
         <AccountPageSectionHeader
+          dxTitle="Bio"
+          dxSubtitle="Write a short introduction to share your interests, background, or anything you'd like others to see."
+        />
+      </AccountPageSection>
+      <AccountPageSection>
+        <AccountPageSectionHeader
           dxTitle="Notifications"
           dxSubtitle="Stay in the loop! Pick how you’d like to receive updates from the school and the community."
         />
