@@ -132,7 +132,7 @@ export const WithComponent = () => {
   return (
     <>
       <button onClick={open}>Open Modal</button>
-      <Modal dxEngine={engine} dxVariant="drawer-ltr">
+      <Modal dxEngine={engine} dxVariant="drawer-right">
         <header>Header</header>
         <div>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni culpa
@@ -153,7 +153,7 @@ export const VariantBasic = () => {
   return (
     <>
       <button onClick={open}>Open Modal</button>
-      <Modal dxEngine={engine} dxVariant="basic">
+      <Modal dxEngine={engine} dxVariant="modal">
         <ModalHeader>Header</ModalHeader>
         <ModalBody>
           <Typography dxVariant="body1" dxNode="p">
@@ -178,12 +178,12 @@ export const VariantBasic = () => {
   );
 };
 
-export const VariantDrawerLTR = () => {
+export const VariantDrawerRight = () => {
   const { engine, open, close } = useModal();
   return (
     <>
       <button onClick={open}>Open Modal</button>
-      <Modal dxEngine={engine} dxVariant="drawer-ltr" style={{ width: 500 }}>
+      <Modal dxEngine={engine} dxVariant="drawer-right" style={{ width: 500 }}>
         <ModalHeader>Header</ModalHeader>
         <ModalBody>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni culpa
@@ -199,12 +199,12 @@ export const VariantDrawerLTR = () => {
   );
 };
 
-export const VariantDrawerRTL = () => {
+export const VariantDrawerBottom = () => {
   const { engine, open, close } = useModal();
   return (
     <>
       <button onClick={open}>Open Modal</button>
-      <Modal dxEngine={engine} dxVariant="drawer-rtl" style={{ width: 500 }}>
+      <Modal dxEngine={engine} dxVariant="drawer-bottom">
         <ModalHeader>Header</ModalHeader>
         <ModalBody>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni culpa
@@ -242,7 +242,6 @@ function ModalContent() {
             Toaster.launch({
               variant: "success",
               message: "This is a popver in a dialog",
-              dismissal: "manual",
             })
           }
         >
@@ -256,7 +255,7 @@ function ModalContent() {
   );
 }
 const ImperativeModal = new ModalController<TestState>({
-  props: { dxVariant: "basic" },
+  props: { dxVariant: "modal" },
   ModalContent,
 });
 

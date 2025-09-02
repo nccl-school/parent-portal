@@ -16,7 +16,6 @@ export type AccountPageSectionHeaderProps = JSX.IntrinsicElements["h3"] & {
   dxTitle: string;
   dxSubtitle: string;
   dxOnClick?: MouseEventHandler<HTMLButtonElement>;
-  children: string;
 };
 
 export function AccountPageSectionHeader({

@@ -1,12 +1,10 @@
 import { classes } from "@stratum-ui/core/utils";
 import type { JSX, RefCallback } from "react";
-import { forwardRef, useCallback, useEffect } from "react";
-import { css } from "@linaria/core";
-import { makeRem } from "@nccl/theme";
+import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import type { ModalVariants } from "./modal.styles.js";
-import { backdropStyles, modalStyles } from "./modal.styles.js";
+import { modalStyles, modalStylesBackdrop } from "./modal.styles.js";
 import type { ReactModalState } from "./Modal.provider.js";
 import { ModalProvider } from "./Modal.provider.js";
 import { useModalContext } from "./modal.useModalContext.js";
@@ -14,6 +12,7 @@ import { useModalContext } from "./modal.useModalContext.js";
 import type { ModalEngine } from "../_core/modal/ModalEngine.js";
 import { useForwardedRef } from "../hooks/hook.useForwardedRef.js";
 import { useDynamicNode } from "../useDynamicNode/index.js";
+import { useIsMobile } from "../hooks/hook.useIsMobile.js";
 
 export type ModalPropsNative = JSX.IntrinsicElements["dialog"];
 export type ModalPropsCustom = {
@@ -25,19 +24,27 @@ export type ModalPropsCustom = {
 };
 export type ModalProps = ModalPropsNative & ModalPropsCustom;
 
-const styles = css`
-  position: relative;
-  border-radius: ${makeRem(8)};
-`;
-
 export const ModalContent = forwardRef<HTMLDialogElement, ModalProps>(
   function Modal(
-    { children, className, dxEngine, dxVariant = "basic", ...restProps },
+    { children, className, dxEngine, dxVariant, ...restProps },
     ref
   ) {
+    const initVariantRef = useRef<ModalVariants>(dxVariant ?? "modal");
     const modalRef = useForwardedRef(ref);
     const dynamicNode = useDynamicNode();
     const { state } = useModalContext();
+    const isMobile = useIsMobile();
+    const [variant, setVariant] = useState<ModalVariants>(
+      initVariantRef.current
+    );
+
+    useEffect(() => {
+      if (isMobile) {
+        setVariant("drawer-bottom");
+      } else {
+        setVariant(initVariantRef.current);
+      }
+    }, [isMobile]);
 
     const handleOnMount = useCallback<RefCallback<HTMLDialogElement>>(
       (node) => {
@@ -59,9 +66,8 @@ export const ModalContent = forwardRef<HTMLDialogElement, ModalProps>(
         {...restProps}
         className={classes(
           className,
-          backdropStyles,
-          modalStyles[dxVariant],
-          styles
+          modalStylesBackdrop,
+          modalStyles[variant]
         )}
         ref={handleOnMount}
       >

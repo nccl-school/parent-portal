@@ -42,8 +42,8 @@ export default [
         index("./features/account/Account.index.tsx"),
         layout("./features/account/AccountPages.layout.tsx", [
           route(
-            "general",
-            "./features/account-general/AccountGeneral.route.tsx"
+            "profile",
+            "./features/account-profile/AccountProfile.route.tsx"
           ),
           route(
             "security",

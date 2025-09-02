@@ -4,7 +4,7 @@ import {
   DescriptionListTag,
 } from "@nccl/components";
 
-import type { Route } from "./+types/AccountGeneral.route";
+import type { Route } from "./+types/AccountProfile.route";
 
 import { getNCCLClient } from "../../utils/server";
 import { dates } from "../../utils/client";
@@ -23,7 +23,7 @@ export async function loader(args: Route.LoaderArgs) {
   return { user };
 }
 
-export default function AccountGeneral({
+export default function AccountProfile({
   loaderData: { user },
 }: Route.ComponentProps) {
   return (

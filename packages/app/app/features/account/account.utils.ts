@@ -6,7 +6,7 @@ import type { NavItemPropsCustom } from "../../components/nav/NavItem";
 export const tabsGeneral: (NavItemPropsCustom &
   Omit<NavLinkProps, "children">)[] = [
   {
-    to: href("/account/general"),
+    to: href("/account/profile"),
     children: "Profile",
     end: true,
     dxBaseIcon: "user-square-stroke-standard",
@@ -27,7 +27,7 @@ export const tabsPreferences: (NavLinkProps & {
   children: string;
 })[] = [
   {
-    to: href("/account/notifications"),
+    to: href("/account"),
     children: "Notification Preferences",
     end: true,
     dxBaseIcon: "notification-01-stroke-standard",
