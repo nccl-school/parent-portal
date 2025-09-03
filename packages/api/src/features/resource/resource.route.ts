@@ -30,7 +30,6 @@ import {
 import {
   getResourceById,
   getUserResourceAccess,
-  getBucket,
   createFileStoragePath,
   createResourceOwnership,
   parseGoogleDocsURL,
@@ -44,6 +43,7 @@ import { authorize } from "../../middleware/middleware.authorize.js";
 import type { Resource } from "../../_generated/prisma/client.js";
 import { tryPrisma } from "../../utils/util.prisma.js";
 import { exhaustiveMatchGuard } from "../../utils/util.exhaustiveMatchGuard.js";
+import { getBucket } from "../../utils/util.bucket.js";
 
 export const resource = new Hono();
 

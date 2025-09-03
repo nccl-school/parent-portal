@@ -116,6 +116,28 @@ user.put(
   }
 );
 
+user.put(
+  "/avatar",
+  validate("json", UpdateMyProfileRequestSchema),
+  async (c) => {
+    const db = c.get("db");
+    const currentUser = c.get("user");
+    const body = c.req.valid("json");
+
+    const updatedUser = await db.user.update({
+      where: {
+        id: currentUser.id,
+      },
+      data: body,
+    });
+
+    console.log(updatedUser);
+
+    const data = await serialize(UpdateMyProfileResponseSchema, updatedUser);
+    return c.json(data);
+  }
+);
+
 user.all(() => {
   throw new ErrorSet.notFound();
 });

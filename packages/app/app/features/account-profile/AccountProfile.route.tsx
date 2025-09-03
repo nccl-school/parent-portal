@@ -35,12 +35,12 @@ export async function action(args: Route.ActionArgs) {
 
   try {
     if (args.request.method !== "PUT") {
-      throw new ErrorSet.methodNotAllowed("PUT");
+      throw new ErrorSet.methodNotAllowed(args.request.method);
     }
     const body = await validateFormData(UpdateMyProfileRequestSchema, formData);
     await ncclClient.user.updateMyProfile(body);
     return {
-      message: "Successfully updated your profile",
+      success: "Successfully updated your profile",
     };
   } catch (error) {
     return ncclClient.serializeError(error);

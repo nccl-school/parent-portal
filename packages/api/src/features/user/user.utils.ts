@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { zDateStringSchema } from "../../utils/util.schema.js";
+import { zDateStringSchema, zStringOptional } from "../../utils/util.schema.js";
 import { RoleSchema, RolesSchema } from "../role/role.utils.js";
 
 export const UserStatusSchema = z.literal(["INVITED", "ACTIVE", "DISABLED"]);
@@ -69,15 +69,15 @@ export type UpdateUserRoleResponse = z.infer<
   typeof UpdateUserRoleResponseSchema
 >;
 
-// Patch a user
+// Update a user's profile a user
 export const UpdateMyProfileRequestSchema = UserSchema.pick({
   firstName: true,
   lastName: true,
   imageUrl: true,
   phone: true,
 }).extend({
-  imageUrl: z.string().optional(),
-  phone: z.string().optional(),
+  imageUrl: zStringOptional(),
+  phone: zStringOptional(),
 });
 export type UpdateMyProfileRequest = z.infer<
   typeof UpdateMyProfileRequestSchema
@@ -85,4 +85,14 @@ export type UpdateMyProfileRequest = z.infer<
 export const UpdateMyProfileResponseSchema = UserSchema;
 export type UpdateMyProfileResponse = z.infer<
   typeof UpdateMyProfileResponseSchema
+>;
+
+// Update a user's profile a user
+export const UpdateMyAvatarRequestSchema = UserSchema.pick({
+  imageUrl: true,
+});
+export type UpdateMyAvatarRequest = z.infer<typeof UpdateMyAvatarRequestSchema>;
+export const UpdateMyAvatarResponseSchema = UserSchema;
+export type UpdateMyAvatarResponse = z.infer<
+  typeof UpdateMyAvatarResponseSchema
 >;

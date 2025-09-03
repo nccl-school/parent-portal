@@ -16,7 +16,7 @@ import { useEffect } from "react";
 
 import type { action } from "./AccountProfile.route";
 
-import { getValidationErrors } from "../../utils/client";
+import { getValidationErrors, isError } from "../../utils/client";
 import { useIsSubmitting } from "../../hooks/hook.useIsSubmitting";
 import { useUser } from "../../hooks/hook.useUser";
 
@@ -29,10 +29,13 @@ export function AccountProfileBasicContent() {
 
   // Display a toast if you update it properly
   useEffect(() => {
-    if (actionData?.message) {
-      Toast.success(actionData.message);
+    if (isError(actionData)) {
+      return Toast.error(actionData.message);
     }
-  }, [actionData?.message, closeModal]);
+    if (actionData?.success) {
+      Toast.success(actionData.success);
+    }
+  }, [actionData, closeModal]);
 
   return (
     <Form method="PUT">
