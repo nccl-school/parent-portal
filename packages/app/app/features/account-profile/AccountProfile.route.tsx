@@ -3,13 +3,18 @@ import {
   DescriptionListData,
   DescriptionListTag,
 } from "@nccl/components";
+import { ErrorSet, UpdateMyProfileRequestSchema } from "@nccl/api/client";
 
 import type { Route } from "./+types/AccountProfile.route";
 import { AccountProfileBasic } from "./AccountProfileBasic";
 
 import { getNCCLClient } from "../../utils/server";
 import { dates } from "../../utils/client";
-import { createRouteHandle, placeholder } from "../../utils/isomorphic";
+import {
+  createRouteHandle,
+  placeholder,
+  validateFormData,
+} from "../../utils/isomorphic";
 import { PageHeader } from "../../components/page";
 import { AccountPageSection } from "../account/AccountPageSection";
 import { AccountPageSectionHeader } from "../account/AccountPageSectionHeader";
@@ -22,6 +27,24 @@ export async function loader(args: Route.LoaderArgs) {
   const ncclClient = getNCCLClient(args);
   const user = await ncclClient.user.getCurrentUser();
   return { user };
+}
+
+export async function action(args: Route.ActionArgs) {
+  const ncclClient = getNCCLClient(args);
+  const formData = await args.request.formData();
+
+  try {
+    if (args.request.method !== "PUT") {
+      throw new ErrorSet.methodNotAllowed("PUT");
+    }
+    const body = await validateFormData(UpdateMyProfileRequestSchema, formData);
+    await ncclClient.user.updateMyProfile(body);
+    return {
+      message: "Successfully updated your profile",
+    };
+  } catch (error) {
+    return ncclClient.serializeError(error);
+  }
 }
 
 export default function AccountProfile({

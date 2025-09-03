@@ -5,9 +5,11 @@ import {
   GetUserListResponseSchema,
   GetUserParamsSchema,
   GetUserResponseSchema,
-  UpdateUserRoleParamsSchema,
+  UserIDParamsSchema,
   UpdateUserRoleRequestSchema,
   UpdateUserRoleResponseSchema,
+  UpdateMyProfileRequestSchema,
+  UpdateMyProfileResponseSchema,
 } from "./user.utils.js";
 
 import { validate } from "../../middleware/middleware.validate.js";
@@ -66,7 +68,7 @@ user.get("/:id", validate("param", GetUserParamsSchema), async (c) => {
 user.put(
   "/:id/role",
   authorize("ADMIN"),
-  validate("param", UpdateUserRoleParamsSchema),
+  validate("param", UserIDParamsSchema),
   validate("json", UpdateUserRoleRequestSchema),
   async (c) => {
     const body = c.req.valid("json");
@@ -91,64 +93,28 @@ user.put(
   }
 );
 
-// GET /api/user/resend-invite/:id | Reinvite a user to the app
-// - Get's the user
-// - Revokes the current invitation
-// - Re-invites the user
-// - Updates the user with the new invitationId
-// user.get(
-//   "/resend-invite/:id",
-//   authorize("ADMIN"),
-//   validate("param", ResendInviteUserParamsSchema),
-//   async (c) => {
-//     const params = c.req.valid("param");
-//     const db = c.get("db");
-//     const env = getEnvVar(c);
+// PUT /api/user/my-profile | Update the current user's profile information
+user.put(
+  "/my-profile",
+  validate("json", UpdateMyProfileRequestSchema),
+  async (c) => {
+    const db = c.get("db");
+    const currentUser = c.get("user");
+    const body = c.req.valid("json");
 
-//     console.log("Resending invite to", params.id);
+    const updatedUser = await db.user.update({
+      where: {
+        id: currentUser.id,
+      },
+      data: body,
+    });
 
-//     const dbUser = await db.user.findUnique({
-//       where: {
-//         id: params.id,
-//       },
-//     });
-//     if (!dbUser) {
-//       throw new ErrorSet.notFound("Unable to locate user to resend invite");
-//     }
-//     if (!dbUser.invitationId) {
-//       throw new ErrorSet.notFound(
-//         "Unable to locate users invitation record to resend"
-//       );
-//     }
+    console.log(updatedUser);
 
-//     await clerk.invitations.revokeInvitation(dbUser.invitationId);
-
-//     const invite = await clerk.invitations.createInvitation({
-//       emailAddress: dbUser.email,
-//       redirectUrl: env.NCCL_APP_URL.concat("/sign-up"),
-//       publicMetadata: {
-//         db_id: dbUser.id,
-//         role: dbUser.roleId,
-//       },
-//     });
-
-//     await db.user.update({
-//       where: {
-//         id: dbUser.id,
-//       },
-//       data: {
-//         invitationId: invite.id,
-//         invitedAt: new Date(),
-//       },
-//     });
-
-//     const data = await serialize(ResendInviteUserResponseSchema, {
-//       message: `Successfully re-invited ${dbUser.email}`,
-//     });
-
-//     return c.json(data);
-//   }
-// );
+    const data = await serialize(UpdateMyProfileResponseSchema, updatedUser);
+    return c.json(data);
+  }
+);
 
 user.all(() => {
   throw new ErrorSet.notFound();

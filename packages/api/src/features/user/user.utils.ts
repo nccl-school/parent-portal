@@ -6,6 +6,10 @@ import { RoleSchema, RolesSchema } from "../role/role.utils.js";
 export const UserStatusSchema = z.literal(["INVITED", "ACTIVE", "DISABLED"]);
 export type UserStatus = z.infer<typeof UserStatusSchema>;
 
+export const UserIDParamsSchema = z.object({
+  id: z.string(),
+});
+
 export const UserSchema = z.object({
   id: z.string(),
   email: z.email(),
@@ -57,13 +61,28 @@ export const CreateUserRequestSchema = UserSchema.pick({
 }).extend({ role: RolesSchema });
 
 // Update a user role
-export const UpdateUserRoleParamsSchema = z.object({
-  id: z.string(),
-});
 export const UpdateUserRoleRequestSchema = z.object({
   role: RolesSchema,
 });
 export const UpdateUserRoleResponseSchema = UserWithRoleSchema;
 export type UpdateUserRoleResponse = z.infer<
   typeof UpdateUserRoleResponseSchema
+>;
+
+// Patch a user
+export const UpdateMyProfileRequestSchema = UserSchema.pick({
+  firstName: true,
+  lastName: true,
+  imageUrl: true,
+  phone: true,
+}).extend({
+  imageUrl: z.string().optional(),
+  phone: z.string().optional(),
+});
+export type UpdateMyProfileRequest = z.infer<
+  typeof UpdateMyProfileRequestSchema
+>;
+export const UpdateMyProfileResponseSchema = UserSchema;
+export type UpdateMyProfileResponse = z.infer<
+  typeof UpdateMyProfileResponseSchema
 >;

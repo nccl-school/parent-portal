@@ -2,12 +2,15 @@ import type z from "zod";
 
 import {
   GetUserParamsSchema,
-  UpdateUserRoleParamsSchema,
+  UserIDParamsSchema,
   UpdateUserRoleRequestSchema,
   type GetCurrentUserResponse,
   type GetUserListResponse,
   type GetUserResponse,
   type UpdateUserRoleResponse,
+  type UpdateMyProfileRequest,
+  type UpdateMyProfileResponse,
+  UpdateMyProfileRequestSchema,
 } from "./user.utils.js";
 
 import {
@@ -59,8 +62,19 @@ export class UserClient extends ApiClient {
     return this._mutateJSON<UpdateUserRoleResponse>({
       method: "PUT",
       path: "/:id/role",
-      params: [UpdateUserRoleParamsSchema, { id: userId }],
+      params: [UserIDParamsSchema, { id: userId }],
       body: [UpdateUserRoleRequestSchema, body],
+    });
+  }
+
+  /**
+   * Updates the current user's profile
+   */
+  public async updateMyProfile(body: UpdateMyProfileRequest) {
+    return this._mutateJSON<UpdateMyProfileResponse>({
+      method: "PUT",
+      path: "/my-profile",
+      body: [UpdateMyProfileRequestSchema, body],
     });
   }
 }
