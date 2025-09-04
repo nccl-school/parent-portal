@@ -1,10 +1,18 @@
 import type { JSX, ReactEventHandler, RefCallback } from "react";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { useImmer } from "use-immer";
 
-export function useCrop(options: { maskSize?: number; initSrc?: string }) {
+export function useCrop(options: {
+  maskSize?: number;
+  initSrc?: string;
+  containerHeight?: number;
+  containerWidth?: number;
+}) {
   const maskSize = options.maskSize ?? 200;
   const initSrc = options.initSrc ?? undefined;
+  const containerHeight = options.containerHeight ?? maskSize;
+  const containerWidth = options.containerWidth ?? maskSize;
+  const _imgRef = useRef<HTMLImageElement | null>(null);
 
   const [state, setState] = useImmer<{
     zoom: number;
@@ -50,6 +58,7 @@ export function useCrop(options: { maskSize?: number; initSrc?: string }) {
   const imgRef = useCallback<RefCallback<HTMLImageElement>>(
     (node) => {
       if (!node) return;
+      _imgRef.current = node;
       if (!initSrc) return;
       console.log("Initial source provided. Setting src of image");
       setState((draft) => {
@@ -114,7 +123,7 @@ export function useCrop(options: { maskSize?: number; initSrc?: string }) {
     [maskSize]
   );
 
-  const zoom = useCallback<(zoomNum: number) => void>(
+  const onZoom = useCallback<(zoomNum: number) => void>(
     (zoomNum) => {
       const zoomFactor = 0.001; // sensitivity
       setState((draft) => {
@@ -139,7 +148,7 @@ export function useCrop(options: { maskSize?: number; initSrc?: string }) {
         cursor: "grab",
         zIndex: 10,
       },
-      onWheel: (e) => zoom(e.deltaY),
+      onWheel: (e) => onZoom(e.deltaY),
       onMouseDown: (e) => {
         const startX = e.clientX - state.offset.x;
         const startY = e.clientY - state.offset.y;
@@ -157,13 +166,103 @@ export function useCrop(options: { maskSize?: number; initSrc?: string }) {
         window.addEventListener("mouseup", onUp);
       },
     }),
-    [maskSize, setState, state.offset.x, state.offset.y, zoom]
+    [maskSize, setState, state.offset.x, state.offset.y, onZoom]
   );
 
-  // const getCropArea = useCallback(() => {}, []);
+  const getCropArea = useCallback(() => {
+    const cropLeft = (containerWidth - maskSize) / 2;
+    const cropTop = (containerHeight - maskSize) / 2;
+    const img = getImage();
 
-  return useMemo(
-    () => ({ handleSelectImage, imgProps, areaProps, maskProps, zoom }),
-    [areaProps, handleSelectImage, imgProps, maskProps, zoom]
-  );
+    const { naturalHeight, naturalWidth } = img;
+
+    const renderedWidth = naturalWidth * state.zoom;
+    const renderedHeight = naturalHeight * state.zoom;
+
+    const cropLeftInRendered = cropLeft - state.offset.x;
+    const cropTopInRendered = cropTop - state.offset.y;
+
+    const scaleX = naturalWidth / renderedWidth;
+    const scaleY = naturalHeight / renderedHeight;
+
+    const x = Math.round(cropLeftInRendered * scaleX);
+    const y = Math.round(cropTopInRendered * scaleY);
+    const width = Math.round(maskSize * scaleX);
+    const height = Math.round(maskSize * scaleY);
+
+    return {
+      x: Math.max(0, Math.min(x, naturalWidth - width)),
+      y: Math.max(0, Math.min(y, naturalHeight - height)),
+      width,
+      height,
+    };
+  }, [
+    containerHeight,
+    containerWidth,
+    maskSize,
+    state.offset.x,
+    state.offset.y,
+    state.zoom,
+  ]);
+
+  function getImage(): HTMLImageElement {
+    if (!_imgRef.current) {
+      throw new Error(
+        "Image element has not been set. Ensure you're spreading `imgProps` on the image node."
+      );
+    }
+    return _imgRef.current;
+  }
+
+  function launchPreview() {
+    const cropArea = getCropArea();
+
+    const dialog = document.createElement("dialog");
+    dialog.id = crypto.randomUUID();
+    const canvas = document.createElement("canvas");
+
+    dialog.appendChild(canvas);
+
+    const ctx = canvas.getContext("2d");
+    const img = getImage();
+    if (!ctx) return;
+
+    // resize canvas to match mask size
+    canvas.width = maskSize;
+    canvas.height = maskSize;
+
+    // clear previous drawing
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // clip to circle (optional)
+    ctx.beginPath();
+    ctx.arc(maskSize / 2, maskSize / 2, maskSize / 2, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+
+    ctx.drawImage(
+      img,
+      cropArea.x,
+      cropArea.y,
+      cropArea.width,
+      cropArea.height,
+      0,
+      0,
+      maskSize,
+      maskSize
+    );
+
+    document.body.appendChild(dialog);
+    dialog.showModal();
+  }
+
+  return {
+    handleSelectImage,
+    imgProps,
+    areaProps,
+    maskProps,
+    onZoom,
+    getCropArea,
+    launchPreview,
+  };
 }
