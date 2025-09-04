@@ -1,20 +1,20 @@
 import {
+  Avatar,
   DescriptionList,
   DescriptionListData,
   DescriptionListTag,
+  Icon,
+  Typography,
 } from "@nccl/components";
 import { ErrorSet, UpdateMyProfileRequestSchema } from "@nccl/api/client";
 
 import type { Route } from "./+types/AccountProfile.route";
 import { AccountProfileBasic } from "./AccountProfileBasic";
+import { AccountProfileAvatar } from "./AccountProfileAvatar";
 
 import { getNCCLClient } from "../../utils/server";
 import { dates } from "../../utils/client";
-import {
-  createRouteHandle,
-  placeholder,
-  validateFormData,
-} from "../../utils/isomorphic";
+import { createRouteHandle, validateFormData } from "../../utils/isomorphic";
 import { PageHeader } from "../../components/page";
 import { AccountPageSection } from "../account/AccountPageSection";
 import { AccountPageSectionHeader } from "../account/AccountPageSectionHeader";
@@ -52,6 +52,7 @@ export default function AccountProfile({
 }: Route.ComponentProps) {
   return (
     <>
+      <AccountProfileAvatar.Component />
       <AccountProfileBasic.Component />
       <PageHeader
         dxTitle="Profile"
@@ -61,7 +62,27 @@ export default function AccountProfile({
         <AccountPageSectionHeader
           dxTitle="Avatar"
           dxSubtitle="Add a friendly face! Upload or adjust your profile picture so others can easily recognize you."
+          dxOnClick={AccountProfileAvatar.launch}
         />
+        {user.imageUrl ? (
+          <Avatar
+            dxSize={"xl"}
+            dxFirstName={user.firstName}
+            dxLastName={user.lastName}
+            dxSrc={user.imageUrl}
+          />
+        ) : (
+          <>
+            <Icon
+              dxSize={64}
+              dxIcon="user-circle-solid-standard"
+              dxColor="light-700"
+            />
+            <Typography dxNode="div" dxVariant="body3">
+              No image uploaded yet
+            </Typography>
+          </>
+        )}
       </AccountPageSection>
       <AccountPageSection>
         <AccountPageSectionHeader
