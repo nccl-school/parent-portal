@@ -77,8 +77,6 @@ export default function AccountProfile({
           <DescriptionListTag>Email</DescriptionListTag>
           <DescriptionListData>{user.email}</DescriptionListData>
           <DescriptionListTag>Phone</DescriptionListTag>
-          <DescriptionListData>{user.phone ?? placeholder}</DescriptionListData>
-          <DescriptionListTag>Last updated</DescriptionListTag>
           <DescriptionListData>
             {dates.format(user.updatedAt, "Relative")}
           </DescriptionListData>

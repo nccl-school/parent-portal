@@ -1,5 +1,5 @@
 import { css } from "@linaria/core";
-import { makeColor, makeRem, makeResponsive } from "@nccl/theme";
+import { makeColor, makeCustom, makeRem, makeResponsive } from "@nccl/theme";
 import { classes } from "@stratum-ui/core/utils";
 import type { JSX } from "react";
 
@@ -22,6 +22,8 @@ const stylesBase = css`
 
   ${makeResponsive({ from: "laptop" })} {
     padding: ${makeRem(32)} 0;
+    max-width: ${makeCustom("container--max-width")};
+    margin: 0 auto;
 
     & > * {
       padding-left: ${makeRem(32)} !important;
