@@ -1,20 +1,20 @@
 import type { JSX, ReactEventHandler, RefCallback } from "react";
-import { useCallback, useMemo, useRef } from "react";
-import { useImmer } from "use-immer";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 export function useCrop(options: {
   maskSize?: number;
-  initSrc?: string;
+  // initSrc?: string;
   containerHeight?: number;
   containerWidth?: number;
 }) {
   const maskSize = options.maskSize ?? 200;
-  const initSrc = options.initSrc ?? undefined;
+  // const initSrc = options.initSrc ?? undefined;
   const containerHeight = options.containerHeight ?? maskSize;
   const containerWidth = options.containerWidth ?? maskSize;
   const _imgRef = useRef<HTMLImageElement | null>(null);
+  const _fileRef = useRef<File | undefined>(undefined);
 
-  const [state, setState] = useImmer<{
+  const [state, setState] = useState<{
     zoom: number;
     naturalSize: { w: number; h: number } | null;
     offset: { x: number; y: number };
@@ -28,6 +28,7 @@ export function useCrop(options: {
 
   const handleSelectImage = useCallback<ReactEventHandler<HTMLInputElement>>(
     (e) => {
+      console.log("Selecting image");
       const file = e.currentTarget.files?.[0];
       if (!file)
         throw new Error(
@@ -41,32 +42,50 @@ export function useCrop(options: {
         );
       }
 
+      console.log("Saving instance of file for submission");
+      _fileRef.current = file;
+
+      console.log("Reading file to display image");
       const reader = new FileReader();
       reader.onload = () =>
-        setState((draft) => {
-          if (!reader.result)
+        setState((prevState) => {
+          if (!reader.result) {
             throw new Error(
               "Cannot read a result from the provided image file."
             );
-          draft.src = reader.result.toString();
+          }
+          return {
+            ...prevState,
+            src: reader.result.toString(),
+          };
         });
       reader.readAsDataURL(file);
     },
     [setState]
   );
 
-  const imgRef = useCallback<RefCallback<HTMLImageElement>>(
-    (node) => {
-      if (!node) return;
-      _imgRef.current = node;
-      if (!initSrc) return;
-      console.log("Initial source provided. Setting src of image");
-      setState((draft) => {
-        draft.src = initSrc;
-      });
-    },
-    [initSrc, setState]
-  );
+  const imgRef = useCallback<RefCallback<HTMLImageElement>>((node) => {
+    if (!node) return;
+    _imgRef.current = node;
+    // if (!initSrc) return;
+    // console.log("Initial source provided. Setting src of image");
+    // setState((prevState) => {
+    //   return {
+    //     ...prevState,
+    //     src: initSrc,
+    //   };
+    // });
+
+    // async function loadImageAsFile() {
+    //   console.log("Converting image to a file");
+    //   if (!initSrc) return;
+    //   const res = await fetch(initSrc);
+    //   const blob = await res.blob();
+    //   _fileRef.current = new File([blob], "image.png", { type: blob.type });
+    // }
+
+    // loadImageAsFile();
+  }, []);
 
   const imgProps = useMemo<JSX.IntrinsicElements["img"]>(
     () => ({
@@ -88,17 +107,18 @@ export function useCrop(options: {
         const minZoomY = maskSize / naturalHeight;
         const minZoom = Math.max(minZoomX, minZoomY);
 
-        setState((draft) => {
-          draft.naturalSize = {
+        setState((prevState) => ({
+          ...prevState,
+          naturalSize: {
             h: naturalHeight,
             w: naturalWidth,
-          };
-          draft.offset = {
+          },
+          offset: {
             x: (maskSize - naturalWidth * minZoom) / 2,
             y: (maskSize - naturalHeight * minZoom) / 2,
-          };
-          draft.zoom = minZoom;
-        });
+          },
+          zoom: minZoom,
+        }));
       },
     }),
     [
@@ -126,12 +146,10 @@ export function useCrop(options: {
   const onZoom = useCallback<(zoomNum: number) => void>(
     (zoomNum) => {
       const zoomFactor = 0.001; // sensitivity
-      setState((draft) => {
-        draft.zoom = Math.max(
-          0.1,
-          Math.min(3, draft.zoom - zoomNum * zoomFactor)
-        );
-      });
+      setState((prevState) => ({
+        ...prevState,
+        zoom: Math.max(0.1, Math.min(3, prevState.zoom - zoomNum * zoomFactor)),
+      }));
     },
     [setState]
   );
@@ -144,7 +162,8 @@ export function useCrop(options: {
         width: maskSize,
         borderRadius: "50%",
         overflow: "hidden",
-        border: "2px solid red",
+        border: "2px solid rgba(0,0,0,0.6)",
+        boxShadow: "0 0 0 9999px rgba(0,0,0,0.5)",
         cursor: "grab",
         zIndex: 10,
       },
@@ -154,9 +173,10 @@ export function useCrop(options: {
         const startY = e.clientY - state.offset.y;
 
         function onMove(ev: MouseEvent) {
-          setState((draft) => {
-            draft.offset = { x: ev.clientX - startX, y: ev.clientY - startY };
-          });
+          setState((prevState) => ({
+            ...prevState,
+            offset: { x: ev.clientX - startX, y: ev.clientY - startY },
+          }));
         }
         function onUp() {
           window.removeEventListener("mousemove", onMove);
@@ -169,7 +189,14 @@ export function useCrop(options: {
     [maskSize, setState, state.offset.x, state.offset.y, onZoom]
   );
 
-  const getCropArea = useCallback(() => {
+  function getFile() {
+    if (!_fileRef.current) {
+      throw new Error("A file has not been set. Please select an image file");
+    }
+    return _fileRef.current;
+  }
+
+  function getCropArea() {
     const cropLeft = (containerWidth - maskSize) / 2;
     const cropTop = (containerHeight - maskSize) / 2;
     const img = getImage();
@@ -196,14 +223,7 @@ export function useCrop(options: {
       width,
       height,
     };
-  }, [
-    containerHeight,
-    containerWidth,
-    maskSize,
-    state.offset.x,
-    state.offset.y,
-    state.zoom,
-  ]);
+  }
 
   function getImage(): HTMLImageElement {
     if (!_imgRef.current) {
@@ -227,18 +247,16 @@ export function useCrop(options: {
     const img = getImage();
     if (!ctx) return;
 
-    // resize canvas to match mask size
     canvas.width = maskSize;
     canvas.height = maskSize;
 
-    // clear previous drawing
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // clip to circle (optional)
-    ctx.beginPath();
-    ctx.arc(maskSize / 2, maskSize / 2, maskSize / 2, 0, Math.PI * 2);
-    ctx.closePath();
-    ctx.clip();
+    // ctx.beginPath();
+    // ctx.arc(maskSize / 2, maskSize / 2, maskSize / 2, 0, Math.PI * 2);
+    // ctx.closePath();
+    // ctx.clip();
 
     ctx.drawImage(
       img,
@@ -263,6 +281,7 @@ export function useCrop(options: {
     maskProps,
     onZoom,
     getCropArea,
+    getFile,
     launchPreview,
   };
 }

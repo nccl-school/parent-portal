@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationDir": "./dist",
+    "declarationMap": true,
+    "noEmit": false
+  },
+  "include": ["./src/client/index.tsx", "./src/server/index.ts"]
+}
