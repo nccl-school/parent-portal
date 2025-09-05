@@ -18,10 +18,11 @@ app.post("/api/avatar", zValidator("form", CropSchema), async (c) => {
 
   const uploadsDir = path.join(process.cwd(), "uploads");
   await mkdir(uploadsDir, { recursive: true });
+  const now = new Date().getTime();
 
   await Promise.all([
-    writeFile(path.join(uploadsDir, "cropped.png"), croppedBuffer),
-    writeFile(path.join(uploadsDir, "original.png"), originalBuffer),
+    writeFile(path.join(uploadsDir, `cropped_${now}.png`), croppedBuffer),
+    writeFile(path.join(uploadsDir, `original_${now}.png`), originalBuffer),
   ]);
 
   return c.json({
