@@ -374,9 +374,9 @@ resource.post("/file", validate("form", CreateFileRequestSchema), async (c) => {
   }
 
   const bucket = getBucket();
-  const buffer = await file.arrayBuffer();
+  const arrayBuffer = await file.arrayBuffer();
   const blob = bucket.file(resource.fileUrl);
-  await blob.save(Buffer.from(buffer), {
+  await blob.save(Buffer.from(arrayBuffer), {
     contentType: file.type,
   });
 

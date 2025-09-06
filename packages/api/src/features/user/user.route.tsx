@@ -10,12 +10,14 @@ import {
   UpdateUserRoleResponseSchema,
   UpdateMyProfileRequestSchema,
   UpdateMyProfileResponseSchema,
+  UpdateAvatarRequestSchema,
 } from "./user.utils.js";
 
 import { validate } from "../../middleware/middleware.validate.js";
 import { ErrorSet } from "../../utils/util.errors.js";
 import { authorize } from "../../middleware/middleware.authorize.js";
 import { serialize } from "../../utils/util.serialize.js";
+import { createBucketPath, getBucket } from "../../utils/util.bucket.js";
 
 export const user = new Hono();
 
@@ -109,34 +111,46 @@ user.put(
       data: body,
     });
 
-    console.log(updatedUser);
-
     const data = await serialize(UpdateMyProfileResponseSchema, updatedUser);
     return c.json(data);
   }
 );
 
-user.put(
-  "/avatar",
-  validate("json", UpdateMyProfileRequestSchema),
-  async (c) => {
-    const db = c.get("db");
-    const currentUser = c.get("user");
-    const body = c.req.valid("json");
+// POST /api/user/avatar | Update the current user's avatar information
+user.post("/avatar", validate("form", UpdateAvatarRequestSchema), async (c) => {
+  const db = c.get("db");
+  const currentUser = c.get("user");
+  const body = c.req.valid("form");
 
-    const updatedUser = await db.user.update({
-      where: {
-        id: currentUser.id,
-      },
-      data: body,
-    });
+  const { crop } = await import("holycrop/server");
+  const { croppedBuffer } = await crop(body);
 
-    console.log(updatedUser);
+  const bucket = getBucket();
+  const bucketImagePath = createBucketPath({
+    owner: "freeform",
+    segments: ["avatars", `${crypto.randomUUID()}.png`],
+  });
+  const blob = bucket.file(bucketImagePath);
+  await blob.save(croppedBuffer, {
+    contentType: "image/png",
+  });
+  await blob.makePublic();
+  const imageUrl = blob.publicUrl();
 
-    const data = await serialize(UpdateMyProfileResponseSchema, updatedUser);
-    return c.json(data);
-  }
-);
+  const updateUser = await db.user.update({
+    data: {
+      imageUrl,
+      imageUrlOriginal: null,
+      imageUrlLastUpdated: new Date(),
+    },
+    where: {
+      id: currentUser.id,
+    },
+  });
+
+  const data = await serialize(UpdateMyProfileResponseSchema, updateUser);
+  return c.json(data);
+});
 
 user.all(() => {
   throw new ErrorSet.notFound();

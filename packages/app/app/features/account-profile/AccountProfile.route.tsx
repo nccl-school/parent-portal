@@ -34,14 +34,30 @@ export async function action(args: Route.ActionArgs) {
   const formData = await args.request.formData();
 
   try {
-    if (args.request.method !== "PUT") {
-      throw new ErrorSet.methodNotAllowed(args.request.method);
+    switch (args.request.method) {
+      // Update the profile
+      case "PUT": {
+        const body = await validateFormData(
+          UpdateMyProfileRequestSchema,
+          formData
+        );
+        await ncclClient.user.updateMyProfile(body);
+        return {
+          success: "Successfully updated your profile",
+        };
+      }
+
+      // Post a new avatar
+      case "POST": {
+        await ncclClient.user.updateAvatar(formData);
+        return {
+          success: "Successfully update the avatar",
+        };
+      }
+
+      default:
+        throw new ErrorSet.methodNotAllowed(args.request.method);
     }
-    const body = await validateFormData(UpdateMyProfileRequestSchema, formData);
-    await ncclClient.user.updateMyProfile(body);
-    return {
-      success: "Successfully updated your profile",
-    };
   } catch (error) {
     return ncclClient.serializeError(error);
   }
@@ -64,25 +80,17 @@ export default function AccountProfile({
           dxSubtitle="Add a friendly face! Upload or adjust your profile picture so others can easily recognize you."
           dxOnClick={AccountProfileAvatar.launch}
         />
-        {user.imageUrl ? (
+        <div>
           <Avatar
-            dxSize={"xl"}
+            dxSize={128}
             dxFirstName={user.firstName}
             dxLastName={user.lastName}
-            dxSrc={user.imageUrl}
+            dxSrc={user.imageUrl ?? undefined}
           />
-        ) : (
-          <>
-            <Icon
-              dxSize={64}
-              dxIcon="user-circle-solid-standard"
-              dxColor="light-700"
-            />
-            <Typography dxNode="div" dxVariant="body3">
-              No image uploaded yet
-            </Typography>
-          </>
-        )}
+          <Typography dxNode="div" dxVariant="body3">
+            No image uploaded yet
+          </Typography>
+        </div>
       </AccountPageSection>
       <AccountPageSection>
         <AccountPageSectionHeader

@@ -65,7 +65,7 @@ export class ResourceClient extends ApiClient {
    * Create a new folder
    */
   public async createFolder(folder: z.infer<typeof CreateFolderRequestSchema>) {
-    return this._mutateJSON<CreateResourceResponse>({
+    return this._mutate<CreateResourceResponse>({
       method: "POST",
       path: "/folder",
       body: [CreateFolderRequestSchema, folder],
@@ -78,7 +78,7 @@ export class ResourceClient extends ApiClient {
   public async createGoogleDoc(
     googleDoc: z.infer<typeof CreateGoogleDocRequestSchema>
   ) {
-    return this._mutateJSON<CreateResourceResponse>({
+    return this._mutate<CreateResourceResponse>({
       method: "POST",
       path: "/google-doc",
       body: [CreateGoogleDocRequestSchema, googleDoc],
@@ -99,7 +99,7 @@ export class ResourceClient extends ApiClient {
    * Update the meta information (name, slug, description)
    */
   public async updateMeta(resourceId: string, meta: UpdateResourceMetaRequest) {
-    return this._mutateJSON({
+    return this._mutate({
       method: "PUT",
       path: "/:id/meta",
       params: [ParamsIDSchema, { id: resourceId }],
@@ -111,7 +111,7 @@ export class ResourceClient extends ApiClient {
    * Move a resource into a different directory
    */
   public async move(resourceId: string, newParentResourceId: string) {
-    return this._mutateJSON({
+    return this._mutate({
       method: "PUT",
       path: "/:id/move",
       params: [ParamsIDSchema, { id: resourceId }],
@@ -142,7 +142,7 @@ export class ResourceClient extends ApiClient {
     resourceId: string,
     body: CreateResourceAccessRuleRequest
   ) {
-    return this._mutateJSON({
+    return this._mutate({
       method: "POST",
       path: "/:id/access",
       params: [ParamsIDSchema, { id: resourceId }],
@@ -157,7 +157,7 @@ export class ResourceClient extends ApiClient {
     resourceAccessId: string,
     body: UpdateResourceAccessRuleRequest
   ) {
-    return this._mutateJSON({
+    return this._mutate({
       method: "PUT",
       path: "/access/:id",
       params: [ParamsIDSchema, { id: resourceAccessId }],

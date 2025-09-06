@@ -1,5 +1,4 @@
-import sharp from "sharp";
-import z from "zod/v4";
+import z from "zod";
 
 export const CropSchema = z.object({
   file: z.file(),
@@ -19,8 +18,10 @@ export async function crop(args: z.infer<typeof CropSchema>) {
 
   const arrayBuffer = await file.arrayBuffer();
   const originalBuffer = Buffer.from(arrayBuffer);
+  const sharp = await import("sharp");
 
-  const croppedBuffer = await sharp(originalBuffer)
+  const croppedBuffer = await sharp
+    .default(originalBuffer)
     .extract({
       left: cropData.x,
       top: cropData.y,

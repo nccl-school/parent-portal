@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { CropSchema } from "holycrop/server";
 
 import { zDateStringSchema, zStringOptional } from "../../utils/util.schema.js";
 import { RoleSchema, RolesSchema } from "../role/role.utils.js";
@@ -87,12 +88,8 @@ export type UpdateMyProfileResponse = z.infer<
   typeof UpdateMyProfileResponseSchema
 >;
 
-// Update a user's profile a user
-export const UpdateMyAvatarRequestSchema = UserSchema.pick({
-  imageUrl: true,
-});
-export type UpdateMyAvatarRequest = z.infer<typeof UpdateMyAvatarRequestSchema>;
-export const UpdateMyAvatarResponseSchema = UserSchema;
-export type UpdateMyAvatarResponse = z.infer<
-  typeof UpdateMyAvatarResponseSchema
->;
+// Update a user's avatar
+export const UpdateAvatarRequestSchema = CropSchema;
+export type UpdateAvatarRequest = z.infer<typeof UpdateAvatarRequestSchema>;
+export const UpdateAvatarResponseSchema = UserSchema;
+export type UpdateAvatarResponse = z.infer<typeof UpdateAvatarResponseSchema>;

@@ -79,10 +79,6 @@ const stylesHead = css`
     ul,
     li {
       height: ${makeCustom("header--height-desktop")};
-      img {
-        height: 50%;
-        width: auto;
-      }
     }
   }
 

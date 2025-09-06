@@ -14,6 +14,7 @@ export function createBucketPath(
     | { owner: "user"; userId: string; segments: string[] }
     | { owner: "org"; orgId: string; segments: string[] }
     | { owner: "school"; segments: string[] }
+    | { owner: "freeform"; segments: string[] }
 ): string {
   switch (input.owner) {
     case "user":
@@ -22,6 +23,8 @@ export function createBucketPath(
       return `org_${input.orgId}/${input.segments.join("/")}`;
     case "school":
       return `school/${input.segments.join("/")}`;
+    case "freeform":
+      return input.segments.join("/");
     default:
       return exhaustiveMatchGuard(input);
   }

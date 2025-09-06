@@ -17,13 +17,13 @@
   },
   "homepage": "https://github.com/nccl-school/parent-portal#readme",
   "dependencies": {
-    "pdfkit": "0.17.1"
+    "pdfkit": "0.17.2"
   },
   "devDependencies": {
     "@gfdigital/tsconfig": "0.3.1",
-    "@types/node": "24.3.0",
-    "@types/pdfkit": "0.17.2",
-    "tsx": "4.20.4",
+    "@types/node": "24.3.1",
+    "@types/pdfkit": "0.17.3",
+    "tsx": "4.20.5",
     "typescript": "5.9.2"
   }
 }

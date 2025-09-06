@@ -83,32 +83,33 @@ model Role {
 }
 
 model User {
-  id                 String                   @id @default(cuid())
-  email              String                   @unique
-  name               String
-  firstName          String                   @default("")
-  lastName           String                   @default("")
-  emailVerified      Boolean
-  phone              String?
-  imageUrl           String?
-  banned             Boolean?                 @default(false)
-  banReason          String?
-  banExpires         DateTime?
-  isSuper            Boolean?                 @default(false)
-  createdAt          DateTime                 @default(now())
-  updatedAt          DateTime                 @updatedAt
-  role               Role                     @relation(fields: [roleId], references: [id])
-  roleId             RoleName
-  memberships        OrganizationMembership[]
-  suggestions        Suggestion[]
-  students           UserStudent[]
-  groups             UserGroup[]
-  suggestionVotes    SuggestionVote[]
-  suggestionComments SuggestionComment[]
-  resources          Resource[]
-  sessions           Session[]
-  accounts           Account[]
-  image              String?
+  id                  String                   @id @default(cuid())
+  email               String                   @unique
+  name                String
+  firstName           String                   @default("")
+  lastName            String                   @default("")
+  emailVerified       Boolean
+  phone               String?
+  imageUrl            String?
+  imageUrlLastUpdated DateTime?
+  banned              Boolean?                 @default(false)
+  banReason           String?
+  banExpires          DateTime?
+  isSuper             Boolean?                 @default(false)
+  createdAt           DateTime                 @default(now())
+  updatedAt           DateTime                 @updatedAt
+  role                Role                     @relation(fields: [roleId], references: [id])
+  roleId              RoleName
+  memberships         OrganizationMembership[]
+  suggestions         Suggestion[]
+  students            UserStudent[]
+  groups              UserGroup[]
+  suggestionVotes     SuggestionVote[]
+  suggestionComments  SuggestionComment[]
+  resources           Resource[]
+  sessions            Session[]
+  accounts            Account[]
+  image               String?
 
   @@map("user")
 }

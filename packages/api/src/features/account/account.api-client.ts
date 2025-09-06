@@ -25,7 +25,7 @@ export class AccountClient extends ApiClient {
    * the same role
    */
   public async inviteUsers(body: z.infer<typeof InviteUsersRequestSchema>) {
-    return this._mutateJSON<InviteUsersResponse>({
+    return this._mutate<InviteUsersResponse>({
       method: "POST",
       path: "/invite",
       body: [InviteUsersRequestSchema, body],
@@ -46,7 +46,7 @@ export class AccountClient extends ApiClient {
    * Accept an invite
    */
   public async acceptInvite(body: AcceptInviteRequest) {
-    return this._mutateJSON<AcceptInviteResponse>({
+    return this._mutate<AcceptInviteResponse>({
       method: "POST",
       path: "/invite/accept",
       body: [AcceptInviteRequestSchema, body],

@@ -51,7 +51,7 @@ export class AuthClient extends ApiClient {
     if (options?.inviteToken) {
       path = path.concat(`&inviteToken=${options.inviteToken}`);
     }
-    return this._mutateJSON<{ url: string; redirect: true }>({
+    return this._mutate<{ url: string; redirect: true }>({
       path,
       method: "POST",
       body: [AuthSignInSocialRequestSchema, { provider: "google", ...options }],
