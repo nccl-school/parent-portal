@@ -113,6 +113,7 @@ const stylesNav = css`
   ${makeResponsive({ to: "laptop" })} {
     height: ${makeRem(90)};
     width: 100%;
+    justify-self: center;
   }
 
   ${makeResponsive({ from: "laptop" })} {
@@ -219,7 +220,7 @@ export default function AppRootLayout(args: Route.ComponentProps) {
             <NavbarItemText>More</NavbarItemText>
           </RootNavbarItem>
           <Restrict role="ADMIN">
-            <RootNavbarItem to="/admin">
+            <RootNavbarItem to="/admin" className={CLASSES.desktopOnly}>
               <NavbarItemIcon
                 dxBaseIcon="tools-stroke-standard"
                 dxActiveIcon="tools-solid-standard"
@@ -228,7 +229,7 @@ export default function AppRootLayout(args: Route.ComponentProps) {
             </RootNavbarItem>
           </Restrict>
         </NavbarGroup>
-        <NavbarGroup>
+        <NavbarGroup className={CLASSES.desktopOnly}>
           <NavbarItem>
             <NavbarItemIcon
               dxBaseIcon="help-circle-stroke-standard"
@@ -253,10 +254,14 @@ export default function AppRootLayout(args: Route.ComponentProps) {
 
 function RootNavbarItem({
   children,
+  className,
   ...restProps
-}: NavLinkProps & { children: ReactNode }) {
+}: Omit<NavLinkProps, "className"> & {
+  children: ReactNode;
+  className?: string;
+}) {
   return (
-    <li>
+    <li className={className}>
       <NavLink {...restProps}>
         {({ isActive }) => (
           <NavbarItem dxIsActive={isActive}>{children}</NavbarItem>
