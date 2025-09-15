@@ -1,9 +1,9 @@
 import {
+  AnchorContent,
   Button,
   Callout,
   InputGroup,
   InputPassword,
-  Typography,
 } from "@nccl/components";
 import { Form, href, Link, redirect, useNavigation } from "react-router";
 import { ErrorSet, parseError, zPasswordSchema } from "@nccl/api/client";
@@ -116,9 +116,9 @@ export default function AuthResetPassword(args: Route.ComponentProps) {
                       />
                       <br />
                       <Link to={href("/forgot-password")}>
-                        <Typography dxVariant="body3" dxNode="span">
+                        <AnchorContent>
                           Request a new password reset email
-                        </Typography>
+                        </AnchorContent>
                       </Link>
                     </>
                   );

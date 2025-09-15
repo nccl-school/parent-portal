@@ -5,7 +5,7 @@ import {
   InputPassword,
   Button,
   Toast,
-  Typography,
+  AnchorContent,
 } from "@nccl/components";
 import { Form, href, Link, useSearchParams } from "react-router";
 import { useEffect } from "react";
@@ -103,9 +103,7 @@ export default function AuthAcceptInviteRoute(args: Route.ComponentProps) {
               dxError={errors.password?.[0]}
             />
             <Link to={href("/forgot-password")}>
-              <Typography dxVariant="body3" dxNode="span">
-                Forgot password?
-              </Typography>
+              <AnchorContent>Forgot password?</AnchorContent>
             </Link>
             <Button
               dxSize="lg"

@@ -4,7 +4,7 @@ import {
   InputText,
   Button,
   Toast,
-  Typography,
+  AnchorContent,
 } from "@nccl/components";
 import {
   Form,
@@ -99,9 +99,7 @@ export default function AuthForgotPassword(args: Route.ComponentProps) {
               dxError={validationErrors.email?.[0]}
             />
             <Link to={href("/sign-in")}>
-              <Typography dxVariant="body3" dxNode="span">
-                Back to sign in
-              </Typography>
+              <AnchorContent>Back to sign in</AnchorContent>
             </Link>
           </InputGroup>
         </AuthPageBody>
