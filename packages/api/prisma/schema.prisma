@@ -89,6 +89,7 @@ model User {
   firstName           String                   @default("")
   lastName            String                   @default("")
   emailVerified       Boolean
+  bio                 String?
   phone               String?
   imageUrl            String?
   imageUrlLastUpdated DateTime?
