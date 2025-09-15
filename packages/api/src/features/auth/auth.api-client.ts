@@ -51,6 +51,9 @@ export class AuthClient extends ApiClient {
     if (options?.inviteToken) {
       path = path.concat(`&inviteToken=${options.inviteToken}`);
     }
+    if (options.callbackURL) {
+      path = path.concat(`&callbackURL=${options.callbackURL}`);
+    }
     return this._mutate<{ url: string; redirect: true }>({
       path,
       method: "POST",

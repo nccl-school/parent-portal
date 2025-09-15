@@ -140,7 +140,6 @@ user.post("/avatar", validate("form", UpdateAvatarRequestSchema), async (c) => {
   const updateUser = await db.user.update({
     data: {
       imageUrl,
-      imageUrlOriginal: null,
       imageUrlLastUpdated: new Date(),
     },
     where: {

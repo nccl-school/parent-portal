@@ -3,7 +3,6 @@ import {
   DescriptionList,
   DescriptionListData,
   DescriptionListTag,
-  Icon,
   Typography,
 } from "@nccl/components";
 import { ErrorSet, UpdateMyProfileRequestSchema } from "@nccl/api/client";
