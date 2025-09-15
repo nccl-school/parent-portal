@@ -10,6 +10,7 @@ import { ErrorSet, UpdateMyProfileRequestSchema } from "@nccl/api/client";
 import type { Route } from "./+types/AccountProfile.route";
 import { AccountProfileBasic } from "./AccountProfileBasic";
 import { AccountProfileAvatar } from "./AccountProfileAvatar";
+import { AccountProfileBio } from "./AccountProfileBio";
 
 import { getNCCLClient } from "../../utils/server";
 import { dates } from "../../utils/client";
@@ -69,6 +70,7 @@ export default function AccountProfile({
     <>
       <AccountProfileAvatar.Component />
       <AccountProfileBasic.Component />
+      <AccountProfileBio.Component />
       <PageHeader
         dxTitle="Profile"
         dxSubtitle="Share a little about yourself so other families and staff can get to know you better."
@@ -105,6 +107,8 @@ export default function AccountProfile({
           <DescriptionListTag>Email</DescriptionListTag>
           <DescriptionListData>{user.email}</DescriptionListData>
           <DescriptionListTag>Phone</DescriptionListTag>
+          <DescriptionListData>{user.phone}</DescriptionListData>
+          <DescriptionListTag>Last updated</DescriptionListTag>
           <DescriptionListData>
             {dates.format(user.updatedAt, "Relative")}
           </DescriptionListData>
@@ -114,7 +118,11 @@ export default function AccountProfile({
         <AccountPageSectionHeader
           dxTitle="Bio"
           dxSubtitle="Write a short introduction to share your interests, background, or anything you'd like others to see."
+          dxOnClick={AccountProfileBio.launch}
         />
+        <Typography dxVariant="body3" dxNode="div">
+          {user.bio ?? "No bio added yet."}
+        </Typography>
       </AccountPageSection>
       <AccountPageSection>
         <AccountPageSectionHeader

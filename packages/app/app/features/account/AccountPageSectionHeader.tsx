@@ -41,6 +41,7 @@ export function AccountPageSectionHeader({
           dxColor="alt"
           dxSize="sm"
           onClick={dxOnClick}
+          type="button"
         >
           Edit
         </Button>

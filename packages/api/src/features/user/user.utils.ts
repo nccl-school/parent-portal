@@ -17,6 +17,7 @@ export const UserSchema = z.object({
   name: z.string(),
   firstName: z.string(),
   lastName: z.string(),
+  bio: z.string().nullable(),
   emailVerified: z.boolean(),
   phone: z.string().nullable(),
   imageUrl: z.string().nullable(),
@@ -76,7 +77,9 @@ export const UpdateMyProfileRequestSchema = UserSchema.pick({
   lastName: true,
   imageUrl: true,
   phone: true,
+  bio: true,
 }).extend({
+  bio: zStringOptional(),
   imageUrl: zStringOptional(),
   phone: zStringOptional(),
 });
