@@ -43,7 +43,7 @@ const styles = css`
     gap: ${makeRem(16)};
     align-items: center;
     padding: ${makeRem(8)};
-    height: ${makeRem(44)};
+    min-height: ${makeRem(44)};
     background: ${makeColor("neutral-light-100")};
     border-bottom-left-radius: ${makeRem(4)};
     border-bottom-right-radius: ${makeRem(4)};

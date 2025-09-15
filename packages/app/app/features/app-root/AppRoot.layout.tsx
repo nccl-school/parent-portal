@@ -79,6 +79,10 @@ const stylesHead = css`
     ul,
     li {
       height: ${makeCustom("header--height-desktop")};
+
+      .nccl-logo {
+        height: 50%;
+      }
     }
   }
 
@@ -147,6 +151,7 @@ export default function AppRootLayout(args: Route.ComponentProps) {
             {pathname === "/" ? (
               <img
                 alt="nccl-logo"
+                className="nccl-logo"
                 src="/images/ncc-logo-shell-only-500x500-transparent.png"
               />
             ) : (

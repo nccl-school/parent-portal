@@ -30,7 +30,8 @@ import type { loader } from "../../api/api.suggestion.getOrUpdateUnique";
 import { getUserName } from "../user";
 
 const styles = css`
-  width: ${makeRem(520)};
+  max-width: ${makeRem(520)};
+  width: 100%;
   display: grid;
   grid-template-rows: auto auto 1fr auto;
   height: 100%;
@@ -115,6 +116,7 @@ function ModalContent() {
                     dxSize="md"
                     dxFirstName={d.createdBy.firstName ?? ""}
                     dxLastName={d.createdBy.lastName ?? ""}
+                    dxSrc={d.createdBy.imageUrl ?? ""}
                   />
                   <Typography dxVariant="body3" dxNode="span">
                     {getUserName(d.createdBy)}

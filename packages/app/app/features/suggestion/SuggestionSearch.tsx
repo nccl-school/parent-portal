@@ -8,7 +8,7 @@ export type SuggestionSearchPropsNative = InputSearchPropsNative;
 export type SuggestionSearchProps = SuggestionSearchPropsNative;
 
 const styles = css`
-  width: 60ch;
+  max-width: 60ch;
   margin: 0 auto;
   backdrop-filter: blur(4px);
   display: flex;
