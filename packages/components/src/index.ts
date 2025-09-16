@@ -1,4 +1,3 @@
-export * from "./_core/popover/index.js";
 export * from "./_core/modal/index.js";
 export * from "./_core/dialog/index.js";
 

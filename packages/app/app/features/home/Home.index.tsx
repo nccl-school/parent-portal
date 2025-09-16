@@ -10,9 +10,5 @@ export function meta() {
 }
 
 export default function HomeIndexRoute() {
-  return (
-    <>
-      <HomeSuggestions />;
-    </>
-  );
+  return <HomeSuggestions />;
 }

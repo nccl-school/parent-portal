@@ -33,11 +33,7 @@ const styles = css`
 `;
 
 const stylesMain = css`
-  grid-area: main;
-
-  ${makeResponsive({ from: "laptop" })} {
-    background: ${makeColor("white")};
-  }
+  background: ${makeColor("white")};
 `;
 
 export async function loader(args: Route.LoaderArgs) {

@@ -24,11 +24,11 @@ import {
 } from "../input-text/InputText.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
 import { Icon } from "../icons/Icon.js";
-import { usePopover } from "../popover/popover.usePopover.js";
-import { Popover } from "../popover/Popover.js";
 import { InputSearch } from "../input-search/InputSearch.js";
 import { useFuzzySearch } from "../useFuzzySearch/useFuzzySearch.js";
 import type { ObjectDotNotation } from "../types/index.js";
+import { usePopover } from "../popover-2.0/popover.usePopover.js";
+import { Popover } from "../popover-2.0/Popover.js";
 
 export type InputComboboxProps<O extends InputComboboxOption> = Omit<
   InputTextPropsCustom,
@@ -94,7 +94,7 @@ export function InputCombobox<O extends InputComboboxOption>({
   });
   const {
     setPopover,
-    setPopoverTarget,
+    setTarget,
     show: showPopover,
     hide: hidePopover,
   } = usePopover({ position: "bottom-span-right" });
@@ -130,10 +130,10 @@ export function InputCombobox<O extends InputComboboxOption>({
   const onButtonMount = useCallback<RefCallback<HTMLButtonElement>>(
     (node) => {
       if (!node) return;
-      setPopoverTarget(node);
+      setTarget(node);
       buttonRef.current = node;
     },
-    [setPopoverTarget]
+    [setTarget]
   );
 
   /**

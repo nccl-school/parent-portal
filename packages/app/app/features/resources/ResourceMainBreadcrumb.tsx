@@ -11,8 +11,8 @@ const stylesBreadcrumb = css`
   align-items: center;
 
   ${makeResponsive({ to: "laptop" })} {
-    padding: 0 ${makeCustom("page--gutter-mobile")};
-    padding-bottom: ${makeRem(8)};
+    padding: ${makeCustom("page--gutter-mobile")};
+    background: ${makeColor("white")};
   }
 
   ${makeResponsive({ from: "laptop" })} {

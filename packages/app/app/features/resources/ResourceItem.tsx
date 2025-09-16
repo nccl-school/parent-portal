@@ -1,8 +1,9 @@
 import type { GetResourceResponse } from "@nccl/api/client";
-import { TableBodyCol, TableRow } from "@nccl/components";
+import { Button, TableBodyCol, TableRow } from "@nccl/components";
 import { useRef } from "react";
 import { css } from "@linaria/core";
 import { makeColor, makeRem } from "@nccl/theme";
+import { classes } from "@stratum-ui/core/utils";
 
 import {
   ResourceItemActions,
@@ -11,7 +12,7 @@ import {
 import { ResourcesTableCellName } from "./ResourcesTableCellName";
 
 import { dates } from "../../utils/client";
-import { placeholder } from "../../utils/isomorphic";
+import { CLASSES, placeholder } from "../../utils/isomorphic";
 
 const rowStyles = css`
   &:hover {
@@ -58,16 +59,24 @@ export function ResourceItem({
       <TableBodyCol>
         <ResourcesTableCellName {...resource} />
       </TableBodyCol>
-      <TableBodyCol>
+      <TableBodyCol className={CLASSES.desktopOnly}>
         {dates.format(resource.updatedAt, "Relative")}
       </TableBodyCol>
-      <TableBodyCol>{placeholder}</TableBodyCol>
-      <TableBodyCol>{placeholder}</TableBodyCol>
-      <TableBodyCol className={styles}>
+      <TableBodyCol className={CLASSES.desktopOnly}>{placeholder}</TableBodyCol>
+      <TableBodyCol className={CLASSES.desktopOnly}>{placeholder}</TableBodyCol>
+      <TableBodyCol className={classes(styles, CLASSES.desktopOnly)}>
         <ResourceItemActions
           controlRef={controlRef}
           initialPath={initialPath}
           resource={resource}
+        />
+      </TableBodyCol>
+      <TableBodyCol className={CLASSES.mobileOnly}>
+        <Button
+          dxVariant="icon"
+          dxIcon="more-horizontal-circle-01-solid-standard"
+          dxSize="md"
+          dxColor="primary-1000"
         />
       </TableBodyCol>
     </TableRow>

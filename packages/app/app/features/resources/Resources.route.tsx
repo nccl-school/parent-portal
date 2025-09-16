@@ -10,12 +10,12 @@ import {
 import { makeRem, makeResponsive } from "@nccl/theme";
 import { css } from "@linaria/core";
 import type { MouseEvent } from "react";
-import { CLASSES } from "app/utils/isomorphic";
 
 import type { Route } from "./+types/Resources.route";
 import { ResourcesTitle } from "./ResourcesTitle";
 import { ResourceItem } from "./ResourceItem";
 
+import { CLASSES } from "../../utils/isomorphic";
 import { EmptyState } from "../../components/states/EmptyState";
 import { LoadingState } from "../../components/states/LoadingState";
 import { parseLoaderData, renderLoaderData } from "../../utils/client";
@@ -151,9 +151,16 @@ export default function ResourcesRoute({
               <TableHead>
                 <TableRow>
                   <TableHeadCol>Name</TableHeadCol>
-                  <TableHeadCol>Last Modified</TableHeadCol>
-                  <TableHeadCol>Size</TableHeadCol>
-                  <TableHeadCol>Who can access</TableHeadCol>
+                  <TableHeadCol className={CLASSES.desktopOnly}>
+                    Last Modified
+                  </TableHeadCol>
+                  <TableHeadCol className={CLASSES.desktopOnly}>
+                    Size
+                  </TableHeadCol>
+                  <TableHeadCol className={CLASSES.desktopOnly}>
+                    Who can access
+                  </TableHeadCol>
+                  <TableHeadCol className={CLASSES.mobileOnly}></TableHeadCol>
                 </TableRow>
               </TableHead>
               <TableBody>

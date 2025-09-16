@@ -1,4 +1,6 @@
 import { Outlet } from "react-router";
+import { css } from "@linaria/core";
+import { makeCustom, makeResponsive } from "@nccl/theme";
 
 import type { Route } from "./+types/Home.layout";
 
@@ -19,13 +21,19 @@ export async function loader(args: Route.LoaderArgs) {
   await ensureSession(args);
 }
 
+const styles = css`
+  ${makeResponsive({ to: "laptop" })} {
+    padding: 0 ${makeCustom("page--gutter-mobile")};
+  }
+`;
+
 export default function HomeLayout() {
   const user = useUser();
 
   if (!user) return;
 
   return (
-    <PageContainer dxVariant="scrollable">
+    <PageContainer dxVariant="scrollable" className={styles}>
       <PageHeader dxTitle={`${getGreetingBanner()}, ${user.firstName}`} />
       <Outlet />
     </PageContainer>

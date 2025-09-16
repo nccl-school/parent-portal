@@ -27,7 +27,7 @@ const styles = css`
   border: 0;
   margin: 0;
   border: 1px solid ${makeColor("neutral-light-50")};
-  padding: ${makeRem(8)};
+  padding: ${makeRem(8)} 0;
   border-radius: ${makeRem(8)};
 
   &:not(:popover-open) {
