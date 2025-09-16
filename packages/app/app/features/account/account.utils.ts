@@ -27,8 +27,8 @@ export const tabsPreferences: (NavLinkProps & {
   children: string;
 })[] = [
   {
-    to: href("/account"),
-    children: "Notification Preferences",
+    to: href("/account/notifications"),
+    children: "Notifications",
     end: true,
     dxBaseIcon: "notification-01-stroke-standard",
     dxActiveIcon: "notification-01-solid-standard",

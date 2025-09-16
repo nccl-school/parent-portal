@@ -89,6 +89,8 @@ const stylesHead = css`
   ${makeResponsive({ from: "laptop" })} {
     background: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: flex-end;
   }
 `;
 

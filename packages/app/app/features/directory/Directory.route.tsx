@@ -1,7 +1,7 @@
 import { css } from "@linaria/core";
 import { Tab, Tabs, type IconNames } from "@nccl/components";
 import { NavLink, Outlet, href, type NavLinkProps } from "react-router";
-import { makeCustom, makeRem } from "@nccl/theme";
+import { makeCustom, makeRem, makeResponsive } from "@nccl/theme";
 
 import { PageHeader } from "../../components/page";
 import { PageContainer } from "../../components/page/PageContainer";
@@ -51,14 +51,24 @@ const navStyles = css`
   position: sticky;
   top: ${makeCustom("header--height-desktop")};
   height: ${makeCustom("admin--tab-height-desktop")};
+
+  ${makeResponsive({ from: "laptop" })} {
+    padding: ${makeCustom("page--gutter-desktop")};
+  }
 `;
 const mainStyles = css`
   max-width: ${makeCustom("container--max-width")};
+
   grid-area: main;
   margin: 0 auto;
   width: 100%;
   overflow: hidden;
   padding-top: ${makeRem(16)};
+
+  ${makeResponsive({ from: "laptop" })} {
+    padding: ${makeCustom("page--gutter-desktop")};
+  }
+
   & > * {
     background: white;
   }

@@ -48,11 +48,6 @@ const stylesText = css`
   ${makeResponsive({ to: "laptop" })} {
     grid-area: text;
   }
-  ${makeResponsive({ from: "laptop" })} {
-    text-align: left;
-    display: grid;
-    place-content: center;
-  }
 
   & .sg-title {
     margin-bottom: ${makeRem(4)};

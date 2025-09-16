@@ -49,6 +49,10 @@ export default [
             "security",
             "./features/account-security/AccountSecurity.route.tsx"
           ),
+          route(
+            "notifications",
+            "./features/account-notifications/AccountNotifications.route.tsx"
+          ),
         ]),
       ]),
     ]),
