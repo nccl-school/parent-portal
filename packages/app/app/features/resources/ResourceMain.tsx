@@ -1,11 +1,13 @@
 import { css } from "@linaria/core";
-import { makeColor } from "@nccl/theme";
+import { makeColor, makeResponsive } from "@nccl/theme";
 import type { ReactNode } from "react";
 
 const styles = css`
-  overflow: auto;
-  background: ${makeColor("white")};
-  min-height: 100%;
+  ${makeResponsive({ from: "laptop" })} {
+    overflow: auto;
+    background: ${makeColor("white")};
+    min-height: 100%;
+  }
 `;
 
 export function ResourceMain({ children }: { children: ReactNode }) {

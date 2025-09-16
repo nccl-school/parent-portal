@@ -14,7 +14,7 @@ export * from "./table/index.js";
 export * from "./label/index.js";
 export * from "./button/index.js";
 export * from "./tabs/index.js";
-export * from "./popover/index.js";
+export * from "./popover-2.0/index.js";
 export * from "./widget/index.js";
 export * from "./action-card/index.js";
 export * from "./callout/index.js";

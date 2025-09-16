@@ -10,7 +10,7 @@ const styles = css`
 
 export function PopoverMenuItemText({ children }: { children: ReactNode }) {
   return (
-    <Typography dxNode="div" dxVariant="body1" className={styles}>
+    <Typography dxNode="div" dxVariant="body3" className={styles}>
       {children}
     </Typography>
   );

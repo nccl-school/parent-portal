@@ -101,7 +101,6 @@ const stylesMain = css`
   width: inherit;
 
   ${makeResponsive({ to: "laptop" })} {
-    padding: 0 ${makeCustom("page--gutter-mobile")};
     overflow: auto;
   }
 

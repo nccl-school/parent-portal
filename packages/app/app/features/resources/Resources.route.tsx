@@ -9,6 +9,8 @@ import {
 } from "@nccl/components";
 import { makeRem, makeResponsive } from "@nccl/theme";
 import { css } from "@linaria/core";
+import type { MouseEvent } from "react";
+import { CLASSES } from "app/utils/isomorphic";
 
 import type { Route } from "./+types/Resources.route";
 import { ResourcesTitle } from "./ResourcesTitle";
@@ -18,7 +20,7 @@ import { EmptyState } from "../../components/states/EmptyState";
 import { LoadingState } from "../../components/states/LoadingState";
 import { parseLoaderData, renderLoaderData } from "../../utils/client";
 import { getNCCLClient } from "../../utils/server";
-import { ResourcesCreateFolder } from "../resources-create-folder";
+import { ResourcesCreateFolder } from "../resources-create-folder/ResourcesCreateFolder";
 import { ResourcesAdd } from "../resources-add/ResourcesAdd";
 import { ResourceActionDelete } from "../resource-action-delete/ResourceActionDelete";
 import { ResourceActionEdit } from "../resource-action-edit/ResourceActionEdit";
@@ -38,14 +40,14 @@ export async function loader(args: Route.LoaderArgs) {
 }
 
 const stylesTable = css`
-  ${makeResponsive({ from: "tablet" })} {
+  ${makeResponsive({ from: "laptop" })} {
     padding: ${makeRem(32)};
     max-width: 100%;
   }
 `;
 
 const stylesEmpty = css`
-  ${makeResponsive({ from: "tablet" })} {
+  ${makeResponsive({ from: "laptop" })} {
     padding: ${makeRem(32)};
 
     & > * {
@@ -63,38 +65,44 @@ export default function ResourcesRoute({
     ok: (d) => (d.id === "__ROOT__" ? "All Files" : d.name),
   }) as string;
 
+  function launchAdd(e: MouseEvent<HTMLButtonElement>) {
+    const resource = parseLoaderData(loaderData);
+    if (!resource) return; // TODO: Throw a toast
+
+    ResourcesAdd.launch(e, {
+      currentPath: params["*"],
+      initParentResourceId: resource.id,
+    });
+  }
+
+  function launchCreateFolder(e: MouseEvent<HTMLButtonElement>) {
+    const resource = parseLoaderData(loaderData);
+    if (!resource) return; // TODO: Throw a toast
+
+    ResourcesCreateFolder.launch(e, {
+      currentPath: params["*"],
+      initParentResourceId: resource.id,
+    });
+  }
+
   return (
     <>
       <ResourcesTitle title={title}>
         <Button
+          className={CLASSES.desktopOnly}
           dxVariant="outlined"
           dxSize="md"
           dxStartIcon="resources-add-stroke-standard"
-          onClick={(e) => {
-            const resource = parseLoaderData(loaderData);
-            if (!resource) return; // TODO: Throw a toast
-
-            ResourcesAdd.launch(e, {
-              currentPath: params["*"],
-              initParentResourceId: resource.id,
-            });
-          }}
+          onClick={launchAdd}
         >
           Add
         </Button>
         <Button
+          className={CLASSES.desktopOnly}
           dxVariant="outlined"
           dxSize="md"
           dxStartIcon="folder-add-stroke-standard"
-          onClick={(e) => {
-            const resource = parseLoaderData(loaderData);
-            if (!resource) return; // TODO: Throw a toast
-
-            ResourcesCreateFolder.launch(e, {
-              currentPath: params["*"],
-              initParentResourceId: resource.id,
-            });
-          }}
+          onClick={launchCreateFolder}
         >
           Create folder
         </Button>

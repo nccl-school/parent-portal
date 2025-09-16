@@ -35,6 +35,13 @@ const locationOptions = {
   OTHER_LOCATION: "other-location",
 } as const;
 
+const styles = css`
+  max-height: 90dvh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden;
+`;
+
 const treeStyles = css`
   padding: ${makeRem(24)};
   border-radius: ${makeRem(4)};
@@ -88,7 +95,7 @@ export function ResourcesCreateFolderContent() {
   const errors = getValidationErrors<CreateFolderRequest>(fetcher.data);
 
   return (
-    <>
+    <div className={styles}>
       <ModalHeader>
         <ModalHeaderTitle>Create a folder</ModalHeaderTitle>
       </ModalHeader>
@@ -208,6 +215,6 @@ export function ResourcesCreateFolderContent() {
           Submit
         </ModalFooterSubmit>
       </ModalFooter>
-    </>
+    </div>
   );
 }

@@ -1,11 +1,16 @@
 import { css } from "@linaria/core";
 import { Typography } from "@nccl/components";
-import { makeResponsive, makeRem } from "@nccl/theme";
+import { makeResponsive, makeRem, makeCustom } from "@nccl/theme";
 import type { ReactNode } from "react";
 
 const stylesTitle = css`
   display: grid;
   grid-template-columns: 1fr auto;
+
+  ${makeResponsive({ to: "laptop" })} {
+    padding: 0 ${makeCustom("page--gutter-mobile")};
+    margin-bottom: ${makeRem(24)};
+  }
 
   ${makeResponsive({ from: "laptop" })} {
     padding: 0 ${makeRem(32)};

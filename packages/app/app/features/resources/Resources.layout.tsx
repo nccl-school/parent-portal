@@ -7,20 +7,22 @@ import type { Route } from "./+types/Resources.layout";
 import {
   ResourcesBreadcrumbDelimiter,
   ResourcesBreadcrumb,
-} from "./ResourcesBreadcrumb";
+} from "./ResourceMainBreadcrumbItem";
 import { ResourceFolderPane } from "./ResourceFolderPane";
 import { ResourceMain } from "./ResourceMain";
 import { ResourceMainSearch } from "./ResourceMainSearch";
-import { ResourceMainBreadcrumbs } from "./ResourceMainBreadcrumbs";
+import { ResourceMainBreadcrumbs } from "./ResourceMainBreadcrumb";
 import { ResourcePreview } from "./ResourcePreview";
 
 import { getNCCLClient } from "../../utils/server";
 import { renderLoaderData } from "../../utils/client";
-import { ResourcesCreateFolder } from "../resources-create-folder";
+import { ResourcesCreateFolder } from "../resources-create-folder/ResourcesCreateFolder";
 import { ResourcesAdd } from "../resources-add/ResourcesAdd";
 
 const styles = css`
-  ${makeResponsive({ from: "tablet" })} {
+  ${makeResponsive({ to: "laptop" })} {
+  }
+  ${makeResponsive({ from: "laptop" })} {
     display: grid;
     grid-template-columns: ${makeRem(300)} 1fr auto;
     grid-template-rows: 1fr;
@@ -32,7 +34,10 @@ const styles = css`
 
 const stylesMain = css`
   grid-area: main;
-  background: ${makeColor("white")};
+
+  ${makeResponsive({ from: "laptop" })} {
+    background: ${makeColor("white")};
+  }
 `;
 
 export async function loader(args: Route.LoaderArgs) {

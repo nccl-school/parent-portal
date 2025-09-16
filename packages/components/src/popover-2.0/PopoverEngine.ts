@@ -72,7 +72,7 @@ type PopoverPositionProps = {
   currentPosition: PopoverPosition;
 };
 
-export class TPopoverEngine {
+export class PopoverEngine {
   #popover: HTMLElement | null = null;
   #target: HTMLButtonElement | null = null;
   #popoverTargetAction: PopoverTargetAction;
@@ -133,13 +133,13 @@ export class TPopoverEngine {
     return this.#target;
   }
 
-  #onToggle = (e: Event) => {
+  #onToggle = async (e: Event) => {
     const event = e as ToggleEvent;
     const popover = this.getPopover();
     const target = this.getTarget();
 
     if (event.newState === "open") {
-      popover.ariaExpanded = "true";
+      return (popover.ariaExpanded = "true");
     }
 
     if (event.newState === "closed") {
@@ -149,6 +149,14 @@ export class TPopoverEngine {
       target.style.removeProperty("positionAnchor");
     }
   };
+
+  destroy() {
+    const target = this.getTarget();
+    target.removeEventListener("mouseenter", this.show);
+    target.removeEventListener("mouseout", this.hide);
+    target.removeEventListener("focus", this.show);
+    target.removeEventListener("blur", this.hide);
+  }
 
   isOpen() {
     const popover = this.getPopover();
@@ -210,7 +218,7 @@ export class TPopoverEngine {
       return `${top}px ${right}px ${bottom}px ${left}px `;
     }
 
-    // 2. Determine some more attributes based upon the selected posotion
+    // 2. Determine some more attributes based upon the selected position
     switch (position) {
       case "bottom":
         positionArea = "bottom";
@@ -481,9 +489,34 @@ export class TPopoverEngine {
 
     this.#popover.addEventListener("toggle", this.#onToggle);
 
+    const onManualClick = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (!this.#popover) return;
+
+      if (!this.#popover.contains(target)) {
+        // If click is outside the popover and not its children
+        this.hide(); // run your animation-aware close
+      }
+    };
+
+    const onManualKeydown = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      this.hide();
+    };
+
+    if (this.#type === "manual") {
+      document.addEventListener("click", onManualClick, true);
+      document.addEventListener("keydown", onManualKeydown);
+    }
+
     return () => {
       if (!this.#popover) return;
       this.#popover.removeEventListener("toggle", this.#onToggle);
+
+      if (this.#type === "manual") {
+        document.removeEventListener("click", onManualClick);
+        document.removeEventListener("keydown", onManualKeydown);
+      }
     };
   }
 

@@ -1,5 +1,5 @@
-import type { PopoverOptions } from "./TPopoverEngine.js";
-import { TPopoverEngine } from "./TPopoverEngine.js";
+import type { PopoverOptions } from "../popover-2.0/PopoverEngine.js";
+import { PopoverEngine } from "../popover-2.0/PopoverEngine.js";
 
 export type TooltipType = "label" | "clarification";
 export type TooltipOptions = Partial<
@@ -9,12 +9,12 @@ export type TooltipOptions = Partial<
 };
 
 export class TooltipEngine {
-  #popover: TPopoverEngine;
+  #popover: PopoverEngine;
   #id: string;
   #type: TooltipType;
 
   constructor(options?: TooltipOptions) {
-    this.#popover = new TPopoverEngine({
+    this.#popover = new PopoverEngine({
       ...(options ?? {}),
       type: "auto",
     });
@@ -72,11 +72,7 @@ export class TooltipEngine {
   }
 
   destroy() {
-    const target = this.#popover.getTarget();
-    target.removeEventListener("mouseenter", this.#popover.show);
-    target.removeEventListener("mouseout", this.#popover.hide);
-    target.removeEventListener("focus", this.#popover.show);
-    target.removeEventListener("blur", this.#popover.hide);
+    this.#popover.destroy();
   }
 
   /**
