@@ -13,9 +13,6 @@ export const AdminUserProfile = new ModalController<AdminUserProfileModalState>(
   {
     props: {
       dxVariant: "drawer-right",
-      style: {
-        width: "45vh",
-      },
     },
     ModalContent,
   }

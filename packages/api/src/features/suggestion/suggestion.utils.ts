@@ -6,15 +6,13 @@ import {
   zDateStringSchema,
   zMessageSchema,
   zQueryParam,
-  zString,
+  zStringRequired,
 } from "../../utils/util.schema.js";
 import { UserSchema } from "../user/user.utils.js";
 
 export const SuggestionCommentSchema = z.object({
   id: z.string(),
-  comment: zString({
-    required: "A comment is required",
-  }),
+  comment: zStringRequired("A comment is required"),
   isAnonymous: z.boolean().optional().default(false),
   createdBy: UserSchema,
   createdAt: zDateStringSchema,
@@ -36,15 +34,11 @@ export const SuggestionSchema = z.object({
 export type Suggestion = z.infer<typeof SuggestionSchema>;
 
 export const SuggestionIDParamsSchema = z.object({
-  id: zString({
-    required: "A suggestion ID is required",
-  }),
+  id: zStringRequired("A suggestion ID is required"),
 });
 export type SuggestionIDParams = z.infer<typeof SuggestionIDParamsSchema>;
 export const CommentIDParamsSchema = z.object({
-  id: zString({
-    required: "A comment ID is required",
-  }),
+  id: zStringRequired("A comment ID is required"),
 });
 export type CommentIDParams = z.infer<typeof CommentIDParamsSchema>;
 

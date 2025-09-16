@@ -30,7 +30,7 @@ const stylesUl = css`
   ${makeReset("ul")};
 
   ${makeResponsive({ to: "laptop" })} {
-    padding: 0 ${makeRem(8)};
+    padding: 0 ${makeRem(16)};
     background: ${makeColor("white")};
     border-radius: ${makeRem(8)};
   }

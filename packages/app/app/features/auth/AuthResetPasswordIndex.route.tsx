@@ -6,7 +6,7 @@ import {
   InputPassword,
 } from "@nccl/components";
 import { Form, href, Link, redirect, useNavigation } from "react-router";
-import { ErrorSet, parseError, zPasswordSchema } from "@nccl/api/client";
+import { ErrorSet, parseError, zSetPasswordSchema } from "@nccl/api/client";
 import { z } from "zod/v4";
 import { useState } from "react";
 
@@ -48,18 +48,9 @@ export async function loader(args: Route.LoaderArgs) {
   } as const;
 }
 
-const schema = z
-  .object({
-    password: zPasswordSchema,
-    confirmPassword: z
-      .string()
-      .min(1, { error: "Please confirm your password" }),
-    token: z.string().min(1, { error: "A token is required" }),
-  })
-  .refine(({ password, confirmPassword }) => password === confirmPassword, {
-    message: "The two passwords don't match",
-    path: ["confirmPassword"], // show the error on the confirmPassword field
-  });
+const schema = zSetPasswordSchema.safeExtend({
+  token: z.string().min(1, { error: "A token is required" }),
+});
 
 export async function action(args: Route.ActionArgs) {
   const nccClient = getNCCLClient(args);

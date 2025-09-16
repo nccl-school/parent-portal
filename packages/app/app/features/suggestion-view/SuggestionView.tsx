@@ -31,11 +31,6 @@ import { getUserName } from "../user";
 
 const styles = css`
   max-width: ${makeRem(520)};
-  width: 100%;
-  display: grid;
-  grid-template-rows: auto auto 1fr auto;
-  height: 100%;
-  overflow: auto;
 
   header {
     position: sticky;

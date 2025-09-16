@@ -1,6 +1,7 @@
 import z from "zod/v4";
 
 import { zStringRequired } from "../../utils/util.schema.js";
+import { zSetPasswordSchema } from "../account/account.schema.js";
 
 export const AuthSignInEmailRequestSchema = z.object({
   email: z.string(),
@@ -38,3 +39,9 @@ export const AuthResetPasswordSchema = z.object({
   token: z.string(),
 });
 export type AuthResetPassword = z.infer<typeof AuthResetPasswordSchema>;
+
+export const AuthChangePasswordSchema = zSetPasswordSchema.safeExtend({
+  currentPassword: zStringRequired("Please enter your current password"),
+  revokeOtherSessions: z.boolean().default(false),
+});
+export type AuthChangePassword = z.infer<typeof AuthChangePasswordSchema>;

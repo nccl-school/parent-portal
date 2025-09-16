@@ -27,6 +27,18 @@ export const zPasswordSchema = passwordRules.reduce(
   z.string()
 );
 
+export const zSetPasswordSchema = z
+  .object({
+    password: zPasswordSchema,
+    confirmPassword: z
+      .string()
+      .min(1, { error: "Please confirm your password" }),
+  })
+  .refine(({ password, confirmPassword }) => password === confirmPassword, {
+    message: "The two passwords don't match",
+    path: ["confirmPassword"], // show the error on the confirmPassword field
+  });
+
 // Invite Users
 export const InviteUsersRequestSchema = z.object({
   email_addresses: z.array(z.email({ pattern: z.regexes.html5Email })),

@@ -6,7 +6,7 @@ import {
   zDateStringSchema,
   zFile,
   zMessageSchema,
-  zString,
+  zStringRequired,
 } from "../../utils/util.schema.js";
 import { GetUserResponseSchema } from "../user/user.utils.js";
 
@@ -179,8 +179,8 @@ export type DeleteResourceResponse = z.infer<
 // --- Create a folder
 export const CreateFolderRequestSchema = CreateResourceOwnershipLevel.and(
   z.object({
-    name: zString({ required: "A folder name is required" }),
-    slug: zString({ required: "A slug is required" }),
+    name: zStringRequired("A folder name is required"),
+    slug: zStringRequired("A slug is required"),
     parentResourceId: z.string().optional(),
   })
 );
