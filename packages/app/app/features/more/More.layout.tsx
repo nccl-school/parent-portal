@@ -4,6 +4,7 @@ import { makeResponsive, makeCustom } from "@nccl/theme";
 
 import { PageHeader } from "../../components/page";
 import { PageContainer } from "../../components/page/PageContainer";
+import { CLASSES } from "../../utils/isomorphic";
 
 const styles = css`
   ${makeResponsive({ to: "laptop" })} {
@@ -17,6 +18,7 @@ export default function MoreLayout() {
       <PageHeader
         dxTitle="More Resources"
         dxSubtitle="Explore more actions you can take as parents"
+        className={CLASSES.desktopOnly}
       />
       <Outlet />
     </PageContainer>

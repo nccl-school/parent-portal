@@ -4,6 +4,7 @@ import type { ActionCardProps } from "@nccl/components";
 import { ActionCard } from "@nccl/components";
 import { Link } from "react-router";
 
+import { createRouteHandle } from "../../utils/isomorphic";
 import { PageSection } from "../../components/page";
 
 const styles = css`
@@ -60,6 +61,8 @@ const options: (Omit<ActionCardProps, "dxCardSize"> & { href: string })[] = [
     href: "/suggestion-box",
   },
 ];
+
+export const handle = createRouteHandle({ mobileTitle: "More" });
 
 export default function MoreRoute() {
   return (

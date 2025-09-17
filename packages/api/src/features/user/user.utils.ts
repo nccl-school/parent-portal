@@ -51,7 +51,7 @@ export type GetUserListResponse = z.infer<typeof GetUserListResponseSchema>;
 export const GetUserParamsSchema = UserSchema.pick({ id: true });
 export const GetUserResponseSchema = z.object({
   ...UserSchema.shape,
-  roleId: RolesSchema,
+  role: RoleSchema,
 });
 export type GetUserResponse = z.infer<typeof GetUserResponseSchema>;
 

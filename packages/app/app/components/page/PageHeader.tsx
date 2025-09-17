@@ -13,14 +13,16 @@ export type PageHeaderProps = PageHeaderPropsNative & PageHeaderPropsCustom;
 
 const styles = css`
   ${makeResponsive({ to: "laptop" })} {
+    margin: 0;
+    margin-bottom: ${makeRem(24)};
+
     h2 {
       font-size: ${makeRem(24)} !important;
     }
-    margin-bottom: ${makeRem(24)};
   }
 
   ${makeResponsive({ from: "laptop" })} {
-    padding: ${makeCustom("page--gutter-desktop")};
+    padding: ${makeCustom("page--gutter-desktop")} 0;
     padding-bottom: ${makeRem(48)};
     max-width: ${makeCustom("container--max-width")};
     margin: 0 auto;

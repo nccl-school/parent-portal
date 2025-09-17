@@ -15,7 +15,7 @@ import type { Route } from "./+types/Resources.route";
 import { ResourcesTitle } from "./ResourcesTitle";
 import { ResourceItem } from "./ResourceItem";
 
-import { CLASSES } from "../../utils/isomorphic";
+import { CLASSES, createRouteHandle } from "../../utils/isomorphic";
 import { EmptyState } from "../../components/states/EmptyState";
 import { LoadingState } from "../../components/states/LoadingState";
 import { parseLoaderData, renderLoaderData } from "../../utils/client";
@@ -55,6 +55,10 @@ const stylesEmpty = css`
     }
   }
 `;
+
+export const handle = createRouteHandle({
+  mobileTitle: "Resources",
+});
 
 export default function ResourcesRoute({
   loaderData,

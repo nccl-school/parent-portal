@@ -101,7 +101,7 @@ const styles = css`
   }
 
   &.caption {
-    ${makeFontSize(-2, 150)};
+    ${makeFontSize(-3, 150)};
     font-family: ${makeFontFamily("body")};
     font-weight: ${makeFontWeight("body-bold")};
   }

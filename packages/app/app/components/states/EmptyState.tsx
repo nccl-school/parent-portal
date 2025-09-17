@@ -6,7 +6,6 @@ import type { ReactNode } from "react";
 
 const styles = css`
   padding: ${makeRem(32)};
-  background: #fff;
   place-content: center;
   gap: ${makeRem(16)};
   max-width: 100ch;

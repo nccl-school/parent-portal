@@ -20,7 +20,7 @@ import { AccountPageSection } from "../account/AccountPageSection";
 import { AccountPageSectionHeader } from "../account/AccountPageSectionHeader";
 
 export const handle = createRouteHandle({
-  mobileTitle: "General",
+  mobileTitle: "Profile",
 });
 
 export async function loader(args: Route.LoaderArgs) {

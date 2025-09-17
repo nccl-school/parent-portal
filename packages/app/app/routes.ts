@@ -17,13 +17,9 @@ export default [
       route("resources/*", "./features/resources/Resources.route.tsx"),
     ]),
     // - /directory
-    route("directory", "./features/directory/Directory.route.tsx", [
-      // - /directory
-      route("", "./features/directory-all/DirectoryAll.route.tsx"),
-      route(
-        "students",
-        "./features/directory-students/DirectoryStudents.route.tsx"
-      ),
+    ...prefix("directory", [
+      index("./features/directory/Directory.route.tsx"),
+      route(":id", "./features/directory-detail/DirectoryDetail.route.tsx"),
     ]),
     // - /calendar
     layout("./features/calendar/Calendar.layout.tsx", [

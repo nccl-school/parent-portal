@@ -57,6 +57,9 @@ user.get("/:id", validate("param", GetUserParamsSchema), async (c) => {
     where: {
       id: params.id,
     },
+    include: {
+      role: true,
+    },
   });
   if (!user) {
     throw new ErrorSet.notFound("");

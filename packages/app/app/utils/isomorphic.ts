@@ -41,8 +41,8 @@ export const CONSTANTS = {
     "ja90kh5sm2d9tnmku5s59fs83s@group.calendar.google.com",
 };
 
-type RouteHandle = { mobileTitle: string };
-export function createRouteHandle({ mobileTitle }: RouteHandle) {
+type RouteHandle<T> = { mobileTitle: string | ((args: T) => string) };
+export function createRouteHandle<T>({ mobileTitle }: RouteHandle<T>) {
   return {
     mobileTitle,
   };
@@ -50,8 +50,13 @@ export function createRouteHandle({ mobileTitle }: RouteHandle) {
 
 export function getMobileTitle<T extends (UIMatch | undefined)[]>(matches: T) {
   return matches.reduce<string | null>((accum, match) => {
-    const mobileTitle = (match?.handle as RouteHandle | undefined)?.mobileTitle;
-    return mobileTitle ?? accum;
+    const mobileTitle = (match?.handle as RouteHandle<unknown> | undefined)
+      ?.mobileTitle;
+    if (!mobileTitle) return accum;
+    if (typeof mobileTitle === "function") {
+      return mobileTitle(match?.loaderData);
+    }
+    return mobileTitle;
   }, null);
 }
 

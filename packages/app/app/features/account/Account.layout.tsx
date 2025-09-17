@@ -8,6 +8,7 @@ const styles = css`
   ${makeResponsive({ to: "laptop" })} {
     padding: 0 ${makeCustom("page--gutter-mobile")};
   }
+
   ${makeResponsive({ from: "laptop" })} {
     display: grid;
     grid-template-columns: auto 1fr;

@@ -19,7 +19,7 @@ const stylesSearch = css`
 export function ResourceMainSearch() {
   return (
     <form className={stylesSearch}>
-      <InputSearch dxSize="lg" dxVariant="contrasted" placeholder="Search" />
+      <InputSearch dxSize="md" dxVariant="contrasted" placeholder="Search" />
     </form>
   );
 }
