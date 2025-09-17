@@ -1,5 +1,5 @@
 import { css } from "@linaria/core";
-import { makeResponsive } from "@nccl/theme";
+import { makeRem, makeResponsive } from "@nccl/theme";
 import { classes } from "@stratum-ui/core/utils";
 import { forwardRef, type JSX } from "react";
 
@@ -12,6 +12,9 @@ export type PageContainerProps = PageContainerPropsNative &
 
 const styles = css`
   &.scrollable {
+    ${makeResponsive({ to: "laptop" })} {
+      padding-bottom: ${makeRem(24)};
+    }
     ${makeResponsive({ from: "laptop" })} {
       height: 100%;
       overflow: auto;

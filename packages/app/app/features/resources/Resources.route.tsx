@@ -134,15 +134,19 @@ export default function ResourcesRoute({
           resource.childResources.length === 0 ? (
             <div className={stylesEmpty}>
               <EmptyState
-                imgSrc="/images/image-icon-black-hole.png"
-                imgSize={200}
+                imgSrc="/images/image-icon-island.png"
+                imgSize={100}
                 imgAlt="all-the-things"
                 title="There's nothing in here"
                 borderless
               >
-                <div style={{ width: "40ch", margin: "0 auto" }}>
-                  Doesn't look like there's anything in this folder... just you,
-                  the folder and the abyss.
+                <div
+                  style={{
+                    maxWidth: "40ch",
+                    margin: "0 auto",
+                  }}
+                >
+                  Enjoy this tranquil moment.
                 </div>
               </EmptyState>
             </div>

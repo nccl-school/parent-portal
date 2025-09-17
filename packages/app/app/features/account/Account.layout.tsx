@@ -1,10 +1,13 @@
 import { css } from "@linaria/core";
-import { makeRem, makeResponsive } from "@nccl/theme";
+import { makeCustom, makeRem, makeResponsive } from "@nccl/theme";
 import { Outlet } from "react-router";
 
 import { PageContainer } from "../../components/page/PageContainer";
 
 const styles = css`
+  ${makeResponsive({ to: "laptop" })} {
+    padding: 0 ${makeCustom("page--gutter-mobile")};
+  }
   ${makeResponsive({ from: "laptop" })} {
     display: grid;
     grid-template-columns: auto 1fr;

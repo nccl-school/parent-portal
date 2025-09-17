@@ -8,8 +8,9 @@ const stylesTitle = css`
   grid-template-columns: 1fr auto;
 
   ${makeResponsive({ to: "laptop" })} {
-    padding: 0 ${makeCustom("page--gutter-mobile")};
-    margin-bottom: ${makeRem(24)};
+    padding: ${makeCustom("page--gutter-mobile")};
+    position: sticky;
+    top: 0;
   }
 
   ${makeResponsive({ from: "laptop" })} {

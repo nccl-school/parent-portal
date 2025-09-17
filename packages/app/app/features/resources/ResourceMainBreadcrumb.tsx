@@ -6,12 +6,12 @@ import type { ReactNode } from "react";
 import { BreadcrumbText } from "./ResourceMainBreadcrumbItem";
 
 const stylesBreadcrumb = css`
-  grid-area: breadcrumb;
   display: flex;
   align-items: center;
 
   ${makeResponsive({ to: "laptop" })} {
     padding: ${makeCustom("page--gutter-mobile")};
+    padding-bottom: 0;
     background: ${makeColor("white")};
   }
 

@@ -12,7 +12,6 @@ import { ResourceFolderPane } from "./ResourceFolderPane";
 import { ResourceMain } from "./ResourceMain";
 import { ResourceMainSearch } from "./ResourceMainSearch";
 import { ResourceMainBreadcrumbs } from "./ResourceMainBreadcrumb";
-import { ResourcePreview } from "./ResourcePreview";
 
 import { getNCCLClient } from "../../utils/server";
 import { renderLoaderData } from "../../utils/client";
@@ -21,6 +20,8 @@ import { ResourcesAdd } from "../resources-add/ResourcesAdd";
 
 const styles = css`
   ${makeResponsive({ to: "laptop" })} {
+    height: 100%;
+    overflow: hidden;
   }
   ${makeResponsive({ from: "laptop" })} {
     display: grid;
@@ -34,6 +35,12 @@ const styles = css`
 
 const stylesMain = css`
   background: ${makeColor("white")};
+`;
+
+const stylesContainer = css`
+  height: 100%;
+  background: ${makeColor("white")};
+  overflow-y: auto;
 `;
 
 export async function loader(args: Route.LoaderArgs) {
@@ -54,41 +61,44 @@ export async function loader(args: Route.LoaderArgs) {
 
 export default function ResourcesLayout({ loaderData }: Route.ComponentProps) {
   return (
-    <div className={styles}>
-      <ResourceFolderPane />
-      <ResourceMain>
-        <ResourcesCreateFolder.Component />
-        <ResourcesAdd.Component />
-        <ResourceMainSearch />
-        {/* <ResourceMainRecentlyViewed /> */}
-        <ResourceMainBreadcrumbs>
-          {renderLoaderData(loaderData, {
-            loading: "Loading...",
-            ok: (data) =>
-              data.breadcrumbs.map((breadcrumb, i, origArr) => {
-                const isLast = i === origArr.length - 1;
-                const relPath = breadcrumb.pathSegments.join("/");
+    <>
+      <ResourcesAdd.Component />
+      <ResourcesCreateFolder.Component />
 
-                if (breadcrumb.id === "__ROOT__") return null;
+      <div className={styles}>
+        <ResourceFolderPane />
+        <ResourceMain>
+          <ResourceMainSearch />
+          <div className={stylesContainer}>
+            <ResourceMainBreadcrumbs>
+              {renderLoaderData(loaderData, {
+                loading: "Loading...",
+                ok: (data) =>
+                  data.breadcrumbs.map((breadcrumb, i, origArr) => {
+                    const isLast = i === origArr.length - 1;
+                    const relPath = breadcrumb.pathSegments.join("/");
 
-                return (
-                  <Fragment key={breadcrumb.id}>
-                    <ResourcesBreadcrumbDelimiter />
-                    <ResourcesBreadcrumb
-                      breadcrumb={breadcrumb}
-                      isLast={isLast}
-                      relPath={relPath}
-                    />
-                  </Fragment>
-                );
-              }),
-          })}
-        </ResourceMainBreadcrumbs>
-        <div className={stylesMain}>
-          <Outlet />
-        </div>
-      </ResourceMain>
-      <ResourcePreview />
-    </div>
+                    if (breadcrumb.id === "__ROOT__") return null;
+
+                    return (
+                      <Fragment key={breadcrumb.id}>
+                        <ResourcesBreadcrumbDelimiter />
+                        <ResourcesBreadcrumb
+                          breadcrumb={breadcrumb}
+                          isLast={isLast}
+                          relPath={relPath}
+                        />
+                      </Fragment>
+                    );
+                  }),
+              })}
+            </ResourceMainBreadcrumbs>
+            <div className={stylesMain}>
+              <Outlet />
+            </div>
+          </div>
+        </ResourceMain>
+      </div>
+    </>
   );
 }

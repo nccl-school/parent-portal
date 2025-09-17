@@ -14,7 +14,7 @@ import {
 import { useEffect, useRef } from "react";
 import { href, useFetcher } from "react-router";
 import { css } from "@linaria/core";
-import { makeColor, makeRem } from "@nccl/theme";
+import { makeColor, makeRem, makeResponsive } from "@nccl/theme";
 
 import { SuggestionViewComments } from "./SuggestionViewComments";
 import { useSuggestionViewModalContext } from "./suggestion-view.useSuggestionViewModalContext";
@@ -31,6 +31,10 @@ import { getUserName } from "../user";
 
 const styles = css`
   max-width: ${makeRem(520)};
+
+  ${makeResponsive({ from: "laptop" })} {
+    width: ${makeRem(520)};
+  }
 
   header {
     position: sticky;
