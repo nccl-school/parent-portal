@@ -2,7 +2,7 @@ import { css } from "@linaria/core";
 import { makeReset, makeResponsive } from "@nccl/theme";
 import type { ActionCardProps } from "@nccl/components";
 import { ActionCard } from "@nccl/components";
-import { Link } from "react-router";
+import { href, Link } from "react-router";
 
 import { createRouteHandle } from "../../utils/isomorphic";
 import { PageSection } from "../../components/page";
@@ -34,21 +34,21 @@ const options: (Omit<ActionCardProps, "dxCardSize"> & { href: string })[] = [
     dxDescription: "View your committees",
     dxImgSrc: "/images/image-icon-meeting.png",
     dxImgAlt: "meeting",
-    href: "/committees",
+    href: href("/committees"),
   },
   {
     dxTitle: "Log your hours",
     dxDescription: "Add time entires to fulfill your family commitment",
     dxImgSrc: "/images/image-icon-time-card.png",
     dxImgAlt: "time-card",
-    href: "/family-commitment/log",
+    href: href("/volunteer"),
   },
   {
     dxTitle: "FAQs",
     dxDescription: "Get some common answers to some common questions",
     dxImgSrc: "/images/image-icon-question-mark.png",
     dxImgAlt: "question-mark",
-    href: "/faqs",
+    href: href("/faqs"),
   },
   {
     dxTitle: "Planned Features",

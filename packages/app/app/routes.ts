@@ -32,6 +32,9 @@ export default [
     layout("./features/more/More.layout.tsx", [
       route("more", "./features/more/More.route.tsx"),
     ]),
+    route("committees", "./features/committees/Committees.route.tsx"),
+    route("volunteer", "./features/volunteer/Volunteer.route.tsx"),
+    route("faqs", "./features/faqs/FAQ.route.tsx"),
     // - /account
     layout("./features/account/Account.layout.tsx", [
       ...prefix("account", [
