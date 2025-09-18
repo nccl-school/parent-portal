@@ -4,9 +4,30 @@ import { classes } from "@stratum-ui/core/utils";
 import type { JSX } from "react";
 
 const styles = css`
-  padding: ${makeRem(16)};
-  border-radius: ${makeRem(8)};
+  padding: ${makeRem(24)};
   background: ${makeColor("white")};
+
+  .open {
+    display: block;
+  }
+
+  .close {
+    display: none;
+  }
+
+  &[open] {
+    .open {
+      display: none;
+    }
+
+    .close {
+      display: block;
+    }
+  }
+
+  & + & {
+    border-top: 1px solid ${makeColor("light-400")};
+  }
 `;
 
 export type AccordionProps = JSX.IntrinsicElements["details"];

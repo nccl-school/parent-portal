@@ -1,8 +1,11 @@
 import { css } from "@linaria/core";
+import { makeRem } from "@nccl/theme";
 import { classes } from "@stratum-ui/core/utils";
 import type { JSX } from "react";
 
-const styles = css``;
+const styles = css`
+  margin-top: ${makeRem(16)};
+`;
 
 export type AccordionContentProps = JSX.IntrinsicElements["div"];
 
