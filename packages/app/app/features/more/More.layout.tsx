@@ -1,6 +1,6 @@
 import { Outlet } from "react-router";
 import { css } from "@linaria/core";
-import { makeResponsive, makeCustom } from "@nccl/theme";
+import { makeResponsive, makeColor, makeRem, makeCustom } from "@nccl/theme";
 
 import { PageHeader } from "../../components/page";
 import { PageContainer } from "../../components/page/PageContainer";
@@ -8,7 +8,16 @@ import { CLASSES } from "../../utils/isomorphic";
 
 const styles = css`
   ${makeResponsive({ to: "laptop" })} {
-    padding: 0 ${makeCustom("page--gutter-mobile")};
+    background: ${makeColor("white")};
+  }
+
+  ${makeResponsive({ from: "tablet", to: "laptop" })} {
+    padding: ${makeRem(32)} ${makeRem(16)};
+  }
+
+  ${makeResponsive({ from: "laptop" })} {
+    max-width: ${makeCustom("container--max-width")};
+    margin: 0 auto;
   }
 `;
 

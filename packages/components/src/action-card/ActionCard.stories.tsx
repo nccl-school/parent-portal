@@ -64,13 +64,13 @@ const containerStyles = css`
 const gridStyles = css`
   width: 100%;
   display: grid;
-  gap: 1rem;
 
   ${makeResponsive({ to: "tablet" })} {
     grid-template-columns: repeat(1, 1fr);
   }
   ${makeResponsive({ from: "tablet" })} {
     grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
   }
 
   ${makeResponsive({ from: "laptop" })} {

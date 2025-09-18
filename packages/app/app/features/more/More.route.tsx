@@ -8,30 +8,34 @@ import { createRouteHandle } from "../../utils/isomorphic";
 import { PageSection } from "../../components/page";
 
 const styles = css`
-  a {
-    ${makeReset("anchor")};
-  }
   width: 100%;
   display: grid;
-  gap: 1rem;
 
   ${makeResponsive({ to: "tablet" })} {
     grid-template-columns: repeat(1, 1fr);
   }
   ${makeResponsive({ from: "tablet" })} {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
   }
 
   ${makeResponsive({ from: "laptop" })} {
     grid-template-columns: repeat(4, 1fr);
   }
 
-  ${makeResponsive({ from: "desktop" })} {
-    grid-template-columns: repeat(5, 1fr);
+  a {
+    ${makeReset("anchor")};
   }
 `;
 
 const options: (Omit<ActionCardProps, "dxCardSize"> & { href: string })[] = [
+  {
+    dxTitle: "Committees",
+    dxDescription: "View your committees",
+    dxImgSrc: "/images/image-icon-meeting.png",
+    dxImgAlt: "meeting",
+    href: "/committees",
+  },
   {
     dxTitle: "Log your hours",
     dxDescription: "Add time entires to fulfill your family commitment",
@@ -70,8 +74,8 @@ export default function MoreRoute() {
       <div className={styles}>
         {options.map(({ href, ...props }) => {
           return (
-            <Link to={href}>
-              <ActionCard dxCardSize="sm" {...props} dxImgAlt="smile-poo" />
+            <Link to={href} key={href}>
+              <ActionCard dxCardSize="md" {...props} dxImgAlt="smile-poo" />
             </Link>
           );
         })}
