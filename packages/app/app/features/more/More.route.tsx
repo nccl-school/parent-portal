@@ -4,8 +4,8 @@ import type { ActionCardProps } from "@nccl/components";
 import { ActionCard } from "@nccl/components";
 import { href, Link } from "react-router";
 
+import { PageContainer } from "../../components/page/PageContainer";
 import { createRouteHandle } from "../../utils/isomorphic";
-import { PageSection } from "../../components/page";
 
 const styles = css`
   width: 100%;
@@ -70,7 +70,7 @@ export const handle = createRouteHandle({ mobileTitle: "More" });
 
 export default function MoreRoute() {
   return (
-    <PageSection>
+    <PageContainer dxVariant="scrollable">
       <div className={styles}>
         {options.map(({ href, ...props }) => {
           return (
@@ -80,6 +80,6 @@ export default function MoreRoute() {
           );
         })}
       </div>
-    </PageSection>
+    </PageContainer>
   );
 }

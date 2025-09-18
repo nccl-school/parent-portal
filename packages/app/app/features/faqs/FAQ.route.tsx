@@ -1,7 +1,13 @@
-import { InputSearch, Label, Typography } from "@nccl/components";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionSummary,
+  Button,
+  InputSearch,
+  Typography,
+} from "@nccl/components";
 import { css } from "@linaria/core";
 import { makeCustom, makeRem, makeReset, makeResponsive } from "@nccl/theme";
-import { NavItem } from "app/components/nav/NavItem";
 
 import { PageContainer } from "../../components/page/PageContainer";
 import { PageHeader } from "../../components/page";
@@ -26,22 +32,22 @@ const styles = css`
   }
 `;
 
+const toolStyles = css`
+  display: flex;
+  gap: ${makeRem(16)};
+  align-items: center;
+
+  & > *:first-child {
+    flex: 1;
+  }
+`;
+
 const styleList = css`
   overflow: auto;
   ${makeReset("ul")};
 
   a {
     ${makeReset("anchor")};
-  }
-`;
-
-const styleItem = css`
-  padding: ${makeRem(16)};
-  border-radius: ${makeRem(8)};
-  background: white;
-
-  & > div {
-    margin-bottom: ${makeRem(8)};
   }
 `;
 
@@ -52,32 +58,52 @@ export default function FAQRoute() {
         dxTitle="Frequently Asked Questions"
         dxSubtitle="Explore answers to the questions families ask most often."
       />
-      <InputSearch
-        dxSize="md"
-        dxVariant="contrasted"
-        placeholder="Search FAQs"
-      />
-      <ul className={styleList}>
-        <li>
-          <details className={styleItem} name="faq">
-            <summary>
-              <Label dxVariant="info">random</Label>
-              <Typography dxVariant="heading5" dxNode="div">
-                Praesent commodo cursus magna, vel scelerisque nisl consectetur
-                et.
-              </Typography>
-            </summary>
-            <Typography dxVariant="body3" dxNode="p">
+      <div className={toolStyles}>
+        <InputSearch
+          dxSize="md"
+          dxVariant="contrasted"
+          placeholder="Search FAQs"
+        />
+        <Button
+          dxIcon="more-horizontal-solid-standard"
+          dxVariant="icon"
+          dxColor="secondary"
+          dxSize="md"
+        />
+      </div>
+
+      <div className={styleList}>
+        <Accordion>
+          <AccordionSummary>Can we have pizza day?</AccordionSummary>
+          <AccordionContent>
+            <Typography dxVariant="body1" dxNode="p">
               Curabitur blandit tempus porttitor. Nullam quis risus eget urna
               mollis ornare vel eu leo. Duis mollis, est non commodo luctus,
-              nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean
-              eu leo quam. Pellentesque ornare sem lacinia quam venenatis
-              vestibulum. Cras mattis consectetur purus sit amet fermentum.
-              Nullam quis risus eget urna mollis ornare vel eu leo.
+              nisi erat porttitor ligula,
             </Typography>
-          </details>
-        </li>
-      </ul>
+          </AccordionContent>
+        </Accordion>
+        <Accordion>
+          <AccordionSummary>Can we have pizza day?</AccordionSummary>
+          <AccordionContent>
+            <Typography dxVariant="body1" dxNode="p">
+              Curabitur blandit tempus porttitor. Nullam quis risus eget urna
+              mollis ornare vel eu leo. Duis mollis, est non commodo luctus,
+              nisi erat porttitor ligula,
+            </Typography>
+          </AccordionContent>
+        </Accordion>
+        <Accordion>
+          <AccordionSummary>Can we have pizza day?</AccordionSummary>
+          <AccordionContent>
+            <Typography dxVariant="body1" dxNode="p">
+              Curabitur blandit tempus porttitor. Nullam quis risus eget urna
+              mollis ornare vel eu leo. Duis mollis, est non commodo luctus,
+              nisi erat porttitor ligula,
+            </Typography>
+          </AccordionContent>
+        </Accordion>
+      </div>
     </PageContainer>
   );
 }
