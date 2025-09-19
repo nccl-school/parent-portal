@@ -2,16 +2,21 @@ name: nccl-parents-test
 
 services:
   db:
-    image: postgres:17
+    image: postgres:17-alpine
     ports:
-      - "${POSTGRES_PORT:?error}:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     env_file:
       - ./.env.spec
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d ${POSTGRES_DB:?error}"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB} || exit 1",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 20s
 
   migrate:
     build:
