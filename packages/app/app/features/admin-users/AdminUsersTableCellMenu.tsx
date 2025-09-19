@@ -10,7 +10,7 @@ export function AdminUsersTableCellMenu(user: UserWithRole) {
 
   const onButtonMount = useCallback<RefCallback<HTMLButtonElement>>(
     (node) => {
-      popover.setPopoverTarget(node);
+      popover.setTarget(node);
       buttonRef.current = node;
     },
     [popover]

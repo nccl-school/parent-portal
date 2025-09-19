@@ -505,11 +505,7 @@ resource.get(
         const user = await db.user.findUnique({
           where: { id: rule.userId },
           include: {
-            role: {
-              select: {
-                id: true,
-              },
-            },
+            role: true,
           },
         });
         if (!user) {
@@ -517,16 +513,9 @@ resource.get(
             "The user who is granted access to this rule cannot be found. This should not have happened. Please contact support."
           );
         }
-        const {
-          role: { id: roleId },
-          ...restUser
-        } = user;
         return {
           ...rule,
-          user: {
-            ...restUser,
-            roleId,
-          },
+          user,
         };
       })
     );

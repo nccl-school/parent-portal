@@ -1,11 +1,12 @@
 import { css } from "@linaria/core";
-import { makeRem, makeColor, makeFontWeight } from "@nccl/theme";
+import { makeRem, makeColor, makeFontWeight, makeReset } from "@nccl/theme";
 import { classes } from "@stratum-ui/core/utils";
 import type { JSX } from "react";
 
-export type PopoverMenuActionProps = JSX.IntrinsicElements["div"];
+export type PopoverMenuActionProps = JSX.IntrinsicElements["button"];
 
 const styles = css`
+  ${makeReset("button")};
   padding: 0 ${makeRem(8)};
   height: ${makeRem(36)};
   display: flex;
@@ -33,8 +34,8 @@ export function PopoverMenuItemAction({
   ...restProps
 }: PopoverMenuActionProps) {
   return (
-    <div className={classes(styles, className)} {...restProps}>
+    <button className={classes(styles, className)} {...restProps}>
       {children}
-    </div>
+    </button>
   );
 }
