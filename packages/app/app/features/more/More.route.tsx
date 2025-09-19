@@ -30,6 +30,13 @@ const styles = css`
 
 const options: (Omit<ActionCardProps, "dxCardSize"> & { href: string })[] = [
   {
+    dxTitle: "Directory",
+    dxDescription: "Discover families, staff, and community members",
+    dxImgSrc: "/images/image-icon-contact.png",
+    dxImgAlt: "contact",
+    href: href("/directory"),
+  },
+  {
     dxTitle: "Committees",
     dxDescription: "View your committees",
     dxImgSrc: "/images/image-icon-meeting.png",
@@ -49,13 +56,6 @@ const options: (Omit<ActionCardProps, "dxCardSize"> & { href: string })[] = [
     dxImgSrc: "/images/image-icon-question-mark.png",
     dxImgAlt: "question-mark",
     href: href("/faqs"),
-  },
-  {
-    dxTitle: "Planned Features",
-    dxDescription: "View the planned features for the app",
-    dxImgSrc: "/images/image-icon-todo-list.png",
-    dxImgAlt: "todo-list",
-    href: "/feature-pipeline",
   },
   {
     dxTitle: "Suggestion Box",

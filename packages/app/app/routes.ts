@@ -28,6 +28,8 @@ export default [
         route("by-day", "./features/calendar-by-day/CalendarByDay.route.tsx"),
       ]),
     ]),
+    // - /students
+    route("students", "./features/students/Students.route.tsx"),
     // - /more
     layout("./features/more/More.layout.tsx", [
       route("more", "./features/more/More.route.tsx"),

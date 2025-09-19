@@ -204,12 +204,12 @@ export default function AppRootLayout(args: Route.ComponentProps) {
             />
             <NavbarItemText>Resources</NavbarItemText>
           </RootNavbarItem>
-          <RootNavbarItem to={href("/directory")}>
+          <RootNavbarItem to={href("/students")}>
             <NavbarItemIcon
-              dxBaseIcon="contact-01-stroke-standard"
-              dxActiveIcon="contact-01-solid-standard"
+              dxBaseIcon="students-stroke-standard"
+              dxActiveIcon="students-solid-standard"
             />
-            <NavbarItemText>Directory</NavbarItemText>
+            <NavbarItemText>Students</NavbarItemText>
           </RootNavbarItem>
           <RootNavbarItem to={href("/calendar")}>
             <NavbarItemIcon

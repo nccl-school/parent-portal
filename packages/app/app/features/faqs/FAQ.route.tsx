@@ -2,16 +2,16 @@ import {
   Accordion,
   AccordionContent,
   AccordionSummary,
-  Button,
   InputSearch,
   Typography,
 } from "@nccl/components";
 import { css } from "@linaria/core";
 import { makeCustom, makeRem, makeReset, makeResponsive } from "@nccl/theme";
 
+import { pluralize } from "../../utils/client";
 import { PageContainer } from "../../components/page/PageContainer";
 import { PageHeader } from "../../components/page";
-import { createRouteHandle } from "../../utils/isomorphic";
+import { CLASSES, createRouteHandle } from "../../utils/isomorphic";
 
 export const handle = createRouteHandle({ mobileTitle: "FAQs" });
 
@@ -33,12 +33,11 @@ const styles = css`
 `;
 
 const toolStyles = css`
-  display: flex;
-  gap: ${makeRem(16)};
-  align-items: center;
-
-  & > *:first-child {
-    flex: 1;
+  ${makeResponsive({ from: "laptop" })} {
+    display: flex;
+    gap: ${makeRem(16)};
+    align-items: center;
+    justify-content: space-between;
   }
 `;
 
@@ -59,19 +58,19 @@ export default function FAQRoute() {
         dxSubtitle="Explore answers to the questions families ask most often."
       />
       <div className={toolStyles}>
+        <Typography
+          dxNode="div"
+          dxVariant="heading5"
+          className={CLASSES.desktopOnly}
+        >
+          {pluralize("result", 88, { withCount: true })}
+        </Typography>
         <InputSearch
           dxSize="md"
           dxVariant="contrasted"
           placeholder="Search FAQs"
         />
-        <Button
-          dxIcon="more-horizontal-solid-standard"
-          dxVariant="icon"
-          dxColor="secondary"
-          dxSize="md"
-        />
       </div>
-
       <div className={styleList}>
         <Accordion>
           <AccordionSummary>Can we have pizza day?</AccordionSummary>
