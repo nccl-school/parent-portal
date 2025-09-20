@@ -14,7 +14,7 @@ import {
 import { useEffect, useRef } from "react";
 import { href, useFetcher } from "react-router";
 import { css } from "@linaria/core";
-import { makeColor, makeRem } from "@nccl/theme";
+import { makeColor, makeRem, makeResponsive } from "@nccl/theme";
 
 import { SuggestionViewComments } from "./SuggestionViewComments";
 import { useSuggestionViewModalContext } from "./suggestion-view.useSuggestionViewModalContext";
@@ -30,11 +30,11 @@ import type { loader } from "../../api/api.suggestion.getOrUpdateUnique";
 import { getUserName } from "../user";
 
 const styles = css`
-  width: ${makeRem(520)};
-  display: grid;
-  grid-template-rows: auto auto 1fr auto;
-  height: 100%;
-  overflow: auto;
+  max-width: ${makeRem(520)};
+
+  ${makeResponsive({ from: "laptop" })} {
+    width: ${makeRem(520)};
+  }
 
   header {
     position: sticky;
@@ -58,7 +58,7 @@ export const SuggestionViewDialog = new ModalController<{
   suggestion_id: string;
 }>({
   props: {
-    dxVariant: "drawer-rtl",
+    dxVariant: "drawer-right",
     className: styles,
   },
   ModalContent,
@@ -115,6 +115,7 @@ function ModalContent() {
                     dxSize="md"
                     dxFirstName={d.createdBy.firstName ?? ""}
                     dxLastName={d.createdBy.lastName ?? ""}
+                    dxSrc={d.createdBy.imageUrl ?? ""}
                   />
                   <Typography dxVariant="body3" dxNode="span">
                     {getUserName(d.createdBy)}

@@ -2,12 +2,17 @@ import type z from "zod";
 
 import {
   GetUserParamsSchema,
-  UpdateUserRoleParamsSchema,
+  UserIDParamsSchema,
   UpdateUserRoleRequestSchema,
   type GetCurrentUserResponse,
   type GetUserListResponse,
   type GetUserResponse,
   type UpdateUserRoleResponse,
+  type UpdateMyProfileRequest,
+  type UpdateMyProfileResponse,
+  UpdateMyProfileRequestSchema,
+  UpdateAvatarRequestSchema,
+  type UpdateAvatarResponse,
 } from "./user.utils.js";
 
 import {
@@ -56,11 +61,33 @@ export class UserClient extends ApiClient {
     userId: string,
     body: z.infer<typeof UpdateUserRoleRequestSchema>
   ) {
-    return this._mutateJSON<UpdateUserRoleResponse>({
+    return this._mutate<UpdateUserRoleResponse>({
       method: "PUT",
       path: "/:id/role",
-      params: [UpdateUserRoleParamsSchema, { id: userId }],
+      params: [UserIDParamsSchema, { id: userId }],
       body: [UpdateUserRoleRequestSchema, body],
+    });
+  }
+
+  /**
+   * Updates the current user's profile
+   */
+  public async updateMyProfile(body: UpdateMyProfileRequest) {
+    return this._mutate<UpdateMyProfileResponse>({
+      method: "PUT",
+      path: "/my-profile",
+      body: [UpdateMyProfileRequestSchema, body],
+    });
+  }
+
+  /**
+   * Creates a new avatar
+   */
+  public async updateAvatar(body: FormData) {
+    return this._mutate<UpdateAvatarResponse>({
+      method: "POST",
+      path: "/avatar",
+      body: [UpdateAvatarRequestSchema, body],
     });
   }
 }

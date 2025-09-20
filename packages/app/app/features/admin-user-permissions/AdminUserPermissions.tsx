@@ -25,7 +25,7 @@ const className = css`
 export const AdminUserPermissions =
   new ModalController<AdminUserPermissionsModalState>({
     props: {
-      dxVariant: "basic",
+      dxVariant: "modal",
       className,
     },
     ModalContent,

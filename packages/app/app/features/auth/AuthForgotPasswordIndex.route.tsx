@@ -1,10 +1,9 @@
-import z from "zod";
 import {
   InputGroup,
   InputText,
   Button,
   Toast,
-  Typography,
+  AnchorContent,
 } from "@nccl/components";
 import {
   Form,
@@ -15,49 +14,25 @@ import {
   useSearchParams,
 } from "react-router";
 import { useEffect } from "react";
-import { ErrorSet, parseError } from "@nccl/api/client";
 
 import type { Route } from "./+types/AuthAcceptInvite.route";
 import { AuthPage } from "./AuthPage";
 import { AuthPageHeader } from "./AuthPageHeader";
 import { AuthPageBody } from "./AuthPageBody";
 import { AuthPageFooter } from "./AuthPageFooter";
+import {
+  requestPasswordResetEmail,
+  type RequestPasswordResetForm,
+} from "./auth.utils";
 
 import { getAuthError, getValidationErrors } from "../../utils/client";
 import { PageHeader } from "../../components/page";
-import { getNCCLClient } from "../../utils/server";
-import { getFormData } from "../../utils/isomorphic";
 import { assembleTitle } from "../../utils/util.assemble-title";
 
-const schema = z.object({
-  email: z
-    .email({ error: "Please enter an email address" })
-    .trim()
-    .min(1, { error: "Please enter an email address" }),
-});
-type FormData = z.infer<typeof schema>;
-
 export async function action(args: Route.ActionArgs) {
-  const authClient = getNCCLClient(args);
-  const formData = await getFormData(args, schema);
-  if (formData.error) {
-    return parseError(formData.error);
-  }
-
-  const resetPasswordUrl = `${args.context.env.NCCL_APP_URL}${href("/reset-password")}`;
-
-  const res = await authClient.auth.requestPasswordReset({
-    ...formData.data,
-    redirectTo: resetPasswordUrl,
-  });
+  const res = await requestPasswordResetEmail(args);
   if (!res.ok) {
-    console.log(res.text());
-    const json = await res.json();
-    console.error(json);
-    const err = new ErrorSet.serverError(
-      json?.message ?? "Error when trying to send a password reset email."
-    );
-    return parseError(err);
+    return res.error;
   }
   return redirect("/forgot-password/success");
 }
@@ -65,7 +40,9 @@ export async function action(args: Route.ActionArgs) {
 export default function AuthForgotPassword(args: Route.ComponentProps) {
   const navigation = useNavigation();
   const [urlSearchParams] = useSearchParams();
-  const validationErrors = getValidationErrors<FormData>(args.actionData);
+  const validationErrors = getValidationErrors<RequestPasswordResetForm>(
+    args.actionData
+  );
   const authError = getAuthError(args.actionData);
 
   useEffect(() => {
@@ -99,9 +76,7 @@ export default function AuthForgotPassword(args: Route.ComponentProps) {
               dxError={validationErrors.email?.[0]}
             />
             <Link to={href("/sign-in")}>
-              <Typography dxVariant="body3" dxNode="span">
-                Back to sign in
-              </Typography>
+              <AnchorContent>Back to sign in</AnchorContent>
             </Link>
           </InputGroup>
         </AuthPageBody>

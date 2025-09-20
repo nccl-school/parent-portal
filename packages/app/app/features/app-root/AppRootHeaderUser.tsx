@@ -23,6 +23,7 @@ export function AppRootHeaderUser() {
         dxSrc={user?.imageUrl ?? undefined}
         dxFirstName={user?.firstName ?? ""}
         dxLastName={user?.lastName ?? undefined}
+        dxBgColor="white"
       />
     </Link>
   );

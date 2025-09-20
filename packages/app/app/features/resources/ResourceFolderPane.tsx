@@ -1,6 +1,6 @@
 import { css } from "@linaria/core";
 import { Typography } from "@nccl/components";
-import { makeRem, makeColor } from "@nccl/theme";
+import { makeRem, makeColor, makeResponsive } from "@nccl/theme";
 import { href, useLocation, useNavigate } from "react-router";
 import { useCallback } from "react";
 
@@ -9,16 +9,22 @@ import { ResourceFolderTree } from "../resource-folder-tree/ResourceFolderTree";
 import { normalizeFolderPath } from "../resource-folder-tree/resource-folder-tree.utils";
 
 const styles = css`
-  padding: 0 ${makeRem(24)};
-  overflow: auto;
-  border-right: 1px solid ${makeColor("neutral-light-100")};
-
-  header {
-    padding: ${makeRem(32)} 0;
+  ${makeResponsive({ to: "laptop" })} {
+    display: none;
   }
 
-  nav {
-    padding-bottom: ${makeRem(32)} 0;
+  ${makeResponsive({ from: "laptop" })} {
+    padding: 0 ${makeRem(24)};
+    overflow: auto;
+    border-right: 1px solid ${makeColor("neutral-light-100")};
+
+    header {
+      padding: ${makeRem(32)} 0;
+    }
+
+    nav {
+      padding-bottom: ${makeRem(32)} 0;
+    }
   }
 `;
 

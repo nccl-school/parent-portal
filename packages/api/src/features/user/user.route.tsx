@@ -5,15 +5,19 @@ import {
   GetUserListResponseSchema,
   GetUserParamsSchema,
   GetUserResponseSchema,
-  UpdateUserRoleParamsSchema,
+  UserIDParamsSchema,
   UpdateUserRoleRequestSchema,
   UpdateUserRoleResponseSchema,
+  UpdateMyProfileRequestSchema,
+  UpdateMyProfileResponseSchema,
+  UpdateAvatarRequestSchema,
 } from "./user.utils.js";
 
 import { validate } from "../../middleware/middleware.validate.js";
 import { ErrorSet } from "../../utils/util.errors.js";
 import { authorize } from "../../middleware/middleware.authorize.js";
 import { serialize } from "../../utils/util.serialize.js";
+import { createBucketPath, getBucket } from "../../utils/util.bucket.js";
 
 export const user = new Hono();
 
@@ -53,6 +57,9 @@ user.get("/:id", validate("param", GetUserParamsSchema), async (c) => {
     where: {
       id: params.id,
     },
+    include: {
+      role: true,
+    },
   });
   if (!user) {
     throw new ErrorSet.notFound("");
@@ -66,7 +73,7 @@ user.get("/:id", validate("param", GetUserParamsSchema), async (c) => {
 user.put(
   "/:id/role",
   authorize("ADMIN"),
-  validate("param", UpdateUserRoleParamsSchema),
+  validate("param", UserIDParamsSchema),
   validate("json", UpdateUserRoleRequestSchema),
   async (c) => {
     const body = c.req.valid("json");
@@ -91,64 +98,61 @@ user.put(
   }
 );
 
-// GET /api/user/resend-invite/:id | Reinvite a user to the app
-// - Get's the user
-// - Revokes the current invitation
-// - Re-invites the user
-// - Updates the user with the new invitationId
-// user.get(
-//   "/resend-invite/:id",
-//   authorize("ADMIN"),
-//   validate("param", ResendInviteUserParamsSchema),
-//   async (c) => {
-//     const params = c.req.valid("param");
-//     const db = c.get("db");
-//     const env = getEnvVar(c);
+// PUT /api/user/my-profile | Update the current user's profile information
+user.put(
+  "/my-profile",
+  validate("json", UpdateMyProfileRequestSchema),
+  async (c) => {
+    const db = c.get("db");
+    const currentUser = c.get("user");
+    const body = c.req.valid("json");
 
-//     console.log("Resending invite to", params.id);
+    const updatedUser = await db.user.update({
+      where: {
+        id: currentUser.id,
+      },
+      data: body,
+    });
 
-//     const dbUser = await db.user.findUnique({
-//       where: {
-//         id: params.id,
-//       },
-//     });
-//     if (!dbUser) {
-//       throw new ErrorSet.notFound("Unable to locate user to resend invite");
-//     }
-//     if (!dbUser.invitationId) {
-//       throw new ErrorSet.notFound(
-//         "Unable to locate users invitation record to resend"
-//       );
-//     }
+    const data = await serialize(UpdateMyProfileResponseSchema, updatedUser);
+    return c.json(data);
+  }
+);
 
-//     await clerk.invitations.revokeInvitation(dbUser.invitationId);
+// POST /api/user/avatar | Update the current user's avatar information
+user.post("/avatar", validate("form", UpdateAvatarRequestSchema), async (c) => {
+  const db = c.get("db");
+  const currentUser = c.get("user");
+  const body = c.req.valid("form");
 
-//     const invite = await clerk.invitations.createInvitation({
-//       emailAddress: dbUser.email,
-//       redirectUrl: env.NCCL_APP_URL.concat("/sign-up"),
-//       publicMetadata: {
-//         db_id: dbUser.id,
-//         role: dbUser.roleId,
-//       },
-//     });
+  const { crop } = await import("holycrop/server");
+  const { croppedBuffer } = await crop(body);
 
-//     await db.user.update({
-//       where: {
-//         id: dbUser.id,
-//       },
-//       data: {
-//         invitationId: invite.id,
-//         invitedAt: new Date(),
-//       },
-//     });
+  const bucket = getBucket();
+  const bucketImagePath = createBucketPath({
+    owner: "freeform",
+    segments: ["avatars", `${crypto.randomUUID()}.png`],
+  });
+  const blob = bucket.file(bucketImagePath);
+  await blob.save(croppedBuffer, {
+    contentType: "image/png",
+  });
+  await blob.makePublic();
+  const imageUrl = blob.publicUrl();
 
-//     const data = await serialize(ResendInviteUserResponseSchema, {
-//       message: `Successfully re-invited ${dbUser.email}`,
-//     });
+  const updateUser = await db.user.update({
+    data: {
+      imageUrl,
+      imageUrlLastUpdated: new Date(),
+    },
+    where: {
+      id: currentUser.id,
+    },
+  });
 
-//     return c.json(data);
-//   }
-// );
+  const data = await serialize(UpdateMyProfileResponseSchema, updateUser);
+  return c.json(data);
+});
 
 user.all(() => {
   throw new ErrorSet.notFound();

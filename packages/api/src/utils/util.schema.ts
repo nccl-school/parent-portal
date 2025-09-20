@@ -47,19 +47,6 @@ function withProfanityCheck<T extends ZodString>(schema: T): T {
 }
 
 /**
- * @deprecated Please use the zStringRequired or zStringOptional
- */
-export function zString(options?: { required?: string }) {
-  const baseSchema = z.string().refine(
-    (value) => {
-      return options?.required && value;
-    },
-    { error: options?.required }
-  );
-  return checkProfanity(baseSchema);
-}
-
-/**
  * Required string with profanity check.
  * - Enforces presence (`required_error`).
  * - Trims whitespace.

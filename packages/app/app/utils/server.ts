@@ -2,6 +2,7 @@ import type { LoaderFunctionArgs, AppLoadContext } from "react-router";
 import { ErrorSet, type Roles } from "@nccl/api/client";
 import { href, redirect } from "react-router";
 import { NCCLClient } from "@nccl/api/client";
+import { ENV_RUNTIME } from "@nccl/env";
 
 export async function getRole<T extends LoaderFunctionArgs>(loaderArgs: T) {
   const session = await ensureSession(loaderArgs);
@@ -55,8 +56,13 @@ export async function ensureSession<T extends LoaderFunctionArgs>(args: T) {
   if (!session?.session) {
     console.log("The user needs to sign in");
     const url = new URL(args.request.url);
+    console.log("Requested URL", url.pathname);
     console.log("Redirecting to sign in");
-    throw redirect(href(`/sign-in`).concat(`?redirect_url=${url.toString()}`));
+    throw redirect(
+      href(`/sign-in`).concat(
+        `?redirect_url=${ENV_RUNTIME.getOne("NCCL_APP_URL")}/${url.pathname}`
+      )
+    );
   }
 
   console.log("User has session and is signed in");

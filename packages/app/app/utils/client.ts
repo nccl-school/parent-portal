@@ -203,3 +203,41 @@ export function getClientVar(
   // @ts-expect-error We're setting this manually
   return window.__ENV__[envVar];
 }
+
+export function pluralize(
+  word: string,
+  count: number,
+  options?: { withCount?: boolean }
+): string {
+  // Common irregulars
+  const irregulars: Record<string, string> = {
+    person: "people",
+    man: "men",
+    woman: "women",
+    child: "children",
+    mouse: "mice",
+    goose: "geese",
+    tooth: "teeth",
+    foot: "feet",
+  };
+
+  const lower = word.toLowerCase();
+
+  let plural: string;
+  if (count === 1) {
+    plural = word;
+  } else if (irregulars[lower]) {
+    plural = irregulars[lower];
+  } else if (word.endsWith("y") && !/[aeiou]y$/i.test(word)) {
+    plural = word.slice(0, -1) + "ies";
+  } else if (/(s|x|z|ch|sh)$/i.test(word)) {
+    plural = word + "es";
+  } else {
+    plural = word + "s";
+  }
+
+  if (options?.withCount) {
+    return `${count} ${plural}`;
+  }
+  return plural;
+}

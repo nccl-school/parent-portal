@@ -1,14 +1,134 @@
-import { Outlet } from "react-router";
+import {
+  href,
+  NavLink,
+  Outlet,
+  useNavigate,
+  type NavLinkProps,
+} from "react-router";
 import { css } from "@linaria/core";
-import { makeColor, makeCustom, makeResponsive } from "@nccl/theme";
-import { classes } from "@stratum-ui/core/utils";
+import { makeColor, makeCustom, makeRem, makeResponsive } from "@nccl/theme";
+import {
+  Button,
+  Header,
+  HeaderActions,
+  HeaderActionsItem,
+  Navbar,
+  NavbarGroup,
+  NavbarItem,
+  NavbarItemIcon,
+  NavbarItemText,
+  NavbarLogo,
+  Typography,
+} from "@nccl/components";
+import type { ReactNode } from "react";
 
 import type { Route } from "./+types/AppRoot.layout";
-import { RootNavbar } from "./AppRootNavbar";
-import { RootHeader } from "./AppRootHeader";
+import { AppRootHeaderUser } from "./AppRootHeaderUser";
 
-import { backgroundGradient } from "../../utils/isomorphic";
+import { CLASSES, getMobileTitle } from "../../utils/isomorphic";
 import { ensureSession, getNCCLClient } from "../../utils/server";
+import { AuthSignOutButton } from "../auth/AuthSignOutButton";
+import { Restrict } from "../auth/Restrict";
+
+const stylesHead = css`
+  :global() {
+    body {
+      display: grid;
+      background-image: linear-gradient(
+        75deg,
+        hsla(0deg, 0%, 100%, 0.4) 0%,
+        hsla(180deg, 100%, 97%, 0.4) 26%,
+        hsla(180deg, 100%, 95%, 0.4) 39%,
+        hsla(181deg, 100%, 94%, 0.4) 50%,
+        hsla(182deg, 100%, 94%, 0.4) 61%,
+        hsla(202deg, 100%, 94%, 0.4) 74%,
+        hsla(300deg, 100%, 94%, 0.4) 100%
+      );
+
+      ${makeResponsive({ to: "laptop" })} {
+        height: 100dvh;
+        width: 100dvw;
+        overflow: hidden;
+        grid-template-rows: auto 1fr auto;
+        grid-template-areas:
+          "head"
+          "main"
+          "nav";
+      }
+
+      ${makeResponsive({ from: "laptop" })} {
+        height: 100vh;
+        grid-template-rows: auto 1fr;
+        grid-template-columns: auto 1fr;
+        grid-template-areas:
+          "nav head"
+          "nav main";
+      }
+    }
+  }
+
+  grid-area: head;
+  width: inherit;
+
+  ${makeResponsive({ to: "laptop" })} {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    justify-items: center;
+    border-bottom: 0;
+
+    ul,
+    li {
+      height: ${makeCustom("header--height-desktop")};
+
+      .nccl-logo {
+        height: 50%;
+      }
+    }
+  }
+
+  ${makeResponsive({ from: "laptop" })} {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: flex-end;
+  }
+`;
+
+const stylesMain = css`
+  grid-area: main;
+  height: 100%;
+  overflow: hidden;
+  width: inherit;
+
+  ${makeResponsive({ to: "laptop" })} {
+    overflow: auto;
+  }
+
+  ${makeResponsive({ from: "laptop" })} {
+    width: 100%;
+  }
+`;
+
+const stylesNav = css`
+  grid-area: nav;
+  position: sticky;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.9);
+
+  ${makeResponsive({ to: "laptop" })} {
+    height: ${makeRem(90)};
+    width: 100%;
+    justify-self: center;
+  }
+
+  ${makeResponsive({ from: "laptop" })} {
+    top: 0;
+    height: 100vh;
+    box-shadow:
+      6px 0px 5px ${makeColor("neutral-light-50", { opacity: 0.7 })},
+      7px 0px 19px 8px ${makeColor("neutral-light-50", { opacity: 0.3 })};
+  }
+`;
 
 export async function loader(args: Route.LoaderArgs) {
   const { session } = await ensureSession(args);
@@ -17,86 +137,142 @@ export async function loader(args: Route.LoaderArgs) {
   return { session, currentUser };
 }
 
-const styles = css`
-  width: 100vw;
-  display: grid;
+export default function AppRootLayout(args: Route.ComponentProps) {
+  const navigate = useNavigate();
 
-  ${makeResponsive({ to: "laptop" })} {
-    grid-template-rows: 1fr auto;
-    grid-template-areas:
-      "head"
-      "main"
-      "nav";
-  }
-
-  ${makeResponsive({ from: "laptop" })} {
-    grid-template-rows: auto 1fr;
-    grid-template-columns: auto 1fr;
-    grid-template-areas:
-      "nav head"
-      "nav main";
-    height: 100vh;
-  }
-
-  .layout-head {
-    grid-area: head;
-    position: sticky;
-    top: 0;
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(10px);
-
-    header {
-      justify-content: flex-end;
-    }
-  }
-
-  .layout-main {
-    grid-area: main;
-    height: 100%;
-    overflow: hidden;
-
-    ${makeResponsive({ to: "laptop" })} {
-      padding-bottom: ${makeCustom("navbar--height-mobile")};
-    }
-  }
-
-  .layout-nav {
-    grid-area: nav;
-    position: sticky;
-    z-index: 10;
-    background: rgba(255, 255, 255, 0.9);
-
-    ${makeResponsive({ to: "laptop" })} {
-      position: sticky;
-      bottom: 0;
-    }
-
-    ${makeResponsive({ from: "laptop" })} {
-      top: 0;
-      height: 100vh;
-      box-shadow:
-        6px 0px 5px ${makeColor("neutral-light-50", { opacity: 0.7 })},
-        7px 0px 19px 8px ${makeColor("neutral-light-50", { opacity: 0.3 })};
-    }
-  }
-`;
-
-export default function AppRootLayout(_args: Route.ComponentProps) {
-  // const { firstName, lastName, email } = args.loaderData.currentUser;
-
-  // const fullName = `${firstName} ${lastName}`;
+  const matchesLength = args.matches.length;
+  const lastMatch = args.matches[matchesLength - 1];
+  const pathname = lastMatch ? lastMatch.pathname : "/";
 
   return (
-    <div className={classes(styles, backgroundGradient)}>
-      <div className="layout-head">
-        <RootHeader />
-      </div>
-      <div className="layout-main">
+    <>
+      <Header className={stylesHead}>
+        <HeaderActions className={CLASSES.mobileOnly}>
+          <HeaderActionsItem>
+            {pathname === "/" ? (
+              <img
+                alt="nccl-logo"
+                className="nccl-logo"
+                src="/images/ncc-logo-shell-only-500x500-transparent.png"
+              />
+            ) : (
+              <Button
+                onClick={() => navigate(-1)}
+                dxIcon="arrow-left-01-stroke-standard"
+                dxVariant="icon"
+                dxSize="lg"
+                dxColor="neutral-dark-1200"
+              />
+            )}
+          </HeaderActionsItem>
+        </HeaderActions>
+        <HeaderActions className={CLASSES.mobileOnly}>
+          <HeaderActionsItem>
+            {pathname !== "/" && (
+              <Typography dxVariant="heading5" dxNode="h1">
+                {getMobileTitle(args.matches)}
+              </Typography>
+            )}
+          </HeaderActionsItem>
+        </HeaderActions>
+        <HeaderActions>
+          <HeaderActionsItem>
+            <AppRootHeaderUser />
+          </HeaderActionsItem>
+        </HeaderActions>
+      </Header>
+      <main className={stylesMain}>
         <Outlet />
-      </div>
-      <div className="layout-nav">
-        <RootNavbar />
-      </div>
-    </div>
+      </main>
+      <Navbar className={stylesNav}>
+        <NavbarGroup>
+          <NavbarLogo
+            dxSrc="/images/ncc-logo-shell-only-500x500-transparent.png"
+            dxAlt="nccl-logo"
+          />
+          <RootNavbarItem to={href("/")}>
+            <NavbarItemIcon
+              dxBaseIcon="home-06-stroke-standard"
+              dxActiveIcon="home-06-solid-standard"
+            />
+            <NavbarItemText>Home</NavbarItemText>
+          </RootNavbarItem>
+          <RootNavbarItem to={href("/resources/*", { "*": "" })}>
+            <NavbarItemIcon
+              dxBaseIcon="folder-02-stroke-standard"
+              dxActiveIcon="folder-02-solid-standard"
+            />
+            <NavbarItemText>Resources</NavbarItemText>
+          </RootNavbarItem>
+          <RootNavbarItem to={href("/students")}>
+            <NavbarItemIcon
+              dxBaseIcon="students-stroke-standard"
+              dxActiveIcon="students-solid-standard"
+            />
+            <NavbarItemText>Students</NavbarItemText>
+          </RootNavbarItem>
+          <RootNavbarItem to={href("/calendar")}>
+            <NavbarItemIcon
+              dxBaseIcon="calendar-03-stroke-standard"
+              dxActiveIcon="calendar-03-solid-standard"
+            />
+            <NavbarItemText>Calendar</NavbarItemText>
+          </RootNavbarItem>
+          <RootNavbarItem to={href("/more")}>
+            <NavbarItemIcon
+              dxBaseIcon="more-01-stroke-standard"
+              dxActiveIcon="more-01-solid-standard"
+            />
+            <NavbarItemText>More</NavbarItemText>
+          </RootNavbarItem>
+          <Restrict role="ADMIN">
+            <RootNavbarItem to="/admin" className={CLASSES.desktopOnly}>
+              <NavbarItemIcon
+                dxBaseIcon="tools-stroke-standard"
+                dxActiveIcon="tools-solid-standard"
+              />
+              <NavbarItemText>Admin</NavbarItemText>
+            </RootNavbarItem>
+          </Restrict>
+        </NavbarGroup>
+        <NavbarGroup className={CLASSES.desktopOnly}>
+          <NavbarItem>
+            <NavbarItemIcon
+              dxBaseIcon="help-circle-stroke-standard"
+              dxActiveIcon="help-circle-stroke-standard"
+            />
+            <NavbarItemText>Help</NavbarItemText>
+          </NavbarItem>
+          <AuthSignOutButton>
+            <NavbarItem>
+              <NavbarItemIcon
+                dxBaseIcon="logout-01-stroke-standard"
+                dxActiveIcon="logout-01-stroke-standard"
+              />
+              <NavbarItemText>Logout</NavbarItemText>
+            </NavbarItem>
+          </AuthSignOutButton>
+        </NavbarGroup>
+      </Navbar>
+    </>
+  );
+}
+
+function RootNavbarItem({
+  children,
+  className,
+  ...restProps
+}: Omit<NavLinkProps, "className"> & {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <li className={className}>
+      <NavLink {...restProps}>
+        {({ isActive }) => (
+          <NavbarItem dxIsActive={isActive}>{children}</NavbarItem>
+        )}
+      </NavLink>
+    </li>
   );
 }

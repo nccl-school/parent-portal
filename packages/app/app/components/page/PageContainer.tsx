@@ -12,14 +12,21 @@ export type PageContainerProps = PageContainerPropsNative &
 
 const styles = css`
   &.scrollable {
-    ${makeResponsive({ from: "tablet" })} {
+    ${makeResponsive({ to: "laptop" })} {
+    }
+
+    ${makeResponsive({ from: "laptop" })} {
       height: 100%;
       overflow: auto;
     }
   }
 
   &.static {
-    ${makeResponsive({ from: "tablet" })} {
+    ${makeResponsive({ to: "laptop" })} {
+      width: 100%;
+    }
+
+    ${makeResponsive({ from: "laptop" })} {
       height: 100%;
       overflow: hidden;
     }

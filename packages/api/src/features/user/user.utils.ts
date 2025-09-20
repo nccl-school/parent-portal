@@ -1,10 +1,15 @@
 import { z } from "zod";
+import { CropSchema } from "holycrop/server";
 
-import { zDateStringSchema } from "../../utils/util.schema.js";
+import { zDateStringSchema, zStringOptional } from "../../utils/util.schema.js";
 import { RoleSchema, RolesSchema } from "../role/role.utils.js";
 
 export const UserStatusSchema = z.literal(["INVITED", "ACTIVE", "DISABLED"]);
 export type UserStatus = z.infer<typeof UserStatusSchema>;
+
+export const UserIDParamsSchema = z.object({
+  id: z.string(),
+});
 
 export const UserSchema = z.object({
   id: z.string(),
@@ -12,6 +17,7 @@ export const UserSchema = z.object({
   name: z.string(),
   firstName: z.string(),
   lastName: z.string(),
+  bio: z.string().nullable(),
   emailVerified: z.boolean(),
   phone: z.string().nullable(),
   imageUrl: z.string().nullable(),
@@ -45,7 +51,7 @@ export type GetUserListResponse = z.infer<typeof GetUserListResponseSchema>;
 export const GetUserParamsSchema = UserSchema.pick({ id: true });
 export const GetUserResponseSchema = z.object({
   ...UserSchema.shape,
-  roleId: RolesSchema,
+  role: RoleSchema,
 });
 export type GetUserResponse = z.infer<typeof GetUserResponseSchema>;
 
@@ -57,9 +63,6 @@ export const CreateUserRequestSchema = UserSchema.pick({
 }).extend({ role: RolesSchema });
 
 // Update a user role
-export const UpdateUserRoleParamsSchema = z.object({
-  id: z.string(),
-});
 export const UpdateUserRoleRequestSchema = z.object({
   role: RolesSchema,
 });
@@ -67,3 +70,29 @@ export const UpdateUserRoleResponseSchema = UserWithRoleSchema;
 export type UpdateUserRoleResponse = z.infer<
   typeof UpdateUserRoleResponseSchema
 >;
+
+// Update a user's profile a user
+export const UpdateMyProfileRequestSchema = UserSchema.pick({
+  firstName: true,
+  lastName: true,
+  imageUrl: true,
+  phone: true,
+  bio: true,
+}).extend({
+  bio: zStringOptional(),
+  imageUrl: zStringOptional(),
+  phone: zStringOptional(),
+});
+export type UpdateMyProfileRequest = z.infer<
+  typeof UpdateMyProfileRequestSchema
+>;
+export const UpdateMyProfileResponseSchema = UserSchema;
+export type UpdateMyProfileResponse = z.infer<
+  typeof UpdateMyProfileResponseSchema
+>;
+
+// Update a user's avatar
+export const UpdateAvatarRequestSchema = CropSchema;
+export type UpdateAvatarRequest = z.infer<typeof UpdateAvatarRequestSchema>;
+export const UpdateAvatarResponseSchema = UserSchema;
+export type UpdateAvatarResponse = z.infer<typeof UpdateAvatarResponseSchema>;

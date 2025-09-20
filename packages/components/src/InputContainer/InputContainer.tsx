@@ -198,6 +198,7 @@ export const InputContainer = forwardRef<HTMLDivElement, InputContainerProps>(
             [DXAdornmentStart]
           )}
 
+          {children}
           {useMemo(
             () =>
               DXAdornmentEnd && (
@@ -207,7 +208,6 @@ export const InputContainer = forwardRef<HTMLDivElement, InputContainerProps>(
               ),
             [DXAdornmentEnd]
           )}
-          {children}
         </div>
         {dxError && <div className="error">{dxError}</div>}
       </div>

@@ -98,11 +98,15 @@ export class ModalEngine<S extends ModalState = ModalState>
     const dialog = this._getDialog();
 
     // add the class close to the dialog to add any closing animations
-    dialog.dataset.close = "true";
+    dialog.classList.add("close");
 
     // get the animations on the entire dialog and wait until they complete
-    const animations = dialog.getAnimations({ subtree: true });
-    await Promise.allSettled(animations.map((animation) => animation.finished));
+    const animations = dialog
+      .getAnimations()
+      .filter((animation) => animation instanceof CSSAnimation)
+      .map((animation) => animation.finished);
+
+    await Promise.all(animations);
 
     // close the dialog
     this._closeDialog();

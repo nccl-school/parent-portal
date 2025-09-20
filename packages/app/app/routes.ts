@@ -17,13 +17,9 @@ export default [
       route("resources/*", "./features/resources/Resources.route.tsx"),
     ]),
     // - /directory
-    route("directory", "./features/directory/Directory.route.tsx", [
-      // - /directory
-      route("", "./features/directory-all/DirectoryAll.route.tsx"),
-      route(
-        "students",
-        "./features/directory-students/DirectoryStudents.route.tsx"
-      ),
+    ...prefix("directory", [
+      index("./features/directory/Directory.route.tsx"),
+      route(":id", "./features/directory-detail/DirectoryDetail.route.tsx"),
     ]),
     // - /calendar
     layout("./features/calendar/Calendar.layout.tsx", [
@@ -32,18 +28,36 @@ export default [
         route("by-day", "./features/calendar-by-day/CalendarByDay.route.tsx"),
       ]),
     ]),
+    // - /students
+    route("students", "./features/students/Students.route.tsx"),
     // - /more
     layout("./features/more/More.layout.tsx", [
       route("more", "./features/more/More.route.tsx"),
     ]),
+    route("committees", "./features/committees/Committees.route.tsx"),
+    route("volunteer", "./features/volunteer/Volunteer.route.tsx"),
+    route("faqs", "./features/faqs/FAQ.route.tsx"),
     // - /account
-    route("account", "./features/account/Account.route.tsx", [
-      route("", "./features/account-general/AccountGeneral.route.tsx"),
-      route(
-        "security",
-        "./features/account-security/AccountSecurity.route.tsx"
-      ),
+    layout("./features/account/Account.layout.tsx", [
+      ...prefix("account", [
+        index("./features/account/Account.index.tsx"),
+        layout("./features/account/AccountPages.layout.tsx", [
+          route(
+            "profile",
+            "./features/account-profile/AccountProfile.route.tsx"
+          ),
+          route(
+            "security",
+            "./features/account-security/AccountSecurity.route.tsx"
+          ),
+          route(
+            "notifications",
+            "./features/account-notifications/AccountNotifications.route.tsx"
+          ),
+        ]),
+      ]),
     ]),
+
     route("admin", "./features/admin/Admin.route.tsx", [
       index("./features/admin-users/AdminUsers.route.tsx"),
       route("resources", "./features/admin-resources/AdminResources.route.tsx"),

@@ -12,7 +12,8 @@ export type CustomTokens =
   | "page--gutter-mobile"
   | "table--cell-padding"
   | "table--body-cell-padding-v"
-  | "modal--gutters"
+  | "modal--gutters-desktop"
+  | "modal--gutters-mobile"
   | "container--max-width"
   | "admin--tab-height-desktop";
 export type MakeCustom = (tokenName: CustomTokens) => string | number;

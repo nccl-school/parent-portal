@@ -19,7 +19,7 @@ await build({
   format: "esm",
   plugins: [
     nodeExternalsPlugin({
-      allowList: ["@nccl/env", "@nccl/emails"],
+      allowList: ["@nccl/env", "@nccl/emails", "holycrop"],
     }),
   ],
 });

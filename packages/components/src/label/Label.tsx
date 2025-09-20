@@ -23,14 +23,15 @@ export type LabelPropsCustom = {
 export type LabelProps = LabelPropsNative & LabelPropsCustom;
 
 const styles = css`
-  padding: 0 ${makeRem(8)};
+  padding: 0 ${makeRem(4)};
   display: inline-flex;
   justify-content: center;
   align-items: center;
   height: ${makeRem(20)};
   border-width: 0.5px;
   border-style: solid;
-  border-radius: ${makeRem(12)};
+  border-radius: ${makeRem(4)};
+  text-transform: uppercase;
 
   &.primary {
     border-color: ${makeColor("primary-800")};

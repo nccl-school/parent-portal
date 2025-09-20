@@ -24,16 +24,16 @@
   },
   "homepage": "https://github.com/nccl-school/parent-portal#readme",
   "devDependencies": {
-    "@gfdigital/tsconfig": "^0.3.1",
-    "@react-email/preview-server": "4.2.8",
-    "dotenv": "17.2.1",
+    "@gfdigital/tsconfig": "0.3.1",
+    "@react-email/preview-server": "4.2.11",
+    "dotenv": "17.2.2",
     "dotenv-cli": "10.0.0",
-    "react-email": "4.2.8",
-    "typescript": "^5.9.2"
+    "react-email": "4.2.11",
+    "typescript": "5.9.2"
   },
   "dependencies": {
     "@nccl/theme": "0.0.1",
-    "@react-email/components": "0.5.1",
+    "@react-email/components": "0.5.3",
     "react": "19.1.1",
     "react-dom": "19.1.1"
   }

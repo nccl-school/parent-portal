@@ -1,7 +1,5 @@
 import type { Context } from "hono";
-import { Storage } from "@google-cloud/storage";
 import type z from "zod";
-import { ENV_RUNTIME } from "@nccl/env";
 
 import type { CreateResourceOwnershipLevel } from "./resource.schema.js";
 
@@ -9,12 +7,7 @@ import type { Resource as DBResource } from "../../_generated/prisma/client.js";
 import { ErrorSet } from "../../utils/util.errors.js";
 import { exhaustiveMatchGuard } from "../../utils/util.exhaustiveMatchGuard.js";
 import { slugify } from "../../utils/util.general.js";
-
-export function getBucket() {
-  const storage = new Storage(); // uses local credentials
-  const bucket = storage.bucket(ENV_RUNTIME.getOne("GCP_CLOUD_STORAGE_BUCKET"));
-  return bucket;
-}
+import { createBucketPath } from "../../utils/util.bucket.js";
 
 export async function getResourceById<C extends Context>(
   id: string,
@@ -178,19 +171,30 @@ export function createFileStoragePath<
     );
   }
   switch (data.owner) {
-    case "currentUser": {
+    case "currentUser":
+    case "user": {
       const currentUser = c.get("currentUser");
-      return `user_${currentUser.id}/${resource.id}/${file.name}`;
+      return createBucketPath({
+        owner: "user",
+        userId: data.owner === "currentUser" ? currentUser.id : data.userId,
+        segments: [resource.id, file.name],
+      });
     }
 
-    case "user":
-      return `user_${data.userId}/${resource.id}/${file.name}`;
+    case "org": {
+      return createBucketPath({
+        owner: "org",
+        orgId: data.orgId,
+        segments: [resource.id, file.name],
+      });
+    }
 
-    case "org":
-      return `org_${data.orgId}/${resource.id}/${file.name}`;
-
-    case "school":
-      return `school/${resource.id}/${file.name}`;
+    case "school": {
+      return createBucketPath({
+        owner: "school",
+        segments: [resource.id, file.name],
+      });
+    }
 
     default:
       return exhaustiveMatchGuard(data);

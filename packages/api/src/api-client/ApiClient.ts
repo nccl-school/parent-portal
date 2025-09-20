@@ -122,19 +122,22 @@ export class ApiClient {
     path: string;
     method: "POST" | "PUT" | "POST" | "GET" | "PATCH";
     params?: [schema: P, data: z.infer<P>];
-    body?: [schema: B, data: z.infer<B>];
+    body?: [schema: B, data: z.infer<B> | FormData];
     options?: {
-      contentType?: "application/json";
+      contentType?: "application/json" | "multipart/form-data";
       headers?: Headers;
     };
   }): Promise<Response> {
     // Assemble the request
-    const headers = this.#requestHeaders;
+    const headers = new Headers(this.#requestHeaders);
+
+    // only set Content-Type if explicitly passed
     if (options?.contentType) {
-      headers.set("content-type", options.contentType);
+      headers.set("Content-Type", options.contentType);
     }
+
     if (options?.headers) {
-      for (const [headerKey, headerValue] of headers) {
+      for (const [headerKey, headerValue] of options.headers) {
         headers.set(headerKey, headerValue);
       }
     }
@@ -148,12 +151,26 @@ export class ApiClient {
       method,
       headers,
     };
+
     if (body) {
       const [bodySchema, bodyRaw] = body;
-      const parsedBody = this.#validateSchema(bodySchema, bodyRaw, {
-        message: "Invalid request body",
-      });
-      reqInit.body = JSON.stringify(parsedBody);
+
+      // Validate an set formData
+      if (bodyRaw instanceof FormData) {
+        const formObj = Object.fromEntries(bodyRaw.entries());
+        this.#validateSchema(bodySchema, formObj, {
+          message: "Invalid request body",
+        });
+        reqInit.body = bodyRaw;
+      }
+
+      // Validate an set stringified json
+      if (headers.get("Content-Type") === "application/json") {
+        const parsedBody = this.#validateSchema(bodySchema, bodyRaw, {
+          message: "Invalid request body",
+        });
+        reqInit.body = JSON.stringify(parsedBody);
+      }
     }
 
     // Fetch the data
@@ -162,28 +179,38 @@ export class ApiClient {
     return res;
   }
 
-  protected async _mutateJSON<
+  protected async _mutate<
     T,
-    P extends ZodType = ZodType,
-    B extends ZodType = ZodType,
+    P extends z.ZodType = z.ZodType,
+    B extends z.ZodType = z.ZodType,
   >({
     path,
     params,
     body,
     method,
+    headers,
   }: {
     path: string;
     params?: [schema: P, data: z.infer<P>];
-    body?: [schema: B, data: z.infer<B>];
+    body?: [schema: B, data: z.infer<B> | FormData];
     method: "POST" | "PUT";
+    headers?: Headers;
   }): Promise<T> {
+    const [, bodyRaw] = body ?? [];
+    const isFormData = bodyRaw instanceof FormData;
+
     const res = await this._request({
       path,
       params,
       body,
       method,
-      options: { contentType: "application/json" },
+      options: {
+        // let fetch set the boundary if it's FormData
+        contentType: isFormData ? undefined : "application/json",
+        headers,
+      },
     });
+
     const json = (await res.json()) as T;
     if (!res.ok) throw deserializeError(json, method);
     return json;

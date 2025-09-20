@@ -28,10 +28,11 @@ export async function tryPrisma<T>(
   try {
     return await dbPromise;
   } catch (error) {
+    console.error(error);
+
     if (!(error instanceof PrismaClientKnownRequestError)) {
       throw new ErrorSet.serverError(messages.fallback);
     }
-    console.error(error);
 
     const key = prismaErrorCodeMap[error.code];
     const message = messages?.[key] ?? messages.fallback;

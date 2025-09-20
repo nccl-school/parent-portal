@@ -2,24 +2,31 @@ import { classes } from "@stratum-ui/core/utils";
 import type { JSX } from "react";
 import { forwardRef } from "react";
 import { makeFontWeight } from "@nccl/theme";
+import { css } from "@linaria/core";
 
 import { Typography } from "../typography/Typography.js";
 
 export type DescriptionListDataPropsNative = JSX.IntrinsicElements["dd"];
 export type DescriptionListDataProps = DescriptionListDataPropsNative;
 
+const styles = css`
+  overflow: hidden;
+`;
+
+const stylesType = css`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: ${makeFontWeight("body-semiBold")};
+`;
+
 export const DescriptionListData = forwardRef<
   HTMLDataListElement,
   DescriptionListDataProps
 >(function DescriptionListData({ children, className, ...restProps }, ref) {
   return (
-    <dd {...restProps} className={classes(className)} ref={ref}>
+    <dd {...restProps} className={classes(styles, className)} ref={ref}>
       {typeof children === "string" || typeof children === "number" ? (
-        <Typography
-          dxVariant="body3"
-          dxNode="div"
-          style={{ fontWeight: makeFontWeight("body-semiBold") }}
-        >
+        <Typography dxVariant="body3" dxNode="div" className={stylesType}>
           {children}
         </Typography>
       ) : (

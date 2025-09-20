@@ -30,7 +30,6 @@ import {
 import {
   getResourceById,
   getUserResourceAccess,
-  getBucket,
   createFileStoragePath,
   createResourceOwnership,
   parseGoogleDocsURL,
@@ -44,6 +43,7 @@ import { authorize } from "../../middleware/middleware.authorize.js";
 import type { Resource } from "../../_generated/prisma/client.js";
 import { tryPrisma } from "../../utils/util.prisma.js";
 import { exhaustiveMatchGuard } from "../../utils/util.exhaustiveMatchGuard.js";
+import { getBucket } from "../../utils/util.bucket.js";
 
 export const resource = new Hono();
 
@@ -374,9 +374,9 @@ resource.post("/file", validate("form", CreateFileRequestSchema), async (c) => {
   }
 
   const bucket = getBucket();
-  const buffer = await file.arrayBuffer();
+  const arrayBuffer = await file.arrayBuffer();
   const blob = bucket.file(resource.fileUrl);
-  await blob.save(Buffer.from(buffer), {
+  await blob.save(Buffer.from(arrayBuffer), {
     contentType: file.type,
   });
 
@@ -505,11 +505,7 @@ resource.get(
         const user = await db.user.findUnique({
           where: { id: rule.userId },
           include: {
-            role: {
-              select: {
-                id: true,
-              },
-            },
+            role: true,
           },
         });
         if (!user) {
@@ -517,16 +513,9 @@ resource.get(
             "The user who is granted access to this rule cannot be found. This should not have happened. Please contact support."
           );
         }
-        const {
-          role: { id: roleId },
-          ...restUser
-        } = user;
         return {
           ...rule,
-          user: {
-            ...restUser,
-            roleId,
-          },
+          user,
         };
       })
     );

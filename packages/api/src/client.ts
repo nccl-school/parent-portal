@@ -14,6 +14,7 @@ export * from "./features/suggestion/suggestion.utils.js";
 export * from "./features/user/user.utils.js";
 export * from "./features/resource/resource.schema.js";
 export * from "./features/account/account.schema.js";
+export * from "./features/auth/auth.schema.js";
 export * from "./features/directory/directory.schema.js";
 
 export {

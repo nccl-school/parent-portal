@@ -12,10 +12,7 @@ import type { AdminUserProfileModalState } from "./admin-user-profile.utils";
 export const AdminUserProfile = new ModalController<AdminUserProfileModalState>(
   {
     props: {
-      dxVariant: "drawer-rtl",
-      style: {
-        width: "45vh",
-      },
+      dxVariant: "drawer-right",
     },
     ModalContent,
   }

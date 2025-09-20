@@ -9,16 +9,18 @@ import {
 } from "@nccl/components";
 import { makeRem, makeResponsive } from "@nccl/theme";
 import { css } from "@linaria/core";
+import type { MouseEvent } from "react";
 
 import type { Route } from "./+types/Resources.route";
 import { ResourcesTitle } from "./ResourcesTitle";
 import { ResourceItem } from "./ResourceItem";
 
+import { CLASSES, createRouteHandle } from "../../utils/isomorphic";
 import { EmptyState } from "../../components/states/EmptyState";
 import { LoadingState } from "../../components/states/LoadingState";
 import { parseLoaderData, renderLoaderData } from "../../utils/client";
 import { getNCCLClient } from "../../utils/server";
-import { ResourcesCreateFolder } from "../resources-create-folder";
+import { ResourcesCreateFolder } from "../resources-create-folder/ResourcesCreateFolder";
 import { ResourcesAdd } from "../resources-add/ResourcesAdd";
 import { ResourceActionDelete } from "../resource-action-delete/ResourceActionDelete";
 import { ResourceActionEdit } from "../resource-action-edit/ResourceActionEdit";
@@ -38,14 +40,14 @@ export async function loader(args: Route.LoaderArgs) {
 }
 
 const stylesTable = css`
-  ${makeResponsive({ from: "tablet" })} {
+  ${makeResponsive({ from: "laptop" })} {
     padding: ${makeRem(32)};
     max-width: 100%;
   }
 `;
 
 const stylesEmpty = css`
-  ${makeResponsive({ from: "tablet" })} {
+  ${makeResponsive({ from: "laptop" })} {
     padding: ${makeRem(32)};
 
     & > * {
@@ -53,6 +55,10 @@ const stylesEmpty = css`
     }
   }
 `;
+
+export const handle = createRouteHandle({
+  mobileTitle: "Resources",
+});
 
 export default function ResourcesRoute({
   loaderData,
@@ -63,38 +69,44 @@ export default function ResourcesRoute({
     ok: (d) => (d.id === "__ROOT__" ? "All Files" : d.name),
   }) as string;
 
+  function launchAdd(e: MouseEvent<HTMLButtonElement>) {
+    const resource = parseLoaderData(loaderData);
+    if (!resource) return; // TODO: Throw a toast
+
+    ResourcesAdd.launch(e, {
+      currentPath: params["*"],
+      initParentResourceId: resource.id,
+    });
+  }
+
+  function launchCreateFolder(e: MouseEvent<HTMLButtonElement>) {
+    const resource = parseLoaderData(loaderData);
+    if (!resource) return; // TODO: Throw a toast
+
+    ResourcesCreateFolder.launch(e, {
+      currentPath: params["*"],
+      initParentResourceId: resource.id,
+    });
+  }
+
   return (
     <>
       <ResourcesTitle title={title}>
         <Button
+          className={CLASSES.desktopOnly}
           dxVariant="outlined"
           dxSize="md"
           dxStartIcon="resources-add-stroke-standard"
-          onClick={(e) => {
-            const resource = parseLoaderData(loaderData);
-            if (!resource) return; // TODO: Throw a toast
-
-            ResourcesAdd.launch(e, {
-              currentPath: params["*"],
-              initParentResourceId: resource.id,
-            });
-          }}
+          onClick={launchAdd}
         >
           Add
         </Button>
         <Button
+          className={CLASSES.desktopOnly}
           dxVariant="outlined"
           dxSize="md"
           dxStartIcon="folder-add-stroke-standard"
-          onClick={(e) => {
-            const resource = parseLoaderData(loaderData);
-            if (!resource) return; // TODO: Throw a toast
-
-            ResourcesCreateFolder.launch(e, {
-              currentPath: params["*"],
-              initParentResourceId: resource.id,
-            });
-          }}
+          onClick={launchCreateFolder}
         >
           Create folder
         </Button>
@@ -126,15 +138,19 @@ export default function ResourcesRoute({
           resource.childResources.length === 0 ? (
             <div className={stylesEmpty}>
               <EmptyState
-                imgSrc="/images/image-icon-black-hole.png"
-                imgSize={200}
+                imgSrc="/images/image-icon-island.png"
+                imgSize={100}
                 imgAlt="all-the-things"
                 title="There's nothing in here"
                 borderless
               >
-                <div style={{ width: "40ch", margin: "0 auto" }}>
-                  Doesn't look like there's anything in this folder... just you,
-                  the folder and the abyss.
+                <div
+                  style={{
+                    maxWidth: "40ch",
+                    margin: "0 auto",
+                  }}
+                >
+                  Enjoy this tranquil moment.
                 </div>
               </EmptyState>
             </div>
@@ -143,9 +159,16 @@ export default function ResourcesRoute({
               <TableHead>
                 <TableRow>
                   <TableHeadCol>Name</TableHeadCol>
-                  <TableHeadCol>Last Modified</TableHeadCol>
-                  <TableHeadCol>Size</TableHeadCol>
-                  <TableHeadCol>Who can access</TableHeadCol>
+                  <TableHeadCol className={CLASSES.desktopOnly}>
+                    Last Modified
+                  </TableHeadCol>
+                  <TableHeadCol className={CLASSES.desktopOnly}>
+                    Size
+                  </TableHeadCol>
+                  <TableHeadCol className={CLASSES.desktopOnly}>
+                    Who can access
+                  </TableHeadCol>
+                  <TableHeadCol className={CLASSES.mobileOnly}></TableHeadCol>
                 </TableRow>
               </TableHead>
               <TableBody>

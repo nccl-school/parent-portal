@@ -55,7 +55,7 @@ export class SuggestionClient extends ApiClient {
   async createSuggestion(
     suggestion: z.infer<typeof CreateSuggestionRequestSchema>
   ) {
-    return this._mutateJSON<CreateSuggestionResponse>({
+    return this._mutate<CreateSuggestionResponse>({
       method: "POST",
       path: "/",
       body: [CreateSuggestionRequestSchema, suggestion],
@@ -69,7 +69,7 @@ export class SuggestionClient extends ApiClient {
     id: string,
     suggestion: z.infer<typeof UpdateSuggestionRequestSchema>
   ) {
-    return this._mutateJSON<UpdateSuggestionResponse>({
+    return this._mutate<UpdateSuggestionResponse>({
       method: "PUT",
       path: "/:id",
       params: [SuggestionIDParamsSchema, { id }],
@@ -84,7 +84,7 @@ export class SuggestionClient extends ApiClient {
     suggestionId: string,
     body: z.infer<typeof CreateSuggestionVoteRequest>
   ) {
-    return this._mutateJSON<CreateSuggestionVoteResponse>({
+    return this._mutate<CreateSuggestionVoteResponse>({
       method: "POST",
       path: "/:id/vote",
       params: [SuggestionIDParamsSchema, { id: suggestionId }],
@@ -110,7 +110,7 @@ export class SuggestionClient extends ApiClient {
     suggestionId: string,
     comment: z.infer<typeof CreateSuggestionCommentsRequestSchema>
   ) {
-    return this._mutateJSON<CreateSuggestionCommentsResponse>({
+    return this._mutate<CreateSuggestionCommentsResponse>({
       method: "POST",
       path: "/:id/comment",
       params: [SuggestionIDParamsSchema, { id: suggestionId }],

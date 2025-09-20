@@ -1,8 +1,10 @@
 import {
+  AuthChangePasswordSchema,
   AuthForgotPasswordRequestSchema,
   AuthResetPasswordSchema,
   AuthSignInEmailRequestSchema,
   AuthSignInSocialRequestSchema,
+  type AuthChangePassword,
   type AuthForgotPasswordRequest,
   type AuthResetPassword,
   type AuthSignInEmailRequest,
@@ -51,7 +53,10 @@ export class AuthClient extends ApiClient {
     if (options?.inviteToken) {
       path = path.concat(`&inviteToken=${options.inviteToken}`);
     }
-    return this._mutateJSON<{ url: string; redirect: true }>({
+    if (options.callbackURL) {
+      path = path.concat(`&callbackURL=${options.callbackURL}`);
+    }
+    return this._mutate<{ url: string; redirect: true }>({
       path,
       method: "POST",
       body: [AuthSignInSocialRequestSchema, { provider: "google", ...options }],
@@ -90,6 +95,20 @@ export class AuthClient extends ApiClient {
   async getSession() {
     return this._get<ReturnType<typeof betterAuth.api.getSession>>({
       path: "/session",
+    });
+  }
+
+  /**
+   * Change your password when authenticated
+   */
+  async changePassword(body: AuthChangePassword) {
+    return this._request({
+      path: "/change-password",
+      method: "POST",
+      body: [AuthChangePasswordSchema, body],
+      options: {
+        contentType: "application/json",
+      },
     });
   }
 }
