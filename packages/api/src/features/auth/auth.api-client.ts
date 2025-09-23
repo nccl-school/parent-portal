@@ -93,13 +93,15 @@ export class AuthClient extends ApiClient {
   }
 
   async getSession() {
-    return this._get<ReturnType<typeof betterAuth.api.getSession>>({
+    return this._get<
+      Awaited<ReturnType<typeof betterAuth.api.getSession<false>>>
+    >({
       path: "/session",
     });
   }
 
   /**
-   * Change your password when authenticated
+   * Change your password when authenticated inside of the
    */
   async changePassword(body: AuthChangePassword) {
     return this._request({

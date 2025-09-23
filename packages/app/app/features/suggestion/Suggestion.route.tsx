@@ -1,13 +1,14 @@
-import { href, useFetcher } from "react-router";
-import { useCallback, useEffect, type ChangeEventHandler } from "react";
+import { useFetcher } from "react-router";
+import { useCallback, type ChangeEventHandler } from "react";
 import { match } from "ts-pattern";
 import { Callout } from "@nccl/components";
+
+import type { Route } from "./+types/Suggestion.route";
 
 import { useDebounce } from "../../hooks/hook.useDebounce";
 import { EmptyState } from "../../components/states/EmptyState";
 import { LoadingState } from "../../components/states/LoadingState";
 import { parseFetcherData } from "../../utils/client";
-import type { loader } from "../../api/api.suggestion.getManyOrCreateUnique";
 import {
   Suggestion,
   SuggestionSearch,
@@ -15,16 +16,25 @@ import {
   SuggestionAdd,
 } from "../suggestion";
 import { SuggestionViewDialog } from "../suggestion-view/SuggestionView";
+import { getNCCLClient } from "../../utils/server";
 
-export function HomeSuggestions() {
-  const { load, data, submit } = useFetcher<typeof loader>();
+export async function loader(args: Route.ActionArgs) {
+  const ncclClient = getNCCLClient(args);
+  try {
+    const url = new URL(args.request.url);
+    const search = url.searchParams.get("search") || undefined;
+    const roles = await ncclClient.suggestion.getSuggestionList({ search });
+    return roles;
+  } catch (error) {
+    return ncclClient.serializeError(error);
+  }
+}
+
+export function SuggestionRoute({ loaderData }: Route.ComponentProps) {
+  const { submit } = useFetcher<typeof loader>();
   const { debounce } = useDebounce();
 
-  useEffect(() => {
-    load(href("/api/suggestion"));
-  }, [load]);
-
-  const res = parseFetcherData(data);
+  const res = parseFetcherData(loaderData);
 
   const handleSearch = useCallback<ChangeEventHandler<HTMLInputElement>>(
     (e) => {

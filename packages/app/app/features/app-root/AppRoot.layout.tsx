@@ -168,11 +168,9 @@ export default function AppRootLayout(args: Route.ComponentProps) {
         </HeaderActions>
         <HeaderActions className={CLASSES.mobileOnly}>
           <HeaderActionsItem>
-            {pathname !== "/" && (
-              <Typography dxVariant="heading5" dxNode="h1">
-                {getMobileTitle(args.matches)}
-              </Typography>
-            )}
+            <Typography dxVariant="heading5" dxNode="h1">
+              {getMobileTitle(args.matches)}
+            </Typography>
           </HeaderActionsItem>
         </HeaderActions>
         <HeaderActions>
