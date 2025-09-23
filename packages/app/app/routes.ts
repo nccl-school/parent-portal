@@ -9,9 +9,7 @@ import {
 export default [
   layout("./features/app-root/AppRoot.layout.tsx", [
     // - /
-    layout("./features/home/Home.layout.tsx", [
-      index("./features/home/Home.index.tsx"),
-    ]),
+    index("./features/home/Home.index.tsx"),
     // - /resources
     layout("./features/resources/Resources.layout.tsx", [
       route("resources/*", "./features/resources/Resources.route.tsx"),
@@ -36,6 +34,7 @@ export default [
     ]),
     route("committees", "./features/committees/Committees.route.tsx"),
     route("volunteer", "./features/volunteer/Volunteer.route.tsx"),
+    route("suggestion", "./features/suggestion/Suggestion.route.tsx"),
     route("faqs", "./features/faqs/FAQ.route.tsx"),
     // - /account
     layout("./features/account/Account.layout.tsx", [
@@ -86,6 +85,7 @@ export default [
   ...prefix("api", [
     route("health", "./api/api.health.ts"),
     ...prefix("role", [route("/", "./api/api.role.getRoles.ts")]),
+    ...prefix("events", [route("/upcoming", "./api/api.events.upcoming.ts")]),
     ...prefix("resource", [
       route(":id", "./api/api.resource.ts"),
       route(":id/meta", "./api/api.resource.meta.ts"),

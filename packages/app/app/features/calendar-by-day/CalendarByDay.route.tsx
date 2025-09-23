@@ -1,10 +1,10 @@
 import { google } from "googleapis";
 
-const calendar = google.calendar("v3");
-
 import type { Route } from "./+types/CalendarByDay.route";
 
 import { CONSTANTS } from "../../utils/isomorphic";
+
+const calendar = google.calendar("v3");
 
 export async function loader(args: Route.LoaderArgs) {
   const ncclPublicEvents = await calendar.events.list({
