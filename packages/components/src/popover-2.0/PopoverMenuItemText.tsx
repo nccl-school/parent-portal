@@ -1,11 +1,13 @@
 import type { ReactNode } from "react";
 import { css } from "@linaria/core";
-import { makeRem } from "@nccl/theme";
+import { makeFontWeight } from "@nccl/theme";
 
 import { Typography } from "../typography/Typography.js";
 
 const styles = css`
-  padding-right: ${makeRem(24)};
+  white-space: nowrap;
+  text-decoration: none;
+  font-weight: ${makeFontWeight("body-semiBold")};
 `;
 
 export function PopoverMenuItemText({ children }: { children: ReactNode }) {

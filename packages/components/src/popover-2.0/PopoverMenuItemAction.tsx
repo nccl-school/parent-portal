@@ -7,7 +7,7 @@ export type PopoverMenuActionProps = JSX.IntrinsicElements["button"];
 
 const styles = css`
   ${makeReset("button")};
-  padding: 0 ${makeRem(8)};
+  padding: 0 ${makeRem(16)};
   height: ${makeRem(36)};
   display: flex;
   align-items: center;
