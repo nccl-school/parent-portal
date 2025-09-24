@@ -69,8 +69,8 @@ export function HomeSectionEvents() {
       </HomeSectionTitle>
       {renderLoaderData(data, {
         loading: <LoadingState>Loading next 3 days...</LoadingState>,
-        ok: (d) => {
-          if (d.items?.length === 0) {
+        ok: (items) => {
+          if (items.length === 0) {
             return (
               <MessageState>
                 No events for the next 3 days. Huzzah!
@@ -79,7 +79,7 @@ export function HomeSectionEvents() {
           }
           return (
             <ul className={listStyles}>
-              {d.items?.map((item) => (
+              {items.map((item) => (
                 <li key={item.id}>
                   <div className={itemStyles}>
                     <div className={titleStyles}>

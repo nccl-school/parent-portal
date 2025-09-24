@@ -36,11 +36,6 @@ export function createValidator<T extends ZodObject>(schema: T) {
   return (formData: FormData) => validateFormData(schema, formData);
 }
 
-export const CONSTANTS = {
-  GOOGLE_CALENDAR_ID_NCCL_PUBLIC:
-    "ja90kh5sm2d9tnmku5s59fs83s@group.calendar.google.com",
-};
-
 type RouteHandle<T> = { mobileTitle: string | ((args: T) => string) };
 export function createRouteHandle<T>({ mobileTitle }: RouteHandle<T>) {
   return {
