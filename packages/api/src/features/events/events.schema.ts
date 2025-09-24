@@ -1,3 +1,10 @@
-import type { calendar_v3 } from "googleapis";
+export type NCCLEvent = {
+  id: string;
+  startDate: string;
+  endDate: string;
+  allDayEvent: boolean;
+  title: string;
+  description: string | null;
+};
 
-export type GetUpcomingEventsResponse = calendar_v3.Schema$Events["items"];
+export type Get3DayOutlookResponse = Record<string, NCCLEvent[]>;

@@ -1,4 +1,4 @@
-import type { GetUpcomingEventsResponse } from "./events.schema.js";
+import type { Get3DayOutlookResponse } from "./events.schema.js";
 
 import {
   ApiClient,
@@ -15,7 +15,7 @@ export class EventsClient extends ApiClient {
    * 3 days
    */
   get3DayOutlook() {
-    return this._get<GetUpcomingEventsResponse>({
+    return this._get<Get3DayOutlookResponse>({
       path: "/3-day-outlook",
     });
   }

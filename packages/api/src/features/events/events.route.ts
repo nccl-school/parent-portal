@@ -3,7 +3,7 @@ import { startOfDay, addDays } from "date-fns";
 import { Hono } from "hono";
 import { toZonedTime, fromZonedTime } from "date-fns-tz";
 
-import { getGoogleClient } from "./events.utils.js";
+import { getGoogleClient, normalizeGoogleEvents } from "./events.utils.js";
 
 export const events = new Hono();
 
@@ -21,7 +21,7 @@ events.get("/3-day-outlook", async (c) => {
   const timeMin = fromZonedTime(today, timeZone).toISOString();
   const timeMax = fromZonedTime(todayPlus3, timeZone).toISOString();
 
-  const events = await calendar.events.list({
+  const googleEvents = await calendar.events.list({
     calendarId: CONSTANTS.GOOGLE_CALENDAR_ID_NCCL_PUBLIC,
     key: ENV_RUNTIME.getOne("GOOGLE_API_KEY"),
     orderBy: "startTime",
@@ -29,5 +29,13 @@ events.get("/3-day-outlook", async (c) => {
     timeMin,
     timeMax,
   });
-  return c.json(events.data.items);
+
+  const googleEventsNormalized = normalizeGoogleEvents(googleEvents.data);
+
+  const groupedEvents = Object.groupBy(
+    googleEventsNormalized,
+    (event) => event.startDate
+  );
+
+  return c.json(groupedEvents);
 });
