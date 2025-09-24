@@ -6,7 +6,7 @@ import { ENV_RUNTIME } from "@nccl/env";
 
 export async function getRole<T extends LoaderFunctionArgs>(loaderArgs: T) {
   const session = await ensureSession(loaderArgs);
-  return session.user.roleId;
+  return session.user.roleId as Roles;
 }
 
 export async function isAdmin<T extends LoaderFunctionArgs>(loaderArgs: T) {
