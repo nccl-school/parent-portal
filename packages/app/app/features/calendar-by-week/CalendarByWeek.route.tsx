@@ -4,6 +4,7 @@ import { Typography } from "@nccl/components";
 import { makeColor, makeRem } from "@nccl/theme";
 import { classes } from "@stratum-ui/core/utils";
 import { useMemo } from "react";
+import { CONSTANTS } from "@nccl/env";
 
 import { CalendarByWeekTools } from "./CalendarByWeekTools";
 import type { Route } from "./+types/CalendarByWeek.route";
@@ -18,7 +19,6 @@ import {
   CalendarHeaderCell,
   CalendarEvent,
 } from "../calendar";
-import { CONSTANTS } from "../../utils/isomorphic";
 
 const styles = css`
   display: grid;
