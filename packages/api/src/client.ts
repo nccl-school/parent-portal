@@ -8,6 +8,7 @@ import "./_generated/prisma/models.js";
 import { AccountClient } from "./features/account/account.api-client.js";
 import { DirectoryClient } from "./features/directory/directory.api-client.js";
 import { AuthClient } from "./features/auth/auth.api-client.js";
+import { EventsClient } from "./features/events/events.api-client.js";
 
 export * from "./features/role/role.utils.js";
 export * from "./features/suggestion/suggestion.utils.js";
@@ -33,6 +34,7 @@ export class NCCLClient {
   account: AccountClient;
   directory: DirectoryClient;
   auth: AuthClient;
+  events: EventsClient;
 
   constructor(options: ApiClientOptions) {
     this.serializeError = serializeError;
@@ -43,5 +45,6 @@ export class NCCLClient {
     this.account = new AccountClient(options);
     this.directory = new DirectoryClient(options);
     this.auth = new AuthClient(options);
+    this.events = new EventsClient(options);
   }
 }
