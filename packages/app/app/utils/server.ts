@@ -6,7 +6,7 @@ import { ENV_RUNTIME } from "@nccl/env";
 
 export async function getRole<T extends LoaderFunctionArgs>(loaderArgs: T) {
   const session = await ensureSession(loaderArgs);
-  return session.user.roleId as Roles;
+  return session.user.roleId;
 }
 
 export async function isAdmin<T extends LoaderFunctionArgs>(loaderArgs: T) {
@@ -53,7 +53,7 @@ export async function ensureSession<T extends LoaderFunctionArgs>(args: T) {
   const ncclClient = getNCCLClient(args);
 
   const session = await ncclClient.auth.getSession();
-  if (!session.session) {
+  if (!session?.session) {
     console.log("The user needs to sign in");
     const url = new URL(args.request.url);
     console.log("Requested URL", url.pathname);
