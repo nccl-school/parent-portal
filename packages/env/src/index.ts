@@ -187,3 +187,8 @@ export const ENV_RUNTIME = new Supermenv({
     },
   },
 });
+
+export const CONSTANTS = {
+  GOOGLE_CALENDAR_ID_NCCL_PUBLIC:
+    "ja90kh5sm2d9tnmku5s59fs83s@group.calendar.google.com",
+};

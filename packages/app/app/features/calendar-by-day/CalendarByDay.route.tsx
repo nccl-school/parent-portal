@@ -1,8 +1,7 @@
 import { google } from "googleapis";
+import { CONSTANTS } from "@nccl/env";
 
 import type { Route } from "./+types/CalendarByDay.route";
-
-import { CONSTANTS } from "../../utils/isomorphic";
 
 const calendar = google.calendar("v3");
 

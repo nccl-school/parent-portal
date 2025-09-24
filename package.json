@@ -45,7 +45,8 @@
     "build-tooling"
   ],
   "resolutions": {
-    "ts-jolt": "0.2.3"
+    "ts-jolt": "0.2.3",
+    "@types/node": "24.5.2"
   },
   "devDependencies": {
     "@gfdigital/eslint-config": "0.4.3",
@@ -53,7 +54,7 @@
     "@types/node": "24.5.2",
     "eslint": "9.36.0",
     "prettier": "3.6.2",
-    "turbo": "2.5.6",
+    "turbo": "2.5.8",
     "typescript": "5.9.2",
     "vitest": "3.2.4"
   },

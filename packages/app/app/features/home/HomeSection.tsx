@@ -9,9 +9,14 @@ const VARS = {
 
 const styles = css`
   grid-area: ${`var(${VARS.SECTION_NAME})`};
-  background: ${makeColor("white", { opacity: 0.6 })};
-  padding: ${makeRem(16)};
+  background: ${makeColor("white")};
+  padding-top: 0;
   border-radius: ${makeRem(8)};
+  padding-bottom: ${makeRem(16)};
+
+  & > div {
+    padding: 0 ${makeRem(16)};
+  }
 `;
 
 export type HomeSectionProps = JSX.IntrinsicElements["article"] & {

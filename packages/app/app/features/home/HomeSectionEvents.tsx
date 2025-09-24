@@ -1,12 +1,13 @@
 import { href, useFetcher } from "react-router";
-import { useEffect } from "react";
+import { Fragment, useEffect } from "react";
 import { css } from "@linaria/core";
 import { makeColor, makeRem, makeReset } from "@nccl/theme";
-import { Label, Typography } from "@nccl/components";
-import { format } from "date-fns";
+import { Button, Label, Typography } from "@nccl/components";
+import { format, isToday } from "date-fns";
 
 import { HomeSection } from "./HomeSection";
 import { HomeSectionTitle } from "./HomeSectionTitle";
+import { HomeSectionContent } from "./HomeSectionContent";
 import { HomeSectionEventsMenu } from "./HomeSectionEventsMenu";
 
 import { renderLoaderData } from "../../utils/client.js";
@@ -65,54 +66,74 @@ export function HomeSectionEvents() {
         dxTitleImg="/images/image-icon-event.png"
         dxTitleImgAlt="event"
       >
+        <Button
+          dxVariant="icon"
+          dxIcon="refresh-stroke-standard"
+          dxSize="md"
+          onClick={() => load(href("/api/events/upcoming"))}
+        />
         <HomeSectionEventsMenu />
       </HomeSectionTitle>
-      {renderLoaderData(data, {
-        loading: <LoadingState>Loading next 3 days...</LoadingState>,
-        ok: (d) => {
-          if (d.items?.length === 0) {
+      <HomeSectionContent>
+        {renderLoaderData(data, {
+          loading: <LoadingState>Loading next 3 days...</LoadingState>,
+          ok: (groupedEvents) => {
+            if (Object.keys(groupedEvents).length === 0) {
+              return (
+                <MessageState>
+                  No events for the next 3 days. Aww yeah!
+                </MessageState>
+              );
+            }
             return (
-              <MessageState>
-                No events for the next 3 days. Huzzah!
-              </MessageState>
+              <ul className={listStyles}>
+                {Object.entries(groupedEvents).map(([startDate, events]) => (
+                  <Fragment key={startDate}>
+                    <li>
+                      <Typography dxVariant="label" dxNode="div">
+                        {isToday(startDate)
+                          ? `Today (${format(startDate, "eeee")})`
+                          : format(startDate, "eeee")}
+                      </Typography>
+                    </li>
+                    {events.map((event) => (
+                      <li key={event.id}>
+                        <div className={itemStyles}>
+                          <div className={titleStyles}>
+                            <div className="bubble" />
+                            <div>
+                              <Typography dxVariant="label" dxNode="div">
+                                {event.allDayEvent ? (
+                                  <span>All day</span>
+                                ) : (
+                                  <>
+                                    <span>{format(event.startDate, "p")}</span>
+                                    &nbsp;-&nbsp;
+                                    <span>{format(event.endDate, "p")}</span>
+                                  </>
+                                )}
+                              </Typography>
+                            </div>
+                            <Label dxVariant="primary">all school</Label>
+                          </div>
+                          <Typography dxVariant="heading5" dxNode="div">
+                            {event.title}
+                          </Typography>
+                          {event.description && (
+                            <Typography dxVariant="body3" dxNode="div">
+                              {event.description}
+                            </Typography>
+                          )}
+                        </div>
+                      </li>
+                    ))}
+                  </Fragment>
+                ))}
+              </ul>
             );
-          }
-          return (
-            <ul className={listStyles}>
-              {d.items?.map((item) => (
-                <li key={item.id}>
-                  <div className={itemStyles}>
-                    <div className={titleStyles}>
-                      <div className="bubble" />
-                      <div>
-                        <Typography dxVariant="label" dxNode="div">
-                          {item.start?.date && <span>All day</span>}
-                          {item.start?.dateTime && (
-                            <span>{format(item.start.dateTime, "p")}</span>
-                          )}
-                          {item.end?.dateTime && (
-                            <>
-                              &nbsp;-&nbsp;
-                              <span>{format(item.end.dateTime, "p")}</span>
-                            </>
-                          )}
-                        </Typography>
-                      </div>
-                      <Label dxVariant="primary">all school</Label>
-                    </div>
-                    <Typography dxVariant="heading5" dxNode="div">
-                      {item.summary}
-                    </Typography>
-                    <Typography dxVariant="body3" dxNode="div">
-                      {item.description}
-                    </Typography>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          );
-        },
-      })}
+          },
+        })}
+      </HomeSectionContent>
     </HomeSection>
   );
 }

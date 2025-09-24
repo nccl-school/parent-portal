@@ -16,6 +16,7 @@ import { emailMiddleware } from "./middleware/middleware.email.js";
 import { account } from "./features/account/account.route.js";
 import { directory } from "./features/directory/directory.route.js";
 import { health } from "./features/health/health.route.js";
+import { events } from "./features/events/events.route.js";
 
 const app = new Hono();
 
@@ -48,6 +49,7 @@ app.route("/api/role", role);
 app.route("/api/user", user);
 app.route("/api/resource", resource);
 app.route("/api/directory", directory);
+app.route("/api/events", events);
 
 // Errors
 app.onError((error, c) => {

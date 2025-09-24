@@ -5,8 +5,7 @@
     "declaration": true,
     "declarationDir": "dist-client",
     "declarationMap": true,
-    "noEmit": false,
-    "noCheck": true
+    "noEmit": false
   },
   "include": ["./src/client.ts"]
 }

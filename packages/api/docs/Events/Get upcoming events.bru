@@ -1,0 +1,15 @@
+meta {
+  name: Get upcoming events
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{API_DOMAIN}}/events/upcoming
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

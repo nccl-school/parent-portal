@@ -33,11 +33,12 @@ const styles = css`
   ${makeResponsive({ from: "laptop" })} {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    grid-template-rows: auto auto;
+    grid-template-rows: auto auto auto;
     gap: ${makeRem(16)};
     grid-template-areas: ${`
       "${SECTION_FEED} ${SECTION_ACTIONS}"
       "${SECTION_FEED} ${SECTION_UPCOMING_EVENTS}"
+      "${SECTION_FEED} ."
       `};
 
     padding: 0 ${makeCustom("page--gutter-desktop")};
