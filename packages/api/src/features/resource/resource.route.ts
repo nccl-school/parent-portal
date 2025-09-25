@@ -83,13 +83,14 @@ resource.delete("/:id", validate("param", ParamsIDSchema), async (c) => {
       await tryPrisma(transaction, {
         fallback: "There was an error when trying to delete the resource",
       });
-      const json = await serialize(DeleteResourceResponseSchema, {
-        message: `Successfully deleted ${resource.name}.`,
-      });
-      return c.json(json);
+      break;
     }
 
-    case "EXTERNAL_DOC":
+    case "EXTERNAL_DOC": {
+      await db.resource.delete({ where: { id } });
+      break;
+    }
+
     case "LINK":
     case "FOLDER":
       throw new ErrorSet.methodNotAllowed(
@@ -99,6 +100,11 @@ resource.delete("/:id", validate("param", ParamsIDSchema), async (c) => {
     default:
       return exhaustiveMatchGuard(resource.type);
   }
+
+  const json = await serialize(DeleteResourceResponseSchema, {
+    message: `Successfully deleted ${resource.name}.`,
+  });
+  return c.json(json);
 });
 
 // GET / api/resource/path/* | Get a specific resource by its slug path
@@ -408,6 +414,7 @@ resource.post(
         externalId: googleDocParsed.externalId,
         mimeType: googleDocParsed.mimeType,
         ...createResourceOwnership(c, json),
+        fileUrl: googleDocParsed.baseDocUrl,
         parentResourceId,
       },
     });

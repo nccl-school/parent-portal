@@ -11,7 +11,7 @@ import {
 } from "@nccl/components";
 import { href, useFetcher } from "react-router";
 import { useEffect } from "react";
-import { match } from "ts-pattern";
+import { match, P } from "ts-pattern";
 
 import type { ResourceActionDeleteModalState } from "./resources-delete.utils";
 
@@ -55,7 +55,7 @@ export function ResourceActionDeleteContent() {
       <Form
         method="DELETE"
         action={match(resource)
-          .with({ type: "FILE" }, () =>
+          .with({ type: P.union("EXTERNAL_DOC", "FILE") }, () =>
             href("/api/resource/:id", { id: resource.id })
           )
           .otherwise(() => "NOT IMPLEMENTED")}
