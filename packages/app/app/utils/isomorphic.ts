@@ -58,7 +58,7 @@ export function getMobileTitle<T extends (UIMatch | undefined)[]>(matches: T) {
 export const CLASSES = {
   mobileOnly: css`
     ${makeResponsive({ from: "laptop" })} {
-      display: none;
+      display: none !important;
     }
   `,
   desktopOnly: css`
