@@ -1,4 +1,4 @@
-import type { Route } from "./+types/view-file.server";
+import type { Route } from "./+types/view-file.server-route";
 
 import { getNCCLClient } from "../../../utils/server";
 

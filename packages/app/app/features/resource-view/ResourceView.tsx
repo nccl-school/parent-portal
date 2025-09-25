@@ -13,7 +13,7 @@ import { css } from "@linaria/core";
 import { makeColor, makeRem } from "@nccl/theme";
 
 import type { ResourceViewState } from "./resource-view.utils";
-import type { loader } from "./+server/view-file.server";
+import type { loader } from "./+server/view-file.server-route";
 import { useResourceViewerControls } from "./resource-view.useResourceViewerControls";
 
 import { MessageState } from "../../components/states/MessageState";
