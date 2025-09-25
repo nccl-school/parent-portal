@@ -14,7 +14,7 @@ import type { ResourceType } from "@nccl/api/client";
 import { useState, type JSX } from "react";
 import { classes } from "@stratum-ui/core/utils";
 import { css } from "@linaria/core";
-import { makeRem, makeReset } from "@nccl/theme";
+import { makeRem, makeReset, makeResponsive } from "@nccl/theme";
 import { useRevalidator } from "react-router";
 
 import { ResourcesAddContentFile } from "./ResourcesAddContentFile";
@@ -40,6 +40,9 @@ const stylesBtn = css`
 
 const stylesBody = css`
   padding-bottom: 0;
+  ${makeResponsive({ from: "tablet" })} {
+    width: ${makeRem(700)};
+  }
 `;
 
 const stylesDiv = css`

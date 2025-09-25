@@ -238,7 +238,6 @@ export const ButtonContained = forwardRef<
     <button
       {...restProps}
       className={classes(
-        className,
         styles,
         dxSize,
         dxColor,
@@ -246,7 +245,8 @@ export const ButtonContained = forwardRef<
         fontSizeStyles,
         {
           "i start": !!dxStartIcon,
-        }
+        },
+        className
       )}
       ref={ref}
     >

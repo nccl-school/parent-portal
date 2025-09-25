@@ -10,11 +10,11 @@ import { classes, exhaustiveMatchGuard } from "@stratum-ui/core/utils";
 import { memo, useEffect, useRef, useState } from "react";
 import { match } from "ts-pattern";
 
-import { useSession } from "../../hooks/hook.useSession";
 import {
   getResourceIcon,
   getResourceIconColor,
 } from "../resources/resources.utils";
+import { useClientEnv } from "../../hooks/hook.useClientEnv";
 
 export type ResourcesAddedListItemFile = {
   type: "FILE";
@@ -83,14 +83,12 @@ export const ResourcesAddedListItemFile = memo(
       | { status: "ok"; data: CreateResourceResponse }
       | { status: "error"; error: ErrorResponse }
     >({ status: "loading" });
-    const session = useSession();
+    const clientEnv = useClientEnv();
 
     useEffect(() => {
       async function uploadWithProgress() {
         if (hasStartedRef.current) return;
         hasStartedRef.current = true;
-        const token = session?.token;
-        if (!token) throw new Error("Missing auth token");
 
         const xhr = new XMLHttpRequest();
 
@@ -134,11 +132,8 @@ export const ResourcesAddedListItemFile = memo(
           });
         };
 
-        xhr.open(
-          "POST",
-          `${import.meta.env.VITE_NCCL_API_URL}/api/resource/file`
-        );
-        xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+        xhr.open("POST", `${clientEnv?.NCCL_API_URL}/api/resource/file`);
+        xhr.withCredentials = true;
         const formData = new FormData();
 
         switch (props.type) {
@@ -160,13 +155,13 @@ export const ResourcesAddedListItemFile = memo(
 
       uploadWithProgress();
     }, [
+      clientEnv?.NCCL_API_URL,
       props.file,
       props.name,
       props.owner,
       props.parentResourceId,
       props.slug,
       props.type,
-      session?.token,
     ]);
 
     switch (props.type) {

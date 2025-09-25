@@ -63,7 +63,7 @@ export const CLASSES = {
   `,
   desktopOnly: css`
     ${makeResponsive({ to: "laptop" })} {
-      display: none;
+      display: none !important;
     }
   `,
 };
