@@ -3,6 +3,7 @@ import { Hono } from "hono";
 import { logger } from "hono/logger";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
 import { cors } from "hono/cors";
+import { ENV_RUNTIME } from "@nccl/env";
 
 import { prismaMiddleware } from "./middleware/middleware.prisma.js";
 import { sessionMiddleware } from "./middleware/middleware.session.js";
@@ -26,8 +27,8 @@ app.use(emailMiddleware);
 app.use(prismaMiddleware);
 app.use(
   cors({
-    origin: "*",
-    allowHeaders: ["Content-Type", "Authorization"],
+    origin: [ENV_RUNTIME.getOne("NCCL_APP_URL")],
+    allowHeaders: ["Content-Type", "Authorization", "Cookie"],
     allowMethods: ["*"],
     exposeHeaders: ["Content-Length"],
     maxAge: 600,

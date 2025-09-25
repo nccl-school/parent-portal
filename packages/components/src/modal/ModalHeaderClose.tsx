@@ -2,7 +2,7 @@ import { useModalContext } from "./modal.useModalContext.js";
 
 import { Button } from "../button/Button.js";
 
-export function ModalHeaderClose() {
+export function ModalHeaderClose({ onClose }: { onClose?: () => void }) {
   const { close: closeModal } = useModalContext();
   return (
     <Button
@@ -10,7 +10,10 @@ export function ModalHeaderClose() {
       dxIcon="cancel-01-solid-standard"
       dxVariant="icon"
       dxSize="md"
-      onClick={closeModal}
+      onClick={() => {
+        if (onClose) onClose();
+        closeModal();
+      }}
     />
   );
 }

@@ -18,6 +18,7 @@ import type { Route } from "./+types/root";
 export async function loader(args: Route.LoaderArgs) {
   return {
     ENV: {
+      NCCL_API_URL: args.context.env.NCCL_API_URL,
       SENTRY_ENABLED: args.context.env.SENTRY_ENABLED,
       SENTRY_DSN_APP: args.context.env.SENTRY_DSN_APP,
       NCCL_ENVIRONMENT: args.context.env.NCCL_ENVIRONMENT,

@@ -38,7 +38,7 @@ export async function getUserResourceAccess<C extends Context>(
   id: string,
   c: C
 ): Promise<[DBResource, ResourceAccessRules]> {
-  const currentUser = c.get("currentUser");
+  const currentUser = c.get("user");
   const db = c.get("db");
 
   const [resource, orgMemberships] = await Promise.all([

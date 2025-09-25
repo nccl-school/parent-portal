@@ -1,0 +1,15 @@
+meta {
+  name: View a resource
+  type: http
+  seq: 31
+}
+
+get {
+  url: {{API_DOMAIN}}/api/resource/view
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

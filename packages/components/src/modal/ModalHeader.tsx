@@ -6,7 +6,9 @@ import { makeColor, makeRem } from "@nccl/theme";
 
 import { ModalHeaderClose } from "./ModalHeaderClose.js";
 
-export type ModalHeaderPropsNative = JSX.IntrinsicElements["header"];
+export type ModalHeaderPropsNative = JSX.IntrinsicElements["header"] & {
+  onClose?: () => void;
+};
 export type ModalHeaderProps = ModalHeaderPropsNative;
 
 const styles = css`
@@ -21,11 +23,11 @@ const styles = css`
 `;
 
 export const ModalHeader = forwardRef<HTMLElement, ModalHeaderProps>(
-  function ModalHeader({ children, className, ...restProps }, ref) {
+  function ModalHeader({ children, className, onClose, ...restProps }, ref) {
     return (
       <header {...restProps} className={classes(className, styles)} ref={ref}>
         <div>{children}</div>
-        <ModalHeaderClose />
+        <ModalHeaderClose onClose={onClose} />
       </header>
     );
   }

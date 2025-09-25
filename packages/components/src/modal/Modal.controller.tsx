@@ -36,11 +36,11 @@ export class ModalController<
 
   launch<E extends HTMLElement>(event?: MouseEvent<E>): void;
   launch<E extends HTMLElement, T extends S = S>(
-    event: MouseEvent<E>,
+    event: MouseEvent<E> | undefined,
     state: T
   ): void;
   launch<E extends HTMLElement, T extends S = S>(
-    _event?: MouseEvent<E>,
+    _event?: MouseEvent<E> | undefined,
     state?: T
   ): void {
     this.setState(() =>
