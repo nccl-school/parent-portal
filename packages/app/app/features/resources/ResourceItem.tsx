@@ -1,8 +1,8 @@
 import type { GetResourceResponse } from "@nccl/api/client";
 import { Button, TableBodyCol, TableRow } from "@nccl/components";
-import { useRef } from "react";
+import { useCallback, useRef, type MouseEventHandler } from "react";
 import { css } from "@linaria/core";
-import { makeColor, makeRem } from "@nccl/theme";
+import { makeColor, makeRem, makeReset } from "@nccl/theme";
 import { classes } from "@stratum-ui/core/utils";
 
 import {
@@ -13,12 +13,20 @@ import { ResourcesTableCellName } from "./ResourcesTableCellName";
 
 import { dates } from "../../utils/client";
 import { CLASSES, placeholder } from "../../utils/isomorphic";
+import { useResourceViewerControls } from "../resource-view";
 
 const rowStyles = css`
   &:hover {
     td {
       background: ${makeColor("light-200")};
     }
+  }
+
+  button {
+    ${makeReset("button")};
+    height: 100%;
+    width: 100%;
+    text-align: left;
   }
 `;
 
@@ -43,7 +51,11 @@ export function ResourceItem({
   initialPath: string;
   resource: GetResourceResponse["childResources"][0];
 }) {
+  const { openViewer } = useResourceViewerControls();
   const controlRef = useRef<ResourceActionControllerRef | null>(null);
+  const handleClick = useCallback<MouseEventHandler<HTMLButtonElement>>(() => {
+    openViewer(resource);
+  }, [openViewer, resource]);
 
   return (
     <TableRow
@@ -57,7 +69,9 @@ export function ResourceItem({
       }}
     >
       <TableBodyCol>
-        <ResourcesTableCellName {...resource} />
+        <button onClick={handleClick}>
+          <ResourcesTableCellName {...resource} />
+        </button>
       </TableBodyCol>
       <TableBodyCol className={CLASSES.desktopOnly}>
         {dates.format(resource.updatedAt, "Relative")}

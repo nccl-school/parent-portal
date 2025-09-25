@@ -16,6 +16,7 @@ import {
   type UpdateResourceAccessRuleRequest,
   type UpdateResourceMetaRequest,
   CreateGoogleDocRequestSchema,
+  type ViewAResourceResponse,
 } from "./resource.schema.js";
 
 import {
@@ -172,6 +173,16 @@ export class ResourceClient extends ApiClient {
     return this._delete({
       path: "/access/:id",
       params: [ParamsIDSchema, { id: resourceAccessId }],
+    });
+  }
+
+  /**
+   * View a particular resource
+   */
+  public async viewResource(resourceId: string) {
+    return this._get<ViewAResourceResponse>({
+      path: "/view/:id",
+      params: [ParamsIDSchema, { id: resourceId }],
     });
   }
 }

@@ -26,6 +26,7 @@ import {
   UpdateResourceAccessRuleResponseSchema,
   DeleteResourceAccessRuleResponseSchema,
   CreateGoogleDocRequestSchema,
+  ViewAResourceResponseSchema,
 } from "./resource.schema.js";
 import {
   getResourceById,
@@ -453,6 +454,61 @@ resource.post(
     return c.json(json);
   }
 );
+
+resource.get("/view/:id", validate("param", ParamsIDSchema), async (c) => {
+  const db = c.get("db");
+  const param = c.req.valid("param");
+  const resource = await db.resource.findUnique({
+    where: {
+      id: param.id,
+    },
+  });
+
+  if (!resource) {
+    throw new ErrorSet.notFound("Cannot find the requested resource.");
+  }
+
+  if (resource.type === "FOLDER") {
+    throw new ErrorSet.badRequest("You cannot view a folder");
+  }
+
+  if (!resource.fileUrl) {
+    throw new ErrorSet.serverError(
+      "The requested resource was located but is missing a location."
+    );
+  }
+
+  switch (resource.type) {
+    case "EXTERNAL_DOC":
+    case "LINK": {
+      const publicUrl = resource.fileUrl;
+      const data = await serialize(ViewAResourceResponseSchema, {
+        ...resource,
+        publicUrl,
+      });
+      return c.json(data);
+    }
+
+    case "FILE": {
+      const bucket = getBucket();
+      const file = bucket.file(resource.fileUrl);
+      const [publicUrl] = await file.getSignedUrl({
+        version: "v4", // Use v4 (recommended)
+        action: "read", // Can also be "write" or "delete"
+        expires: Date.now() + 15 * 60 * 1000, // 5 minutes
+      });
+      const data = await serialize(ViewAResourceResponseSchema, {
+        ...resource,
+        publicUrl,
+      });
+      console.log("Signed URL:", data.publicUrl);
+      return c.json(data);
+    }
+
+    default:
+      return exhaustiveMatchGuard(resource.type);
+  }
+});
 
 // GET /api/resource/:id/access/school | Get all school access rules for a resource
 resource.get(

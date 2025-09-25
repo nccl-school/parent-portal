@@ -9,7 +9,7 @@ import {
 } from "@nccl/components";
 import { makeRem, makeResponsive } from "@nccl/theme";
 import { css } from "@linaria/core";
-import type { MouseEvent } from "react";
+import { useEffect, type MouseEvent } from "react";
 
 import type { Route } from "./+types/Resources.route";
 import { ResourcesTitle } from "./ResourcesTitle";
@@ -26,6 +26,7 @@ import { ResourceActionDelete } from "../resource-action-delete/ResourceActionDe
 import { ResourceActionEdit } from "../resource-action-edit/ResourceActionEdit";
 import { ResourceActionMove } from "../resource-action-move/ResourceActionMove";
 import { ResourceActionAccess } from "../resource-action-access/ResourceActionAccess";
+import { ResourceView, useResourceViewerControls } from "../resource-view";
 
 export async function loader(args: Route.LoaderArgs) {
   const { "*": slugPath } = args.params;
@@ -64,6 +65,8 @@ export default function ResourcesRoute({
   loaderData,
   params,
 }: Route.ComponentProps) {
+  const { resourcePreviewId } = useResourceViewerControls();
+
   const title = renderLoaderData(loaderData, {
     loading: "Loading...",
     ok: (d) => (d.id === "__ROOT__" ? "All Files" : d.name),
@@ -88,6 +91,12 @@ export default function ResourcesRoute({
       initParentResourceId: resource.id,
     });
   }
+
+  // launch the viewer
+  useEffect(() => {
+    if (!resourcePreviewId) return;
+    ResourceView.launch(undefined, { resourceId: resourcePreviewId });
+  }, [resourcePreviewId]);
 
   return (
     <>
@@ -125,6 +134,7 @@ export default function ResourcesRoute({
       <ResourceActionEdit.Component />
       <ResourceActionMove.Component />
       <ResourceActionAccess.Component />
+      <ResourceView.Component />
 
       {renderLoaderData(loaderData, {
         loading: (

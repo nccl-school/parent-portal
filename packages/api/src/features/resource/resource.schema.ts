@@ -288,3 +288,17 @@ export const DeleteResourceAccessRuleResponseSchema = zMessageSchema;
 export type DeleteResourceAccessRuleResponse = z.infer<
   typeof DeleteResourceAccessRuleResponseSchema
 >;
+
+// -- View a resource
+export const ViewAResourceResponseSchema = z.object({
+  ...ResourceSchema.pick({
+    id: true,
+    mimeType: true,
+    description: true,
+    name: true,
+    slug: true,
+    updatedAt: true,
+  }).shape,
+  publicUrl: z.string(),
+});
+export type ViewAResourceResponse = z.infer<typeof ViewAResourceResponseSchema>;
