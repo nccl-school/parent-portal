@@ -35,6 +35,7 @@ export function ResourceFolderPane() {
   const handleSelectFolder = useCallback<(path: string) => void>(
     (path) => {
       const routePath = normalizeFolderPath(path);
+      if (routePath === "") return goToRoute("/resources");
       goToRoute(href("/resources/*", { "*": routePath }));
     },
     [goToRoute]

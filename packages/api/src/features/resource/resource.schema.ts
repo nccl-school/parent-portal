@@ -298,6 +298,7 @@ export const ViewAResourceResponseSchema = z.object({
     name: true,
     slug: true,
     updatedAt: true,
+    fileUrl: true,
   }).shape,
   publicUrl: z.string(),
 });

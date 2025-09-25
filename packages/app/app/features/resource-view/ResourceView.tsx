@@ -16,6 +16,7 @@ import type { ResourceViewState } from "./resource-view.utils";
 import type { loader } from "./+server/view-file.server";
 import { useResourceViewerControls } from "./resource-view.useResourceViewerControls";
 
+import { MessageState } from "../../components/states/MessageState";
 import { dates, renderLoaderData } from "../../utils/client";
 import { LoadingState } from "../../components/states/LoadingState";
 
@@ -28,6 +29,7 @@ const styles = css`
   iframe {
     height: 100%;
     width: 100%;
+    border: none;
   }
 `;
 
@@ -66,14 +68,14 @@ export function ResourceViewModalContent() {
             ok: (d) => {
               switch (d.mimeType) {
                 case "application/pdf":
+                case "application/vnd.google-apps.document":
                   return <iframe title="viewer" src={d.publicUrl} />;
 
                 default:
                   return (
-                    <iframe
-                      title="viewer"
-                      src={`https://docs.google.com/viewer?url=${d.publicUrl}&embedded=true`}
-                    />
+                    <MessageState>
+                      {d.mimeType} is not currently supported
+                    </MessageState>
                   );
               }
             },
