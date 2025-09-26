@@ -12,12 +12,12 @@ import { href, useFetcher } from "react-router";
 import { useImmer } from "use-immer";
 import { useEffect } from "react";
 
-import { ResourcesAddedList } from "./ResourcesAddedList";
+import { ResourceAddedList } from "./ResourceAddedList";
 import {
-  ResourcesAddedListItemGoogleDoc,
-  type ResourcesAddedListItemGoogleDocProps,
-} from "./ResourcesAddedListItemGoogleDoc";
-import type { ResourcesAddModalState } from "./resources-add.utils";
+  ResourceAddedListItemGoogleDoc,
+  type ResourceAddedListItemGoogleDocProps,
+} from "./ResourceAddedListItemGoogleDoc";
+import type { ResourceAddModalState } from "./resources-add.utils";
 
 import { LoadingState } from "../../components/states/LoadingState";
 import { parseFetcherData } from "../../utils/client";
@@ -29,11 +29,11 @@ const styles = css`
   gap: ${makeRem(16)};
 `;
 
-export function ResourcesAddContentGoogleDoc() {
+export function ResourceAddContentGoogleDoc() {
   const {
     state: { initParentResourceId },
-  } = useModalContext<ResourcesAddModalState>();
-  const [docs, setDocs] = useImmer<ResourcesAddedListItemGoogleDocProps[]>([]);
+  } = useModalContext<ResourceAddModalState>();
+  const [docs, setDocs] = useImmer<ResourceAddedListItemGoogleDocProps[]>([]);
   const { Form, data, state } = useFetcher();
 
   const isLoading = state !== "idle";
@@ -98,17 +98,17 @@ export function ResourcesAddContentGoogleDoc() {
         </Form>
       </FormGroup>
       <FormGroup dxTitle="2. Manage added Google Docs">
-        <ResourcesAddedList>
+        <ResourceAddedList>
           {match(docs)
             .with([], () => <LoadingState>Nothing added yet</LoadingState>)
             .otherwise((d) =>
               d.map((doc) => (
                 <li key={doc.id}>
-                  <ResourcesAddedListItemGoogleDoc {...doc} />
+                  <ResourceAddedListItemGoogleDoc {...doc} />
                 </li>
               ))
             )}
-        </ResourcesAddedList>
+        </ResourceAddedList>
       </FormGroup>
     </>
   );

@@ -17,6 +17,7 @@ import {
   type UpdateResourceMetaRequest,
   CreateGoogleDocRequestSchema,
   type ViewAResourceResponse,
+  CreateFileRequestSchema,
 } from "./resource.schema.js";
 
 import {
@@ -83,6 +84,17 @@ export class ResourceClient extends ApiClient {
       method: "POST",
       path: "/google-doc",
       body: [CreateGoogleDocRequestSchema, googleDoc],
+    });
+  }
+
+  /**
+   * Upload a file
+   */
+  public async uploadFile(file: FormData) {
+    return this._mutate<CreateResourceResponse>({
+      method: "POST",
+      path: "/file",
+      body: [CreateFileRequestSchema, file],
     });
   }
 

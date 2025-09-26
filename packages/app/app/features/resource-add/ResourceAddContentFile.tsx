@@ -6,9 +6,9 @@ import { FormGroup, useModalContext } from "@nccl/components";
 import { useImmer } from "use-immer";
 import { match } from "ts-pattern";
 
-import type { ResourcesAddModalState } from "./resources-add.utils";
-import { ResourcesAddedList } from "./ResourcesAddedList";
-import { ResourcesAddedListItemFile } from "./ResourcesAddedListItemFile";
+import type { ResourceAddModalState } from "./resources-add.utils";
+import { ResourceAddedList } from "./ResourceAddedList";
+import { ResourceAddedListItemFile } from "./ResourceAddedListItemFile";
 
 import { LoadingState } from "../../components/states/LoadingState";
 import { EmptyState } from "../../components/states/EmptyState";
@@ -44,11 +44,11 @@ const styles = css`
   }
 `;
 
-export function ResourcesAddContentFile() {
+export function ResourceAddContentFile() {
   const {
     state: { initParentResourceId },
-  } = useModalContext<ResourcesAddModalState>();
-  const [files, setFiles] = useImmer<ResourcesAddedListItemFile[]>([]);
+  } = useModalContext<ResourceAddModalState>();
+  const [files, setFiles] = useImmer<ResourceAddedListItemFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
 
   const handleDrop = useCallback(
@@ -109,17 +109,17 @@ export function ResourcesAddContentFile() {
         </div>
       </FormGroup>
       <FormGroup dxTitle="2. Manage created resources">
-        <ResourcesAddedList>
+        <ResourceAddedList>
           {match(files)
             .with([], () => <LoadingState>Nothing added yet</LoadingState>)
             .otherwise((d) =>
               d.map((file, i) => (
                 <li key={`${file.file.name}_${i}`}>
-                  <ResourcesAddedListItemFile {...file} />
+                  <ResourceAddedListItemFile {...file} />
                 </li>
               ))
             )}
-        </ResourcesAddedList>
+        </ResourceAddedList>
       </FormGroup>
     </>
   );

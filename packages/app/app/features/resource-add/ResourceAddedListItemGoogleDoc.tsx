@@ -9,7 +9,7 @@ import {
   getResourceIconColor,
 } from "../resources/resources.utils";
 
-export type ResourcesAddedListItemGoogleDocProps = {
+export type ResourceAddedListItemGoogleDocProps = {
   name: string;
   id: string;
   slug: string;
@@ -68,9 +68,9 @@ const errStyles = css`
   }
 `;
 
-export const ResourcesAddedListItemGoogleDoc = memo(
-  function ResourcesAddedListItemGoogleDoc(
-    props: ResourcesAddedListItemGoogleDocProps
+export const ResourceAddedListItemGoogleDoc = memo(
+  function ResourceAddedListItemGoogleDoc(
+    props: ResourceAddedListItemGoogleDocProps
   ) {
     return (
       <div className={styles}>

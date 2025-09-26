@@ -17,8 +17,8 @@ import { css } from "@linaria/core";
 import { makeRem, makeReset, makeResponsive } from "@nccl/theme";
 import { useRevalidator } from "react-router";
 
-import { ResourcesAddContentFile } from "./ResourcesAddContentFile";
-import { ResourcesAddContentGoogleDoc } from "./ResourcesAddContentGoogleDoc";
+import { ResourceAddContentFile } from "./ResourceAddContentFile";
+import { ResourceAddContentGoogleDoc } from "./ResourceAddContentGoogleDoc";
 
 const stylesTab = css`
   width: 100%;
@@ -59,17 +59,17 @@ const tabs: {
     type: "FILE",
     display: "File",
     icon: "upload-01-stroke-standard",
-    Component: ResourcesAddContentFile,
+    Component: ResourceAddContentFile,
   },
   {
     type: "EXTERNAL_DOC",
     display: "Google Doc",
     icon: "google-solid-standard",
-    Component: ResourcesAddContentGoogleDoc,
+    Component: ResourceAddContentGoogleDoc,
   },
 ];
 
-export function ResourcesAddContent() {
+export function ResourceAddContent() {
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const TabContent = activeTab.Component;
   const { close: closeModal } = useModalContext();

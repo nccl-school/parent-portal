@@ -167,6 +167,7 @@ export function parseLoaderData<D>(loaderData: D) {
   }
 }
 
+export const renderActionData = renderLoaderData;
 export function renderLoaderData<D>(
   data: D,
   callbacks: {

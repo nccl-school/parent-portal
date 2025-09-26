@@ -9,6 +9,6 @@ const styles = css`
   gap: ${makeRem(16)};
 `;
 
-export function ResourcesAddedList({ children }: { children: ReactNode }) {
+export function ResourceAddedList({ children }: { children: ReactNode }) {
   return <ul className={styles}>{children}</ul>;
 }
