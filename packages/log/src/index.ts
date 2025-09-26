@@ -1,0 +1,219 @@
+// logger.ts
+export type LogLevel = "debug" | "info" | "warn" | "error";
+
+export interface LogEntry {
+  level: LogLevel;
+  message: string;
+  timestamp: number;
+  namespace?: string[];
+  context?: Record<string, unknown>;
+}
+
+export interface LoggerPlugin {
+  name: string;
+  init?(logger: Logger): void;
+  onLog?(entry: LogEntry): void;
+}
+
+export interface LoggerOptions {
+  level?: LogLevel;
+  plugins?: LoggerPlugin[];
+  namespace?: string[];
+  bufferSize?: number;
+}
+
+const LEVEL_PRIORITY: Record<LogLevel, number> = {
+  debug: 10,
+  info: 20,
+  warn: 30,
+  error: 40,
+};
+
+const COLORS = [
+  "#e6194b",
+  "#3cb44b",
+  "#ffe119",
+  "#4363d8",
+  "#f58231",
+  "#911eb4",
+  "#46f0f0",
+  "#f032e6",
+  "#bcf60c",
+  "#fabebe",
+  "#008080",
+  "#e6beff",
+  "#9a6324",
+  "#fffac8",
+  "#800000",
+  "#aaffc3",
+];
+
+function colorForNamespace(ns: string[]): string {
+  const key = ns.join(":");
+  let hash = 0;
+  for (let i = 0; i < key.length; i++) {
+    hash = (hash << 5) - hash + key.charCodeAt(i);
+    hash |= 0;
+  }
+  return COLORS[Math.abs(hash) % COLORS.length];
+}
+
+export class Logger {
+  #level: LogLevel;
+  #plugins: LoggerPlugin[] = [];
+  #namespace: string[];
+  #buffer: LogEntry[] = [];
+  #bufferSize: number;
+  #contextProviders: Array<() => Record<string, unknown>> = [];
+
+  constructor(options: LoggerOptions = {}) {
+    this.#level = options.level ?? "info";
+    this.#namespace = options.namespace ?? [];
+    this.#bufferSize = options.bufferSize ?? 500;
+
+    if (options.plugins) {
+      options.plugins.forEach((p) => this.use(p));
+    }
+
+    // Attach root logger to window for browser
+    if (typeof window !== "undefined" && this.#namespace.length === 0) {
+      window.__NCCL_LOGS__ = this;
+    }
+  }
+
+  setLevel(level: LogLevel) {
+    this.#level = level;
+  }
+
+  use(plugin: LoggerPlugin) {
+    this.#plugins.push(plugin);
+    plugin.init?.(this);
+  }
+
+  addContextProvider(fn: () => Record<string, unknown>) {
+    this.#contextProviders.push(fn);
+  }
+
+  #enrichContext(ctx?: Record<string, unknown>) {
+    const globalCtx = this.#contextProviders.reduce<Record<string, unknown>>(
+      (acc, fn) => Object.assign(acc, fn()),
+      {}
+    );
+    return { ...globalCtx, ...ctx };
+  }
+
+  feature(name: string): Logger {
+    const child = new Logger({
+      level: this.#level,
+      plugins: this.#plugins,
+      namespace: [...this.#namespace, name],
+      bufferSize: this.#bufferSize,
+    });
+
+    child.#contextProviders = [...this.#contextProviders];
+
+    if (typeof window !== "undefined") {
+      const root = window.__NCCL_LOGS__;
+      if (root && this.#namespace.length === 0) {
+        root[name] = child;
+      }
+    }
+
+    return child;
+  }
+
+  private shouldLog(level: LogLevel) {
+    return LEVEL_PRIORITY[level] >= LEVEL_PRIORITY[this.#level];
+  }
+
+  private store(entry: LogEntry) {
+    this.#buffer.push(entry);
+    if (this.#buffer.length > this.#bufferSize) {
+      this.#buffer.shift();
+    }
+  }
+
+  private emit(
+    level: LogLevel,
+    message: string,
+    context?: Record<string, unknown>
+  ) {
+    if (!this.shouldLog(level)) return;
+
+    const entry: LogEntry = {
+      level,
+      message,
+      timestamp: Date.now(),
+      namespace: this.#namespace,
+      context: this.#enrichContext(context),
+    };
+
+    this.store(entry);
+
+    // --- Client ---
+    if (typeof window !== "undefined") {
+      // Browser: colorful
+      const namespacePrefix = entry.namespace?.length
+        ? entry.namespace.join(":")
+        : "root";
+      const nsColor = colorForNamespace(entry.namespace ?? []);
+      const levelLabel = `[${entry.level}]`;
+      const fn = console[level] ?? console.log;
+      fn(
+        `%c[${namespacePrefix}]%c ${levelLabel} ${entry.message}`,
+        `color:${nsColor}; font-weight:bold`,
+        "color:inherit",
+        entry.context ?? {}
+      );
+      return;
+    }
+
+    // --- Server ---
+    const nsPrefix = entry.namespace?.length
+      ? entry.namespace.join(":")
+      : "root";
+    const ts = new Date(entry.timestamp).toISOString();
+
+    if (process.env.NODE_ENV === "development") {
+      // Pretty format
+      const fn = console[level] ?? console.log;
+      fn(
+        `${ts} [${nsPrefix}] [${entry.level}] ${entry.message}`,
+        entry.context ?? {}
+      );
+    } else {
+      // JSON for production
+      process.stdout.write(JSON.stringify(entry) + "\n");
+    }
+
+    this.#plugins.forEach((plugin) => plugin.onLog?.(entry));
+  }
+
+  // API
+  debug(msg: string, ctx?: Record<string, unknown>) {
+    this.emit("debug", msg, ctx);
+  }
+  info(msg: string, ctx?: Record<string, unknown>) {
+    this.emit("info", msg, ctx);
+  }
+  warn(msg: string, ctx?: Record<string, unknown>) {
+    this.emit("warn", msg, ctx);
+  }
+  error(msg: string, ctx?: Record<string, unknown>) {
+    this.emit("error", msg, ctx);
+  }
+
+  // Access log buffer
+  getLogs(): LogEntry[] {
+    return [...this.#buffer];
+  }
+  clearLogs() {
+    this.#buffer.length = 0;
+  }
+
+  // Example: send buffer to Sentry
+  flushToSentry(send: (logs: LogEntry[]) => void) {
+    send(this.getLogs());
+    this.clearLogs();
+  }
+}

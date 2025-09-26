@@ -26,7 +26,7 @@ import { ResourceActionDelete } from "../resource-action-delete/ResourceActionDe
 import { ResourceActionEdit } from "../resource-action-edit/ResourceActionEdit";
 import { ResourceActionMove } from "../resource-action-move/ResourceActionMove";
 import { ResourceActionAccess } from "../resource-action-access/ResourceActionAccess";
-import { ResourceView, useResourceViewerControls } from "../resource-view";
+import { ResourceView, useResourceViewerControls } from "../resource-viewer";
 
 export async function loader(args: Route.LoaderArgs) {
   const { "*": slugPath } = args.params;

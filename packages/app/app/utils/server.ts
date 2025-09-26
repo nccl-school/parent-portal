@@ -4,6 +4,10 @@ import { href, redirect } from "react-router";
 import { NCCLClient } from "@nccl/api/client";
 import { ENV_RUNTIME } from "@nccl/env";
 
+import { LOG } from "./isomorphic";
+
+import { getUserName } from "../features/user";
+
 export async function getRole<T extends LoaderFunctionArgs>(loaderArgs: T) {
   const session = await ensureSession(loaderArgs);
   return session.user.roleId as Roles;
@@ -50,14 +54,16 @@ export async function isAuthorized(
  * Throws a redirect to /sign-in if not authenticated.
  */
 export async function ensureSession<T extends LoaderFunctionArgs>(args: T) {
+  LOG.debug("Ensuring the application has a session");
+
   const ncclClient = getNCCLClient(args);
 
   const session = await ncclClient.auth.getSession();
   if (!session?.session) {
-    console.log("The user needs to sign in");
+    LOG.info("The user is not authenticated");
     const url = new URL(args.request.url);
-    console.log("Requested URL", url.pathname);
-    console.log("Redirecting to sign in");
+    LOG.debug("Requested URL", { pathname: url.pathname });
+    LOG.debug("Redirecting to sign in");
     throw redirect(
       href(`/sign-in`).concat(
         `?redirect_url=${ENV_RUNTIME.getOne("NCCL_APP_URL")}/${url.pathname}`
@@ -65,7 +71,11 @@ export async function ensureSession<T extends LoaderFunctionArgs>(args: T) {
     );
   }
 
-  console.log("User has session and is signed in");
+  LOG.addContextProvider(() => ({
+    userId: session.user.id,
+    userFullName: getUserName(session.user),
+  }));
+  LOG.info("The user is signed in");
 
   return session;
 }

@@ -13,7 +13,9 @@ export const roleIcon: {
  * Get the user's full name depending upon availability of
  * the name attributes
  */
-export function getUserName(user: User) {
+export function getUserName<T extends Pick<User, "firstName" | "lastName">>(
+  user: T
+) {
   if (user.lastName) return `${user.firstName} ${user.lastName}`;
   return String(user.firstName);
 }

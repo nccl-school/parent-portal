@@ -3856,6 +3856,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@nccl/logger@workspace:^, @nccl/logger@workspace:packages/log":
+  version: 0.0.0-use.local
+  resolution: "@nccl/logger@workspace:packages/log"
+  dependencies:
+    "@gfdigital/tsconfig": "npm:0.3.1"
+    picocolors: "npm:1.1.1"
+    typescript: "npm:5.9.2"
+  languageName: unknown
+  linkType: soft
+
 "@nccl/parent-portal@workspace:packages/app":
   version: 0.0.0-use.local
   resolution: "@nccl/parent-portal@workspace:packages/app"
@@ -3868,6 +3878,7 @@ __metadata:
     "@nccl/api": "npm:0.0.1"
     "@nccl/components": "npm:0.0.1"
     "@nccl/env": "npm:0.0.1"
+    "@nccl/logger": "workspace:^"
     "@nccl/theme": "npm:0.0.1"
     "@react-router/dev": "npm:7.9.2"
     "@react-router/express": "npm:7.9.2"

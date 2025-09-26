@@ -1,10 +1,10 @@
 import { css } from "@linaria/core";
 import { ModalController } from "@nccl/components";
 
-import { ResourceViewModalContent } from "./ResourceView";
-import type { ResourceViewState } from "./resource-view.utils";
+import { ResourceViewerModalContent } from "./ResourceViewer";
+import type { ResourceViewerState } from "./resource-viewer.utils";
 
-export * from "./resource-view.useResourceViewerControls";
+export * from "./resource-viewer.useResourceViewerControls";
 
 const styles = css`
   height: 100dvh;
@@ -19,8 +19,8 @@ const styles = css`
   }
 `;
 
-export const ResourceView = new ModalController<ResourceViewState>({
-  ModalContent: ResourceViewModalContent,
+export const ResourceView = new ModalController<ResourceViewerState>({
+  ModalContent: ResourceViewerModalContent,
   props: {
     dxVariant: "modal",
     className: styles,

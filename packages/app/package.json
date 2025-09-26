@@ -13,6 +13,7 @@
     "@nccl/api": "0.0.1",
     "@nccl/components": "0.0.1",
     "@nccl/env": "0.0.1",
+    "@nccl/logger": "workspace:^",
     "@nccl/theme": "0.0.1",
     "@react-router/express": "7.9.2",
     "@react-router/node": "7.9.2",

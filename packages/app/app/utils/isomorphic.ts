@@ -3,6 +3,7 @@ import { makeResponsive } from "@nccl/theme";
 import type { ActionFunctionArgs, UIMatch } from "react-router";
 import type { ZodObject, ZodType } from "zod";
 import { z } from "zod";
+import { Logger } from "@nccl/logger";
 
 export function capitalizeFirstLetter(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -67,3 +68,9 @@ export const CLASSES = {
     }
   `,
 };
+
+export const LOG = new Logger();
+
+LOG.addContextProvider(() => ({
+  app: "NCCL Parents - App",
+}));
