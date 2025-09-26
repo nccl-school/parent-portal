@@ -7,6 +7,7 @@ import {
 } from "@react-router/dev/routes";
 
 import { resourceViewServerRoutes } from "./features/resource-view/+server";
+import { resourceAddServerRoutes } from "./features/resource-add/+server";
 
 export default [
   layout("./features/app-root/AppRoot.layout.tsx", [
@@ -17,6 +18,7 @@ export default [
       route("resources/*", "./features/resources/Resources.route.tsx"),
     ]),
     ...resourceViewServerRoutes,
+    ...resourceAddServerRoutes,
     // - /directory
     ...prefix("directory", [
       index("./features/directory/Directory.route.tsx"),

@@ -21,7 +21,7 @@ import { LoadingState } from "../../components/states/LoadingState";
 import { parseLoaderData, renderLoaderData } from "../../utils/client";
 import { getNCCLClient } from "../../utils/server";
 import { ResourcesCreateFolder } from "../resources-create-folder/ResourcesCreateFolder";
-import { ResourcesAdd } from "../resources-add/ResourcesAdd";
+import { ResourceAdd } from "../resource-add/ResourceAdd";
 import { ResourceActionDelete } from "../resource-action-delete/ResourceActionDelete";
 import { ResourceActionEdit } from "../resource-action-edit/ResourceActionEdit";
 import { ResourceActionMove } from "../resource-action-move/ResourceActionMove";
@@ -76,7 +76,7 @@ export default function ResourcesRoute({
     const resource = parseLoaderData(loaderData);
     if (!resource) return; // TODO: Throw a toast
 
-    ResourcesAdd.launch(e, {
+    ResourceAdd.launch(e, {
       currentPath: params["*"],
       initParentResourceId: resource.id,
     });

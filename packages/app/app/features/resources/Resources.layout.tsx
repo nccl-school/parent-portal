@@ -16,7 +16,7 @@ import { ResourceMainBreadcrumbs } from "./ResourceMainBreadcrumb";
 import { getNCCLClient } from "../../utils/server";
 import { renderLoaderData } from "../../utils/client";
 import { ResourcesCreateFolder } from "../resources-create-folder/ResourcesCreateFolder";
-import { ResourcesAdd } from "../resources-add/ResourcesAdd";
+import { ResourceAdd } from "../resource-add/ResourceAdd";
 
 const styles = css`
   ${makeResponsive({ to: "laptop" })} {
@@ -62,7 +62,7 @@ export async function loader(args: Route.LoaderArgs) {
 export default function ResourcesLayout({ loaderData }: Route.ComponentProps) {
   return (
     <>
-      <ResourcesAdd.Component />
+      <ResourceAdd.Component />
       <ResourcesCreateFolder.Component />
 
       <div className={styles}>
