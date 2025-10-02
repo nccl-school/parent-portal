@@ -16,12 +16,13 @@ import "@nccl/components/css";
 import type { Route } from "./+types/root";
 
 export async function loader(args: Route.LoaderArgs) {
+  const env = args.context.resolve("env");
   return {
     ENV: {
-      NCCL_API_URL: args.context.env.NCCL_API_URL,
-      SENTRY_ENABLED: args.context.env.SENTRY_ENABLED,
-      SENTRY_DSN_APP: args.context.env.SENTRY_DSN_APP,
-      NCCL_ENVIRONMENT: args.context.env.NCCL_ENVIRONMENT,
+      NCCL_API_URL: env.NCCL_API_URL,
+      SENTRY_ENABLED: env.SENTRY_ENABLED,
+      SENTRY_DSN_APP: env.SENTRY_DSN_APP,
+      NCCL_ENVIRONMENT: env.NCCL_ENVIRONMENT,
     },
   };
 }

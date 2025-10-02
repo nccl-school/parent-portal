@@ -58,12 +58,14 @@ export async function loader(args: Route.LoaderArgs) {
   const { google } = await import("googleapis");
   const calendar = google.calendar("v3");
 
+  const env = args.context.resolve("env");
+
   const searchParams = getCalendarURLSearchParams(args.request);
   const meta = getByWeekMetaData(searchParams);
 
   const events = await calendar.events.list({
     calendarId: CONSTANTS.GOOGLE_CALENDAR_ID_NCCL_PUBLIC,
-    key: args.context.env.GOOGLE_API_KEY,
+    key: env.GOOGLE_API_KEY,
     orderBy: "startTime",
     singleEvents: true,
     timeMin: meta.this_week.iso,
