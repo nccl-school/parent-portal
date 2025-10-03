@@ -7,11 +7,15 @@ import { match } from "ts-pattern";
 
 import { getResourceIcon, getResourceIconColor } from "./resources.utils";
 
+import { LOG } from "../../utils/isomorphic";
+
 const styles = css`
   display: flex;
   gap: ${makeRem(8)};
   align-items: center;
 `;
+
+export const LOG_RESOURCES = LOG.feature("resources");
 
 export function ResourcesTableCellName(
   resource: GetResourceResponse["childResources"][0]

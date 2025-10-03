@@ -6,7 +6,7 @@ export interface LogEntry {
   message: string;
   timestamp: number;
   namespace?: string[];
-  context?: Record<string, unknown>;
+  context: Record<string, unknown>;
 }
 
 export interface LoggerPlugin {
@@ -58,6 +58,18 @@ function colorForNamespace(ns: string[]): string {
   return COLORS[Math.abs(hash) % COLORS.length];
 }
 
+function coerceToLevel(
+  level: string | undefined = "",
+  fallback: LogLevel
+): LogLevel {
+  const levels = Object.keys(LEVEL_PRIORITY);
+  const levelInLevels = levels.indexOf(level);
+  if (levelInLevels !== -1) {
+    return levels[levelInLevels] as LogLevel;
+  }
+  return fallback;
+}
+
 export class Logger {
   #level: LogLevel;
   #plugins: LoggerPlugin[] = [];
@@ -67,7 +79,13 @@ export class Logger {
   #contextProviders: Array<() => Record<string, unknown>> = [];
 
   constructor(options: LoggerOptions = {}) {
-    this.#level = options.level ?? "info";
+    // Set the level and override if a env variable exists
+    this.#level = coerceToLevel(options.level, "info");
+    if (typeof window === "undefined") {
+      this.#level = coerceToLevel(process.env.LOG_LEVEL, this.#level);
+    } else {
+      this.#level = process.env.NODE_ENV === "development" ? "debug" : "info";
+    }
     this.#namespace = options.namespace ?? [];
     this.#bufferSize = options.bufferSize ?? 500;
 
@@ -145,7 +163,7 @@ export class Logger {
       message,
       timestamp: Date.now(),
       namespace: this.#namespace,
-      context: this.#enrichContext(context),
+      context: this.#enrichContext(context) ?? {},
     };
 
     this.store(entry);
@@ -157,29 +175,57 @@ export class Logger {
         ? entry.namespace.join(":")
         : "root";
       const nsColor = colorForNamespace(entry.namespace ?? []);
-      const levelLabel = `[${entry.level}]`;
+      const levelLabel = `[${entry.level.toUpperCase()}]`;
       const fn = console[level] ?? console.log;
       fn(
         `%c[${namespacePrefix}]%c ${levelLabel} ${entry.message}`,
         `color:${nsColor}; font-weight:bold`,
         "color:inherit",
-        entry.context ?? {}
+        entry.context
       );
       return;
     }
 
     // --- Server ---
-    const nsPrefix = entry.namespace?.length
-      ? entry.namespace.join(":")
-      : "root";
-    const ts = new Date(entry.timestamp).toISOString();
 
     if (process.env.NODE_ENV === "development") {
+      // Pretty dev formatting with ANSI colors
+      const colorLevel: Record<LogLevel, string> = {
+        debug: "\x1b[95m", // bright magenta
+        info: "\x1b[36m", // cyan
+        warn: "\x1b[33m", // yellow
+        error: "\x1b[31m", // red
+      };
+      const colorBold = "\x1b[1m";
+      const colorReset = "\x1b[0m";
+      const colorDim = "\x1b[2m"; // dimmed style for message
+
+      function colorize(
+        color: keyof typeof colorLevel | "dim",
+        context: string
+      ) {
+        if (color === "dim") {
+          return `${colorDim}${context}${colorReset}`;
+        }
+        return `${colorBold}${colorLevel[level]}${context}${colorReset}`;
+      }
+
       // Pretty format
+      const printNamespace = entry.namespace?.length
+        ? entry.namespace.join(":")
+        : "root";
+      const timestamp = new Date(entry.timestamp).toISOString();
+      const printTimestamp = colorize("dim", timestamp);
       const fn = console[level] ?? console.log;
+      const printLevel = colorize(level, `${level.toUpperCase()}`);
+      const printMessage = message;
+      const printContext =
+        Object.keys(entry.context).length > 0
+          ? colorize("dim", JSON.stringify(entry.context))
+          : "";
+
       fn(
-        `${ts} [${nsPrefix}] [${entry.level}] ${entry.message}`,
-        entry.context ?? {}
+        `${printTimestamp} [${printNamespace}] ${printLevel} - ${printMessage} ${printContext}`
       );
     } else {
       // JSON for production

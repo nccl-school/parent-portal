@@ -58,16 +58,16 @@ export async function ensureSession<T extends LoaderFnArgs>({
   context,
   request,
 }: T) {
-  LOG.debug("Loading session...");
+  LOG.debug("Ensuring user has an active session...");
 
   const env = context.resolve("env");
   const ncclClient = context.resolve("ncclClient");
 
   const session = await ncclClient.auth.getSession();
+  const url = new URL(request.url);
 
   if (!session?.session) {
-    LOG.info("The user is not authenticated");
-    const url = new URL(request.url);
+    LOG.info("The user does NOT have a valid session");
     LOG.debug("Requested URL", { pathname: url.pathname });
     LOG.debug("Redirecting to sign in page");
     throw redirect(
@@ -77,11 +77,14 @@ export async function ensureSession<T extends LoaderFnArgs>({
     );
   }
 
+  // Add the user to every request from here on out
   LOG.addContextProvider(() => ({
     userId: session.user.id,
     userFullName: getUserName(session.user),
   }));
-  LOG.info("The user is signed in");
+  LOG.info("Session found. Serving requested page", {
+    url: url.pathname,
+  });
 
   return session;
 }

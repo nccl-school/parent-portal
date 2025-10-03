@@ -69,8 +69,4 @@ export const CLASSES = {
   `,
 };
 
-export const LOG = new Logger();
-
-LOG.addContextProvider(() => ({
-  app: "NCCL Parents - App",
-}));
+export const LOG = new Logger({ bufferSize: 100 });

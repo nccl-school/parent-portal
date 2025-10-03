@@ -14,12 +14,12 @@ import { useEffect, type MouseEvent } from "react";
 import type { Route } from "./+types/Resources.route";
 import { ResourcesTitle } from "./ResourcesTitle";
 import { ResourceItem } from "./ResourceItem";
+import { LOG_RESOURCES } from "./ResourcesTableCellName";
 
 import { CLASSES, createRouteHandle } from "../../utils/isomorphic";
 import { EmptyState } from "../../components/states/EmptyState";
 import { LoadingState } from "../../components/states/LoadingState";
 import { parseLoaderData, renderLoaderData } from "../../utils/client";
-import { getNCCLClient } from "../../utils/server";
 import { ResourcesCreateFolder } from "../resources-create-folder/ResourcesCreateFolder";
 import { ResourceAdd } from "../resource-add/ResourceAdd";
 import { ResourceActionDelete } from "../resource-action-delete/ResourceActionDelete";
@@ -30,13 +30,19 @@ import { ResourceView, useResourceViewerControls } from "../resource-viewer";
 
 export async function loader(args: Route.LoaderArgs) {
   const { "*": slugPath } = args.params;
-
-  const ncclClient = getNCCLClient(args);
+  const client = args.context.resolve("ncclClient");
   try {
-    const resource = await ncclClient.resource.getResourceByPath(slugPath);
+    LOG_RESOURCES.debug("Fetching the resource by path", { slugPath });
+    const resource = await client.resource.getResourceByPath(slugPath);
+    LOG_RESOURCES.info("Located resource", resource);
     return resource;
   } catch (error) {
-    return ncclClient.serializeError(error);
+    const err = client.serializeError(error);
+    LOG_RESOURCES.error(
+      "Error when trying to fetch the resource in the loader",
+      err
+    );
+    return;
   }
 }
 
@@ -95,7 +101,9 @@ export default function ResourcesRoute({
   // launch the viewer
   useEffect(() => {
     if (!resourcePreviewId) return;
-    ResourceView.launch(undefined, { resourceId: resourcePreviewId });
+    const payload = { resourceId: resourcePreviewId };
+    LOG_RESOURCES.debug("Launching the previewer", payload);
+    ResourceView.launch(undefined, payload);
   }, [resourcePreviewId]);
 
   return (
