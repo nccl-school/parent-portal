@@ -112,12 +112,24 @@ export class Logger {
     this.#contextProviders.push(fn);
   }
 
-  #enrichContext(ctx?: Record<string, unknown>) {
+  async #enrichContext(ctx?: Record<string, unknown>) {
+    let asyncCtx: Record<string, unknown> = {};
+    if (typeof window === "undefined") {
+      try {
+        // Dynamically import to avoid bundling in browser builds
+        const { logContext } = await import("./context.js");
+        asyncCtx = logContext.getStore?.() ?? {};
+      } catch {
+        // In case context.js isn’t available or running in an unsupported environment
+        asyncCtx = {};
+      }
+    }
+
     const globalCtx = this.#contextProviders.reduce<Record<string, unknown>>(
       (acc, fn) => Object.assign(acc, fn()),
       {}
     );
-    return { ...globalCtx, ...ctx };
+    return { ...asyncCtx, ...globalCtx, ...ctx };
   }
 
   feature(name: string): Logger {
@@ -151,19 +163,21 @@ export class Logger {
     }
   }
 
-  private emit(
+  private async emit(
     level: LogLevel,
     message: string,
     context?: Record<string, unknown>
   ) {
     if (!this.shouldLog(level)) return;
 
+    const enrichedCtx = await this.#enrichContext(context);
+
     const entry: LogEntry = {
       level,
       message,
       timestamp: Date.now(),
       namespace: this.#namespace,
-      context: this.#enrichContext(context) ?? {},
+      context: enrichedCtx,
     };
 
     this.store(entry);
@@ -200,14 +214,11 @@ export class Logger {
       const colorReset = "\x1b[0m";
       const colorDim = "\x1b[2m"; // dimmed style for message
 
-      function colorize(
-        color: keyof typeof colorLevel | "dim",
-        context: string
-      ) {
+      function colorize(color: keyof typeof colorLevel | "dim", ctx: string) {
         if (color === "dim") {
-          return `${colorDim}${context}${colorReset}`;
+          return `${colorDim}${ctx}${colorReset}`;
         }
-        return `${colorBold}${colorLevel[level]}${context}${colorReset}`;
+        return `${colorBold}${colorLevel[level]}${ctx}${colorReset}`;
       }
 
       // Pretty format

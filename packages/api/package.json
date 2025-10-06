@@ -34,6 +34,7 @@
     "@hono/zod-validator": "0.7.3",
     "@nccl/emails": "workspace:*",
     "@nccl/env": "workspace:*",
+    "@nccl/logger": "workspace:^",
     "@neondatabase/serverless": "1.0.1",
     "@prisma/adapter-neon": "6.16.2",
     "@prisma/adapter-pg": "6.16.2",
