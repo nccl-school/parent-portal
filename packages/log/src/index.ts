@@ -1,4 +1,5 @@
-// logger.ts
+import { logContext } from "./context.js";
+
 export type LogLevel = "debug" | "info" | "warn" | "error";
 
 export interface LogEntry {
@@ -113,17 +114,7 @@ export class Logger {
   }
 
   async #enrichContext(ctx?: Record<string, unknown>) {
-    let asyncCtx: Record<string, unknown> = {};
-    if (typeof window === "undefined") {
-      try {
-        // Dynamically import to avoid bundling in browser builds
-        const { logContext } = await import("./context.js");
-        asyncCtx = logContext.getStore?.() ?? {};
-      } catch {
-        // In case context.js isn’t available or running in an unsupported environment
-        asyncCtx = {};
-      }
-    }
+    const asyncCtx = logContext.getStore?.() ?? {};
 
     const globalCtx = this.#contextProviders.reduce<Record<string, unknown>>(
       (acc, fn) => Object.assign(acc, fn()),

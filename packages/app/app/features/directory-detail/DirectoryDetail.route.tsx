@@ -7,7 +7,7 @@ import { DirectoryDetailUser } from "./DirectoryDetailUser";
 import { ErrorState } from "../../components/states/ErrorState";
 import { EmptyState } from "../../components/states/EmptyState";
 import { createRouteHandle } from "../../utils/isomorphic";
-import { getNCCLClient } from "../../utils/server";
+
 import { getUserName } from "../user";
 import { renderLoaderData } from "../../utils/client";
 
@@ -18,7 +18,7 @@ export async function loader(
   | { status: "not-found" }
   | { status: "error"; message: string }
 > {
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
 
   try {
     const user = await ncclClient.user.getUser(args.params.id);

@@ -9,7 +9,7 @@ import { AuthAcceptInviteError } from "./AuthAcceptInviteError";
 
 import { validateFormData } from "../../utils/isomorphic";
 import { renderLoaderData } from "../../utils/client";
-import { getNCCLClient } from "../../utils/server";
+
 import { assembleTitle } from "../../utils/util.assemble-title";
 
 export async function loader(args: Route.LoaderArgs) {
@@ -21,7 +21,7 @@ export async function loader(args: Route.LoaderArgs) {
       reason: "A token is required in order to process your invitation.",
     } as const;
   }
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
   try {
     const res = await ncclClient.account.validateInviteToken(queryToken);
     return res;
@@ -31,7 +31,7 @@ export async function loader(args: Route.LoaderArgs) {
 }
 
 export async function action(args: Route.ActionArgs) {
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
   const formData = await args.request.formData();
 
   try {

@@ -16,10 +16,9 @@ import {
   SuggestionAdd,
 } from "../suggestion";
 import { SuggestionViewDialog } from "../suggestion-view/SuggestionView";
-import { getNCCLClient } from "../../utils/server";
 
 export async function loader(args: Route.ActionArgs) {
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
   try {
     const url = new URL(args.request.url);
     const search = url.searchParams.get("search") || undefined;

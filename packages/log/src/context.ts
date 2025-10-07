@@ -1,33 +1,43 @@
-import { AsyncLocalStorage } from "node:async_hooks";
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
- * Context values that persist throughout the lifetime
- * of a single request. These are automatically merged
- * into every log emitted during that request.
+ * Isomorphic context storage for @nccl/logger.
+ * Works in both Node (AsyncLocalStorage) and browser (simple stack).
  */
 export interface RequestLogContext {
   requestId?: string;
   [key: string]: unknown;
 }
 
-class LogContext extends AsyncLocalStorage<RequestLogContext> {
-  set<K extends keyof RequestLogContext>(key: K, value: RequestLogContext[K]) {
-    const store = this.getStore();
-    if (store) store[key] = value;
-  }
+type NodeALS<T> = {
+  run(store: T, fn: () => any): any;
+  getStore(): T | undefined;
+};
 
-  get<K extends keyof RequestLogContext>(
-    key: K
-  ): RequestLogContext[K] | undefined {
-    return this.getStore()?.[key];
-  }
+function createContextStore<T extends object>() {
+  // Runtime detection only, no static imports:
+  const NodeAsyncLocalStorage: NodeALS<T> | undefined =
+    typeof globalThis !== "undefined" && (globalThis as any).AsyncLocalStorage
+      ? new (globalThis as any).AsyncLocalStorage()
+      : undefined;
+
+  const stack: T[] = [];
+
+  return {
+    run<R>(context: T, fn: () => R): R {
+      if (NodeAsyncLocalStorage) return NodeAsyncLocalStorage.run(context, fn);
+      stack.push(context);
+      try {
+        return fn();
+      } finally {
+        stack.pop();
+      }
+    },
+    getStore(): T | undefined {
+      return NodeAsyncLocalStorage
+        ? NodeAsyncLocalStorage.getStore()
+        : stack.at(-1);
+    },
+  };
 }
 
-/**
- * Singleton AsyncLocalStorage instance used by the logger.
- *
- * Use:
- *   logContext.run({ requestId }, async () => { ... });
- *   const ctx = logContext.getStore(); // => RequestLogContext | undefined
- */
-export const logContext = new LogContext();
+export const logContext = createContextStore<RequestLogContext>();

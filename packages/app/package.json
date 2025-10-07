@@ -1,5 +1,5 @@
 {
-  "name": "@nccl/parent-portal",
+  "name": "@nccl/app",
   "private": true,
   "type": "module",
   "scripts": {

@@ -6,13 +6,11 @@ import {
 
 import type { Route } from "./+types/api.resource.access.school";
 
-import { getNCCLClient } from "../utils/server";
-
 /**
  * Get the school access rule for the particular resource
  */
 export async function loader(args: Route.LoaderArgs) {
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
   const { id } = args.params;
 
   try {
@@ -27,7 +25,7 @@ export async function loader(args: Route.LoaderArgs) {
  * Creates a new access rule for a particular resource
  */
 export async function action(args: Route.ActionArgs) {
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
   const formData = await args.request.formData();
   const { id } = args.params;
 

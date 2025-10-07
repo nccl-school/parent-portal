@@ -4,7 +4,6 @@ import { AuthChangePasswordSchema } from "@nccl/api/client";
 import type { Route } from "./+types/AccountSecurity.route";
 import { AccountSecurityChangePassword } from "./AccountSecurityChangePassword";
 
-import { getNCCLClient } from "../../utils/server";
 import { createRouteHandle, validateFormData } from "../../utils/isomorphic";
 import { PageHeader } from "../../components/page";
 import { AccountPageSection } from "../account/AccountPageSection";
@@ -15,7 +14,7 @@ export const handle = createRouteHandle({
 });
 
 export async function action(args: Route.ActionArgs) {
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
 
   try {
     const formData = await args.request.formData();

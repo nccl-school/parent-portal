@@ -4,13 +4,12 @@ import { SuggestionVoteTypeSchema } from "@nccl/api/client";
 import type { Route } from "./+types/api.suggestion.voteOnUnique";
 
 import { validateFormData } from "../utils/isomorphic";
-import { getNCCLClient } from "../utils/server";
 
 /**
  * Server action to invite a user
  */
 export async function action(args: Route.ActionArgs) {
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
 
   try {
     const formData = await args.request.formData();

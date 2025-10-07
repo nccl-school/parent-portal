@@ -32,7 +32,6 @@ export default defineConfig((config) => ({
       },
     }),
   ].filter(Boolean),
-
   build: {
     rollupOptions: config.isSsrBuild
       ? {

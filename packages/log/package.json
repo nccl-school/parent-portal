@@ -28,9 +28,6 @@
     "url": "https://github.com/nccl-school/parent-portal/issues"
   },
   "homepage": "https://github.com/nccl-school/parent-portal#readme",
-  "dependencies": {
-    "picocolors": "1.1.1"
-  },
   "devDependencies": {
     "@gfdigital/tsconfig": "0.3.1",
     "typescript": "5.9.2"

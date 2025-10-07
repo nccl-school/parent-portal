@@ -4,10 +4,9 @@ import z from "zod";
 import type { Route } from "./+types/api.resource.move";
 
 import { validateFormData } from "../utils/isomorphic";
-import { getNCCLClient } from "../utils/server";
 
 export async function action(args: Route.LoaderArgs) {
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
 
   try {
     switch (args.request.method) {

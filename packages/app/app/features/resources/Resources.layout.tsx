@@ -13,7 +13,6 @@ import { ResourceMain } from "./ResourceMain";
 import { ResourceMainSearch } from "./ResourceMainSearch";
 import { ResourceMainBreadcrumbs } from "./ResourceMainBreadcrumb";
 
-import { getNCCLClient } from "../../utils/server";
 import { renderLoaderData } from "../../utils/client";
 import { ResourcesCreateFolder } from "../resources-create-folder/ResourcesCreateFolder";
 import { ResourceAdd } from "../resource-add/ResourceAdd";
@@ -46,7 +45,7 @@ const stylesContainer = css`
 export async function loader(args: Route.LoaderArgs) {
   const { "*": slugPath } = args.params;
 
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
   try {
     const [tree, breadcrumbs] = await Promise.all([
       ncclClient.resource.getTreeByPath(slugPath),

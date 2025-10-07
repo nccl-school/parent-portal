@@ -3,8 +3,14 @@
   "version": "0.0.0",
   "type": "module",
   "exports": {
-    "./client": "./dist/client/index.js",
-    "./server": "./dist/server/index.js"
+    "./server": {
+      "node": "./dist/server/index.js",
+      "default": "./dist/server/index.js"
+    },
+    "./client": {
+      "browser": "./dist/client/index.js",
+      "default": "./dist/client/index.js"
+    }
   },
   "scripts": {
     "dev:app": "vite",

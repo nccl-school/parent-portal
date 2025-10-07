@@ -1,11 +1,9 @@
 import type { Route } from "./+types/api.user.getUserById";
 
-import { getNCCLClient } from "../utils/server";
-
-export async function loader(loaderArgs: Route.LoaderArgs) {
-  const ncclClient = getNCCLClient(loaderArgs);
+export async function loader(args: Route.LoaderArgs) {
+  const ncclClient = args.context.resolve("ncclClient");
   try {
-    const user = await ncclClient.user.getUser(loaderArgs.params.id);
+    const user = await ncclClient.user.getUser(args.params.id);
     return user;
   } catch (error) {
     return ncclClient.serializeError(error);

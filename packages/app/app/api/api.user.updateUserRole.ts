@@ -2,10 +2,8 @@ import type { Roles } from "@nccl/api/client";
 
 import type { Route } from "./+types/api.user.updateUserRole";
 
-import { getNCCLClient } from "../utils/server";
-
 export async function action(args: Route.ActionArgs) {
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
   try {
     const formData = await args.request.formData();
     const role = await ncclClient.user.updateUserRole(args.params.id, {

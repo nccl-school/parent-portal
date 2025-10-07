@@ -1,7 +1,6 @@
 import type { Route } from "./+types/AdminUsers.route";
 import { AdminUsersTable } from "./AdminUsersTable";
 
-import { getNCCLClient } from "../../utils/server";
 import { assembleTitle } from "../../utils/util.assemble-title";
 
 export function meta() {
@@ -9,7 +8,7 @@ export function meta() {
 }
 
 export async function loader(args: Route.LoaderArgs) {
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
   const data = await ncclClient.user.getUserList();
   return data;
 }
