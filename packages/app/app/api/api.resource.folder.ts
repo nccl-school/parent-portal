@@ -2,10 +2,8 @@ import { CreateFolderRequestSchema } from "@nccl/api/client";
 
 import type { Route } from "./+types/api.resource.folder";
 
-import { getNCCLClient } from "../utils/server";
-
 export async function action(args: Route.LoaderArgs) {
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
 
   try {
     switch (args.request.method) {

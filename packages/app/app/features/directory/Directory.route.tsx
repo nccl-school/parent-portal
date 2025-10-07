@@ -10,7 +10,7 @@ import { LoadingState } from "../../components/states/LoadingState";
 import { PageContainer } from "../../components/page/PageContainer";
 import { PageHeader } from "../../components/page";
 import { createRouteHandle } from "../../utils/isomorphic";
-import { getNCCLClient } from "../../utils/server";
+
 import { pluralize, renderLoaderData } from "../../utils/client";
 
 const styles = css`
@@ -96,7 +96,7 @@ export const handle = createRouteHandle({
 });
 
 export async function loader(args: Route.LoaderArgs) {
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
   const directory = await ncclClient.directory.getEntireDirectory();
   return { directory };
 }

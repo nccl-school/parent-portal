@@ -4,10 +4,8 @@ import { ENV_RUNTIME } from "@nccl/env";
 
 import type { Route } from "./+types/api.auth.signInSocial";
 
-import { getNCCLClient } from "../utils/server";
-
 export async function action(args: Route.ActionArgs) {
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
   const formData = await args.request.formData();
   const inviteToken = formData.get("inviteToken");
 

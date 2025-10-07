@@ -5,13 +5,11 @@ import {
 
 import type { Route } from "./+types/api.resource.access.school";
 
-import { getNCCLClient } from "../utils/server";
-
 /**
  * Creates a new access rule for a particular resource
  */
 export async function action(args: Route.ActionArgs) {
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
   const formData = await args.request.formData();
   const { id } = args.params;
 

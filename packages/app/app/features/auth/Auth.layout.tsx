@@ -4,8 +4,6 @@ import { Outlet, redirect } from "react-router";
 
 import type { Route } from "./+types/Auth.layout";
 
-import { getNCCLClient } from "../../utils/server";
-
 const styles = css`
   width: 100vw;
   display: grid;
@@ -59,7 +57,7 @@ const styles = css`
 `;
 
 export async function loader(args: Route.LoaderArgs) {
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
   const res = await ncclClient.auth.getSession();
   if (res?.session) {
     console.log("User is already signed in. Redirecting to home");

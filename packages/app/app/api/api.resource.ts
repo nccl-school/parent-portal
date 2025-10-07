@@ -1,9 +1,7 @@
 import type { Route } from "./+types/api.resource";
 
-import { getNCCLClient } from "../utils/server";
-
 export async function action(args: Route.LoaderArgs) {
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
 
   try {
     switch (args.request.method) {

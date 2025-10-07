@@ -1,9 +1,9 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import { logger } from "hono/logger";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
 import { cors } from "hono/cors";
 import { ENV_RUNTIME } from "@nccl/env";
+import { requestId } from "hono/request-id";
 
 import { prismaMiddleware } from "./middleware/middleware.prisma.js";
 import { sessionMiddleware } from "./middleware/middleware.session.js";
@@ -18,11 +18,14 @@ import { account } from "./features/account/account.route.js";
 import { directory } from "./features/directory/directory.route.js";
 import { health } from "./features/health/health.route.js";
 import { events } from "./features/events/events.route.js";
+import { LOG } from "./utils/util.logger.js";
+import { requestMiddleware } from "./middleware/middleware.request.js";
 
 const app = new Hono();
 
 // Middleware - CORS, logging, transactional email
-app.use(logger());
+app.use("*", requestId());
+app.use(requestMiddleware);
 app.use(emailMiddleware);
 app.use(prismaMiddleware);
 app.use(
@@ -55,6 +58,8 @@ app.route("/api/events", events);
 // Errors
 app.onError((error, c) => {
   const errorPayload = serializeError(error);
+  LOG.error("An error occurred", errorPayload);
+  console.error(error);
   return c.json(errorPayload, errorPayload.status as ContentfulStatusCode);
 });
 

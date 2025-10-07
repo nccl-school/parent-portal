@@ -20,7 +20,7 @@ import { AuthPasswordMeter } from "./AuthFieldPassword";
 import { PageHeader } from "../../components/page";
 import { getValidationErrors, renderLoaderData } from "../../utils/client";
 import { getFormData } from "../../utils/isomorphic";
-import { getNCCLClient } from "../../utils/server";
+
 import { assembleTitle } from "../../utils/util.assemble-title";
 
 export async function loader(args: Route.LoaderArgs) {
@@ -53,7 +53,7 @@ const schema = zSetPasswordSchema.safeExtend({
 });
 
 export async function action(args: Route.ActionArgs) {
-  const nccClient = getNCCLClient(args);
+  const nccClient = args.context.resolve("ncclClient");
   const formData = await getFormData(args, schema);
   if (formData.error) {
     return parseError(formData.error);

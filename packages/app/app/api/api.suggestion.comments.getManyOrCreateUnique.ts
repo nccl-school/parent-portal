@@ -3,7 +3,6 @@ import { z } from "zod";
 
 import type { Route } from "./+types/api.suggestion.comments.getManyOrCreateUnique";
 
-import { getNCCLClient } from "../utils/server";
 import { validateFormData } from "../utils/isomorphic";
 
 /**
@@ -11,7 +10,7 @@ import { validateFormData } from "../utils/isomorphic";
  * to a suggestion
  */
 export async function loader(args: Route.ActionArgs) {
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
   try {
     const roles = await ncclClient.suggestion.getCommentsList(args.params.id);
     return roles;
@@ -24,7 +23,7 @@ export async function loader(args: Route.ActionArgs) {
  * Add a new comment to a suggestion
  */
 export async function action(args: Route.ActionArgs) {
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
 
   try {
     const formData = await args.request.formData();

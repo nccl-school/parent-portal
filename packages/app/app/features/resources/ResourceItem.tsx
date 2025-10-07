@@ -13,7 +13,7 @@ import { ResourcesTableCellName } from "./ResourcesTableCellName";
 
 import { dates } from "../../utils/client";
 import { CLASSES, placeholder } from "../../utils/isomorphic";
-import { useResourceViewerControls } from "../resource-view";
+import { useResourceViewerControls } from "../resource-viewer";
 
 const rowStyles = css`
   &:hover {

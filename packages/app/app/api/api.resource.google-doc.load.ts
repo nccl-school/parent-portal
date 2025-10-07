@@ -2,10 +2,8 @@ import { ErrorSet, CreateGoogleDocRequestSchema } from "@nccl/api/client";
 
 import type { Route } from "./+types/api.resource.google-doc.load";
 
-import { getNCCLClient } from "../utils/server";
-
 export async function action(args: Route.LoaderArgs) {
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
 
   try {
     if (args.request.method !== "POST") {

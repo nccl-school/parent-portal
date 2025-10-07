@@ -12,9 +12,9 @@ import { href, useFetcher } from "react-router";
 import { css } from "@linaria/core";
 import { makeColor, makeRem } from "@nccl/theme";
 
-import type { ResourceViewState } from "./resource-view.utils";
+import type { ResourceViewerState } from "./resource-viewer.utils";
 import type { loader } from "./+server/view-file.server-route";
-import { useResourceViewerControls } from "./resource-view.useResourceViewerControls";
+import { useResourceViewerControls } from "./resource-viewer.useResourceViewerControls";
 
 import { MessageState } from "../../components/states/MessageState";
 import { dates, renderLoaderData } from "../../utils/client";
@@ -33,15 +33,15 @@ const styles = css`
   }
 `;
 
-export function ResourceViewModalContent() {
+export function ResourceViewerModalContent() {
   const { load, data } = useFetcher<typeof loader>();
   const {
     state: { resourceId },
-  } = useModalContext<ResourceViewState>();
+  } = useModalContext<ResourceViewerState>();
   const { closeViewer } = useResourceViewerControls();
 
   useEffect(() => {
-    load(href("/resource-view/server/:id", { id: resourceId }));
+    load(href("/resource-viewer/server/:id", { id: resourceId }));
   }, [load, resourceId]);
 
   return (

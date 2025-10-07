@@ -20,7 +20,6 @@ import { AuthPage } from "./AuthPage";
 import { SocialButton } from "../../components/social/SocialButton";
 import { getAuthError, getValidationErrors } from "../../utils/client";
 import { PageHeader } from "../../components/page";
-import { getNCCLClient } from "../../utils/server";
 import { getFormData } from "../../utils/isomorphic";
 import { assembleTitle } from "../../utils/util.assemble-title";
 import { useIsSubmitting } from "../../hooks/hook.useIsSubmitting";
@@ -41,15 +40,16 @@ const schema = z.object({
 });
 
 export async function action(args: Route.ActionArgs) {
-  const ncclClient = getNCCLClient(args);
+  const env = args.context.resolve("env");
+  const ncclClient = args.context.resolve("ncclClient");
+
   const formData = await getFormData(args, schema);
   if (formData.error) {
     return parseError(formData.error);
   }
 
   const url = new URL(args.request.url);
-  const redirect_url =
-    url.searchParams.get("redirect_url") ?? args.context.env.NCCL_APP_URL;
+  const redirect_url = url.searchParams.get("redirect_url") ?? env.NCCL_APP_URL;
 
   // BA usually clears via its own sign-out endpoint; you can proxy or call it directly:
   return await ncclClient.auth.signInEmail({

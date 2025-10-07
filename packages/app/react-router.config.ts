@@ -3,6 +3,9 @@ import { ENV_RUNTIME } from "@nccl/env";
 
 export default {
   ssr: true,
+  future: {
+    v8_middleware: true,
+  },
   buildEnd: async ({ viteConfig, reactRouterConfig, buildManifest }) => {
     if (!ENV_RUNTIME.getOne("SENTRY_ENABLED")) return;
     const Sentry = await import("@sentry/react-router");

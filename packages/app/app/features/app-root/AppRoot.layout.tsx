@@ -26,7 +26,7 @@ import type { Route } from "./+types/AppRoot.layout";
 import { AppRootHeaderUser } from "./AppRootHeaderUser";
 
 import { CLASSES, getMobileTitle } from "../../utils/isomorphic";
-import { ensureSession, getNCCLClient } from "../../utils/server";
+import { ensureSession } from "../../utils/server";
 import { AuthSignOutButton } from "../auth/AuthSignOutButton";
 import { Restrict } from "../auth/Restrict";
 
@@ -130,11 +130,17 @@ const stylesNav = css`
   }
 `;
 
-export async function loader(args: Route.LoaderArgs) {
-  const { session } = await ensureSession(args);
-  const ncclClient = getNCCLClient(args);
+export const middleware: Route.MiddlewareFunction[] = [
+  async function authMiddleware(args) {
+    const session = await ensureSession(args);
+    args.context.assign("session", session);
+  },
+];
+
+export async function loader({ context }: Route.LoaderArgs) {
+  const ncclClient = context.resolve("ncclClient");
   const currentUser = await ncclClient.user.getCurrentUser();
-  return { session, currentUser };
+  return { currentUser };
 }
 
 export default function AppRootLayout(args: Route.ComponentProps) {

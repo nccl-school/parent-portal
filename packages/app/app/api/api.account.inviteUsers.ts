@@ -1,16 +1,14 @@
 import { InviteUsersRequestSchema } from "@nccl/api/client";
 import z from "zod";
 
-import type { Route } from "./+types/api.account.inviteUsers";
-
 import { validateFormData } from "../utils/isomorphic";
-import { getNCCLClient } from "../utils/server";
+import type { Route } from "./+types/api.account.inviteUsers";
 
 /**
  * Server action to invite a user
  */
 export async function action(args: Route.ActionArgs) {
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
 
   try {
     const formData = await args.request.formData();

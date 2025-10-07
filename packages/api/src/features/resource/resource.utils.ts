@@ -8,6 +8,9 @@ import { ErrorSet } from "../../utils/util.errors.js";
 import { exhaustiveMatchGuard } from "../../utils/util.exhaustiveMatchGuard.js";
 import { slugify } from "../../utils/util.general.js";
 import { createBucketPath } from "../../utils/util.bucket.js";
+import { LOG } from "../../utils/util.logger.js";
+
+export const LOG_RESOURCE = LOG.feature("resource");
 
 export async function getResourceById<C extends Context>(
   id: string,
@@ -15,11 +18,20 @@ export async function getResourceById<C extends Context>(
   options?: { includeAccessRules: boolean }
 ) {
   const includeAccessRules = options?.includeAccessRules ?? false;
+  LOG_RESOURCE.info("Fetching resource by ID", {
+    resourceId: id,
+    includeAccessRules,
+  });
+
   const db = c.get("db");
   const record = await db.resource.findUnique({
     where: { id },
     include: { childResources: true, accessRules: includeAccessRules },
   });
+  LOG_RESOURCE.info("Successfully found resource record", {
+    resource: record,
+  });
+
   if (!record) {
     throw new ErrorSet.notFound("Unable to find the requested resource");
   }

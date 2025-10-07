@@ -11,7 +11,6 @@ import { HomeSectionActions, SECTION_ACTIONS } from "./HomeSectionActions";
 import type { Route } from "./+types/Home.index";
 
 import { CLASSES, createRouteHandle } from "../../utils/isomorphic";
-import { ensureSession } from "../../utils/server";
 import { PageHeader } from "../../components/page";
 import { assembleTitle } from "../../utils/util.assemble-title";
 
@@ -49,12 +48,12 @@ const styles = css`
 `;
 
 export async function loader(args: Route.LoaderArgs) {
-  const session = await ensureSession(args);
-  return session;
+  const session = args.context.resolve("session");
+  return session.user;
 }
 
 export const handle = createRouteHandle<Awaited<ReturnType<typeof loader>>>({
-  mobileTitle: (session) => `${getGreetingBanner()}, ${session.user.firstName}`,
+  mobileTitle: (user) => `${getGreetingBanner()}, ${user.firstName}`,
 });
 
 export default function HomeIndexRoute({ loaderData }: Route.ComponentProps) {
@@ -62,7 +61,7 @@ export default function HomeIndexRoute({ loaderData }: Route.ComponentProps) {
     <>
       <title>{assembleTitle("Home")}</title>
       <PageHeader
-        dxTitle={`${getGreetingBanner()}, ${loaderData.user.firstName}`}
+        dxTitle={`${getGreetingBanner()}, ${loaderData.firstName}`}
         className={CLASSES.desktopOnly}
       />
       <div className={styles}>

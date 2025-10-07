@@ -6,7 +6,7 @@ import {
   route,
 } from "@react-router/dev/routes";
 
-import { resourceViewServerRoutes } from "./features/resource-view/+server";
+import { resourceViewServerRoutes } from "./features/resource-viewer/+server";
 import { resourceAddServerRoutes } from "./features/resource-add/+server";
 
 export default [

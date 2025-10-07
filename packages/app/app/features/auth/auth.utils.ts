@@ -3,7 +3,6 @@ import z from "zod/v4";
 import { parseError, ErrorSet, type ErrorResponse } from "@nccl/api/client";
 
 import { getFormData } from "../../utils/isomorphic";
-import { getNCCLClient } from "../../utils/server";
 
 const schema = z.object({
   email: z
@@ -18,15 +17,17 @@ export async function requestPasswordResetEmail<T extends ActionFunctionArgs>(
 ): Promise<
   { ok: false; error: ErrorResponse } | { ok: true; error: undefined }
 > {
-  const authClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
+  const env = args.context.resolve("env");
+
   const formData = await getFormData(args, schema);
   if (formData.error) {
     return { ok: false, error: parseError(formData.error) };
   }
 
-  const resetPasswordUrl = `${args.context.env.NCCL_APP_URL}${href("/reset-password")}`;
+  const resetPasswordUrl = `${env.NCCL_APP_URL}${href("/reset-password")}`;
 
-  const res = await authClient.auth.requestPasswordReset({
+  const res = await ncclClient.auth.requestPasswordReset({
     ...formData.data,
     redirectTo: resetPasswordUrl,
   });

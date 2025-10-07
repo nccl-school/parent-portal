@@ -6,9 +6,11 @@ import type { Route } from "./+types/CalendarByDay.route";
 const calendar = google.calendar("v3");
 
 export async function loader(args: Route.LoaderArgs) {
+  const env = args.context.resolve("env");
+
   const ncclPublicEvents = await calendar.events.list({
     calendarId: CONSTANTS.GOOGLE_CALENDAR_ID_NCCL_PUBLIC,
-    key: args.context.env.GOOGLE_API_KEY,
+    key: env.GOOGLE_API_KEY,
     maxResults: 100,
     orderBy: "startTime",
     singleEvents: true,

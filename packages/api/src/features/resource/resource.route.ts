@@ -35,6 +35,7 @@ import {
   createResourceOwnership,
   parseGoogleDocsURL,
   fetchGoogleDocMetadataFromGoogleDrive,
+  LOG_RESOURCE,
 } from "./resource.utils.js";
 
 import { validate } from "../../middleware/middleware.validate.js";
@@ -463,17 +464,9 @@ resource.post(
 );
 
 resource.get("/view/:id", validate("param", ParamsIDSchema), async (c) => {
-  const db = c.get("db");
   const param = c.req.valid("param");
-  const resource = await db.resource.findUnique({
-    where: {
-      id: param.id,
-    },
-  });
 
-  if (!resource) {
-    throw new ErrorSet.notFound("Cannot find the requested resource.");
-  }
+  const resource = await getResourceById(param.id, c);
 
   if (resource.type === "FOLDER") {
     throw new ErrorSet.badRequest("You cannot view a folder");
@@ -485,9 +478,12 @@ resource.get("/view/:id", validate("param", ParamsIDSchema), async (c) => {
     );
   }
 
+  LOG_RESOURCE.info(`Resource is a "${resource.type}"`);
+
   switch (resource.type) {
     case "EXTERNAL_DOC":
     case "LINK": {
+      LOG_RESOURCE.info(`Serializing the public URL.`);
       const publicUrl = resource.fileUrl;
       const data = await serialize(ViewAResourceResponseSchema, {
         ...resource,
@@ -497,6 +493,7 @@ resource.get("/view/:id", validate("param", ParamsIDSchema), async (c) => {
     }
 
     case "FILE": {
+      LOG_RESOURCE.info(`Creating a signed URL from the bucket`);
       const bucket = getBucket();
       const file = bucket.file(resource.fileUrl);
       const [publicUrl] = await file.getSignedUrl({
@@ -504,11 +501,15 @@ resource.get("/view/:id", validate("param", ParamsIDSchema), async (c) => {
         action: "read", // Can also be "write" or "delete"
         expires: Date.now() + 15 * 60 * 1000, // 5 minutes
       });
+      LOG_RESOURCE.info(
+        `Successfully created a public URL that will expire in 5 minutes`,
+        { publicUrl }
+      );
       const data = await serialize(ViewAResourceResponseSchema, {
         ...resource,
         publicUrl,
       });
-      console.log("Signed URL:", data.publicUrl);
+      LOG_RESOURCE.info(`Serializing response`, data);
       return c.json(data);
     }
 

@@ -12,7 +12,6 @@ import { AccountProfileBasic } from "./AccountProfileBasic";
 import { AccountProfileAvatar } from "./AccountProfileAvatar";
 import { AccountProfileBio } from "./AccountProfileBio";
 
-import { getNCCLClient } from "../../utils/server";
 import { dates } from "../../utils/client";
 import { createRouteHandle, validateFormData } from "../../utils/isomorphic";
 import { PageHeader } from "../../components/page";
@@ -24,13 +23,13 @@ export const handle = createRouteHandle({
 });
 
 export async function loader(args: Route.LoaderArgs) {
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
   const user = await ncclClient.user.getCurrentUser();
   return { user };
 }
 
 export async function action(args: Route.ActionArgs) {
-  const ncclClient = getNCCLClient(args);
+  const ncclClient = args.context.resolve("ncclClient");
   const formData = await args.request.formData();
 
   try {
